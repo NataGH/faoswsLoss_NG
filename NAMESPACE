@@ -1,0 +1,17 @@
+import(RCurl)
+import(RJSONIO)
+import(data.table)
+
+exportClasses(
+	Dimension,
+	KeySet,
+	Pivoting
+)
+
+export(
+	Dimension,
+	KeySet,
+	Pivoting,
+	GetData,
+	"addKey<-"
+)

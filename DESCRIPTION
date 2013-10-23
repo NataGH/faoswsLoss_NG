@@ -1,0 +1,15 @@
+Package: faosws
+Type: Package
+Title: API providing access to the FAO Statistical Working System
+Version: 0.0.7
+Date: 2013-10-22
+Author: Engineering Ingegneria Informatica
+Maintainer: ? <rsws@fao.org>
+Description: API providing access to the FAO Statistical Working System
+License: @FAO 2013
+Depends: R (>= 3.0)
+Imports: RCurl, RJSONIO, data.table
+Collate:
+	Dimension.R KeySet.R Pivoting.R 
+	PostRestCall.R
+	GetData.R
