@@ -1,5 +1,26 @@
 GetData <- function(keyset, flags = TRUE, pivoting) {
 
+	# Validate passed arguments.
+	#
+	GetData.validate(keyset, flags, pivoting)
+
+	# Prepare JSON for REST call.
+	#
+	json <- GetData.buildJSON(keyset, flags, pivoting)
+
+	# Perform REST call.
+	#
+	url <- paste0("https://swsrm:8181/sws/rest/r/data/", swsContext.id) 
+	data <- PostRestCall(url, json)
+
+	# Create result data table.
+	#
+	GetData.processResult(data)
+}
+
+
+GetData.validate <- function(keyset, flags, pivoting) {
+
 	# Validate passed keyset.
 	#
 	if(missing(keyset)) {
@@ -33,7 +54,10 @@ GetData <- function(keyset, flags = TRUE, pivoting) {
 			}
 		}
 	}
+}
 
+
+GetData.buildJSON <- function(keyset, flags, pivoting) {
 	
 	# Build JSON for REST call.
 	#
@@ -59,11 +83,12 @@ GetData <- function(keyset, flags = TRUE, pivoting) {
 	#
 	json[["includeFlags"]] = flags
 
+	json
+}
 
-	# Perform REST call.
-	#
-	url <- paste0("https://swsrm:8181/sws/rest/r/data/", swsContext.id) 
-	data <- PostRestCall(url, json)
+
+GetData.processResult <- function(data) {
+
 	columns <- list()
 
 	# Extract key columns.

@@ -12,4 +12,4 @@ Imports: RCurl, RJSONIO, data.table
 Collate:
 	Dimension.R KeySet.R Pivoting.R 
 	PostRestCall.R
-	GetData.R
+	GetData.R GetCodeList.R

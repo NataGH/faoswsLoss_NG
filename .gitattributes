@@ -2,6 +2,7 @@
 /DESCRIPTION -text
 /NAMESPACE -text
 R/Dimension.R -text
+R/GetCodeList.R -text
 R/GetData.R -text
 R/KeySet.R -text
 R/Pivoting.R -text

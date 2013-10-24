@@ -13,5 +13,6 @@ export(
 	KeySet,
 	Pivoting,
 	GetData,
+	GetCodeList,
 	"addKey<-"
 )
