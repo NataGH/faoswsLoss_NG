@@ -1,12 +1,12 @@
-GetData <- function(keyset, flags = TRUE, pivoting) {
+GetData <- function(keyset, flags = TRUE, normalized = TRUE, pivoting) {
 
 	# Validate passed arguments.
 	#
-	GetData.validate(keyset, flags, pivoting)
+	GetData.validate(keyset, flags, normalized, pivoting)
 
 	# Prepare JSON for REST call.
 	#
-	json <- GetData.buildJSON(keyset, flags, pivoting)
+	json <- GetData.buildJSON(keyset, flags, normalized, pivoting)
 
 	# Perform REST call.
 	#
@@ -15,11 +15,15 @@ GetData <- function(keyset, flags = TRUE, pivoting) {
 
 	# Create result data table.
 	#
-	GetData.processResult(data)
+	if(normalized) {
+		GetData.processNormalizedResult(data)
+	} else {
+		GetData.processDenormalizedResult(data)
+	}
 }
 
 
-GetData.validate <- function(keyset, flags, pivoting) {
+GetData.validate <- function(keyset, flags, normalized, pivoting) {
 
 	# Validate passed keyset.
 	#
@@ -57,7 +61,7 @@ GetData.validate <- function(keyset, flags, pivoting) {
 }
 
 
-GetData.buildJSON <- function(keyset, flags, pivoting) {
+GetData.buildJSON <- function(keyset, flags, normalized, pivoting) {
 	
 	# Build JSON for REST call.
 	#
@@ -81,13 +85,17 @@ GetData.buildJSON <- function(keyset, flags, pivoting) {
 
 	# Add parameter controlling the inclusion of flags.
 	#
-	json[["includeFlags"]] = flags
+	json[["includeFlags"]] <- flags
+
+	# Add parameter used to request normalized or denormalized data.
+	#
+	json[["denormalized"]] <- !normalized
 
 	json
 }
 
 
-GetData.processResult <- function(data) {
+GetData.processNormalizedResult <- function(data) {
 
 	columns <- list()
 
@@ -109,6 +117,35 @@ GetData.processResult <- function(data) {
 	for(col in data$flagDefinitions) {
 		index <- index + 1
 		columns[[col["code"]]] <- sapply(data$data, function(x) { x[["flags"]][index] })
+	}
+
+	# Bind columns into a data table object.
+	#
+	do.call("data.table", columns)
+}
+
+
+GetData.processDenormalizedResult <- function(data) {
+
+	columns <- list()
+
+	# Extract grouping key columns.
+	#
+	index <- 0
+	for(col in data$groupingKeyDefinitions) {
+		index <- index + 1
+		columns[[col["code"]]] <- sapply(data$data, function(x) { x[["groupingKeys"]][index] })
+	}
+
+	# Extract denormalized column keys.
+	#
+	index <- 0
+	for(col in data$columnKey$codes) {
+		index <- index + 1
+		columns[[paste0("Value_", col)]] <- sapply(data$data, function(x) { x[["content"]][[index]][["value"]] })
+
+		# Need to process flags, if requested.
+		#
 	}
 
 	# Bind columns into a data table object.
