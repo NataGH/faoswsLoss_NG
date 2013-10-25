@@ -10,7 +10,7 @@ GetCodeTree <- function(domain, dataset, dimension, roots) {
 
 	# Perform REST call.
 	#
-	url <- paste0("https://swsrm:8181/sws/rest/r/dimensionValues/", domain, "/", dataset, "/", dimension, "/tree")
+	url <- paste0(swsContext.baseRestUrl, "/r/dimensionValues/", domain, "/", dataset, "/", dimension, "/tree")
 	data <- PostRestCall(url, json)
 
 	# Create result data table.

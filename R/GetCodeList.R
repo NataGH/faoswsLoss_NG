@@ -10,7 +10,7 @@ GetCodeList <- function(domain, dataset, dimension, codes) {
 
 	# Perform REST call.
 	#
-	url <- paste0("https://swsrm:8181/sws/rest/r/dimensionValues/", domain, "/", dataset, "/", dimension, "/plain?plainDescription=true")
+	url <- paste0(swsContext.baseRestUrl, "/r/dimensionValues/", domain, "/", dataset, "/", dimension, "/plain?plainDescription=true")
 	data <- PostRestCall(url, json)
 
 	# Create result data table.

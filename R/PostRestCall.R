@@ -5,7 +5,7 @@ PostRestCall <- function(url, data) {
 		url = url,
 		curl = ch,
 		verbose = FALSE, 
-		noproxy = "swsrm", 
+		noproxy = "swsrm", # Remove this!
 		ssl.verifypeer = FALSE, 
 		sslcert = swsContext.clientCertificate,
 		sslkey = swsContext.clientKey,
