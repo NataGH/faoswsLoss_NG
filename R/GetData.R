@@ -101,10 +101,10 @@ GetData.processNormalizedResult <- function(data) {
 
 	# Extract key columns.
 	#
-	index <- 0
+	i <- 0
 	for(col in data$keyDefinitions) {
-		index <- index + 1
-		columns[[col["code"]]] <- sapply(data$data, function(x) { x[["keys"]][index] })
+		i <- i + 1
+		columns[[col["code"]]] <- sapply(data$data, function(x) { x[["keys"]][i] })
 	}
 
 	# Extract value column.
@@ -113,10 +113,10 @@ GetData.processNormalizedResult <- function(data) {
 
 	# Extract flag columns.
 	#
-	index <- 0
+	i <- 0
 	for(col in data$flagDefinitions) {
-		index <- index + 1
-		columns[[col["code"]]] <- sapply(data$data, function(x) { x[["flags"]][index] })
+		i <- i + 1
+		columns[[col["code"]]] <- sapply(data$data, function(x) { x[["flags"]][i] })
 	}
 
 	# Bind columns into a data table object.
@@ -131,21 +131,26 @@ GetData.processDenormalizedResult <- function(data) {
 
 	# Extract grouping key columns.
 	#
-	index <- 0
+	i <- 0
 	for(col in data$groupingKeyDefinitions) {
-		index <- index + 1
-		columns[[col["code"]]] <- sapply(data$data, function(x) { x[["groupingKeys"]][index] })
+		i <- i + 1
+		columns[[col["code"]]] <- sapply(data$data, function(x) { x[["groupingKeys"]][i] })
 	}
 
 	# Extract denormalized column keys.
 	#
-	index <- 0
+	i <- 0
 	for(col in data$columnKey$codes) {
-		index <- index + 1
-		columns[[paste0("Value_", col)]] <- sapply(data$data, function(x) { x[["content"]][[index]][["value"]] })
+		i <- i + 1
+		columns[[paste0("Value_", col)]] <- sapply(data$data, function(x) { x[["content"]][[i]][["value"]] })
 
-		# Need to process flags, if requested.
+		# Extract flag columns.
 		#
+		j <- 0
+		for(flag in data$flagDefinitions) {
+			j <- j + 1
+			columns[[paste0(flag["code"], "_", col)]] <- sapply(data$data, function(x) { x[["content"]][[i]][["flags"]][j] })
+		}
 	}
 
 	# Bind columns into a data table object.
