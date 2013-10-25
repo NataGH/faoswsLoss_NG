@@ -1,12 +1,12 @@
-GetData <- function(keyset, flags = TRUE, normalized = TRUE, pivoting) {
+GetData <- function(keyset, flags = TRUE, normalized = TRUE, metadata = FALSE, pivoting) {
 
 	# Validate passed arguments.
 	#
-	GetData.validate(keyset, flags, normalized, pivoting)
+	GetData.validate(keyset, flags, normalized, metadata, pivoting)
 
 	# Prepare JSON for REST call.
 	#
-	json <- GetData.buildJSON(keyset, flags, normalized, pivoting)
+	json <- GetData.buildJSON(keyset, flags, normalized, metadata, pivoting)
 
 	# Perform REST call.
 	#
@@ -16,14 +16,14 @@ GetData <- function(keyset, flags = TRUE, normalized = TRUE, pivoting) {
 	# Create result data table.
 	#
 	if(normalized) {
-		GetData.processNormalizedResult(data)
+		GetData.processNormalizedResult(data, metadata)
 	} else {
 		GetData.processDenormalizedResult(data)
 	}
 }
 
 
-GetData.validate <- function(keyset, flags, normalized, pivoting) {
+GetData.validate <- function(keyset, flags, normalized, metadata, pivoting) {
 
 	# Validate passed keyset.
 	#
@@ -58,10 +58,16 @@ GetData.validate <- function(keyset, flags, normalized, pivoting) {
 			}
 		}
 	}
+
+	# Denormalized format with metadata is not supported.
+	#
+	if(!normalized && metadata) {
+		stop("Denormalized data format with metadata is not supported.")
+	}
 }
 
 
-GetData.buildJSON <- function(keyset, flags, normalized, pivoting) {
+GetData.buildJSON <- function(keyset, flags, normalized, metadata, pivoting) {
 	
 	# Build JSON for REST call.
 	#
@@ -87,6 +93,10 @@ GetData.buildJSON <- function(keyset, flags, normalized, pivoting) {
 	#
 	json[["includeFlags"]] <- flags
 
+	# Add parameter controlling the inclusion of metadata.
+	#
+	json[["includeMetadata"]] <- metadata
+
 	# Add parameter used to request normalized or denormalized data.
 	#
 	json[["denormalized"]] <- !normalized
@@ -95,7 +105,7 @@ GetData.buildJSON <- function(keyset, flags, normalized, pivoting) {
 }
 
 
-GetData.processNormalizedResult <- function(data) {
+GetData.processNormalizedResult <- function(data, metadata) {
 
 	columns <- list()
 
@@ -104,19 +114,145 @@ GetData.processNormalizedResult <- function(data) {
 	i <- 0
 	for(col in data$keyDefinitions) {
 		i <- i + 1
-		columns[[col["code"]]] <- sapply(data$data, function(x) { x[["keys"]][i] })
+		columns[[col["code"]]] <- unlist(sapply(data$data, function(x) { 
+
+			if(length(x[["metadata"]]) > 0) {
+				
+				len <- 0
+				for(metadata in x[["metadata"]]) {
+					len <- len + length(metadata$elements)
+				}
+				rep(x[["keys"]][i], len)
+
+			} else {
+
+				x[["keys"]][i] 
+
+			}
+		}))
+	}
+
+	# Extract metadata if needed.
+	#
+	if(metadata) {
+		columns[["Metadata"]] <- unlist(sapply(data$data, function(x) { 
+
+				if(length(x[["metadata"]]) > 0) {
+					
+					tmp <- NULL
+					for(metadata in x[["metadata"]]) {
+						tmp <- c(tmp, rep(metadata$typeCode, length(metadata$elements)))
+					}
+					tmp
+
+				} else {
+
+					NA
+
+				}
+		}))
+
+		columns[["Metadata_Group"]] <- unlist(sapply(data$data, function(x) { 
+
+				if(length(x[["metadata"]]) > 0) {
+					
+					tmp <- NULL
+					group <- 0
+					for(metadata in x[["metadata"]]) {
+						group <- group + 1
+						tmp <- c(tmp, rep(group, length(metadata$elements)))
+					}
+					tmp
+
+				} else {
+
+					NA
+
+				}
+		}))
+
+		columns[["Metadata_Element"]] <- unlist(sapply(data$data, function(x) { 
+
+				if(length(x[["metadata"]]) > 0) {
+					
+					tmp <- NULL
+					for(metadata in x[["metadata"]]) {
+						tmp <- c(tmp, unlist(sapply(metadata$elements, function(y) {
+							y[["typeCode"]]
+						})))
+					}
+					tmp
+
+				} else {
+
+					NA
+
+				}
+		}))
+
+		columns[["Metadata_Value"]] <- unlist(sapply(data$data, function(x) { 
+
+				if(length(x[["metadata"]]) > 0) {
+					
+					tmp <- NULL
+					for(metadata in x[["metadata"]]) {
+						tmp <- c(tmp, unlist(sapply(metadata$elements, function(y) {
+							y[["value"]]
+						})))
+					}
+					tmp
+
+				} else {
+
+					NA
+
+				}
+		}))
 	}
 
 	# Extract value column.
 	#
-	columns[["value"]] <- sapply(data$data, function(x) { x[["value"]] })
+	columns[["value"]] <- unlist(sapply(data$data, function(x) { 
+
+			tmp <- ifelse(is.null(x[["value"]]), NA, x[["value"]])
+
+			if(length(x[["metadata"]]) > 0) {
+				
+				len <- 0
+				for(metadata in x[["metadata"]]) {
+					len <- len + length(metadata$elements)
+				}
+				rep(tmp, len)
+
+			} else {
+
+				tmp
+
+			}
+	}))
 
 	# Extract flag columns.
 	#
 	i <- 0
 	for(col in data$flagDefinitions) {
 		i <- i + 1
-		columns[[col["code"]]] <- sapply(data$data, function(x) { x[["flags"]][i] })
+		columns[[col["code"]]] <- unlist(sapply(data$data, function(x) 
+		{ 
+
+			if(length(x[["metadata"]]) > 0) {
+				
+				len <- 0
+				for(metadata in x[["metadata"]]) {
+					len <- len + length(metadata$elements)
+				}
+				rep(x[["flags"]][i], len)
+
+			} else {
+
+				x[["flags"]][i] 
+
+			}
+		}))
 	}
 
 	# Bind columns into a data table object.
