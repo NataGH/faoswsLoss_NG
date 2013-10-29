@@ -19,11 +19,6 @@ setValidity("KeySet", function(object) {
 		valid <- FALSE
 		msg <- c(msg, "The dataset of the keyset was not properly set.")
 	}
-
-	if(length(object@dimensions) <= 0) {
-		valid <- FALSE
-		msg <- c(msg, "At least one dimension needs to be specified.")
-	}
 	
 	for(d in object@dimensions) {
 		if(!class(d) == "Dimension" || !validObject(d)) {

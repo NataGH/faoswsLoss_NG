@@ -10,11 +10,6 @@ setValidity("Dimension", function(object) {
 		msg <- c(msg, "The name of the dimension was not properly set.")
 	}
 
-	if(length(object@keys) <= 0) {
-		valid <- FALSE
-		msg <- c(msg, "At least one key needs to be specified.")
-	}
-
 	if (valid) {
 		TRUE
 	} else {

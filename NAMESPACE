@@ -10,10 +10,11 @@ exportClasses(
 
 export(
 	Dimension,
+	"addKey<-",
 	KeySet,
 	Pivoting,
 	GetData,
 	GetCodeList,
 	GetCodeTree,
-	"addKey<-"
+	SaveData
 )

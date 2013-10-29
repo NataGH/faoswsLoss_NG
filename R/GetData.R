@@ -152,6 +152,23 @@ GetData.processNormalizedResult <- function(data, metadata) {
 				}
 		}))
 
+		columns[["Metadata_Language"]] <- unlist(sapply(data$data, function(x) { 
+
+				if(length(x[["metadata"]]) > 0) {
+					
+					tmp <- NULL
+					for(metadata in x[["metadata"]]) {
+						tmp <- c(tmp, rep(metadata$language, length(metadata$elements)))
+					}
+					tmp
+
+				} else {
+
+					NA
+
+				}
+		}))
+
 		columns[["Metadata_Group"]] <- unlist(sapply(data$data, function(x) { 
 
 				if(length(x[["metadata"]]) > 0) {

@@ -8,3 +8,5 @@ R/GetData.R -text
 R/KeySet.R -text
 R/Pivoting.R -text
 R/PostRestCall.R -text
+R/PutRestCall.R -text
+R/SaveData.R -text
