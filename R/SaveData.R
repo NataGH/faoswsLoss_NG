@@ -7,15 +7,66 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE) {
 	# Prepare JSON for REST call.
 	#
 	json <- SaveData.buildJSON(domain, dataset, data, metadata, normalized)
+	cat(toJSON(json))
 
 	# Perform REST call.
 	#
-	url <- paste0(swsContext.baseRestUrl, "/r/data/", swsContext.id, domain, dataset, "?token=", swsContext.token, "?normalized=", normalized) 
+	url <- paste0(
+		swsContext.baseRestUrl, 
+		"/r/data/", 
+		swsContext.id,
+		"/",
+		domain, 
+		"/",
+		dataset, 
+		"?token=", swsContext.token, 
+		"&normalized=", tolower(as.character(normalized)))
 	PutRestCall(url, json)
 }
 
 
-GetData.validate <- function(domain, dataset, data, metadata, normalized) {
+SaveData.validate <- function(domain, dataset, data, metadata, normalized) {
+
+	# Validate passed domain.
+	#
+	if(missing(domain)) {
+		stop("The domain argument is mandatory.")
+	}
+	if(class(domain) != "character") {
+		stop("The passed domain argument is not a character value.")
+	}
+
+	# Validate passed dataset
+	#
+	if(missing(dataset)) {
+		stop("The dataset argument is mandatory.")
+	}
+	if(class(dataset) != "character") {
+		stop("The passed dataset argument is not a character value.")
+	}
+
+	# At least one argument amoung data and metadata need to be
+	# specified.
+	#
+	if(missing(data) & missing(metadata)) {
+		stop("Neither data nor metadata arguments have been specified.")
+	}
+
+	# Validate data argument, if passed.
+	#
+	if(!missing(data)) {
+		if(!is.data.table(data)) {
+			stop("The passed data argument is not a data table.")
+		}
+	}
+
+	# Validate metadata argument, if passed.
+	#
+	if(!missing(metadata)) {
+		if(!is.data.table(metadata)) {
+			stop("The passed metadata argument is not a data table.")
+		}
+	}
 }
 
 
@@ -81,7 +132,6 @@ SaveData.buildNormalizedDataJSON <- function(data) {
 	if(length(filteredColumnNames) > index) {
 		flags <- filteredColumnNames[(index + 1):(length(filteredColumnNames))]
 	}
-	print(flags)
 
 	# Set up section declaring flags definition.
 	#

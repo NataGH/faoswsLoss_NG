@@ -114,7 +114,7 @@ GetData.processNormalizedResult <- function(data, metadata) {
 	i <- 0
 	for(col in data$keyDefinitions) {
 		i <- i + 1
-		columns[[col["code"]]] <- unlist(sapply(data$data, function(x) { 
+		column <- unlist(sapply(data$data, function(x) { 
 
 			if(length(x[["metadata"]]) > 0) {
 				
@@ -130,12 +130,14 @@ GetData.processNormalizedResult <- function(data, metadata) {
 
 			}
 		}))
+		dim(column) <- NULL
+		columns[[col["code"]]] <- column
 	}
 
 	# Extract metadata if needed.
 	#
 	if(metadata) {
-		columns[["Metadata"]] <- unlist(sapply(data$data, function(x) { 
+		column <- unlist(sapply(data$data, function(x) { 
 
 				if(length(x[["metadata"]]) > 0) {
 					
@@ -151,8 +153,10 @@ GetData.processNormalizedResult <- function(data, metadata) {
 
 				}
 		}))
+		dim(column) <- NULL
+		columns[["Metadata"]] <- column
 
-		columns[["Metadata_Language"]] <- unlist(sapply(data$data, function(x) { 
+		column <- unlist(sapply(data$data, function(x) { 
 
 				if(length(x[["metadata"]]) > 0) {
 					
@@ -168,8 +172,10 @@ GetData.processNormalizedResult <- function(data, metadata) {
 
 				}
 		}))
+		dim(column) <- NULL
+		columns[["Metadata_Language"]] <- column
 
-		columns[["Metadata_Group"]] <- unlist(sapply(data$data, function(x) { 
+		column <- unlist(sapply(data$data, function(x) { 
 
 				if(length(x[["metadata"]]) > 0) {
 					
@@ -187,8 +193,10 @@ GetData.processNormalizedResult <- function(data, metadata) {
 
 				}
 		}))
+		dim(column) <- NULL
+		columns[["Metadata_Group"]] <- column
 
-		columns[["Metadata_Element"]] <- unlist(sapply(data$data, function(x) { 
+		column <- unlist(sapply(data$data, function(x) { 
 
 				if(length(x[["metadata"]]) > 0) {
 					
@@ -206,8 +214,10 @@ GetData.processNormalizedResult <- function(data, metadata) {
 
 				}
 		}))
+		dim(column) <- NULL
+		columns[["Metadata_Element"]] <- column
 
-		columns[["Metadata_Value"]] <- unlist(sapply(data$data, function(x) { 
+		column <- unlist(sapply(data$data, function(x) { 
 
 				if(length(x[["metadata"]]) > 0) {
 					
@@ -225,11 +235,13 @@ GetData.processNormalizedResult <- function(data, metadata) {
 
 				}
 		}))
+		dim(column) <- NULL
+		columns[["Metadata_Value"]] <- column
 	}
 
 	# Extract value column.
 	#
-	columns[["value"]] <- unlist(sapply(data$data, function(x) { 
+	column <- unlist(sapply(data$data, function(x) { 
 
 			tmp <- ifelse(is.null(x[["value"]]), NA, x[["value"]])
 
@@ -247,13 +259,15 @@ GetData.processNormalizedResult <- function(data, metadata) {
 
 			}
 	}))
+	dim(column) <- NULL
+	columns[["value"]] <- column
 
 	# Extract flag columns.
 	#
 	i <- 0
 	for(col in data$flagDefinitions) {
 		i <- i + 1
-		columns[[col["code"]]] <- unlist(sapply(data$data, function(x) 
+		column <- unlist(sapply(data$data, function(x) 
 		{ 
 
 			if(length(x[["metadata"]]) > 0) {
@@ -270,6 +284,8 @@ GetData.processNormalizedResult <- function(data, metadata) {
 
 			}
 		}))
+		dim(column) <- NULL
+		columns[[col["code"]]] <- column
 	}
 
 	# Bind columns into a data table object.
