@@ -13,7 +13,7 @@ PostRestCall <- function(url, data) {
 		ssl.verifyhost = 2,
 		httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"),
 		post = 1,
-		postfields = toJSON(data))
+		postfields = toJSON(data, digits = 30))
 
 	# Check returned status code.
 	#

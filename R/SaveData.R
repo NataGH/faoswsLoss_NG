@@ -23,9 +23,96 @@ SaveData.buildJSON <- function(domain, dataset, data, metadata, normalized) {
 
 	json <- list()
 
+	if(!missing(data) && normalized) {
+		json[["data"]] <- SaveData.buildNormalizedDataJSON(data)
+	}
+
 	if(!missing(metadata)) {
 		json[["metadata"]] <- SaveData.buildMetadataJSON(metadata)
 	}
+
+	json
+}
+
+
+SaveData.buildNormalizedDataJSON <- function(data) {
+
+	# Save the original key of the passed data table.
+	#
+	origKey <- key(data)
+
+	# Do not consider metadata column, if they have been passed.
+	#
+	metadataColumnsFilter <- colnames(data) != "Metadata"
+	metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Language"
+	metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Group"
+	metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Element"
+	metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Value"
+
+
+	# Prepare list to hold JSON data.
+	#
+	json <- list()
+
+	# Extract key column names.
+	#
+	filteredColumnNames <- colnames(data[, metadataColumnsFilter, with = FALSE])
+	if(length(which(filteredColumnNames == "value")) <= 0) {
+		stop("Unexpected data table structure detected: could not locate value column.")
+	}
+	index <- tail(which(filteredColumnNames == "value"), 1)
+	if(index <= 0) {
+		stop("Unexpected data table structure detected: value column located before any key column")
+	}
+	keys <- filteredColumnNames[1:index - 1]
+
+	# Set up section declaring data key definition.
+	#
+	json[["keyDefinitions"]] <- list()
+	for(i in 1:length(keys)) {
+		json[["keyDefinitions"]][[i]] <- list()
+		json[["keyDefinitions"]][[i]][["code"]] <- keys[i]
+	}
+
+	# Check if flag columns are present. They are all those immediately following
+	# the value column.
+	#
+	flags <- c()
+	if(length(filteredColumnNames) > index) {
+		flags <- filteredColumnNames[(index + 1):(length(filteredColumnNames))]
+	}
+	print(flags)
+
+	# Set up section declaring flags definition.
+	#
+	json[["flagDefinitions"]] <- list()
+	for(i in 1:length(flags)) {
+		json[["flagDefinitions"]][[i]] <- list()
+		json[["flagDefinitions"]][[i]][["code"]] <- flags[i]
+	}
+
+
+	# Set data table key.
+	#
+	setkeyv(data, keys, verbose = FALSE)
+
+	# Extract the set of unique keys for external loop.
+	#
+	json[["data"]] <- list()
+	uniqueKeys <- unique(data)
+	for(i in 1:nrow(uniqueKeys)) {
+		
+		jsonElement <- list()
+		jsonElement[["keys"]] <- as.character(uniqueKeys[i, keys, with = FALSE])
+		jsonElement[["value"]] <- uniqueKeys[i, value]
+		jsonElement[["flags"]] <- as.character(uniqueKeys[i, flags, with = FALSE])
+
+		json[["data"]][[i]] <- jsonElement
+	}
+
+	# Restore original key.
+	#
+	setkeyv(data, origKey, verbose = FALSE)
 
 	json
 }

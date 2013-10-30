@@ -12,7 +12,7 @@ PutRestCall <- function(url, data) {
 		#cacert = swsContext.serverCertificate,
 		ssl.verifyhost = 2,
 		httpheader = c(Accept = "application/json", 'Content-Type' = "application/json", Expect = ""),
-		content = toJSON(data))
+		content = toJSON(data, digits = 30))
 
 	# Check returned status code.
 	#
