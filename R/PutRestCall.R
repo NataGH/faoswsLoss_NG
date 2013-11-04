@@ -5,12 +5,11 @@ PutRestCall <- function(url, data) {
 		url = url,
 		curl = ch,
 		verbose = TRUE,
-#		noproxy = "swsrm", # Remove this!
-		noproxy = "localhost",
+		noproxy = swsContext.noProxy,
 		ssl.verifypeer = FALSE, 
-		sslcert = swsContext.clientCertificate,
-		sslkey = swsContext.clientKey,
-		#cacert = swsContext.serverCertificate,
+		sslcert = path.expand(swsContext.clientCertificate),
+		sslkey = path.expand(swsContext.clientKey),
+		#cacert = path.expand(swsContext.serverCertificate),
 		ssl.verifyhost = 2,
 		httpheader = c(Accept = "application/json", 'Content-Type' = "application/json", Expect = ""),
 		content = toJSON(data, digits = 30))

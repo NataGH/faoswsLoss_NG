@@ -4,13 +4,12 @@ PostRestCall <- function(url, data) {
 	response <- getURL(
 		url = url,
 		curl = ch,
-		verbose = FALSE, 
-		noproxy = "localhost", # Remove this!
-#		noproxy = "swsrm", # Remove this!
+		verbose = TRUE,
+		noproxy = swsContext.noProxy,
 		ssl.verifypeer = FALSE, 
-		sslcert = swsContext.clientCertificate,
-		sslkey = swsContext.clientKey,
-		#cacert = swsContext.serverCertificate,
+		sslcert = path.expand(swsContext.clientCertificate),
+		sslkey = path.expand(swsContext.clientKey),
+		#cacert = path.expand(swsContext.serverCertificate),
 		ssl.verifyhost = 2,
 		httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"),
 		post = 1,

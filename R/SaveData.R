@@ -14,7 +14,7 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE) {
 	url <- paste0(
 		swsContext.baseRestUrl, 
 		"/r/data/", 
-		swsContext.id,
+		swsContext.executionId,
 		"/",
 		domain, 
 		"/",
@@ -74,8 +74,12 @@ SaveData.buildJSON <- function(domain, dataset, data, metadata, normalized) {
 
 	json <- list()
 
-	if(!missing(data) && normalized) {
-		json[["data"]] <- SaveData.buildNormalizedDataJSON(data)
+	if(!missing(data)) {
+		if(normalized) {
+			json[["data"]] <- SaveData.buildNormalizedDataJSON(data)
+		} else {
+			json[["denormalizedData"]] <- SaveData.buildDenormalizedDataJSON(data)
+		}
 	}
 
 	if(!missing(metadata)) {
@@ -83,6 +87,10 @@ SaveData.buildJSON <- function(domain, dataset, data, metadata, normalized) {
 	}
 
 	json
+}
+
+
+SaveData.buildDenormalizedDataJSON <- function(data) {
 }
 
 
@@ -165,6 +173,10 @@ SaveData.buildNormalizedDataJSON <- function(data) {
 	setkeyv(data, origKey, verbose = FALSE)
 
 	json
+}
+
+
+SaveData.buildDenormalizedDataJSON <- function(data) {
 }
 
 

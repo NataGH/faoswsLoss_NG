@@ -10,7 +10,7 @@ GetData <- function(keyset, flags = TRUE, normalized = TRUE, metadata = FALSE, p
 
 	# Perform REST call.
 	#
-	url <- paste0(swsContext.baseRestUrl, "/r/data/", swsContext.id) 
+	url <- paste0(swsContext.baseRestUrl, "/r/data/", swsContext.executionId) 
 	data <- PostRestCall(url, json)
 
 	# Create result data table.
