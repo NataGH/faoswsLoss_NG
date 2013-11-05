@@ -59,7 +59,7 @@ GetCodeTree.buildJSON <- function(domain, dataset, dimension, roots) {
 	# Add the roots if they have been specified otherwise simply add a null field.
 	#
 	if(missing(roots)) {
-		json[["codes"]] <- NULL
+		json[["codes"]] <- NA
 	} else {
 		json[["codes"]] <- I(roots)
 	}
