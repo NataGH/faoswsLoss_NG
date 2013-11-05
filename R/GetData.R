@@ -260,7 +260,7 @@ GetData.processNormalizedResult <- function(data, metadata) {
 			}
 	}))
 	dim(column) <- NULL
-	columns[["value"]] <- column
+	columns[["Value"]] <- column
 
 	# Extract flag columns.
 	#

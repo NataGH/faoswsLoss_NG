@@ -59,7 +59,7 @@ GetCodeList.buildJSON <- function(domain, dataset, dimension, codes) {
 	# Add the codes if they have been specified otherwise simply add a null field.
 	#
 	if(missing(codes)) {
-		json[["codes"]] <- NULL
+		json[["codes"]] <- NA
 	} else {
 		json[["codes"]] <- I(codes)
 	}

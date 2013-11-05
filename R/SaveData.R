@@ -116,12 +116,12 @@ SaveData.buildNormalizedDataJSON <- function(data) {
 	# Extract key column names.
 	#
 	filteredColumnNames <- colnames(data[, metadataColumnsFilter, with = FALSE])
-	if(length(which(filteredColumnNames == "value")) <= 0) {
-		stop("Unexpected data table structure detected: could not locate value column.")
+	if(length(which(filteredColumnNames == "Value")) <= 0) {
+		stop("Unexpected data table structure detected: could not locate Value column.")
 	}
-	index <- tail(which(filteredColumnNames == "value"), 1)
+	index <- tail(which(filteredColumnNames == "Value"), 1)
 	if(index <= 0) {
-		stop("Unexpected data table structure detected: value column located before any key column")
+		stop("Unexpected data table structure detected: Value column located before any key column")
 	}
 	keys <- filteredColumnNames[1:index - 1]
 
@@ -134,7 +134,7 @@ SaveData.buildNormalizedDataJSON <- function(data) {
 	}
 
 	# Check if flag columns are present. They are all those immediately following
-	# the value column.
+	# the Value column.
 	#
 	flags <- c()
 	if(length(filteredColumnNames) > index) {
