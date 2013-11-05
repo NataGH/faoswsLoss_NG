@@ -83,7 +83,7 @@ GetData.buildJSON <- function(keyset, flags, normalized, metadata, pivoting) {
 		json[["dimension2codes"]][[d@name]] <- I(d@keys)
 	}
 
-	# Pivoting still missing
+	# Add pivoting parameters, if requested.
 	#
 	if(!missing(pivoting) && !is.na(pivoting) && length(pivoting) > 0) {
 		json[["pivotingDimensions"]] <- pivoting

@@ -16,6 +16,7 @@ export(
 	GetData,
 	GetCodeList,
 	GetCodeTree,
+	GetHistory,
 	SaveData,
 	swsContext.clientCertificate,
 	swsContext.clientKey,

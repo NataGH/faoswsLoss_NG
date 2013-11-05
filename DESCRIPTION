@@ -12,5 +12,5 @@ Imports: RCurl, RJSONIO, data.table
 Collate:
 	Dimension.R KeySet.R Pivoting.R 
 	PostRestCall.R PutRestCall.R
-	GetData.R GetCodeList.R GetCodeTree.R SaveData.R
+	GetData.R GetCodeList.R GetCodeTree.R GetHistory.R SaveData.R
 	zzz.R
