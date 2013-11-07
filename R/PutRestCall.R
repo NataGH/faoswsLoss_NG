@@ -4,7 +4,7 @@ PutRestCall <- function(url, data) {
 	response <- httpPUT(
 		url = url,
 		curl = ch,
-		verbose = TRUE,
+		verbose = FALSE,
 		noproxy = swsContext.noProxy,
 		ssl.verifypeer = FALSE, 
 		sslcert = path.expand(swsContext.clientCertificate),

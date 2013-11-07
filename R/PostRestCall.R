@@ -4,7 +4,7 @@ PostRestCall <- function(url, data) {
 	response <- getURL(
 		url = url,
 		curl = ch,
-		verbose = TRUE,
+		verbose = FALSE,
 		noproxy = swsContext.noProxy,
 		ssl.verifypeer = FALSE, 
 		sslcert = path.expand(swsContext.clientCertificate),

@@ -162,7 +162,7 @@ SaveData.buildNormalizedDataJSON <- function(data) {
 		
 		jsonElement <- list()
 		jsonElement[["keys"]] <- as.character(uniqueKeys[i, keys, with = FALSE])
-		jsonElement[["value"]] <- uniqueKeys[i, value]
+		jsonElement[["value"]] <- uniqueKeys[i, Value]
 		jsonElement[["flags"]] <- as.character(uniqueKeys[i, flags, with = FALSE])
 
 		json[["data"]][[i]] <- jsonElement
