@@ -1,23 +1,23 @@
-KeySet <- setClass("KeySet", 
+DatasetKey <- setClass("DatasetKey", 
 	representation(
 		domain = "character", 
 		dataset = "character",
 		dimensions = "list",
 		sessionId = "integer"))
 
-setValidity("KeySet", function(object) {
+setValidity("DatasetKey", function(object) {
 	
 	msg <- NULL
 	valid <- TRUE
 
 	if(length(object@domain) != 1) {
 		valid <- FALSE
-		msg <- c(msg, "The domain of the keyset was not properly set.")
+		msg <- c(msg, "The domain of the key was not properly set.")
 	}
 
 	if(length(object@dataset) != 1) {
 		valid <- FALSE
-		msg <- c(msg, "The dataset of the keyset was not properly set.")
+		msg <- c(msg, "The dataset of the key was not properly set.")
 	}
 	
 	for(d in object@dimensions) {

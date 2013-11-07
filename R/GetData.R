@@ -1,12 +1,12 @@
-GetData <- function(keyset, flags = TRUE, normalized = TRUE, metadata = FALSE, pivoting) {
+GetData <- function(key, flags = TRUE, normalized = TRUE, metadata = FALSE, pivoting) {
 
 	# Validate passed arguments.
 	#
-	GetData.validate(keyset, flags, normalized, metadata, pivoting)
+	GetData.validate(key, flags, normalized, metadata, pivoting)
 
 	# Prepare JSON for REST call.
 	#
-	json <- GetData.buildJSON(keyset, flags, normalized, metadata, pivoting)
+	json <- GetData.buildJSON(key, flags, normalized, metadata, pivoting)
 
 	# Perform REST call.
 	#
@@ -23,18 +23,18 @@ GetData <- function(keyset, flags = TRUE, normalized = TRUE, metadata = FALSE, p
 }
 
 
-GetData.validate <- function(keyset, flags, normalized, metadata, pivoting) {
+GetData.validate <- function(key, flags, normalized, metadata, pivoting) {
 
-	# Validate passed keyset.
+	# Validate passed key.
 	#
-	if(missing(keyset)) {
-		stop("The keyset argument is mandatory.")
+	if(missing(key)) {
+		stop("The key argument is mandatory.")
 	}
-	if(class(keyset) != "KeySet") {
-		stop("The passed keyset argument is not an instance of the KeySet class.")
+	if(class(key) != "DatasetKey") {
+		stop("The passed key argument is not an instance of the DatasetKey class.")
 	}
-	if(!validObject(keyset)) {
-		stop("The passed keyset argument is not valid.")
+	if(!validObject(key)) {
+		stop("The passed key argument is not valid.")
 	}
 
 	# Validate pivoting, if present.
@@ -67,19 +67,19 @@ GetData.validate <- function(keyset, flags, normalized, metadata, pivoting) {
 }
 
 
-GetData.buildJSON <- function(keyset, flags, normalized, metadata, pivoting) {
+GetData.buildJSON <- function(key, flags, normalized, metadata, pivoting) {
 	
 	# Build JSON for REST call.
 	#
 	json <- list(
 		token = swsContext.token,
-		domain = keyset@domain,
-		dataSet = keyset@dataset)
+		domain = key@domain,
+		dataSet = key@dataset)
 
 	# Set up dimensions and selected keys.
 	#
 	json[["dimension2codes"]] <- list()
-	for(d in keyset@dimensions) {
+	for(d in key@dimensions) {
 		json[["dimension2codes"]][[d@name]] <- I(d@keys)
 	}
 

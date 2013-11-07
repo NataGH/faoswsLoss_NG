@@ -4,19 +4,22 @@ import(data.table)
 
 exportClasses(
 	Dimension,
-	KeySet,
+	DatasetKey,
+	MappingTableKey,
 	Pivoting
 )
 
 export(
 	Dimension,
 	"addKey<-",
-	KeySet,
+	DatasetKey,
+	MappingTableKey,
 	Pivoting,
 	GetData,
 	GetCodeList,
 	GetCodeTree,
 	GetHistory,
+	GetMapping,
 	SaveData,
 	swsContext.clientCertificate,
 	swsContext.clientKey,

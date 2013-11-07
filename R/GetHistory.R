@@ -1,12 +1,12 @@
-GetHistory <- function(keyset, pivoting) {
+GetHistory <- function(key, pivoting) {
 
 	# Validate passed arguments.
 	#
-	GetHistory.validate(keyset, pivoting)
+	GetHistory.validate(key, pivoting)
 
 	# Prepare JSON for REST call.
 	#
-	json <- GetHistory.buildJSON(keyset, pivoting)
+	json <- GetHistory.buildJSON(key, pivoting)
 
 	# Perform REST call.
 	#
@@ -19,18 +19,18 @@ GetHistory <- function(keyset, pivoting) {
 }
 
 
-GetHistory.validate <- function(keyset, pivoting) {
+GetHistory.validate <- function(key, pivoting) {
 
-	# Validate passed keyset.
+	# Validate passed key.
 	#
-	if(missing(keyset)) {
-		stop("The keyset argument is mandatory.")
+	if(missing(key)) {
+		stop("The key argument is mandatory.")
 	}
-	if(class(keyset) != "KeySet") {
-		stop("The passed keyset argument is not an instance of the KeySet class.")
+	if(class(key) != "DatasetKey") {
+		stop("The passed key argument is not an instance of the DatasetKey class.")
 	}
-	if(!validObject(keyset)) {
-		stop("The passed keyset argument is not valid.")
+	if(!validObject(key)) {
+		stop("The passed key argument is not valid.")
 	}
 
 	# Validate pivoting, if present.
@@ -57,19 +57,19 @@ GetHistory.validate <- function(keyset, pivoting) {
 }
 
 
-GetHistory.buildJSON <- function(keyset, pivoting) {
+GetHistory.buildJSON <- function(key, pivoting) {
 	
 	# Build JSON for REST call.
 	#
 	json <- list(
 		token = swsContext.token,
-		domain = keyset@domain,
-		dataSet = keyset@dataset)
+		domain = key@domain,
+		dataSet = key@dataset)
 
 	# Set up dimensions and selected keys.
 	#
 	json[["dimension2codes"]] <- list()
-	for(d in keyset@dimensions) {
+	for(d in key@dimensions) {
 		json[["dimension2codes"]][[d@name]] <- I(d@keys)
 	}
 

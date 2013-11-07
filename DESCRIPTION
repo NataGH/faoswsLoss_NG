@@ -10,7 +10,7 @@ License: @FAO 2013
 Depends: R (>= 3.0)
 Imports: RCurl, RJSONIO, data.table
 Collate:
-	Dimension.R KeySet.R Pivoting.R 
+	Dimension.R DatasetKey.R MappingTableKey.R Pivoting.R 
 	PostRestCall.R PutRestCall.R
-	GetData.R GetCodeList.R GetCodeTree.R GetHistory.R SaveData.R
+	GetData.R GetCodeList.R GetCodeTree.R GetHistory.R GetMapping.R SaveData.R
 	zzz.R
