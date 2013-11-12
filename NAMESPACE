@@ -21,6 +21,7 @@ export(
 	GetHistory,
 	GetMapping,
 	SaveData,
+	SaveValidation,
 	swsContext.clientCertificate,
 	swsContext.clientKey,
 	swsContext.serverCertificate,

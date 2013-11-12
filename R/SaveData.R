@@ -7,7 +7,6 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE) {
 	# Prepare JSON for REST call.
 	#
 	json <- SaveData.buildJSON(domain, dataset, data, metadata, normalized)
-	cat(toJSON(json))
 
 	# Perform REST call.
 	#
