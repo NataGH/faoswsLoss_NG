@@ -7,6 +7,7 @@ GetData <- function(key, flags = TRUE, normalized = TRUE, metadata = FALSE, pivo
 	# Prepare JSON for REST call.
 	#
 	json <- GetData.buildJSON(key, flags, normalized, metadata, pivoting)
+	cat(toJSON(json))
 
 	# Perform REST call.
 	#

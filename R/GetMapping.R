@@ -128,8 +128,6 @@ GetMapping.processResult <- function(data) {
 	dim(column) <- NULL
 	columns[["Comment"]] <- column
 
-	str(columns)
-
 	# Bind columns into a data table object.
 	#
 	do.call("data.table", columns)

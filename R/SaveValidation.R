@@ -7,7 +7,6 @@ SaveValidation <- function(domain, dataset, validation) {
 	# Prepare JSON for REST call.
 	#
 	json <- SaveValidation.buildJSON(domain, dataset, validation)
-	cat(toJSON(json))
 
 	# Perform REST call.
 	#
