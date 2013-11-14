@@ -82,21 +82,21 @@ GetCodeTree.recurseTree <- function(nodes, dt = NULL) {
 			next
 		}
 
-		str <- ""
+		strbuf <- ""
 		first <- TRUE
 		for(child in node$children) {
 			if(first) {
 				first <- FALSE
 			} else {
-				str <- paste0(str, ", ")
+				strbuf <- paste0(strbuf, ", ")
 			}
-			str <- paste0(str, child$code)
+			strbuf <- paste0(strbuf, child$code)
 		}
 
 		if(missing(dt)) {
-			dt <- data.table(parent = node$code, children = str)
+			dt <- data.table(parent = node$code, children = strbuf)
 		} else {
-			dt <- rbind(dt, data.table(parent = node$code, children = str))
+			dt <- rbind(dt, data.table(parent = node$code, children = strbuf))
 		}
 
 		dt <- GetCodeTree.recurseTree(node$children, dt)
