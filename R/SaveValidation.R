@@ -68,16 +68,28 @@ SaveValidation.buildJSON <- function(domain, dataset, validation) {
 	keyColumnsFilter <- keyColumnsFilter & colnames(validation) != "Description"
 	keys <- colnames(validation[, keyColumnsFilter, with = FALSE])
 
+	# Declare dimension in first element of JSON.
+	#
+	jsonElement <- list()
+	jsonElement[["dimensions"]] <- keys
+	json[["validations"]][[1]] <- jsonElement
+
+
 	# Iterate on passed validation table rows.
 	#
 	for(i in 1:nrow(validation)) {
 
+		k <- c()
+		for(j in 1:length(keys)) {
+			k <- c(k, as.character(validation[i, keys, with = FALSE][[j]]))
+		}
+
 		jsonElement <- list()
-		jsonElement[["keys"]] <- as.character(validation[i, keys, with = FALSE])
+		jsonElement[["keys"]] <- k
 		jsonElement[["severity"]] <- validation[i, Severity]
 		jsonElement[["description"]] <- validation[i, Description]
 
-		json[["validations"]][[i]] <- jsonElement
+		json[["validations"]][[i + 1]] <- jsonElement
 	}
 
 	json
