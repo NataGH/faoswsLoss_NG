@@ -43,13 +43,16 @@ SaveValidation.validate <- function(domain, dataset, validation) {
 		stop("The passed dataset argument is not a character value.")
 	}
 
-	# The validation object is mandatory.
+	# The validation object is mandatory and cannot be empty.
 	#
 	if(missing(validation)) {
 		stop("No validation argument has been specified.")
 	}
 	if(!is.data.table(validation)) {
 		stop("The passed validation argument is not a data table.")
+	}
+	if(nrow(validation) == 0) {
+		stop("The passed validation argument was empty.")
 	}
 }
 
