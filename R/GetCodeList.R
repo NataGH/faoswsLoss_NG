@@ -84,6 +84,10 @@ GetCodeList.processResult <- function(data) {
 	#
 	columns[["selectionOnly"]] <- sapply(data$result, function(x) { x[["subtreeSelectionOnly"]] })
 
+	# Extract type column.
+	#
+	columns[["type"]] <- sapply(data$result, function(x) { x[["type"]] })
+
 	# Bind columns into a data table object.
 	#
 	do.call("data.table", columns)
