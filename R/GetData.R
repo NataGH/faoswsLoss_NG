@@ -37,6 +37,17 @@ GetData.validate <- function(key, flags, normalized, metadata, pivoting) {
 		stop("The passed key argument is not valid.")
 	}
 
+	# Validate that at least one key per dimension has been specified.
+	#
+	for(d in key@dimensions) {
+		if(is.null(d@keys)) {
+			stop(paste("The passed dimension", d@name, "has a null key array. It is necessary to specify at least one key for every dimension of the target dataset."))
+		}
+		if(length(d@keys) == 0) {
+			stop(paste("The passed dimension", d@name, "has an empty key array. It is necessary to specify at least one key for every dimension of the target dataset."))
+		}
+	}
+	
 	# Validate pivoting, if present.
 	#
 	if(!missing(pivoting)) {
