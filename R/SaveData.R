@@ -20,7 +20,18 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE) {
 		dataset, 
 		"?token=", swsContext.token, 
 		"&normalized=", tolower(as.character(normalized)))
-	PutRestCall(url, json)
+	response <- PutRestCall(url, json)
+
+	# Check result.
+	#
+	if(!response[["success"]]) {
+		msg <- paste("The server REST call reported an error: ", response[["message"]], "[")
+		for(i in response[["details"]]) {
+			msg <- paste(msg, i$message, sep = "\n")
+		}
+		msg <- paste(msg, "]", sep = "\n")
+		stop(msg)
+	}
 }
 
 
