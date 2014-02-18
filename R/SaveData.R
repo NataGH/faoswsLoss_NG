@@ -26,8 +26,14 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE) {
 	#
 	if(!response[["success"]]) {
 		msg <- paste("The server REST call reported an error: ", response[["message"]], "[")
+
+		map <- list()
 		for(i in response[["details"]]) {
-			msg <- paste(msg, i$message, sep = "\n")
+			map[[i$message]] <- ifelse(is.null(map[[i$message]]), 1, map[[i$message]] + 1)
+		}
+
+		for(i in names(map)) {
+			msg <- paste(msg, paste0(i, " (", map[[i]], ")"), sep = "\n")
 		}
 		msg <- paste(msg, "]", sep = "\n")
 		stop(msg)

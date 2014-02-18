@@ -1,14 +1,20 @@
 * text=auto !eol
 /DESCRIPTION -text
 /NAMESPACE -text
+R/BlockMetadata.R -text
+R/BlockMetadataSet.R -text
 R/DatasetKey.R -text
 R/Dimension.R -text
+R/GetBlockMetadata.R -text
 R/GetCodeList.R -text
 R/GetCodeTree.R -text
 R/GetData.R -text
 R/GetHistory.R -text
 R/GetMapping.R -text
+R/KeyDefinition.R -text
 R/MappingTableKey.R -text
+R/Metadata.R -text
+R/MetadataElement.R -text
 R/Pivoting.R -text
 R/PostRestCall.R -text
 R/PutRestCall.R -text
