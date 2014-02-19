@@ -7,6 +7,7 @@ SaveBlockMetadata <- function(domain, dataset, blockMetadata) {
 	# Prepare JSON for REST call.
 	#
 	json <- SaveBlockMetadata.buildJSON(domain, dataset, blockMetadata)
+	cat(toJSON(json))
 
 	# Perform REST call.
 	#
@@ -93,7 +94,9 @@ SaveBlockMetadata.buildJSON <- function(domain, dataset, blockMetadata) {
 
 	json[["blockMetadata"]] <- lapply(bmd, function(x) {
 		a <- list()
-		a[["blockId"]] <- x@blockId
+		if(!is.null(x@blockId) && length(x@blockId) > 0) {
+			a[["blockId"]] <- x@blockId
+		}
 
 		b <- list()
 		for(i in x@selection) {
