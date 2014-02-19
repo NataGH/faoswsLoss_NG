@@ -28,6 +28,7 @@ export(
 	GetBlockMetadata,
 	SaveData,
 	SaveValidation,
+	SaveBlockMetadata,
 
 	.buildModifiedCells,
 

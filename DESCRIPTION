@@ -2,7 +2,7 @@ Package: faosws
 Type: Package
 Title: API providing access to the FAO Statistical Working System
 Version: 0.2.1
-Date: 2013-02-18
+Date: 2013-02-19
 Author: Engineering Ingegneria Informatica
 Maintainer: ? <rsws@fao.org>
 Description: API providing access to the FAO Statistical Working System
@@ -13,6 +13,6 @@ Collate:
 	Dimension.R DatasetKey.R MappingTableKey.R Pivoting.R KeyDefinition.R MetadataElement.R Metadata.R BlockMetadata.R BlockMetadataSet.R
 	PostRestCall.R PutRestCall.R
 	GetData.R GetCodeList.R GetCodeTree.R GetHistory.R GetMapping.R GetBlockMetadata.R
-	SaveData.R SaveValidation.R
+	SaveData.R SaveValidation.R SaveBlockMetadata.R
 	zzz.R
 	buildModifiedCells.R
