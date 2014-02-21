@@ -7,7 +7,6 @@ SaveBlockMetadata <- function(domain, dataset, blockMetadata) {
 	# Prepare JSON for REST call.
 	#
 	json <- SaveBlockMetadata.buildJSON(domain, dataset, blockMetadata)
-	cat(toJSON(json))
 
 	# Perform REST call.
 	#
