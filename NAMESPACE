@@ -29,6 +29,7 @@ export(
 	SaveData,
 	SaveValidation,
 	SaveBlockMetadata,
+	GetTestEnvironment,
 
 	.buildModifiedCells,
 
