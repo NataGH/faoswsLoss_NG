@@ -19,7 +19,8 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE) {
 		"/",
 		dataset, 
 		"?token=", swsContext.token, 
-		"&normalized=", tolower(as.character(normalized)))
+		"&normalized=true")
+		#"&normalized=", tolower(as.character(normalized)))
 	response <- PutRestCall(url, json)
 
 	# Check result.
@@ -94,7 +95,8 @@ SaveData.buildJSON <- function(domain, dataset, data, metadata, normalized) {
 		if(normalized) {
 			json[["data"]] <- SaveData.buildNormalizedDataJSON(data)
 		} else {
-			json[["denormalizedData"]] <- SaveData.buildDenormalizedDataJSON(data)
+			#json[["denormalizedData"]] <- SaveData.buildDenormalizedDataJSON(data)
+			json[["data"]] <- SaveData.buildDenormalizedDataJSON(data)
 		}
 	}
 
@@ -103,10 +105,6 @@ SaveData.buildJSON <- function(domain, dataset, data, metadata, normalized) {
 	}
 
 	json
-}
-
-
-SaveData.buildDenormalizedDataJSON <- function(data) {
 }
 
 
@@ -193,6 +191,121 @@ SaveData.buildNormalizedDataJSON <- function(data) {
 
 
 SaveData.buildDenormalizedDataJSON <- function(data) {
+
+	# Save the original key of the passed data table.
+	#
+	origKey <- key(data)
+
+	# Do not consider metadata column, if they have been passed.
+	#
+	metadataColumnsFilter <- colnames(data) != "Metadata"
+	metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Language"
+	metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Group"
+	metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Element"
+	metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Value"
+
+
+	# Prepare list to hold JSON data.
+	#
+	json <- list()
+
+	# Extract fixed key column names.
+	#
+	filteredColumnNames <- colnames(data[, metadataColumnsFilter, with = FALSE])
+	if(length(which(grepl("^Value_", filteredColumnNames))) <= 0) {
+		stop("Unexpected data table structure detected: could not locate the first Value column.")
+	}
+	index <- head(which(grepl("^Value_", filteredColumnNames)), 1)
+	if(index <= 0) {
+		stop("Unexpected data table structure detected: Value column located before any key column")
+	}
+	keys <- filteredColumnNames[1:index - 1]
+
+	# Extract denormalized key column name.
+	#
+	denormalizedKey <- substr(filteredColumnNames[index], nchar("Value_") + 1, regexpr("_[^_]+$", filteredColumnNames[index]) - 1)
+	allKeys <- append(keys, denormalizedKey)
+
+	# Set up section declaring data key definition.
+	#
+	json[["keyDefinitions"]] <- list()
+	for(i in 1:length(allKeys)) {
+		json[["keyDefinitions"]][[i]] <- list()
+		json[["keyDefinitions"]][[i]][["code"]] <- allKeys[i]
+	}
+
+	# Check if flag columns are present. They are all those immediately following
+	# the Value column.
+	#
+	flags <- c()
+	for(col in filteredColumnNames[(index + 1):(length(filteredColumnNames))]) {
+		if(grepl("^Value_", col)) {
+			break
+		}
+		flags <- append(flags, substr(col, 1, regexpr(paste0("_", denormalizedKey), col) - 1))
+	}
+
+	# Set up section declaring flags definition.
+	#
+	json[["flagDefinitions"]] <- list()
+	for(i in 1:length(flags)) {
+		json[["flagDefinitions"]][[i]] <- list()
+		json[["flagDefinitions"]][[i]][["code"]] <- flags[i]
+	}
+
+	# Extract all denormalized column keys.
+	#
+	denormalizedKeys <- c()
+	for(col in filteredColumnNames[which(grepl("^Value_", filteredColumnNames))]) {
+		denormalizedKeys <- append(denormalizedKeys, substr(col, regexpr("_[^_]+$", col) + 1, nchar(col)))
+	}
+
+
+	# Set data table key.
+	#
+	setkeyv(data, keys, verbose = FALSE)
+
+	# Extract the set of unique keys for external loop.
+	#
+	json[["data"]] <- list()
+	uniqueKeys <- unique(data)
+	for(i in 1:nrow(uniqueKeys)) {
+		for(j in 1:length(denormalizedKeys)) {
+			
+			value <- unlist(uniqueKeys[i, paste0("Value_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE])
+
+			jsonElement <- list()
+			jsonElement[["keys"]] <- c(as.character(uniqueKeys[i, keys, with = FALSE]), denormalizedKeys[[j]])
+
+			if(is.null(value)) {
+				jsonElement[["value"]] <- NA
+			} else {
+				jsonElement[["value"]] <- as.numeric(value)
+			}
+
+			flagValues <- unlist(uniqueKeys[i, paste0(flags, "_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE])
+
+			jsonElement[["flags"]] <- c()
+			for(f in uniqueKeys[i, paste0(flags, "_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE]) {
+
+				u <- unlist(f)
+				if(is.null(u)) {
+					jsonElement[["flags"]] <- append(jsonElement[["flags"]], "")
+				}
+				else {
+					jsonElement[["flags"]] <- append(jsonElement[["flags"]], as.character(u))
+				}
+			}
+
+			json[["data"]][[(i - 1) * length(denormalizedKeys) + j]] <- jsonElement
+		}
+	}
+
+	# Restore original key.
+	#
+	setkeyv(data, origKey, verbose = FALSE)
+
+	json
 }
 
 

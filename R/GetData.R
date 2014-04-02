@@ -307,6 +307,7 @@ GetData.processNormalizedResult <- function(data, metadata) {
 
 GetData.processDenormalizedResult <- function(data) {
 
+
 	columns <- list()
 
 	# Extract grouping key columns.
@@ -319,17 +320,21 @@ GetData.processDenormalizedResult <- function(data) {
 
 	# Extract denormalized column keys.
 	#
+	denormalizedDimension <- data$columnKey$definition[["code"]]
 	i <- 0
 	for(col in data$columnKey$codes) {
 		i <- i + 1
-		columns[[paste0("Value_", col)]] <- sapply(data$data, function(x) { x[["content"]][[i]][["value"]] })
+		columns[[paste0("Value_", denormalizedDimension, "_", col)]] <- sapply(data$data, function(x) { 
+			y <- x[["content"]][[i]][["value"]] 
+			ifelse(is.null(y), NA, y)
+		})
 
 		# Extract flag columns.
 		#
 		j <- 0
 		for(flag in data$flagDefinitions) {
 			j <- j + 1
-			columns[[paste0(flag["code"], "_", col)]] <- sapply(data$data, function(x) { x[["content"]][[i]][["flags"]][j] })
+			columns[[paste0(flag["code"], "_", denormalizedDimension, "_", col)]] <- sapply(data$data, function(x) { x[["content"]][[i]][["flags"]][j] })
 		}
 	}
 
