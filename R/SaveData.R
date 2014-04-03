@@ -335,6 +335,18 @@ SaveData.buildMetadataJSON <- function(metadata) {
 	#
 	json <- list()
 
+
+	# Prepare key definitions element.
+	#
+	jsonElement <- list()
+	jsonElement[["keyDefinitions"]] <- list()
+	for(i in 1:length(keys)) {
+		jsonElement[["keyDefinitions"]][[i]] <- list()
+		jsonElement[["keyDefinitions"]][[i]][["code"]] <- keys[[i]]
+	}
+	json[[1]] <- jsonElement
+
+
 	# Extract the set of unique keys for external loop.
 	#
 	uniqueKeys <- unique(metadata)[,keys, with = FALSE]
@@ -363,7 +375,7 @@ SaveData.buildMetadataJSON <- function(metadata) {
 			}
 		}
 
-		json[[i]] <- jsonElement
+		json[[i + 1]] <- jsonElement
 	}
 
 	# Restore original key.
