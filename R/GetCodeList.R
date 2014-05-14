@@ -88,6 +88,14 @@ GetCodeList.processResult <- function(data) {
 	#
 	columns[["type"]] <- sapply(data$result, function(x) { x[["type"]] })
 
+	# Extract start date column.
+	#
+	columns[["startDate"]] <- sapply(data$result, function(x) { x[["startDate"]] })
+
+	# Extract end date column.
+	#
+	columns[["endDate"]] <- sapply(data$result, function(x) { x[["endDate"]] })
+
 	# Bind columns into a data table object.
 	#
 	do.call("data.table", columns)
