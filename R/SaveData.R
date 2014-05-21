@@ -158,9 +158,11 @@ SaveData.buildNormalizedDataJSON <- function(data) {
 	# Set up section declaring flags definition.
 	#
 	json[["flagDefinitions"]] <- list()
-	for(i in 1:length(flags)) {
-		json[["flagDefinitions"]][[i]] <- list()
-		json[["flagDefinitions"]][[i]][["code"]] <- flags[i]
+	if (length(flags) > 0) {
+		for(i in 1:length(flags)) {
+			json[["flagDefinitions"]][[i]] <- list()
+			json[["flagDefinitions"]][[i]][["code"]] <- flags[i]
+		}
 	}
 
 
@@ -248,9 +250,11 @@ SaveData.buildDenormalizedDataJSON <- function(data) {
 	# Set up section declaring flags definition.
 	#
 	json[["flagDefinitions"]] <- list()
-	for(i in 1:length(flags)) {
-		json[["flagDefinitions"]][[i]] <- list()
-		json[["flagDefinitions"]][[i]][["code"]] <- flags[i]
+	if (length(flags) > 0) {
+		for(i in 1:length(flags)) {
+			json[["flagDefinitions"]][[i]] <- list()
+			json[["flagDefinitions"]][[i]][["code"]] <- flags[i]
+		}
 	}
 
 	# Extract all denormalized column keys.
