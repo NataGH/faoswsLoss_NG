@@ -273,35 +273,40 @@ SaveData.buildDenormalizedDataJSON <- function(data) {
 	#
 	json[["data"]] <- list()
 	uniqueKeys <- unique(data)
+	k = 1
 	for(i in 1:nrow(uniqueKeys)) {
 		for(j in 1:length(denormalizedKeys)) {
 			
 			value <- unlist(uniqueKeys[i, paste0("Value_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE])
+			if (!is.na(value))
+			{
+				jsonElement <- list()
+				jsonElement[["keys"]] <- c(as.character(uniqueKeys[i, keys, with = FALSE]), denormalizedKeys[[j]])
 
-			jsonElement <- list()
-			jsonElement[["keys"]] <- c(as.character(uniqueKeys[i, keys, with = FALSE]), denormalizedKeys[[j]])
-
-			if(is.null(value)) {
-				jsonElement[["value"]] <- NA
-			} else {
-				jsonElement[["value"]] <- as.numeric(value)
-			}
-
-			flagValues <- unlist(uniqueKeys[i, paste0(flags, "_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE])
-
-			jsonElement[["flags"]] <- c()
-			for(f in uniqueKeys[i, paste0(flags, "_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE]) {
-
-				u <- unlist(f)
-				if(is.null(u)) {
-					jsonElement[["flags"]] <- append(jsonElement[["flags"]], "")
+				if(is.null(value)) {
+					jsonElement[["value"]] <- NA
+				} else {
+					jsonElement[["value"]] <- as.numeric(value)
 				}
-				else {
-					jsonElement[["flags"]] <- append(jsonElement[["flags"]], as.character(u))
-				}
-			}
 
-			json[["data"]][[(i - 1) * length(denormalizedKeys) + j]] <- jsonElement
+				flagValues <- unlist(uniqueKeys[i, paste0(flags, "_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE])
+
+				jsonElement[["flags"]] <- c()
+				for(f in uniqueKeys[i, paste0(flags, "_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE]) {
+
+					u <- unlist(f)
+					if(is.null(u)) {
+						jsonElement[["flags"]] <- append(jsonElement[["flags"]], "")
+					}
+					else {
+						jsonElement[["flags"]] <- append(jsonElement[["flags"]], as.character(u))
+					}
+				}
+
+#				json[["data"]][[(i - 1) * length(denormalizedKeys) + j]] <- jsonElement
+				json[["data"]][[k]] <- jsonElement
+				k <- k + 1
+			}
 		}
 	}
 
