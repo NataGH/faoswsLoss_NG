@@ -177,10 +177,11 @@ SaveData.buildNormalizedDataJSON <- function(data) {
 	for(i in 1:nrow(uniqueKeys)) {
 		
 		jsonElement <- list()
-		jsonElement[["keys"]] <- as.character(uniqueKeys[i, keys, with = FALSE])
+		jsonElement[["keys"]] <- list()
+		jsonElement[["keys"]] <- c(jsonElement[["keys"]], as.character(uniqueKeys[i, keys, with = FALSE]))
 		jsonElement[["value"]] <- uniqueKeys[i, Value]
-		jsonElement[["flags"]] <- as.character(uniqueKeys[i, flags, with = FALSE])
-
+		jsonElement[["flags"]] <- list()
+		jsonElement[["flags"]] <- c(jsonElement[["flags"]], as.character(uniqueKeys[i, flags, with = FALSE]))
 		json[["data"]][[i]] <- jsonElement
 	}
 
@@ -291,15 +292,15 @@ SaveData.buildDenormalizedDataJSON <- function(data) {
 
 				flagValues <- unlist(uniqueKeys[i, paste0(flags, "_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE])
 
-				jsonElement[["flags"]] <- c()
+				jsonElement[["flags"]] <- list()
 				for(f in uniqueKeys[i, paste0(flags, "_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE]) {
 
 					u <- unlist(f)
 					if(is.null(u)) {
-						jsonElement[["flags"]] <- append(jsonElement[["flags"]], "")
+						jsonElement[["flags"]] <- c(jsonElement[["flags"]], "")
 					}
 					else {
-						jsonElement[["flags"]] <- append(jsonElement[["flags"]], as.character(u))
+						jsonElement[["flags"]] <- c(jsonElement[["flags"]], as.character(u))
 					}
 				}
 
