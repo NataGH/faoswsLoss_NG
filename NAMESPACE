@@ -30,6 +30,7 @@ export(
 	SaveValidation,
 	SaveBlockMetadata,
 	GetTestEnvironment,
+	GetTableData,
 
 	.buildModifiedCells,
 

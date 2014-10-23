@@ -12,6 +12,7 @@ R/GetData.R -text
 R/GetHistory.R -text
 R/GetMapping.R -text
 R/GetRestCall.R -text
+R/GetTableData.R -text
 R/GetTestEnvironment.R -text
 R/KeyDefinition.R -text
 R/MappingTableKey.R -text
