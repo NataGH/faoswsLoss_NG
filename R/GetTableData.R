@@ -56,14 +56,14 @@ GetTableData <- function(schemaName, tableName, whereClause = NULL, selectColumn
 		} else {
 
 			# transforms the list of json-like objects in a data.table
-			do.call("rbind", 
-				lapply(
-					jsonOut[["rows"]], 
-					function(x) {
-						x[sapply(x, is.null)] <- NA
-						unlist(x)
-					}))
-      
+      data.table(
+  			do.call("rbind", 
+  				lapply(
+  					jsonOut[["rows"]], 
+  					function(x) {
+  						x[sapply(x, is.null)] <- NA
+  						unlist(x)
+  					})))
 		}
 	}	
 
