@@ -17,4 +17,4 @@ Collate:
 	GetTestEnvironment.R
 	zzz.R
 	buildModifiedCells.R
-	GetTableData.R
+	GetTableData.R SetTableData.R
