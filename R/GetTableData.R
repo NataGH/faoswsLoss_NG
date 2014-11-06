@@ -21,7 +21,7 @@
 GetTableData <- function(schemaName, tableName, whereClause = NULL, selectColumns = NULL) {
 
 	# concats the base URL with the sub-path and the execution ID from session
-	url <- paste0(swsContext.baseRestUrl, "/r/tabledata/", swsContext.executionId) 
+	url <- paste0(swsContext.baseRestUrl, "/r/gettabledata/", swsContext.executionId) 
 
 	# prepares JSON request object conforming to args received as input
 	json <- list(
@@ -31,13 +31,17 @@ GetTableData <- function(schemaName, tableName, whereClause = NULL, selectColumn
 		whereClause = whereClause,
 		selectColumns = selectColumns)
 	
-	# performs the invokation through the corresponding SWS RESTful POST service
+	# performs the invocation through the corresposnding SWS RESTful POST service
 	# which returns a composite JSON object with a "rows" field with the list of records from the DB
 	# and an "rc" property which is 0 if execution succeeded
 	# if "rc" is != 0, an "error" property is contained in the result, instead of "rows", containing details of the error
 	# NOTE: the only kind of errors described by the "error" property
 	# are the ones referred to incorrect SQL used basing on the request arguments
 	# (any other server-side or network errors will result in 'http status != 200' and pasted by the PostRestCall function)
+  # if rc != 0, another object is returned "columnsMetadata", which contains a list of "column" objects, any of which with
+  # the following properties: name, type (SQL java name for the DB column) and position in the list. These attributes are used
+  # to build the resulting data.table with columns conforming with the DB SQL types.
+  # Please note only the most common SQL types are mapped/transformed, excluding bynary and complex ones: BLOB, CLOB, ARRAY, ...
 	jsonOut <- PostRestCall(url, json)
 	
 	# if rc != 0 a SQL error occurred: halts by giving details
@@ -56,15 +60,48 @@ GetTableData <- function(schemaName, tableName, whereClause = NULL, selectColumn
 		} else {
 
 			# transforms the list of json-like objects in a data.table
-      data.table(
-  			do.call("rbind", 
-  				lapply(
-  					jsonOut[["rows"]], 
-  					function(x) {
-  						x[sapply(x, is.null)] <- NA
-  						unlist(x)
-  					})))
-		}
-	}	
+      constructor <- "data.frame(stringsAsFactors=FALSE"
+      for (i in 1:length(jsonOut$columnsMetadata)) {
+        colname <- jsonOut$columnsMetadata[[i]]$name
+        coltype <- jsonOut$columnsMetadata[[i]]$type
+        coltype <- switch(coltype, 
+          varchar={ "=character()" },
+          int8={ "=numeric()" },
+          bool={ "=logical()" },
+          date={ "=as.Date(character(), format='%Y-%m-%d')" },
+          float4={ "=numeric()" },
+          float8={ "=numeric()" },
+          timestamp={ "=as.POSIXct(character(), format='%Y-%m-%d %H:%M:%S')" },
+          int4={ "=integer()" },
+          numeric={ "=numeric()" },
+          { "=character()" }
+        )
+        constructor <- paste(constructor, ",", colname, coltype)
+      }
+      constructor <- paste(constructor, ')')
+      eval(parse(text=paste("dataframe <- ", constructor)))
 
+      for (i in 1:length(jsonOut$columnsMetadata)) {
+        colname <- jsonOut$columnsMetadata[[i]]$name
+        coltype <- jsonOut$columnsMetadata[[i]]$type
+        for (y in 1:length(jsonOut$rows)) {
+          eval(parse(text=paste("value <- jsonOut$rows[[y]]$", colname, sep="")))
+          expr <- "resValue <- value"
+          if (is.null(value)) { 
+            expr = "resValue <- NA"
+          } else {
+            expr <- switch(coltype, 
+              date={ "resValue <- as.Date(value, format='%Y-%m-%d')" },
+              timestamp={ "resValue <- as.POSIXct(value, format='%Y-%m-%d %H:%M:%S')" },
+              int4={ "resValue <- as.integer(value)" },
+              { expr}
+            )
+          }
+          eval(parse(text=expr))
+          dataframe[y,i] <- resValue
+        }
+      }
+      data.table(dataframe)
+    }
+  }	
 }

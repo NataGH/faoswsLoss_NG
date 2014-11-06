@@ -24,5 +24,6 @@ R/PutRestCall.R -text
 R/SaveBlockMetadata.R -text
 R/SaveData.R -text
 R/SaveValidation.R -text
+R/SetTableData.R -text
 R/buildModifiedCells.R -text
 R/zzz.R -text
