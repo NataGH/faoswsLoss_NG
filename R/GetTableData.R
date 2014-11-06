@@ -62,8 +62,8 @@ GetTableData <- function(schemaName, tableName, whereClause = NULL, selectColumn
 			# transforms the list of json-like objects in a data.table
       constructor <- "data.frame(stringsAsFactors=FALSE"
       for (i in 1:length(jsonOut$columnsMetadata)) {
-        colname <- jsonOut$columnsMetadata[[i]]$name
-        coltype <- jsonOut$columnsMetadata[[i]]$type
+        colname <- jsonOut$columnsMetadata[[i]][["name"]]
+        coltype <- jsonOut$columnsMetadata[[i]][["type"]]
         coltype <- switch(coltype, 
           varchar={ "=character()" },
           int8={ "=numeric()" },
@@ -82,8 +82,8 @@ GetTableData <- function(schemaName, tableName, whereClause = NULL, selectColumn
       eval(parse(text=paste("dataframe <- ", constructor)))
 
       for (i in 1:length(jsonOut$columnsMetadata)) {
-        colname <- jsonOut$columnsMetadata[[i]]$name
-        coltype <- jsonOut$columnsMetadata[[i]]$type
+        colname <- jsonOut$columnsMetadata[[i]][["name"]]
+        coltype <- jsonOut$columnsMetadata[[i]][["type"]]
         for (y in 1:length(jsonOut$rows)) {
           eval(parse(text=paste("value <- jsonOut$rows[[y]]$", colname, sep="")))
           expr <- "resValue <- value"
