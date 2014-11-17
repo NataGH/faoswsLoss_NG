@@ -32,6 +32,7 @@ export(
 	GetTestEnvironment,
 	GetTableData,
 	SetTableData,
+	NullToNa,
 
 	.buildModifiedCells,
 

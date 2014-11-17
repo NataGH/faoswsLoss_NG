@@ -74,27 +74,27 @@ GetCodeList.processResult <- function(data) {
 
 	# Extract codes column.
 	#
-	columns[["code"]] <- sapply(data$result, function(x) { x[["code"]] })
+	columns[["code"]] <- NullToNa(sapply(data$result, function(x) { x[["code"]] }))
 
 	# Extract description column.
 	#
-	columns[["description"]] <- sapply(data$result, function(x) { x[["description"]] })
+	columns[["description"]] <- NullToNa(sapply(data$result, function(x) { x[["description"]] }))
 
 	# Extract selection-only flag column.
 	#
-	columns[["selectionOnly"]] <- sapply(data$result, function(x) { x[["subtreeSelectionOnly"]] })
+	columns[["selectionOnly"]] <- NullToNa(sapply(data$result, function(x) { x[["subtreeSelectionOnly"]] }))
 
 	# Extract type column.
 	#
-	columns[["type"]] <- sapply(data$result, function(x) { x[["type"]] })
+	columns[["type"]] <- NullToNa(sapply(data$result, function(x) { x[["type"]] }))
 
 	# Extract start date column.
 	#
-	columns[["startDate"]] <- sapply(data$result, function(x) { x[["startDate"]] })
+	columns[["startDate"]] <- NullToNa(sapply(data$result, function(x) { x[["startDate"]] }))
 
 	# Extract end date column.
 	#
-	columns[["endDate"]] <- sapply(data$result, function(x) { x[["endDate"]] })
+	columns[["endDate"]] <- NullToNa(sapply(data$result, function(x) { x[["endDate"]] }))
 
 	# Bind columns into a data table object.
 	#

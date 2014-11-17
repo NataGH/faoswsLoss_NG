@@ -18,6 +18,7 @@ R/KeyDefinition.R -text
 R/MappingTableKey.R -text
 R/Metadata.R -text
 R/MetadataElement.R -text
+R/NullToNa.R -text
 R/Pivoting.R -text
 R/PostRestCall.R -text
 R/PutRestCall.R -text
