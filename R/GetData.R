@@ -15,10 +15,11 @@ GetData <- function(key, flags = TRUE, normalized = TRUE, metadata = FALSE, pivo
 
 	# Create result data table.
 	#
-	query <-
-	  ifelse(normalized,
-	         GetData.processNormalizedResult(data, metadata),
-	         GetData.processDenormalizedResult(data))
+	if(normalized){
+	  query <- GetData.processNormalizedResult(data, metadata)
+	} else {
+	  query <- GetData.processDenormalizedResult(data)
+	}
 	
 	# normalizes result transforming columns from list of NULLs to vector of NAs
 	as.data.table(
