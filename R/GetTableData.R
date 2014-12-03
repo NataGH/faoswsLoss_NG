@@ -85,7 +85,7 @@ GetTableData <- function(schemaName, tableName, whereClause = NULL, selectColumn
         colname <- jsonOut$columnsMetadata[[i]][["name"]]
         coltype <- jsonOut$columnsMetadata[[i]][["type"]]
         for (y in 1:length(jsonOut$rows)) {
-          eval(parse(text=paste("value <- jsonOut$rows[[y]]$", colname, sep="")))
+          eval(parse(text=paste("value <- jsonOut$rows[[y]][['", colname, "']]", sep="")))
           expr <- "resValue <- value"
           if (is.null(value)) { 
             expr = "resValue <- NA"
