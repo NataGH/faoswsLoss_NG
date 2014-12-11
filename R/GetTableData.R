@@ -53,7 +53,7 @@ GetTableData <- function(schemaName, tableName, whereClause = NULL, selectColumn
 	} else {
 	
 		# if rows is NULL, means no records have been extracted from the DB by the requested SQL query
-		if ((is.null(jsonOut[["rows"]]))) {
+		if ((is.null(jsonOut[["rows"]])) || length(jsonOut[["rows"]]) == 0) {
 	
 			NULL
 	
