@@ -1,3 +1,9 @@
+##' Put Rest Call
+##' 
+##' @param url
+##' @param data
+##' 
+
 PutRestCall <- function(url, data) {
 
 	ch <- getCurlHandle()

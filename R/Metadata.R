@@ -1,3 +1,24 @@
+##' Metadata Class Definition
+##' 
+##' This object represents the metadata associated to the block of data
+##' specified by the keys held by the "selection" slot for BlockMetaData.
+##' 
+##' @param code A character value identifying the metadata type represented
+##' (for instance ACCURACY or GENERAL).
+##' @param description A character value of the description of the metadata
+##' type.
+##' @param language Should be one of the following character values:
+##' \itemize{
+##'     \item "ar": Arabic
+##'     \item "en": English
+##'     \item "es": Spanish
+##'     \item "fr": French
+##'     \item "ru": Russian
+##'     \item "zh": Chinese
+##' }
+##' @param elements A list of objects of class MetadataElement.
+##' 
+
 Metadata <- setClass("Metadata", 
 	representation(
 		code = "character", 
@@ -19,6 +40,11 @@ setValidity("Metadata", function(object) {
 		valid <- FALSE
 		msg <- c(msg, "The language field of the metadata was not properly set.")
 	}
+    
+    if(!object@language %in% c("ar", "en", "es", "fr", "ru", "zh")){
+        valid <- FALSE
+        msg <- c(msg, "The language field specified is invalid!")
+    }
 	
 	for(d in object@elements) {
 		if(!class(d) == "MetadataElement" || !validObject(d)) {

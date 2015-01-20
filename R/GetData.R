@@ -1,3 +1,34 @@
+##' Get Data
+##' 
+##' This function provides an interface between an R session and the database.
+##' 
+##' f the denormalized value is not set then the data is normalized; if set the
+##' data is denormalized along the axis specified.
+##' 
+##' If the pivoting vector is present, the dimensions are extracted in the
+##' specified order and applying the requested sort direction. This affects
+##' both normalized and denormalized extractions. For normalized extractions
+##' only the order of the dimensions is influenced, while for denormalized
+##' extraction the effect is more evident since the last dimension specified in
+##' the pivoting vector gets its values developed along the column of the
+##' generated data.table result object.
+##' 
+##' @param key An object of class DatasetKey.  Often, this will be one of the
+##' list elements of swsContext.datasets (if running in a debug/local session,
+##' create this object with GetTestEnvironment).
+##' @param flags Logical, indicating if flags should be returned (TRUE)
+##' otherwise not returned (FALSE).
+##' @param normalized Logical, if true then data are returned in normalized
+##' format, otherwise the format is denormalized.
+##' @param metadata Logical, if true then metadata are returned otherwise not.
+##' @param pivoting A vector, each of whose elements must be an object of type
+##' Pivoting.  If omitted, no pivoting is performed on the dataset.  Using this
+##' argument can allow for convenient reshaping of the data prior to pulling it
+##' into R.
+##' 
+##' @return A data table containing the data matching the key (may be empty).
+##' 
+
 GetData <- function(key, flags = TRUE, normalized = TRUE, metadata = FALSE, pivoting) {
 
 	# Validate passed arguments.

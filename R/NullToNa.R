@@ -1,3 +1,8 @@
+##' Null to NA
+##' 
+##' @param nullList
+##' 
+
 NullToNa = function(nullList) {
   if (is.null(nullList) || !is.list(nullList)) {
     nullList

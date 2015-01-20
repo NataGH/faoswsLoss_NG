@@ -1,3 +1,28 @@
+##' Get Code List
+##' 
+##' This function returns information about certain codes for a dimension.  For
+##' example, one may wish to check if a particular country has a startDate or
+##' endDate in the system before attempting to write a particular value.  See
+##' example below for a query that pulls the startDates for three countries.
+##' Note that Belarus(1992-) is not defined prior to 1992.
+##' 
+##' @param domain A character value specifying the domain for which the code
+##' list is required.
+##' @param dataset A character value specifying the dataset for which the code
+##' list is required.
+##' @param dimension A character value specifying the name of the key for which
+##' the code list is required.
+##' @param codes (optional) A list of codes for which the key data is required.
+##' 
+##' @return A data table containing the key codes and matching labels.
+##' 
+##' @examples
+##' \dontrun{
+##' GetCodeList(domain = "agriculture", dataset = "agriculture",
+##'             dimension = "geographicAreaM49", codes = c("4", "8", "112"))
+##' }
+##' 
+
 GetCodeList <- function(domain, dataset, dimension, codes) {
 
 	# Validate passed arguments.

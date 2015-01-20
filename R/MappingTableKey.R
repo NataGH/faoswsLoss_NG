@@ -1,3 +1,9 @@
+##' Mapping Table Key
+##' 
+##' @param mappingTable
+##' @param dimensions
+##' 
+
 MappingTableKey <- setClass("MappingTableKey", 
 	representation(
 		mappingTable = "character",

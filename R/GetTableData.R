@@ -1,22 +1,30 @@
-# FUNCTION: GetTableData
-#
-# invokes a SWS RESTful POST to perform a query on a specific schema/table, returning the list of records matched, or NULL if none.
-# If the SQL request and resulting query is incorrect, SQL error details are pasted and execution blocked ;
-# if HTTPS connection fails (e.g. a runtime error on the server), HTTP status != 200 is pasted and execution blocked.
-#
-# ARGS:
-#
-# - schemaName, MANDATORY: a string containing the name of the schema to be accessed for the query;
-# - tableName, MANDATORY: a string containing the name of the table to be read by the query;
-# - whereClause, OPTIONAL: a string containing whichever SQL clauses to take place after the "FROM" section
-#   (usually WHERE conditions). Example values:
-#                - "WHERE (id IN (1,2,3,4) AND descr = 'A') OR (id = 5 AND status = 0) "
-#                - "ORDER BY descr DESC"
-#                - "WHERE descr = 'aaa' ORDER BY id LIMIT 5"
-#                if NULL, nothing is appended in the SQL query composition after the FROM section;
-# - selectColumns, OPTIONAL: the list of columns to be returned by the query. it can be:
-#                - NULL (the query will start with "SELECT * ")
-#                - a list of strings, such as: "list('id', 'descr')"
+##' Get Table Data
+##' 
+##' Invokes a SWS RESTful POST to perform a query on a specific schema/table,
+##' returning the list of records matched, or NULL if none.  If the SQL request
+##' and resulting query is incorrect, SQL error details are pasted and
+##' execution blocked; if HTTPS connection fails (e.g. a runtime error on the
+##' server), HTTP status != 200 is pasted and execution blocked.
+##' 
+##' @param schemaName A string containing the name of the schema to be accessed
+##' for the query.
+##' @param tableName A string containing the name of the table to be read by
+##' the query.
+##' @param whereClause (optional) A string containing whichever SQL clauses to
+##' take place after the "FROM" section (usually WHERE conditions). Example
+##' values:
+##'     - "WHERE (id IN (1,2,3,4) AND descr = 'A') OR (id = 5 AND status = 0) "
+##'     - "ORDER BY descr DESC"
+##'     - "WHERE descr = 'aaa' ORDER BY id LIMIT 5"
+##' If NULL, nothing is appended in the SQL query composition after the FROM
+##' section.
+##' @param selectColumns (optional) The list of columns to be returned by the
+##' query. it can be:
+##'     - NULL (the query will start with "SELECT * ")
+##'     - a list of strings, such as: "list('id', 'descr')"
+##' 
+##' @return A data.table object containing the queried dataset.
+##' 
 
 GetTableData <- function(schemaName, tableName, whereClause = NULL, selectColumns = NULL) {
 

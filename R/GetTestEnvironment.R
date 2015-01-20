@@ -1,3 +1,24 @@
+##' Get Test Environment
+##' 
+##' @param baseUrl The url for the SWS server, typically
+##' "https://hqlqasws1:8181/sws" or something similar.
+##' @param token A token which tells the SWS system what dataset to access.
+##' This token can be obtained from the system by
+##' 
+##' \itemize{
+##'     \item Opening a session with the relevant data.
+##'     \item Clicking "R Plugins"
+##'     \item Selecting the relevant script to analyze.
+##'     \item Clicking "New debug session".
+##' }
+##' If the module does not currently exist on the system, you will need to
+##' upload a zipped file with an xml file specifying the dataset
+##' configurations.
+##' 
+##' @return This function doesn't return any objects but creates "swsContext"
+##' objects, such as swsContext.datasets, swsContexts.token, etc.
+##' 
+
 GetTestEnvironment <- function(baseUrl, token) {
 
 	# Validate passed token

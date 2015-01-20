@@ -1,3 +1,18 @@
+##' Get Mapping
+##' 
+##' This is expected to be used only by advanced script writers. The key will
+##' be a custom key layout matching the axes of the mapping table.
+##' 
+##' The key may make use of wildcards to widen the number of results matched.
+##' 
+##' Map tables are always read-only
+##' 
+##' @param key A DatasetKey class object.
+##' 
+##' @return A data table containing the map entries matching the key (may be
+##' empty).
+##' 
+
 GetMapping <- function(key) {
 
 	# Validate passed arguments.

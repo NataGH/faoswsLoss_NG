@@ -1,3 +1,9 @@
+##' Build Modified Cells
+##' 
+##' @param dimensions
+##' @param coordinates
+##' 
+
 .buildModifiedCells <- function(dimensions, coordinates) {
 
 	# Check passed arguments.

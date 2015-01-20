@@ -1,3 +1,28 @@
+##' Save Data
+##' 
+##' This is the main function used to write data back to a user's session.  The
+##' data must be in a particular format, and thus it's recommended to first
+##' read data via GetData, modify the data.table, and then write it back to the
+##' database with this function.
+##' 
+##' Also, this function will throw an error if you attempt to write to invalid
+##' data.  For example, some countries have restrictions on which time period
+##' they have data (as they recently became a country, or are no longer a
+##' country).  See ?GetCodeList.
+##' 
+##' @param domain A character value specifying the domain for which the code
+##' list is required.
+##' @param dataset A character value specifying the dataset for which the code
+##' list is required.
+##' @param data A data.table object containing keys, data and flags.
+##' @param metadata A data.table object containing the metadata.
+##' @param normalized Logical, indicates whether data is in a normalized or
+##' denormalized format.
+##' 
+##' @return No object is returned, as this function just writes data to the
+##' SWS.
+##' 
+
 SaveData <- function(domain, dataset, data, metadata, normalized = TRUE) {
 
 	# Validate passed arguments.

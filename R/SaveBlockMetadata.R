@@ -1,3 +1,13 @@
+##' Save Block Metadata
+##' 
+##' @param domain A character value specifying the domain for which the code list is
+##' required.
+##' @param dataset A character value specifying the dataset for which the code
+##' list is required.
+##' @param blockMetadata An object of type BlockMetadata which should be saved
+##' back to the user's session.
+##' 
+
 SaveBlockMetadata <- function(domain, dataset, blockMetadata) {
 
 	# Validate passed arguments.

@@ -1,3 +1,8 @@
+##' Get Rest Call
+##' 
+##' @param url
+##' 
+
 GetRestCall <- function(url) {
 
 	ch <- getCurlHandle()

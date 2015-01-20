@@ -1,6 +1,18 @@
-# S4 class modeling a key definition.
-#
-KeyDefinition <- setClass("KeyDefinition", representation(code = "character", description = "character", type = "character"))
+##' Definition for KeyDefinition Class
+##' 
+##' @param code A character value holding the name of the dimension in the
+##' system (for example, "geographicAreaM49").
+##' @param description A character value holding the description of the
+##' dimension.
+##' @param type A character value.  Valid values are "normal",
+##' "measurementUnit", and "time".
+##' 
+
+KeyDefinition <- setClass("KeyDefinition",
+    representation(
+        code = "character",
+        description = "character",
+        type = "character"))
 
 # A key definition need to define at least its code. The rest of the fields is optional.
 #
@@ -13,6 +25,12 @@ setValidity("KeyDefinition", function(object) {
 		valid <- FALSE
 		msg <- c(msg, "The code of the key definition was not properly set.")
 	}
+    
+    if(!object@type %in% c("normal", "measurementUnit", "time")) {
+        valid <- FALSE
+        msg <- c(msg,
+            'The type must be one of "normal", "measurementUnit", or "time"')
+    }
 
 	if (valid) {
 		TRUE

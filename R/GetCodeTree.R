@@ -1,3 +1,24 @@
+##' Get Code Tree
+##' 
+##' @param domain A character value specifying the domain for which the code list is
+##' required.
+##' @param dataset A character value specifying the dataset for which the code
+##' list is required.
+##' @param dimension A character value specifying the name of the key for which
+##' the code list is required.
+##' @param roots [optional] A list of root codes for the tree. Default is all
+##' those with no parent node.
+##' 
+##' @return A data table containing the parent codes and lists of child codes
+##' in the tree (see the Code Tree structure above).
+##' 
+##' @examples
+##' \dontrun{
+##' GetCodeTree(domain = "agriculture", dataset = "agriculture",
+##'                      dimension = "geographicAreaM49", roots = "953")
+##' }
+##' 
+
 GetCodeTree <- function(domain, dataset, dimension, roots) {
 
 	# Validate passed arguments.

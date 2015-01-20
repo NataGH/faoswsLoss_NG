@@ -1,3 +1,12 @@
+##' Save Validation
+##' 
+##' @param domain A character value specifying the domain for which the code
+##' list is required.
+##' @param dataset A character value specifying the dataset for which the code
+##' list is required.
+##' @param validation A data.table object containing keys and validation data.
+##' 
+
 SaveValidation <- function(domain, dataset, validation) {
 
 	# Validate passed arguments.

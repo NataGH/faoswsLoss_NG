@@ -1,3 +1,8 @@
+##' Get Block Metadata
+##' 
+##' @param key A key object, as contained in a BlockMetadata object.
+##' 
+
 GetBlockMetadata <- function(key) {
 
 	# Validate passed arguments.

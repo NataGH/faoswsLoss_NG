@@ -1,3 +1,17 @@
+##' Get History
+##' 
+##' @param key An object of class DatasetKey.  Often, this will be one of the
+##' list elements of swsContext.datasets (if running in a debug/local session,
+##' create this object with GetTestEnvironment).
+##' @param pivoting A vector, each of whose elements must be an object of type
+##' Pivoting.  If omitted, no pivoting is performed on the dataset.  Using this
+##' argument can allow for convenient reshaping of the data prior to pulling it
+##' into R.
+##' 
+##' @return A data table of observation objects containing the values and flags
+##' through history with the associated history metadata.
+##' 
+
 GetHistory <- function(key, pivoting) {
 
 	# Validate passed arguments.

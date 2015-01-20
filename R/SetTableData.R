@@ -1,18 +1,44 @@
-# FUNCTION: GetTableData
-#
-# ...
-#
-# ARGS:
-#
-# - schemaName, MANDATORY: a string containing the name of the schema to be accessed for the query;
-# - tableName, MANDATORY: a string containing the name of the table to be read by the query;
-# - data, MANDATORY: a non empty data.table containing records with values to be appended/edited on the table. No need to put
-#                   all the columns that are in the DB, BUT at least the column/s that compose the primary key (if any). If no
-#                   primary key is set for the table, all the records will be appended as they are
-# - replace, DEFAULT=FALSE: if true, when for a row in the data.table a corresponding record is fuond in the DB, with same key,
-#                           the record is UPDATED, otherwise skipped
-# - purge, DEFAULT=FALSE: if true, before to proceed with the insertions/updates, the table is empty
-# - purge, DEFAULT=NULL: can be specified only for purge=TRUE, allow specifying a filter for the deletion (whichever WHERE condition/s)
+##' SetTableData
+##' 
+##' This function allows altering the content of a table for a specified
+##' schema.
+##' 
+##' @param schemaName A character value containing the name of the schema to be
+##' accessed for the query.
+##' @param tableName A character value containing the name of the table to be
+##' read by the query.
+##' @param data A non empty data.table containing records with values to be
+##' appended/edited on the table. No need to put all the columns that are in
+##' the DB, BUT at least the column/s that compose the primary key (if any). If
+##' no primary key is set for the table, all the records will be appended as
+##' they are
+##' @param replace Logical, if TRUE, then for a row that exists in the
+##' data.table and a corresponding record is fuond in the DB, with same key,
+##' the record is UPDATED.  If FALSE, it is skipped.
+##' @param purge Logical.  If true, before any inserts/updates, rows are
+##' deleted from the database table; which rows depends on the purgeFilter
+##' parameter (see below).
+##' @param purgeFilter Can be specified only for purge=TRUE.  This allows the
+##' user to specify a filter for the deletion in the form of an SQL WHERE
+##' clause.  Specifying purge=TRUE and purgeFilter=NULL will remove all rows
+##' from the table before the update.
+##' 
+##' @details The system checks if the data passed as data.table are either
+##' conforming to the expected column type to which any cell refers, or can be
+##' parsed (e.g. a string containing "1" to the number 1, or a string
+##' containing "01-01-2001" to the corresponding date by assuming the format
+##' "dd-MM-yyyy"). If the conversion fails, or any other SQL error is arisen by
+##' the underlying DB (e.g. a column constraint for NOT NULL), the function
+##' aborts (using stop()) with the error message being placed on the R error
+##' message queue.  If otherwise the function succeed, statistics on the
+##' updates are returned, indicating how many records have been:
+##' \itemize{
+##'     \item deleted (if purge was TRUE)
+##'     \item updated (if replace was TRUE and rec found by key)
+##'     \item inserted (if rec not found by key)
+##'     \item skipped (if replace was FALSE and rec found by key)
+##' }
+##' 
 
 SetTableData <- function(schemaName, tableName, data, replace = FALSE, purge = FALSE, purgeFilter = NULL) {
 
