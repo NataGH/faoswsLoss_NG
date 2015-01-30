@@ -27,13 +27,14 @@ export(
 	GetMapping,
 	GetBlockMetadata,
 	SaveData,
+	SaveDataNew,
 	SaveValidation,
 	SaveBlockMetadata,
 	GetTestEnvironment,
 	GetTableData,
 	SetTableData,
 	NullToNa,
-
+	
 	.buildModifiedCells,
 
 	swsContext.clientCertificate,
