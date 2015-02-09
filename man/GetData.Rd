@@ -22,7 +22,9 @@ format, otherwise the format is denormalized.}
 \item{pivoting}{A vector, each of whose elements must be an object of type
 Pivoting.  If omitted, no pivoting is performed on the dataset.  Using this
 argument can allow for convenient reshaping of the data prior to pulling it
-into R.}
+into R.  Note: if this argument is included, then all of the dimensions in
+key must be included in this vector.  See ?Pivoting for a description on
+creating this argument and for some examples on how to use it.}
 }
 \value{
 A data table containing the data matching the key (may be empty).

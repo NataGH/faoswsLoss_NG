@@ -26,7 +26,9 @@
 ##' @param pivoting A vector, each of whose elements must be an object of type
 ##' Pivoting.  If omitted, no pivoting is performed on the dataset.  Using this
 ##' argument can allow for convenient reshaping of the data prior to pulling it
-##' into R.
+##' into R.  Note: if this argument is included, then all of the dimensions in
+##' key must be included in this vector.  See ?Pivoting for a description on
+##' creating this argument and for some examples on how to use it.
 ##' 
 ##' @return A data table containing the data matching the key (may be empty).
 ##' 
@@ -126,23 +128,20 @@ GetData.validate <- function(key, flags, normalized, metadata, pivoting) {
 	# Validate pivoting, if present.
 	#
 	if(!missing(pivoting)) {
-		if(is.list(pivoting)) {
-			for(p in pivoting) {
-				if(class(p) != "Pivoting") {
-					stop("At least one of the objects in the list passed for the pivoting argument is not an instance of the Pivoting class.")
-				}
-				if(!validObject(p)) {
-					stop("At least one of the objects in the list passed for the pivoting argument is not valid.")
-				}
+		if(!is.list(pivoting))
+            stop("The pivoting argument must be a list of Pivoting objects.")
+		for(p in pivoting) {
+			if(class(p) != "Pivoting") {
+				stop("At least one of the objects in the list passed for the pivoting argument is not an instance of the Pivoting class.")
 			}
-		} else {
-			if(class(pivoting) != "Pivoting") {
-				stop("The pivoting parameter passed is not an instance of the Pivoting class.")
-			}
-			if(!validObject(pivoting)) {
-				stop("The pivoting parameter passed is not valid.")
+			if(!validObject(p)) {
+				stop("At least one of the objects in the list passed for the pivoting argument is not valid.")
 			}
 		}
+        dimensionNames = sapply(key@dimensions, slot, "name")
+        pivotNames = sapply(pivoting, slot, "code")
+        if(!setequal(pivotNames, dimensionNames))
+            stop("pivoting must contain all the same elements as dimensions (specified in key), and no more.")
 	}
 
 	# Denormalized format with metadata is not supported.
