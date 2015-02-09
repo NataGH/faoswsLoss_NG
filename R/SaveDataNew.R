@@ -18,6 +18,15 @@
 ##' @param metadata A data.table object containing the metadata.
 ##' @param normalized Logical, indicates whether data is in a normalized or
 ##' denormalized format.
+##' @param waitMode A character string indicating how to behave with respect to
+##' the backend.  Should be either "wait", "forget", or "synch".  "wait" allows
+##' R to routinely check for completion of the save, up to pullTimeout seconds.
+##' "forget" returns control to R immediately without verifying that the object
+##' has been saved (this can be dangerous if the object is accessed later).
+##' "synch" gives the writing process a short time period, and returns an error
+##' if the write fails.
+##' @param pullTimeout An integer giving the number of seconds to allow for the
+##' write process to the database before returning an error.
 ##' 
 ##' @return No object is returned, as this function just writes data to the
 ##' SWS.

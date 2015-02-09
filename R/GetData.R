@@ -1,8 +1,10 @@
 ##' Get Data
 ##' 
 ##' This function provides an interface between an R session and the database.
+##' Note that swsContext files must exist in your session, so you should run
+##' GetTestEnvironment before calling this function.
 ##' 
-##' f the denormalized value is not set then the data is normalized; if set the
+##' If the denormalized value is not set then the data is normalized; if set the
 ##' data is denormalized along the axis specified.
 ##' 
 ##' If the pivoting vector is present, the dimensions are extracted in the
@@ -27,6 +29,37 @@
 ##' into R.
 ##' 
 ##' @return A data table containing the data matching the key (may be empty).
+##' 
+##' @examples
+##' \dontrun{
+##' # swsContext files are necessary for GetData to run:
+##' GetTestEnvironment(
+##'    baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
+##'    token = "7823c00b-b82e-47bc-8708-1be103ac91e4"
+##' )
+##' 
+##' # Use GetCodeList to find all countries and commodities
+##' areaCodes = GetCodeList("agriculture", "agriculture", "geographicAreaM49")
+##' itemCodes = GetCodeList("agriculture", "agriculture", "measuredItemCPC")
+##' 
+##' # Pull data for one country and all commodities
+##' dim1 = Dimension(name = "geographicAreaM49", keys = "12")
+##' dim2 = Dimension(name = "measuredElement", keys = c("5510"))
+##' dim3 = Dimension(name = "measuredItemCPC", keys = itemCodes[, code])
+##' dim4 = Dimension(name = "timePointYears", keys = as.character(2000:2013))
+##' key = DatasetKey(domain = "agriculture", dataset = "agriculture",
+##'                  dimensions = list(dim1, dim2, dim3, dim4))
+##' GetData(key)
+##' 
+##' # Pull data for all countries and one commodity
+##' dim1 = Dimension(name = "geographicAreaM49", keys = areaCodes[, code])
+##' dim2 = Dimension(name = "measuredElement", keys = c("5510"))
+##' dim3 = Dimension(name = "measuredItemCPC", keys = "0111")
+##' dim4 = Dimension(name = "timePointYears", keys = as.character(2000:2013))
+##' key = DatasetKey(domain = "agriculture", dataset = "agriculture",
+##'                  dimensions = list(dim1, dim2, dim3, dim4))
+##' GetData(key)
+##' }
 ##' 
 
 GetData <- function(key, flags = TRUE, normalized = TRUE, metadata = FALSE, pivoting) {
