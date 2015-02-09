@@ -46,7 +46,7 @@ generated data.table result object.
 }
 \examples{
 \dontrun{
-# swsContext files are necessary for GetData to run:
+# swsContext files are necessary for GetData to run (token may need to be updated)
 GetTestEnvironment(
    baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
    token = "7823c00b-b82e-47bc-8708-1be103ac91e4"
@@ -58,7 +58,7 @@ itemCodes = GetCodeList("agriculture", "agriculture", "measuredItemCPC")
 
 # Pull data for one country and all commodities
 dim1 = Dimension(name = "geographicAreaM49", keys = "12")
-dim2 = Dimension(name = "measuredElement", keys = c("5510"))
+dim2 = Dimension(name = "measuredElement", keys = "5510")
 dim3 = Dimension(name = "measuredItemCPC", keys = itemCodes[, code])
 dim4 = Dimension(name = "timePointYears", keys = as.character(2000:2013))
 key = DatasetKey(domain = "agriculture", dataset = "agriculture",
@@ -67,7 +67,7 @@ GetData(key)
 
 # Pull data for all countries and one commodity
 dim1 = Dimension(name = "geographicAreaM49", keys = areaCodes[, code])
-dim2 = Dimension(name = "measuredElement", keys = c("5510"))
+dim2 = Dimension(name = "measuredElement", keys = "5510")
 dim3 = Dimension(name = "measuredItemCPC", keys = "0111")
 dim4 = Dimension(name = "timePointYears", keys = as.character(2000:2013))
 key = DatasetKey(domain = "agriculture", dataset = "agriculture",
