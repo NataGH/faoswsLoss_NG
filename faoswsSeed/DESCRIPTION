@@ -1,0 +1,21 @@
+Package: faoswsSeed
+Type: Package
+Title: Package to perform the imputation of seed usage for the FAO seed domain.
+Version: 1.0.0
+Date: 2015-01-15
+Author: Joshua M. Browning <joshua.browning@fao.org>,
+    Michael C. J. Kao <michael.kao@fao.org>
+Maintainer: Joshua M. Browning <joshua.browning@fao.org>
+Description: This package provides all the functions for imputation of seed
+    usage.
+URL: https://github.com/rockclimber112358/sws_seed
+License: GPL (>= 3)
+Imports:
+Depends:
+    faoswsFlag (>= 0.1.1), faoswsUtil (>= 0.1.2), faosws (>= 0.3.2), data.table (>= 1.9.2)
+LazyData: yes
+ZipData: no
+VignetteBuilder: knitr
+Suggests:
+    knitr,
+    ggplot2

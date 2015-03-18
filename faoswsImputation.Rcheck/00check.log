@@ -1,0 +1,174 @@
+* using log directory 'C:/Users/rockc_000/Documents/SVN/faoswsImputation.Rcheck'
+* using R version 3.1.0 (2014-04-10)
+* using platform: x86_64-w64-mingw32 (64-bit)
+* using session charset: ISO8859-1
+* checking for file 'faoswsImputation/DESCRIPTION' ... OK
+* checking extension type ... Package
+* this is package 'faoswsImputation' version '5.0'
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking whether package 'faoswsImputation' can be installed ... WARNING
+Found the following significant warnings:
+  Warning: package 'data.table' was built under R version 3.1.2
+  Warning: package 'ggplot2' was built under R version 3.1.1
+  Warning: package 'data.table' was built under R version 3.1.2
+  Warning: package 'ggplot2' was built under R version 3.1.1
+  Warning: package 'data.table' was built under R version 3.1.2
+  Warning: package 'ggplot2' was built under R version 3.1.1
+See 'C:/Users/rockc_000/Documents/SVN/faoswsImputation.Rcheck/00install.out' for details.
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Package listed in more than one of Depends, Imports, Suggests, Enhances:
+  'ggplot2'
+A package should be listed in only one of these fields.
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking dependencies in R code ... WARNING
+'library' or 'require' call not declared from: 'zoo'
+Namespaces in Imports field not imported from:
+  'earth' 'forecast' 'reshape2' 'zoo'
+  All declared Imports should be used.
+Packages in Depends field not imported from:
+  'data.table' 'faoswsFlag' 'faoswsUtil' 'ggplot2'
+  These packages need to be imported from (in the NAMESPACE file)
+  for when this namespace is loaded but not attached.
+Unexported object imported by a ':::' call: 'data.table:::melt.data.table'
+  See the note in ?`:::` about the use of this operator.
+package 'methods' is used but not declared
+See the information on DESCRIPTION files in the chapter 'Creating R
+packages' of the 'Writing R Extensions' manual.
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+Found the following possibly unsafe calls:
+File 'faoswsImputation/R/reassignGlobalVariable.R':
+  unlockBinding(var, .GlobalEnv)
+
+plotEnsemble: warning in facet_wrap(as.formula(paste("~",
+  paste(imputationParameters$byKey, collapse = "+"))), scale = "free"):
+  partial argument match of 'scale' to 'scales'
+computeEnsembleFit: no visible binding for global variable
+  'ensuredImputationData'
+computeEnsembleWeight: no visible binding for global variable
+  'ensuredImputationData'
+computeEnsembleWeight: no visible binding for global variable 'V1'
+computeEnsembleWeight: no visible binding for global variable 'weight'
+computeErrorLOOCV: no visible binding for global variable
+  'ensuredImputationData'
+computeErrorLOOCV: no visible binding for global variable
+  'imputationValueColumn'
+computeErrorRate: no visible binding for global variable
+  'ensuredImputationData'
+computeLoocvFits: no visible binding for global variable
+  'ensuredImputationData'
+defaultArima: no visible global function definition for 'auto.arima'
+defaultGlobalMean: no visible binding for global variable
+  'ensuredImputationData'
+defaultGlobalMedian: no visible binding for global variable
+  'ensuredImputationData'
+defaultMars: no visible global function definition for 'earth'
+defaultMixedModel: no visible binding for global variable
+  'ensuredImputationData'
+defaultNaive: no visible global function definition for 'na.locf'
+defaultNaive: no visible global function definition for 'na.approx'
+ensembleImpute: no visible binding for global variable
+  'ensuredImputationData'
+ensureImputationInputs: no visible binding for '<<-' assignment to
+  'ensuredImputationData'
+extendSimpleModel: no visible binding for global variable
+  'ensuredImputationData'
+getInverseWeights: no visible binding for global variable
+  'ensuredImputationData'
+getInverseWeights: no visible binding for global variable
+  'missingValue'
+getInverseWeights: no visible binding for global variable 'modelFailed'
+getInverseWeights: no visible binding for global variable 'fit'
+getInverseWeights: no visible binding for global variable
+  'averageErrorByKey'
+getInverseWeights: no visible binding for global variable
+  'averageError'
+getInverseWeights: no visible binding for global variable 'weight'
+getStackingWeights: no visible binding for global variable
+  'ensuredImputationData'
+getStackingWeights: no visible binding for global variable 'y'
+getStackingWeights: no visible binding for global variable 'byKey'
+getStackingWeights: no visible binding for global variable 'V1'
+getStackingWeights : lassoModel: no visible global function definition
+  for 'cv.glmnet'
+getWeightMatrix: no visible binding for global variable
+  'ensuredImputationData'
+getWeightMatrix: no visible binding for global variable
+  'extrapolationRange'
+getWeightMatrix: no visible binding for global variable 'allowedRange'
+getWeightMatrix: no visible binding for global variable 'model'
+getWeightMatrix: no visible binding for global variable 'weight'
+imputeVariable: no visible binding for global variable
+  'ensuredImputationData'
+makeCvGroup: no visible binding for global variable
+  'ensuredImputationData'
+mixedModelFixedDf: no visible binding for global variable
+  'ensuredImputationData'
+mixedModelFixedDf: no visible global function definition for 'lmer'
+plotEnsemble: no visible binding for global variable
+  'ensuredImputationData'
+plotEnsemble: no visible binding for global variable 'V1'
+plotEnsemble: no visible binding for global variable 'rowIndex'
+plotEnsemble: no visible binding for global variable
+  'imputedObservation'
+plotEnsemble: no visible binding for global variable
+  'imputationValueColumn'
+plotEnsemble: no visible binding for global variable 'maxY'
+plotEnsemble: no visible binding for global variable 'modelFit'
+plotEnsemble: no visible binding for global variable 'ribbonWidth'
+plotEnsemble: no visible binding for global variable 'modelWeight'
+plotEnsemble: no visible binding for global variable 'variable'
+plotEnsemble : <anonymous>: no visible binding for global variable
+  'variable'
+plotEnsemble : <anonymous>: no visible binding for global variable
+  'modelFit'
+plotEnsemble : <anonymous>: no visible binding for global variable
+  'ribbonWidth'
+plotEnsembleOld: no visible binding for global variable
+  'imputationValueColumn'
+plotEnsembleOld: no visible binding for global variable 'byKey'
+plotEnsembleOld: no visible global function definition for 'brewer.pal'
+plotEnsembleOld: no visible binding for global variable 'missIndex'
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... WARNING
+Documented arguments not in \usage in documentation object 'plotEnsembleOld':
+  'value' 'byKey' 'yearValue'
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See the chapter 'Writing R documentation files' in the 'Writing R
+Extensions' manual.
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of 'data' directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking examples ... OK
+* checking PDF version of manual ... OK
+WARNING: There were 3 warnings.
+NOTE: There were 2 notes.

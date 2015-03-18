@@ -1,0 +1,19 @@
+balanceAreaHarvested    Function to compute area harvested when new
+                        production and yield are given.
+balanceProduction       Function to compute production when new area
+                        harvested and yield are given.
+computeYield            Function to compute and update yield
+defaultProcessingParameters
+                        Default Processing Parameters
+ensureProductionInputs
+                        Ensure Production Inputs
+getProductionDomainData
+                        Get Production Domain Data
+imputeProductionDomain
+                        This function imputes the whole production
+                        domain.
+okrapd                  Example data for the documentations.
+processProductionDomain
+                        This is a wrapper for all the data manipulation
+                        step before the preparation of the imputation.
+saveProductionData      Save Production Data

@@ -1,0 +1,333 @@
+%\VignetteIndexEntry{faoswsSeed: A package for the imputation of the seed domain for the Statistical Working System}
+%\VignetteEngine{knitr::knitr}
+\documentclass[nojss]{jss}
+\usepackage{url}
+\usepackage[sc]{mathpazo}
+\usepackage{geometry}
+\geometry{verbose,tmargin=2.5cm,bmargin=2.5cm,lmargin=2.5cm,rmargin=2.5cm}
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{2}
+\usepackage{breakurl}
+\usepackage{hyperref}
+\usepackage[ruled, vlined]{algorithm2e}
+\usepackage{mathtools}
+\usepackage{draftwatermark}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{mathrsfs}
+\usepackage{multirow}
+%% \usepackage{mathbbm}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+
+\title{\bf faoswsSeed: A package for the imputation of
+  the seed domain of the Statistical Working System}
+
+\author{Joshua M. Browning, Michael. C. J. Kao\\ Food and Agriculture Organization \\ of
+  the United Nations}
+
+\Plainauthor{Joshua M. Browning, Michael. C. J. Kao} 
+
+\Plaintitle{faoswsSeed: Package for imputation of the
+  seed domain of the ESS Statistical Working System}
+
+\Shorttitle{Seed Module}
+
+\Abstract{ 
+
+  This vignette provides detailed description of the usage of
+  functions in the \pkg{faoswsSeed} package. \\
+  
+  There are two sections to this paper. The first is introductory, and provides
+  a breif overview of the algorithm followed by this package.  The second
+  section shows a sample execution of the module, and describes what each
+  function is doing as execution proceeds.
+  
+}
+
+\Keywords{Seed, Agriculture}
+\Plainkeywords{Seed, Agriculture}
+
+\Address{
+  Joshua M. Browning\\
+  Economics and Social Statistics Division (ESS)\\
+  Economic and Social Development Department (ES)\\
+  Food and Agriculture Organization of the United Nations (FAO)\\
+  Viale delle Terme di Caracalla 00153 Rome, Italy\\
+  E-mail: \email{joshua.browning@fao.org}\\
+  URL: \url{https://github.com/rockclimber112358/sws_seed}
+}
+
+\begin{document}
+
+<<setup, include=FALSE, cache=FALSE, echo=FALSE>>=
+library(knitr)
+opts_chunk$set(fig.path = 'figure/', fig.align = 'center', fig.show = 'hold',
+               warning = FALSE, message = FALSE, error = FALSE, tidy = FALSE,
+               results = 'markup', eval = TRUE, echo = TRUE, cache = FALSE)
+options(replace.assign = TRUE, width = 80)
+assign("depthtrigger", 80, data.table:::.global)
+@ 
+
+\section{Introduction}
+
+This algorithm follows this general process:
+
+\begin{enumerate}
+    \item Pull agricultural data from the database.
+    \item Estimate the area sown for each year.
+    \item Estimate the seed rate.
+    \item Estimate the total seed used by multiplying the area sown by the seed
+    rate.
+    \item Push the updated data.table back to the database.
+\end{enumerate}
+
+\section{Example}
+
+Before we begin, we will need to load the required library
+
+<<loda-library>>=
+## Load libraries
+library(faosws)
+library(faoswsSeed)
+library(faoswsImputation)
+library(faoswsUtil)
+library(data.table)
+library(ggplot2)
+@ 
+
+\subsection{Pull Data}
+
+Now, we need to get a data.table object from the working system.  To do this,
+we'll need a token for the R session.  To get this token, you'll need to create
+an .xml file that references the appropriate dataset: see the .xml file in the
+sws\_seed repository.  Alternatively, you can create an .xml file with the Code
+tag set to agriculture and four SelectableDimension's: geographicAreaM49, 
+measuredItemCPC, measuredElement, timePointYears.  Once you get this token, you
+can run GetTestEnvironment (see below, baseUrl is the same) to load some
+variables (usually starting with swsContext.*) into your workspace.
+
+Now, we may change the dataset of interest by updating the keys in the
+\textit{swsContext.datasets[[1]]} object.  For example, let's look at Austria's
+data (geographicAreaM49 code of ``40'').  Note: multiple keys are allowed.
+
+Lastly, the getAreaData function will pull in the seed data needed.  The code
+below shows an example of what these calls look like, although it is not
+executable as the token is no longer valid.
+
+<<eval=FALSE>>=
+## Pull in necessary swsContext parameters, see faosws documentation
+GetTestEnvironment(
+    baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
+    token = "ec5a4b0e-0ffa-432e-9db0-ba08072c924b"
+)
+swsContext.datasets[[1]]@dimensions$geographicAreaM49@keys = c("40")
+data = getAreaData(dataContext = swsContext.datasets[[1]],
+                   areaSownElementCode = "5212",
+                   areaHarvestedElementCode = "5312",
+                   seedElementCode = "5525")
+@
+
+We can't pull this data directly, but the faoswsSeed package has a default
+dataset that would result from this kind of a call:
+
+<<>>=
+seedData
+@
+
+The data is somewhat cryptic, as there are alot of codes used, but it's there.
+
+\subsection{Estimate Area Sown}
+
+Next, we need to impute the missing values.  Imputation follows one of several
+methods:
+\begin{enumerate}
+    \item If no area sown values exist, the area sown is imputed as the area
+    harvested.
+    \item If some area sown values exist, then imputation is performed based on
+    input parameters.  If the imputationParameters argument is NULL, then an
+    average ratio is computed across all non-missing values within each byKey
+    group (by default, byKey is NULL and so the ratio is computed with all the
+    data): $R = $(area sown) / (area harvested).  Missing values for area sown
+    are then imputed by taking the area harvested and multiplying by this
+    ratio.
+    \item If some area sown values exist and imputationParameters is not NULL,
+    then imputation is performed via ensemble imputation from the
+    faoswsImputation package.  All of the elegant models in that framework are
+    not likely to be useful here, as most countries have no data.  However,
+    two models such as a local and global mean may be helpful.
+\end{enumerate}
+
+In this example, we have the first scenario (remember, 5212 is the area sown
+code and 5312 is the area harvested).
+
+<<>>=
+seedData[geographicAreaM49 == 348 & measuredItemCPC == "01330",
+         .(time = timePointYears, areaSown = Value_measuredElement_5212,
+           areaHarvested = Value_measuredElement_5312)]
+temp = copy(seedData)
+imputeAreaSown(data = temp)
+temp[geographicAreaM49 == 348 & measuredItemCPC == "01330",
+     .(time = timePointYears, areaSown = Value_measuredElement_5212,
+       areaHarvested = Value_measuredElement_5312, Value_areaSownRatio)]
+@
+
+The areaSownRatio is estimated globally by default.  We could also estimate the
+ratio within each country individually:
+
+<<>>=
+temp = copy(seedData)
+imputeAreaSown(data = temp, valueAreaSown = "Value_measuredElement_5212",
+               byKey = "geographicAreaM49")
+temp[geographicAreaM49 == 348 & measuredItemCPC == "01330",
+     .(time = timePointYears, areaSown = Value_measuredElement_5212,
+       areaHarvested = Value_measuredElement_5312, Value_areaSownRatio)]
+@
+
+Or, we can estimate the ratio via an ensemble method (from faoswsImputation):
+
+<<>>=
+imputationParams = defaultImputationParameters(variable = "seed")
+## Coerce type to character instead of default factor type
+imputationParams$flagTable$flagObservationStatus =
+    as.character(imputationParams$flagTable$flagObservationStatus)
+imputationParams$ensembleModels = list(
+    defaultMean = ensembleModel(model = defaultMean, extrapolationRange = Inf,
+                                level = "countryCommodity"),
+    globalMean = ensembleModel(model = defaultGlobalMean,
+                               extrapolationRange = Inf, level = "commodity"),
+    defaultLm = ensembleModel(model = defaultLm, extrapolationRange = Inf,
+                              level = "countryCommodity"))
+temp = seedData[measuredItemCPC == "01330", ]
+imputeAreaSown(data = temp, imputationParameters = imputationParams)
+temp[geographicAreaM49 == 348 & measuredItemCPC == "01330",
+     .(time = timePointYears, areaSown = Value_measuredElement_5212,
+       areaHarvested = Value_measuredElement_5312, Value_areaSownRatio)]
+@
+
+In this example, notice that we filtered the seedData set to one specific
+measuredItemCPC code.  This is a requirement for imputeAreaSown: it can only
+handle one CPC code at a time.  A future goal of this package is to add an
+additional function that calls imputeAreaSown for each individual CPC code.
+
+Additionally, note that the defaultLm model could be problematic: predictions
+in the later years for the left graph give ratios of less than 1.  These don't
+make sense: you can't sow less area than your harvest.  There is a check within
+the code that corrects any imputed values less than 1 (by setting it to 1);
+however, the analyst should ensure that the models they use do not impute
+values smaller than 1 as a good practice.
+
+Note that this ensemble model seems to generate improved estimates of area sown
+rates in this scenario.  However, in most scenarios, area sown is not
+available.  Moreover, if it is, it is generally available for almost all years.
+The usual scenario would be more like the following example:
+
+<<>>=
+data = seedData[measuredItemCPC == "0111", ]
+data[geographicAreaM49 == 100,
+     .(time = timePointYears, areaSown = Value_measuredElement_5212,
+       areaHarvested = Value_measuredElement_5312)]
+imputeAreaSown(data = data, imputationParameters = imputationParams)
+data[geographicAreaM49 == 100,
+     .(time = timePointYears, areaSown = Value_measuredElement_5212,
+       areaHarvested = Value_measuredElement_5312, Value_areaSownRatio)]
+imputeAreaSown(data = data)
+data[geographicAreaM49 == 100,
+     .(time = timePointYears, areaSown = Value_measuredElement_5212,
+       areaHarvested = Value_measuredElement_5312, Value_areaSownRatio)]
+@
+
+The two cases above are identical.  Using an ensemble provides no advantage as
+no area sown data is originally available.
+
+\subsection{Estimate Seed Rate}
+
+For this vignette, we will proceed with the dataset defined above: seedData
+with a CPC code of 0111.
+
+The next step in getting the seed usage is to estimate the seeding rate.  The
+database stores two tables, default\_seed\_rate and specific\_seed\_rate, which
+contain estimates for seed rates.  The specific seed rate table contains values
+for country commodity pairs, while the default seed rate contains average
+values for commodities overall.  It would therefore be preferable to use the
+specific\_seed\_rate table, but values are not always available for all
+countries.  Thus, the default\_seed\_rate table is used when entries are not 
+available in the specific\_seed\_rate table.
+
+<<>>=
+# countrySpecificData = getCountrySpecificSeedRate()
+countrySpecificData = data.table(
+    geographicAreaM49 = c("100", "348", "400"),
+    measuredItemCPC = "0111",
+    Value_seedRate = c(222, 213, 115),
+    flagObservationStatus_seedRate = c("E", "E", ""))
+setkeyv(countrySpecificData, c("geographicAreaM49", "measuredItemCPC"))
+fillCountrySpecificSeedRate(data = data,
+                            countrySpecificData = countrySpecificData)
+head(data, 1)
+data[, Value_seedRate]
+@
+
+The getCountrySpecificSeedRate function simply pulls the specific\_seed\_rate
+table from the database.  This table is also the default value for
+countrySpecificData in the fillCountrySpecificSeedRate function, so generally
+it will not need to be created as here (although it could be created manually
+from the commented out line above).  However, for vignette creation, it was
+simpler to just create the part of the table we used at the time of the
+writing, and this is what is done here.  The fillCountrySpecificSeedRate
+function adds an additional two columns to data with the seedRate value and
+observation flags.
+
+<<>>=
+# generalSeedData = getCountryGeneralSeedRate()
+generalSeedData = data.table(measuredItemCPC = "0111", Value_seedRate = 151.14,
+                             flagObservationStatus_seedRate = "")
+setkeyv(generalSeedData, "measuredItemCPC")
+fillGeneralSeedRate(data = data,
+                    generalSeedData = generalSeedData)
+head(data, 1)
+data[, Value_seedRate]
+@
+
+This function updates all the NA values to the (``global'') default seeding
+rate for this commodity.
+
+\subsection{Estimate Seed Usage}
+
+The seed usage is estimated by way of the imputeSeed function:
+
+<<>>=
+data[, oldSeed := Value_measuredElement_5525]
+imputeSeed(data)
+data[geographicAreaM49 == 100, .(timePointYears,
+                                 AreaSown = Value_measuredElement_5212,
+                                 AreaHarvested = Value_measuredElement_5312,
+                                 Seed = Value_measuredElement_5525,
+                                 oldSeed)]
+@
+
+Not all seeds have been imputed.  To understand why, note that area
+sown is available for all years except the last year.  But, area sown on year
+$t$ corresponds to seed usage on year $t-1$, thus we don't have enough
+valid observations to impute either of the last two seed usages.  These values
+remain missing, as seen above.
+
+\subsection{Push data back to database}
+
+Lastly, we must push the imputed data back to the database.  This is done via
+the saveSeedData function (not evaluated, as the token would need to be valid).
+
+<<eval=FALSE>>=
+saveSeedData(data)
+@
+
+Note: this function assumes certain swsContext files exist within your
+workspace, although it does not require you to pass them to it.  So, be careful
+not to rm those files!
+
+<<echo=FALSE>>=
+# Reset the depthtrigger to 3 so normal printing works fine again.
+assign("depthtrigger", 3, data.table:::.global)
+@
+
+\end{document}

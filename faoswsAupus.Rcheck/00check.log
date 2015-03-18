@@ -1,0 +1,475 @@
+* using log directory 'C:/Users/rockc_000/Documents/SVN/faoswsAupus.Rcheck'
+* using R version 3.1.0 (2014-04-10)
+* using platform: x86_64-w64-mingw32 (64-bit)
+* using session charset: ISO8859-1
+* checking for file 'faoswsAupus/DESCRIPTION' ... OK
+* checking extension type ... Package
+* this is package 'faoswsAupus' version '1.0'
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking whether package 'faoswsAupus' can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking 'build' directory ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... WARNING
+Vignettes with missing or empty \VignetteIndexEntry:
+[1] "faoswsAupus.Rnw"
+See the information on INDEX files and package subdirectories in the
+chapter 'Creating R packages' of the 'Writing R Extensions' manual.
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking dependencies in R code ... NOTE
+Missing or unexported object: 'faosws::NullToNa'
+See the information on DESCRIPTION files in the chapter 'Creating R
+packages' of the 'Writing R Extensions' manual.
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+Aupus: no visible binding for global variable 'aupusParameterEnsured'
+Aupus: no visible binding for global variable 'processingLevel'
+Aupus: no visible binding for global variable 'i.processingLevel'
+SaveAupusData: no visible binding for global variable
+  'timePointYearsSP'
+SaveInputFromProcessingData: no visible binding for global variable
+  'timePointYearsSP'
+SavePopulationData: no visible binding for global variable
+  'measuredItemFS'
+SavePopulationData: no visible binding for global variable
+  'timePointYearsSP'
+calculateAupusElements: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateBalance: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateBalance: no visible binding for global variable 'BALANCE'
+calculateBalance: no visible binding for global variable
+  'element161Num'
+calculateBalance: no visible binding for global variable
+  'element171Num'
+calculateBalance: no visible binding for global variable
+  'element181Num'
+calculateBalance: no visible binding for global variable
+  'element181Symb'
+calculateBalance: no visible binding for global variable 'replaced'
+calculateDailyNutritive: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateDailyNutritive: no visible binding for global variable
+  'validPopulation'
+calculateEle101: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle101: no visible binding for global variable
+  'element101Symb'
+calculateEle101: no visible binding for global variable 'ratio101Num'
+calculateEle101: no visible binding for global variable 'element101Num'
+calculateEle11: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle11: no visible binding for global variable 'element161Num'
+calculateEle11: no visible binding for global variable 'element161Symb'
+calculateEle11: no visible binding for global variable 'element11Symb'
+calculateEle11: no visible binding for global variable 'newValue'
+calculateEle11: no visible binding for global variable 'element11Num'
+calculateEle11: no visible global function definition for '.'
+calculateEle11: no visible binding for global variable 'newSymbol'
+calculateEle111: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle111: no visible binding for global variable 'ratio111Num'
+calculateEle111: no visible binding for global variable 'ratio171Num'
+calculateEle111: no visible binding for global variable
+  'element111Symb'
+calculateEle111: no visible binding for global variable 'element111Num'
+calculateEle111 : yearSearch: no visible binding for global variable
+  'element111Symb'
+calculateEle111 : yearSearch: no visible binding for global variable
+  'element21Num'
+calculateEle111 : yearSearch: no visible binding for global variable
+  'element31Num'
+calculateEle111 : yearSearch: no visible binding for global variable
+  'ratio171Num'
+calculateEle111: no visible binding for global variable 'element21Num'
+calculateEle111: no visible binding for global variable 'element31Num'
+calculateEle111: no visible binding for global variable 'replaced'
+calculateEle121: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle121: no visible binding for global variable
+  'element121Symb'
+calculateEle121: no visible binding for global variable 'ratio121Num'
+calculateEle121: no visible binding for global variable 'element121Num'
+calculateEle131: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle131: no visible binding for global variable
+  'element131Symb'
+calculateEle131: no visible binding for global variable 'ratio131Num'
+calculateEle131: no visible binding for global variable 'element131Num'
+calculateEle141: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle141: no visible binding for global variable
+  'element141Symb'
+calculateEle141: no visible binding for global variable 'ratio141Num'
+calculateEle141: no visible binding for global variable 'element141Num'
+calculateEle141: no visible binding for global variable 'newSummation'
+calculateEle141: no visible binding for global variable 'element11Num'
+calculateEle141: no visible binding for global variable 'element51Num'
+calculateEle141: no visible binding for global variable 'element61Num'
+calculateEle141: no visible binding for global variable 'element91Num'
+calculateEle141: no visible binding for global variable 'element95Num'
+calculateEle141: no visible binding for global variable 'element161Num'
+calculateEle144: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle144: no visible binding for global variable
+  'element144Symb'
+calculateEle144: no visible binding for global variable 'element141Num'
+calculateEle144: no visible binding for global variable 'element144Num'
+calculateEle151: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle151: no visible binding for global variable
+  'element151Symb'
+calculateEle151: no visible binding for global variable 'ratio151Num'
+calculateEle151: no visible binding for global variable 'element151Num'
+calculateEle151: no visible binding for global variable 'element131Num'
+calculateEle151: no visible binding for global variable
+  'charcoalUpdateValue'
+calculateEle151: no visible binding for global variable 'element51Num'
+calculateEle161: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle161: no visible binding for global variable
+  'element161Symb'
+calculateEle161: no visible binding for global variable 'element11Num'
+calculateEle161: no visible binding for global variable 'element71Num'
+calculateEle161: no visible binding for global variable 'element161Num'
+calculateEle171: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle171: no visible binding for global variable 'newValue'
+calculateEle171: no visible binding for global variable 'element101Num'
+calculateEle171: no visible binding for global variable 'element121Num'
+calculateEle171: no visible binding for global variable 'element131Num'
+calculateEle171: no visible binding for global variable 'element141Num'
+calculateEle171: no visible binding for global variable 'element151Num'
+calculateEle171: no visible binding for global variable
+  'element171Symb'
+calculateEle171: no visible binding for global variable 'element171Num'
+calculateEle174: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle174: no visible binding for global variable
+  'element174Symb'
+calculateEle174: no visible binding for global variable 'element171Num'
+calculateEle174: no visible binding for global variable 'element174Num'
+calculateEle21: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle21: no visible binding for global variable 'element21Symb'
+calculateEle21: no visible binding for global variable 'element11Num'
+calculateEle21: no visible binding for global variable 'element21Num'
+calculateEle31: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle31: no visible binding for global variable 'element31Symb'
+calculateEle31: no visible binding for global variable 'element31Num'
+calculateEle314151: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle314151: no visible binding for global variable
+  'divisionFactor'
+calculateEle314151: no visible binding for global variable
+  'numberOfMissingElements'
+calculateEle314151: no visible binding for global variable
+  'element31Num'
+calculateEle314151: no visible binding for global variable
+  'element41Num'
+calculateEle314151: no visible binding for global variable
+  'element51Num'
+calculateEle314151: no visible binding for global variable
+  'numberOfTrendingElements'
+calculateEle314151: no visible binding for global variable
+  'element31Symb'
+calculateEle314151: no visible binding for global variable
+  'element41Symb'
+calculateEle314151: no visible binding for global variable
+  'element51Symb'
+calculateEle314151: no visible binding for global variable 'case'
+calculateEle41: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle41: no visible binding for global variable 'element41Symb'
+calculateEle41: no visible binding for global variable 'ratio41Num'
+calculateEle41: no visible binding for global variable 'element41Num'
+calculateEle51: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle51: no visible binding for global variable 'element51Symb'
+calculateEle51: no visible binding for global variable 'element58Num'
+calculateEle51: no visible binding for global variable 'element51Num'
+calculateEle51: no visible binding for global variable 'sugarSum'
+calculateEle51: no visible binding for global variable 'newSum'
+calculateEle541: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle541: no visible binding for global variable 'element542Num'
+calculateEle541: no visible binding for global variable 'element543Num'
+calculateEle541: no visible binding for global variable 'element544Num'
+calculateEle541: no visible binding for global variable 'element545Num'
+calculateEle541: no visible binding for global variable 'newSummation'
+calculateEle541: no visible binding for global variable
+  'numberOfMissingElements'
+calculateEle541: no visible binding for global variable
+  'element541Symb'
+calculateEle541: no visible binding for global variable 'element541Num'
+calculateEle546: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle546: no visible binding for global variable 'newSummation'
+calculateEle546: no visible binding for global variable 'element541Num'
+calculateEle546: no visible binding for global variable 'element151Num'
+calculateEle546: no visible binding for global variable 'element91Num'
+calculateEle546: no visible binding for global variable
+  'numberOfMissingElements'
+calculateEle546: no visible binding for global variable
+  'element546Symb'
+calculateEle546: no visible binding for global variable 'element546Num'
+calculateEle58: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle58 : sumCropYear: no visible binding for global variable
+  'element58Num'
+calculateEle58: no visible binding for global variable 'cropYear'
+calculateEle58: no visible binding for global variable 'element58Symb'
+calculateEle63: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle63: no visible binding for global variable 'element61Num'
+calculateEle63: no visible binding for global variable 'element62Num'
+calculateEle63: no visible binding for global variable 'element63Symb'
+calculateEle63: no visible binding for global variable 'element63Num'
+calculateEle66: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle66: no visible binding for global variable 'aupusParam'
+calculateEle66: no visible binding for global variable 'element66Symb'
+calculateEle66: no visible binding for global variable 'element66Num'
+calculateEle66: no visible global function definition for
+  'standardizeCommodityNetwork'
+calculateEle66: no visible binding for global variable 'Year'
+calculateEle66: no visible binding for global variable 'element41Num'
+calculateEle66: no visible binding for global variable 'element61Num'
+calculateEle71: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle71: no visible binding for global variable 'newSummation'
+calculateEle71: no visible binding for global variable 'element51Num'
+calculateEle71: no visible binding for global variable 'element61Num'
+calculateEle71: no visible binding for global variable 'element91Num'
+calculateEle71: no visible binding for global variable 'element101Num'
+calculateEle71: no visible binding for global variable 'element121Num'
+calculateEle71: no visible binding for global variable 'element131Num'
+calculateEle71: no visible binding for global variable 'element141Num'
+calculateEle71: no visible binding for global variable 'element151Num'
+calculateEle71: no visible binding for global variable 'element71Symb'
+calculateEle71: no visible binding for global variable 'element71Num'
+calculateEle71: no visible binding for global variable 'element161Num'
+calculateEle93: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle93: no visible binding for global variable 'element91Num'
+calculateEle93: no visible binding for global variable 'element92Num'
+calculateEle93: no visible binding for global variable 'element93Symb'
+calculateEle93: no visible binding for global variable 'element93Num'
+calculateEle96: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateEle96: no visible binding for global variable 'aupusParam'
+calculateEle96: no visible binding for global variable 'element96Symb'
+calculateEle96: no visible binding for global variable 'element96Num'
+calculateEle96: no visible global function definition for
+  'standardizeCommodityNetwork'
+calculateEle96: no visible binding for global variable 'Year'
+calculateEle96: no visible binding for global variable 'element41Num'
+calculateEle96: no visible binding for global variable 'element91Num'
+calculateTotalNutritive: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateTotalNutritive: no visible binding for global variable
+  'element141Num'
+calculateTotalSupply: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateTotalSupply: no visible binding for global variable
+  'TOTAL_SUPPLY'
+calculateTotalSupply: no visible binding for global variable
+  'element51Num'
+calculateTotalSupply: no visible binding for global variable
+  'element58Num'
+calculateTotalSupply: no visible binding for global variable
+  'element61Num'
+calculateTotalSupply: no visible binding for global variable
+  'element66Num'
+calculateTotalSupply: no visible binding for global variable
+  'element11Num'
+calculateTotalUtilization: no visible binding for global variable
+  'aupusParameterEnsured'
+calculateTotalUtilization: no visible binding for global variable
+  'TOTAL_UTILIZATION'
+calculateTotalUtilization: no visible binding for global variable
+  'element91Num'
+calculateTotalUtilization: no visible binding for global variable
+  'element95Num'
+calculateTotalUtilization: no visible binding for global variable
+  'element96Num'
+calculateTotalUtilization: no visible binding for global variable
+  'element101Num'
+calculateTotalUtilization: no visible binding for global variable
+  'element111Num'
+calculateTotalUtilization: no visible binding for global variable
+  'element121Num'
+calculateTotalUtilization: no visible binding for global variable
+  'element131Num'
+calculateTotalUtilization: no visible binding for global variable
+  'element141Num'
+calculateTotalUtilization: no visible binding for global variable
+  'element161Num'
+calculateTotalUtilization: no visible binding for global variable
+  'element546Num'
+calculateTotalUtilization: no visible binding for global variable
+  'element151Num'
+checkShareUnity: no visible binding for global variable 'Value_share'
+checkShareUnity: no visible binding for global variable 'aupusParam'
+checkShareUnity: no visible binding for global variable 'sum_check'
+coerceColumnTypes: no visible binding for global variable
+  'aupusParameterEnsured'
+collapseShare: no visible binding for global variable
+  'aupusParameterEnsured'
+collapseShare: no visible binding for global variable
+  'timePointYearsSP'
+collapseSpecificData: no visible binding for global variable
+  'aupusParameterEnsured'
+collapseSpecificData: no visible binding for global variable
+  'timePointYearsSP'
+constructStandardizationGraph: no visible binding for global variable
+  'aupusParameterEnsured'
+defineElementVariables: no visible binding for global variable
+  'aupusParameterEnsured'
+ensureAupusParameter: no visible binding for global variable 'code'
+ensureAupusParameter: no visible binding for '<<-' assignment to
+  'aupusParameterEnsured'
+fbsStandardization: no visible binding for global variable
+  'aupusParameterEnsured'
+getAupusData: no visible binding for global variable
+  'aupusParameterEnsured'
+getAupusData: no visible binding for global variable 'areaCode'
+getAupusData: no visible global function definition for 'dbGetQuery'
+getAupusData: no visible binding for global variable 'Year'
+getAupusData: no visible binding for global variable 'variable'
+getAupusData: no visible binding for global variable 'type'
+getAupusData: no visible binding for global variable 'timePointYearsSP'
+getAupusDataset: no visible binding for global variable
+  'aupusParameterEnsured'
+getAupusDataset: no visible binding for global variable 'Value_share'
+getAupusParameter: no visible binding for global variable 'type'
+getAupusParameter: no visible binding for global variable 'code'
+getAupusParameter: no visible binding for global variable 'description'
+getBalanceElementData: no visible binding for global variable
+  'aupusParameterEnsured'
+getBalanceElementData: no visible binding for global variable
+  'areaCode'
+getBalanceElementData: no visible global function definition for
+  'dbGetQuery'
+getBalanceElementData: no visible binding for global variable 'Year'
+getBalanceElementData: no visible binding for global variable
+  'geographicAreaFS'
+getBalanceElementData: no visible binding for global variable
+  'timePointYearsSP'
+getExtractionRateData: no visible binding for global variable
+  'aupusParameterEnsured'
+getExtractionRateData: no visible binding for global variable
+  'element41Num'
+getExtractionRateData: no visible binding for global variable
+  'element41Symb'
+getInputFromProcessData: no visible binding for global variable
+  'aupusParameterEnsured'
+getInputFromProcessData: no visible binding for global variable
+  'areaCode'
+getInputFromProcessData: no visible global function definition for
+  'dbGetQuery'
+getInputFromProcessData: no visible binding for global variable 'Year'
+getInputFromProcessData: no visible binding for global variable
+  'variable'
+getInputFromProcessData: no visible binding for global variable 'type'
+getInputFromProcessData: no visible binding for global variable 'NUM'
+getItemInfoData: no visible binding for global variable 'startDate'
+getItemInfoData: no visible binding for global variable 'endDate'
+getItemInfoData: no visible binding for global variable
+  'measuredItemFS'
+getItemInfoData: no visible binding for global variable
+  'measuredItemNameFS'
+getItemInfoData: no visible binding for global variable
+  'measuredItemTypeFS'
+getPopulationData: no visible binding for global variable
+  'aupusParameterEnsured'
+getPopulationData: no visible binding for global variable 'areaCode'
+getPopulationData: no visible global function definition for
+  'dbGetQuery'
+getPopulationData: no visible binding for global variable 'Year'
+getPopulationData: no visible binding for global variable 'variable'
+getPopulationData: no visible binding for global variable 'type'
+getPopulationData: no visible binding for global variable
+  'measuredItemFS'
+getPopulationData: no visible binding for global variable
+  'timePointYearsSP'
+getRatioData: no visible binding for global variable
+  'aupusParameterEnsured'
+getRatioData: no visible binding for global variable 'areaCode'
+getRatioData: no visible global function definition for 'dbGetQuery'
+getRatioData: no visible binding for global variable 'ELE'
+getRatioData: no visible binding for global variable 'Year'
+getRatioData: no visible binding for global variable 'geographicAreaFS'
+getRatioData: no visible binding for global variable 'timePointYearsSP'
+getShareData: no visible binding for global variable
+  'aupusParameterEnsured'
+getShareData: no visible binding for global variable 'areaCode'
+getShareData: no visible global function definition for 'dbGetQuery'
+getShareData: no visible binding for global variable 'Year'
+getShareData: no visible binding for global variable 'flagShare'
+getShareData: no visible binding for global variable 'geographicAreaFS'
+getShareData: no visible binding for global variable 'timePointYearsSP'
+plotCommodityTree: no visible binding for global variable 'N'
+standardizeNode: no visible global function definition for 'from'
+suaToNetworkRepresentation: no visible binding for global variable
+  'aupusParameterEnsured'
+subsetAupus: no visible binding for global variable
+  'aupusParameterEnsured'
+updateEdges: no visible binding for global variable
+  'aupusParameterEnsured'
+updateEdges: no visible binding for global variable 'element131Num'
+updateEdges: no visible binding for global variable 'element41Num'
+updateEdges: no visible binding for global variable 'Value_input'
+updateEdges: no visible binding for global variable 'inputFromParent'
+updateEdges: no visible binding for global variable 'Value_share'
+updateEdges: no visible binding for global variable 'Value_extraction'
+updateEdges: no visible binding for global variable
+  'newExtractionRates'
+updateInputFromProcessing: no visible binding for global variable
+  'aupusParameterEnsured'
+updateInputFromProcessing: no visible binding for global variable
+  'Value_input'
+updateInputFromProcessing: no visible binding for global variable
+  'element31Num'
+updateInputFromProcessing: no visible binding for global variable
+  'Aggregated_input'
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of 'data' directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking installed files from 'inst/doc' ... OK
+* checking files in 'vignettes' ... OK
+* checking examples ... OK
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes in 'inst/doc' ... OK
+* checking running R code from vignettes ... OK
+* checking re-building of vignette outputs ... OK
+* checking PDF version of manual ... OK
+WARNING: There was 1 warning.
+NOTE: There were 2 notes.

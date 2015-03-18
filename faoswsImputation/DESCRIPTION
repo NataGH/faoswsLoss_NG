@@ -1,0 +1,28 @@
+Package: faoswsImputation
+Type: Package
+Title: Package to perform ensemble imputation for various FAO domains.
+Version: 5.0
+Date: 2015-01-29
+Authors@R: c(person("Micheal. C. J.", "Kao", role = c("aut", "cre"), email = "michael.kao@fao.org"))
+Author: Michael C. J. Kao <michael.kao@fao.org>, Joshua M. Browning <joshua.browning@fao.org>
+Maintainer: Joshua M. Browning <joshua.browning@fao.org>
+Description: This package provides all the functions to perform imputation of variables for the FAO production domain.
+URL: https://github.com/mkao006/sws_imputation
+License: GPL (>= 3)
+Imports:
+    lme4 (>= 1.1-7),
+    reshape2 (>= 1.4),
+    earth (>= 3.2-7),
+    forecast (>= 5.5),
+    zoo (>= 1.7-11),
+    RColorBrewer (>= 1.0-5)
+Depends:
+    faoswsFlag (>= 0.1.0),
+    faoswsUtil (>= 0.1.3),
+    data.table (>= 1.9.2),
+    splines (>= 3.0.2),
+    ggplot2
+LazyData: yes
+ZipData: no
+VignetteBuilder: knitr
+Suggests: knitr, ggplot2
