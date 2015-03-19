@@ -25,7 +25,6 @@ R/PostRestCall.R -text
 R/PutRestCall.R -text
 R/SaveBlockMetadata.R -text
 R/SaveData.R -text
-R/SaveDataNew.R -text
 R/SaveValidation.R -text
 R/SetTableData.R -text
 R/buildModifiedCells.R -text
@@ -53,7 +52,6 @@ man/PostRestCall.Rd -text
 man/PutRestCall.Rd -text
 man/SaveBlockMetadata.Rd -text
 man/SaveData.Rd -text
-man/SaveDataNew.Rd -text
 man/SaveValidation.Rd -text
 man/SetTableData.Rd -text
 man/swsContext.Rd -text
