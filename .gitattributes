@@ -420,7 +420,6 @@ faoswsAupus/vignettes/faoswsAupus.Rnw -text
 faoswsAupus/vignettes/faoswsAupus.tex -text
 faoswsAupus/vignettes/figure/unnamed-chunk-3-1.pdf -text
 faoswsAupus/vignettes/figure/unnamed-chunk-6-1.pdf -text
-/faoswsAupus_1.0.tar.gz -text
 faoswsImputation.Rcheck/00_pkg_src/faoswsImputation/DESCRIPTION -text
 faoswsImputation.Rcheck/00_pkg_src/faoswsImputation/NAMESPACE -text
 faoswsImputation.Rcheck/00_pkg_src/faoswsImputation/R/Class-ensembleModel.R -text
@@ -541,7 +540,6 @@ faoswsImputation.Rcheck/faoswsImputation/help/faoswsImputation.rdx -text
 faoswsImputation.Rcheck/faoswsImputation/help/paths.rds -text
 faoswsImputation.Rcheck/faoswsImputation/html/00Index.html -text
 faoswsImputation.Rcheck/faoswsImputation/html/R.css -text
-/faoswsImputation.zip -text
 faoswsImputation/DESCRIPTION -text
 faoswsImputation/NAMESPACE -text
 faoswsImputation/R/Class-ensembleModel.R -text
@@ -641,7 +639,6 @@ faoswsImputation/vignettes/methodology.out -text
 faoswsImputation/vignettes/methodology.pdf -text
 faoswsImputation/vignettes/methodology.tex -text
 faoswsImputation/vignettes/methodologyOld.Rnw -text
-/faoswsImputation_5.0.tar.gz -text
 faoswsProduction.Rcheck/00_pkg_src/faoswsProduction/DESCRIPTION -text
 faoswsProduction.Rcheck/00_pkg_src/faoswsProduction/NAMESPACE -text
 faoswsProduction.Rcheck/00_pkg_src/faoswsProduction/R/balanceAreaHarvested.R -text
@@ -732,7 +729,6 @@ faoswsProduction/man/processProductionDomain.Rd -text
 faoswsProduction/man/saveProductionData.Rd -text
 faoswsProduction/vignettes/faoswsProduction.Rnw -text
 faoswsProduction/vignettes/methodology.Rnw -text
-/faoswsProduction_1.0.0.tar.gz -text
 faoswsSeed.Rcheck/00_pkg_src/faoswsSeed/DESCRIPTION -text
 faoswsSeed.Rcheck/00_pkg_src/faoswsSeed/NAMESPACE -text
 faoswsSeed.Rcheck/00_pkg_src/faoswsSeed/R/fillCountrySpecificSeedRate.R -text
@@ -793,8 +789,6 @@ faoswsSeed.Rcheck/faoswsSeed/help/faoswsSeed.rdx -text
 faoswsSeed.Rcheck/faoswsSeed/help/paths.rds -text
 faoswsSeed.Rcheck/faoswsSeed/html/00Index.html -text
 faoswsSeed.Rcheck/faoswsSeed/html/R.css -text
-/faoswsSeed.pdf -text svneol=unset#unset
-/faoswsSeed.zip -text
 faoswsSeed/DESCRIPTION -text
 faoswsSeed/NAMESPACE -text
 faoswsSeed/R/fillCountrySpecificSeedRate.R -text
@@ -819,7 +813,6 @@ faoswsSeed/man/imputeSeedDomain.Rd -text
 faoswsSeed/man/saveSeedData.Rd -text
 faoswsSeed/man/seedData.Rd -text
 faoswsSeed/vignettes/faoswsSeed.Rnw -text
-/faoswsSeed_1.0.0.tar.gz -text
 man/BlockMetadata-class.Rd -text
 man/BlockMetadataSet-class.Rd -text
 man/DatasetKey-class.Rd -text
