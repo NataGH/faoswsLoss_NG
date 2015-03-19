@@ -13,7 +13,7 @@ Collate:
 	Dimension.R DatasetKey.R MappingTableKey.R Pivoting.R KeyDefinition.R MetadataElement.R Metadata.R BlockMetadata.R BlockMetadataSet.R
 	GetRestCall.R PostRestCall.R PutRestCall.R
 	GetData.R GetCodeList.R GetCodeTree.R GetHistory.R GetMapping.R GetBlockMetadata.R
-	SaveData.R SaveDataNew.R SaveValidation.R SaveBlockMetadata.R
+	SaveData.R SaveValidation.R SaveBlockMetadata.R
 	GetTestEnvironment.R
 	zzz.R
 	buildModifiedCells.R

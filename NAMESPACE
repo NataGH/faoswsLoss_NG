@@ -27,7 +27,6 @@ export(
 	GetMapping,
 	GetBlockMetadata,
 	SaveData,
-	SaveDataNew,
 	SaveValidation,
 	SaveBlockMetadata,
 	GetTestEnvironment,
