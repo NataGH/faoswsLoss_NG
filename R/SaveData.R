@@ -25,8 +25,11 @@
 ##' has been saved (this can be dangerous if the object is accessed later).
 ##' "synch" gives the writing process a short time period, and returns an error
 ##' if the write fails.
-##' @param pullTimeout An integer giving the number of seconds to allow for the
+##' @param waitTimeout An integer giving the number of seconds to allow for the
 ##' write process to the database before returning an error.
+##' @param chunkSize The largest number of rows to write at one time.  This
+##' value helps prevent server timeouts, and shouldn't usually need to be
+##' adjusted from the default value of 50,000.
 ##' 
 ##' @return No object is returned, as this function just writes data to the
 ##' SWS.

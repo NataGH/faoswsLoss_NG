@@ -6,8 +6,8 @@
 
 PutRestCall <- function(url, data) {
 
-	ch <- getCurlHandle()
-	response <- httpPUT(
+	ch <- RCurl::getCurlHandle()
+	response <- RCurl::httpPUT(
 		url = url,
 		curl = ch,
 		verbose = FALSE,
@@ -18,14 +18,14 @@ PutRestCall <- function(url, data) {
 		#cacert = path.expand(swsContext.serverCertificate),
 		ssl.verifyhost = 2,
 		httpheader = c(Accept = "application/json", 'Content-Type' = "application/json", Expect = ""),
-		content = toJSON(data, digits = 30))
+		content = RJSONIO::toJSON(data, digits = 30))
 
 	# Check returned status code.
 	#
-	status <- getCurlInfo(ch, which = "response.code")
+	status <- RCurl::getCurlInfo(ch, which = "response.code")
 	if(status != 200) {
 		stop(paste("Unable to perform REST call to SWS server. Status code was", status))
 	}
 
-	fromJSON(response)
+	RJSONIO::fromJSON(response)
 }

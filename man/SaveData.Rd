@@ -4,7 +4,8 @@
 \alias{SaveData}
 \title{Save Data}
 \usage{
-SaveData(domain, dataset, data, metadata, normalized = TRUE)
+SaveData(domain, dataset, data, metadata, normalized = TRUE,
+  waitMode = "wait", waitTimeout = 600, chunkSize = 50000)
 }
 \arguments{
 \item{domain}{A character value specifying the domain for which the code
@@ -19,6 +20,21 @@ list is required.}
 
 \item{normalized}{Logical, indicates whether data is in a normalized or
 denormalized format.}
+
+\item{waitMode}{A character string indicating how to behave with respect to
+the backend.  Should be either "wait", "forget", or "synch".  "wait" allows
+R to routinely check for completion of the save, up to pullTimeout seconds.
+"forget" returns control to R immediately without verifying that the object
+has been saved (this can be dangerous if the object is accessed later).
+"synch" gives the writing process a short time period, and returns an error
+if the write fails.}
+
+\item{waitTimeout}{An integer giving the number of seconds to allow for the
+write process to the database before returning an error.}
+
+\item{chunkSize}{The largest number of rows to write at one time.  This
+value helps prevent server timeouts, and shouldn't usually need to be
+adjusted from the default value of 50,000.}
 }
 \value{
 No object is returned, as this function just writes data to the
