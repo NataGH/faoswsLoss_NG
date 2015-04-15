@@ -15,6 +15,10 @@ list is required.}
 
 \item{validation}{A data.table object containing keys and validation data.}
 }
+\value{
+The data passed to this function is saved to the database, and
+nothing is explicitly returned by this function.
+}
 \description{
 Save Validation
 }

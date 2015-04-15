@@ -6,6 +6,9 @@
 ##' list is required.
 ##' @param validation A data.table object containing keys and validation data.
 ##' 
+##' @return The data passed to this function is saved to the database, and
+##' nothing is explicitly returned by this function.
+##' 
 
 SaveValidation <- function(domain, dataset, validation) {
 
@@ -15,8 +18,8 @@ SaveValidation <- function(domain, dataset, validation) {
 
 	# Prepare JSON for REST call.
 	#
-	json <- SaveValidation.buildJSON(domain, dataset, validation)
-
+	json <- SaveValidation.buildJSON.new(domain, dataset, validation)
+	
 	# Perform REST call.
 	#
 	url <- paste0(
@@ -84,25 +87,17 @@ SaveValidation.buildJSON <- function(domain, dataset, validation) {
 	#
 	jsonElement <- list()
 	jsonElement[["dimensions"]] <- keys
-	json[["validations"]][[1]] <- jsonElement
 
-
-	# Iterate on passed validation table rows.
+	# Extract data from passed validation table rows using apply.
 	#
-	for(i in 1:nrow(validation)) {
+    json = c(list(jsonElement), apply(data.frame(validation), 1, function(x){
+        currentKeys = x[keys]
+        names(currentKeys) = NULL
+        list(keys = currentKeys,
+             severity = as.numeric(x["Severity"]),
+             description = as.character(x["Description"]))
+        }))
 
-		k <- c()
-		for(j in 1:length(keys)) {
-			k <- c(k, as.character(validation[i, keys, with = FALSE][[j]]))
-		}
-
-		jsonElement <- list()
-		jsonElement[["keys"]] <- k
-		jsonElement[["severity"]] <- validation[i, Severity]
-		jsonElement[["description"]] <- validation[i, Description]
-
-		json[["validations"]][[i + 1]] <- jsonElement
-	}
-
-	json
+    ## Coerce to a list of lists to match previous format requirements
+	list(validations = json)
 }
