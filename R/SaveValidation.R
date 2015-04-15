@@ -66,6 +66,19 @@ SaveValidation.validate <- function(domain, dataset, validation) {
 	if(nrow(validation) == 0) {
 		stop("The passed validation argument was empty.")
 	}
+    
+    expectedColumnNames = c(names(swsContext.datasets[[1]]@dimensions),
+                            "Severity", "Description")
+    missingColumns = !expectedColumnNames %in% colnames(validation)
+    if(any(missingColumns))
+        warning("Based on swsContext.datasets[[1]], we expect the following ",
+                "columns which aren't in the validation dataset:\n",
+                paste(expectedColumnNames[missingColumns], collapse = "\n"))
+    additionalColumns = !colnames(validation) %in% expectedColumnNames
+    if(any(additionalColumns))
+        warning("Based on swsContext.datasets[[1]], we don't expect the ",
+                "following columns which are in the validation dataset:\n",
+                paste(colnames(validation)[additionalColumns], collapse = "\n"))
 }
 
 
