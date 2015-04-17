@@ -354,12 +354,9 @@ SaveData.buildNormalizedDataContentJSON <- function(data) {
   
   # Do not consider metadata column, if they have been passed.
   #
-  metadataColumnsFilter <- colnames(data) != "Metadata"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Language"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Group"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Element"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Value"
-  
+  metadataColumnsFilter <- ! colnames(data) %in%
+      c("Metadata", "Metadata_Language", "Metadata_Group",
+        "Metadata_Element", "Metadata_Value")
   
   # Prepare list to hold JSON data.
   #
@@ -392,16 +389,28 @@ SaveData.buildNormalizedDataContentJSON <- function(data) {
   # Extract the set of unique keys for external loop.
   #
   uniqueKeys <- unique(data)
-  for(i in 1:nrow(uniqueKeys)) {
-    
-    jsonElement <- list()
-    jsonElement[["keys"]] <- list()
-    jsonElement[["keys"]] <- c(jsonElement[["keys"]], as.character(uniqueKeys[i, keys, with = FALSE]))
-    jsonElement[["value"]] <- uniqueKeys[i, Value]
-    jsonElement[["flags"]] <- list()
-    jsonElement[["flags"]] <- c(jsonElement[["flags"]], as.character(uniqueKeys[i, flags, with = FALSE]))
-    json[[i]] <- jsonElement
-  }
+  json = apply(data.frame(uniqueKeys), 1, function(x){
+    keyValues = c(x[keys])
+    keyValues = as.list(keyValues)
+    names(keyValues) = NULL
+    value = as.numeric(x["Value"])
+    flagValue = as.list(x[flags])
+    names(flagValue) = NULL
+    list(keys = keyValues,
+         value = ifelse(is.null(value), NA, value),
+         flags = flagValue)
+  })
+  
+#   for(i in 1:nrow(uniqueKeys)) {
+#     
+#     jsonElement <- list()
+#     jsonElement[["keys"]] <- list()
+#     jsonElement[["keys"]] <- c(jsonElement[["keys"]], as.character(uniqueKeys[i, keys, with = FALSE]))
+#     jsonElement[["value"]] <- uniqueKeys[i, Value]
+#     jsonElement[["flags"]] <- list()
+#     jsonElement[["flags"]] <- c(jsonElement[["flags"]], as.character(uniqueKeys[i, flags, with = FALSE]))
+#     json[[i]] <- jsonElement
+#   }
   
   # Restore original key.
   #
@@ -501,11 +510,9 @@ SaveData.buildDenormalizedDataContentJSON <- function(data) {
   
   # Do not consider metadata column, if they have been passed.
   #
-  metadataColumnsFilter <- colnames(data) != "Metadata"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Language"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Group"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Element"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Value"
+  metadataColumnsFilter <- ! colnames(data) %in%
+      c("Metadata", "Metadata_Language", "Metadata_Group",
+        "Metadata_Element", "Metadata_Value")
   
   # Prepare list to hold JSON data.
   #
@@ -554,42 +561,60 @@ SaveData.buildDenormalizedDataContentJSON <- function(data) {
   # Extract the set of unique keys for external loop.
   #
   uniqueKeys <- unique(data)
-  k = 1
-  for(i in 1:nrow(uniqueKeys)) {
-    for(j in 1:length(denormalizedKeys)) {
-      
-      value <- unlist(uniqueKeys[i, paste0("Value_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE])
-      if (!is.na(value))
-      {
-        jsonElement <- list()
-        jsonElement[["keys"]] <- c(as.character(uniqueKeys[i, keys, with = FALSE]), denormalizedKeys[[j]])
-        
-        if(is.null(value)) {
-          jsonElement[["value"]] <- NA
-        } else {
-          jsonElement[["value"]] <- as.numeric(value)
-        }
-        
-        flagValues <- unlist(uniqueKeys[i, paste0(flags, "_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE])
-        
-        jsonElement[["flags"]] <- list()
-        for(f in uniqueKeys[i, paste0(flags, "_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE]) {
-          
-          u <- unlist(f)
-          if(is.null(u)) {
-            jsonElement[["flags"]] <- c(jsonElement[["flags"]], "")
-          }
-          else {
-            jsonElement[["flags"]] <- c(jsonElement[["flags"]], as.character(u))
-          }
-        }
-        
-        #				json[["data"]][[(i - 1) * length(denormalizedKeys) + j]] <- jsonElement
-        json[[k]] <- jsonElement
-        k <- k + 1
-      }
-    }
-  }
+  json = apply(data.frame(uniqueKeys), 1, function(x){
+    lapply(denormalizedKeys, function(key){
+      keyValues = c(x[keys], key)
+      names(keyValues) = NULL
+      valueColumnName = paste0("Value_", denormalizedKey, "_", key)
+      value = as.numeric(x[valueColumnName])
+      flagColumnNames = paste0(flags, "_", denormalizedKey, "_", key)
+      flagValue = as.list(x[flagColumnNames])
+      names(flagValue) = NULL
+      list(keys = keyValues,
+           value = ifelse(is.null(value), NA, value),
+           flags = flagValue)
+    })
+  })
+  ## The above function produces a list where each element is a list of three
+  ## (for the three different keys).  We want to combine all those together,
+  ## so call c on this list.
+  json = do.call("c", json)
+
+#   for(i in 1:nrow(uniqueKeys)) {
+#     for(j in 1:length(denormalizedKeys)) {
+#       
+#       value <- unlist(uniqueKeys[i, paste0("Value_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE])
+#       if (!is.na(value))
+#       {
+#         jsonElement <- list()
+#         jsonElement[["keys"]] <- c(as.character(uniqueKeys[i, keys, with = FALSE]), denormalizedKeys[[j]])
+#         
+#         if(is.null(value)) {
+#           jsonElement[["value"]] <- NA
+#         } else {
+#           jsonElement[["value"]] <- as.numeric(value)
+#         }
+#         
+#         flagValues <- unlist(uniqueKeys[i, paste0(flags, "_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE])
+#         
+#         jsonElement[["flags"]] <- list()
+#         for(f in uniqueKeys[i, paste0(flags, "_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE]) {
+#           
+#           u <- unlist(f)
+#           if(is.null(u)) {
+#             jsonElement[["flags"]] <- c(jsonElement[["flags"]], "")
+#           }
+#           else {
+#             jsonElement[["flags"]] <- c(jsonElement[["flags"]], as.character(u))
+#           }
+#         }
+#         
+#         #				json[["data"]][[(i - 1) * length(denormalizedKeys) + j]] <- jsonElement
+#         json[[k]] <- jsonElement
+#         k <- k + 1
+#       }
+#     }
+#   }
   
   # Restore original key.
   #
