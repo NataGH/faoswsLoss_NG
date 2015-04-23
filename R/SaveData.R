@@ -488,6 +488,34 @@ SaveData.buildDenormalizedDataDefJSON <- function(data) {
   json
 }
 
+##' Normalize Data
+##' 
+##' This function takes denormalized data and casts it as normalized data,
+##' mostly with the help of the tidyr package.
+##' 
+##' @param data The denormalized dataset, provided as a data.table.
+##' @param keys A character vector of column names of data which correspond
+##' to all the dimensions of the data except for the denormalized dimension.
+##' @param denormalizedKey A character value containing the name of the
+##' denormalized key.  This string is then used to determine the columns of
+##' data which correspond to values and flags and which correspond to
+##' dimensions.
+##' 
+##' @return A data.table object in normalized format.
+##' 
+
+normalizeData <- function(data, keys, denormalizedKey){
+  newData <- suppressWarnings(
+  tidyr::gather(data, key = "Key", value = "Value",
+                (1:ncol(data))[!colnames(data) %in% keys]))
+  newData <- tidyr::separate(newData, col = "Key",
+                            into = c("Key", denormalizedKey),
+                            sep = paste0("_", denormalizedKey, "_"))
+  newData <- tidyr::spread(newData, key = "Key", value = "Value")
+  newData$Value <- as.numeric(newData$Value)
+  newData
+}
+
 SaveData.buildDenormalizedDataContentJSON <- function(data) {
   
   # Save the original key of the passed data table.
