@@ -367,11 +367,6 @@ SaveData.buildNormalizedDataContentJSON <- function(data) {
   metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Element"
   metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Value"
   
-  
-  # Prepare list to hold JSON data.
-  #
-  json <- list()
-  
   # Extract key column names.
   #
   filteredColumnNames <- colnames(data[, metadataColumnsFilter, with = FALSE])
@@ -399,16 +394,11 @@ SaveData.buildNormalizedDataContentJSON <- function(data) {
   # Extract the set of unique keys for external loop.
   #
   uniqueKeys <- unique(data)
-  for(i in 1:nrow(uniqueKeys)) {
-    jsonElement <- list()
-    jsonElement[["keys"]] <- list()
-    jsonElement[["keys"]] <- c(jsonElement[["keys"]], as.character(uniqueKeys[i, keys, with = FALSE]))
-    jsonElement[["value"]] <- uniqueKeys[i, Value]
-    jsonElement[["flags"]] <- list()
-    jsonElement[["flags"]] <- c(jsonElement[["flags"]], as.character(uniqueKeys[i, flags, with = FALSE]))
-    # json[[i]] <- jsonElement
-    json[[i]] <- c(as.character(jsonElement[["keys"]]), jsonElement[["value"]], as.character(jsonElement[["flags"]]))
-  }
+  json <- split(uniqueKeys, rownames(uniqueKeys))
+  json <- lapply(json, as.character)
+  json <- json[order(as.numeric(names(json)))]
+  names(json) <- NULL
+
   # Restore original key.
   #
   setkeyv(data, origKey, verbose = FALSE)
@@ -487,7 +477,6 @@ SaveData.buildDenormalizedDataDefJSON <- function(data) {
     denormalizedKeys <- append(denormalizedKeys, substr(col, regexpr("_[^_]+$", col) + 1, nchar(col)))
   }
   
-  
   # Set data table key.
   #
   setkeyv(data, keys, verbose = FALSE)
@@ -513,10 +502,6 @@ SaveData.buildDenormalizedDataContentJSON <- function(data) {
   metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Element"
   metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Value"
   
-  # Prepare list to hold JSON data.
-  #
-  json <- list()
-  
   # Extract fixed key column names.
   #
   filteredColumnNames <- colnames(data[, metadataColumnsFilter, with = FALSE])
@@ -534,75 +519,15 @@ SaveData.buildDenormalizedDataContentJSON <- function(data) {
   denormalizedKey <- substr(filteredColumnNames[index], nchar("Value_") + 1, regexpr("_[^_]+$", filteredColumnNames[index]) - 1)
   allKeys <- append(keys, denormalizedKey)
   
-  # Check if flag columns are present. They are all those immediately following
-  # the Value column.
-  #
-  flags <- c()
-  for(col in filteredColumnNames[(index + 1):(length(filteredColumnNames))]) {
-    if(grepl("^Value_", col)) {
-      break
-    }
-    flags <- append(flags, substr(col, 1, regexpr(paste0("_", denormalizedKey), col) - 1))
-  }
-  
-  # Extract all denormalized column keys.
-  #
-  denormalizedKeys <- c()
-  for(col in filteredColumnNames[which(grepl("^Value_", filteredColumnNames))]) {
-    denormalizedKeys <- append(denormalizedKeys, substr(col, regexpr("_[^_]+$", col) + 1, nchar(col)))
-  }
-  
-  
-  # Set data table key.
-  #
-  setkeyv(data, keys, verbose = FALSE)
-  
-  # Extract the set of unique keys for external loop.
+  # Extract the set of unique keys
   #
   uniqueKeys <- unique(data)
-  k = 1
-  for(i in 1:nrow(uniqueKeys)) {
-    for(j in 1:length(denormalizedKeys)) {
-      
-      value <- unlist(uniqueKeys[i, paste0("Value_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE])
-      if (!is.na(value))
-      {
-        jsonElement <- list()
-        jsonElement[["keys"]] <- c(as.character(uniqueKeys[i, keys, with = FALSE]), denormalizedKeys[[j]])
-        
-        if(is.null(value)) {
-          jsonElement[["value"]] <- NA
-        } else {
-          jsonElement[["value"]] <- as.numeric(value)
-        }
-        
-        flagValues <- unlist(uniqueKeys[i, paste0(flags, "_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE])
-        
-        jsonElement[["flags"]] <- list()
-        for(f in uniqueKeys[i, paste0(flags, "_", denormalizedKey, "_", denormalizedKeys[[j]]), with = FALSE]) {
-          
-          u <- unlist(f)
-          if(is.null(u)) {
-            jsonElement[["flags"]] <- c(jsonElement[["flags"]], "")
-          }
-          else {
-            jsonElement[["flags"]] <- c(jsonElement[["flags"]], as.character(u))
-          }
-        }
-        
-        #				json[["data"]][[(i - 1) * length(denormalizedKeys) + j]] <- jsonElement
-        # json[[k]] <- jsonElement
-        json[[k]] <- c(as.character(jsonElement[["keys"]]), jsonElement[["value"]], as.character(jsonElement[["flags"]]))
-        k <- k + 1
-      }
-    }
-  }
-  
-  # Restore original key.
-  #
-  setkeyv(data, origKey, verbose = FALSE)
-  
-  json
+  normalizedData <- normalizeData(uniqueKeys, keys = keys,
+                                 denormalizedKey = denormalizedKey)
+  normalizedData <- normalizedData[, c(keys, denormalizedKey, "Value", flags),
+                                    with = FALSE]
+  ## Now that data has been normalized, pass it to the normalized SaveData
+  SaveData.buildNormalizedDataContentJSON(data = normalizedData)
 }
 
 SaveData.buildMetadataDefJSON <- function(metadata) {
