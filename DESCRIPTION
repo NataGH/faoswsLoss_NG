@@ -8,7 +8,7 @@ Maintainer: ? <rsws@fao.org>
 Description: API providing access to the FAO Statistical Working System
 License: @FAO 2013
 Depends: R (>= 3.0)
-Imports: RCurl, RJSONIO, data.table
+Imports: RCurl, RJSONIO, data.table, tidyr
 Collate:
 	Dimension.R DatasetKey.R MappingTableKey.R Pivoting.R KeyDefinition.R MetadataElement.R Metadata.R BlockMetadata.R BlockMetadataSet.R
 	GetRestCall.R PostRestCall.R PutRestCall.R
