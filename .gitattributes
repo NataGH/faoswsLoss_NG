@@ -54,4 +54,5 @@ man/SaveBlockMetadata.Rd -text
 man/SaveData.Rd -text
 man/SaveValidation.Rd -text
 man/SetTableData.Rd -text
+man/normalizeData.Rd -text
 man/swsContext.Rd -text

@@ -547,6 +547,17 @@ SaveData.buildDenormalizedDataContentJSON <- function(data) {
   denormalizedKey <- substr(filteredColumnNames[index], nchar("Value_") + 1, regexpr("_[^_]+$", filteredColumnNames[index]) - 1)
   allKeys <- append(keys, denormalizedKey)
   
+  # Check if flag columns are present. They are all those immediately following
+  # the Value column.
+  #
+  flags <- c()
+  for(col in filteredColumnNames[(index + 1):(length(filteredColumnNames))]) {
+    if(grepl("^Value_", col)) {
+      break
+    }
+    flags <- append(flags, substr(col, 1, regexpr(paste0("_", denormalizedKey), col) - 1))
+  }
+  
   # Extract the set of unique keys
   #
   uniqueKeys <- unique(data)
