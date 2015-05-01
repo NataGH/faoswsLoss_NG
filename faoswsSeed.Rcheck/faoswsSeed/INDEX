@@ -1,0 +1,14 @@
+fillCountrySpecificSeedRate
+                        Fill country specific seed rates
+fillGeneralSeedRate     Fill general seed rate
+getAreaData             Function for obtaining the area harvested/sown
+                        data
+getCountryGeneralSeedRate
+                        Get Country General Seed Rates
+getCountrySpecificSeedRate
+                        Function to load the country specific rate data
+imputeAreaSown          Get the area harvested/sown data
+imputeSeed              Function to impute the seed.
+imputeSeedDomain        Impute Seed Domain
+saveSeedData            Save Seed Data
+seedData                Example seed data for the vignette.

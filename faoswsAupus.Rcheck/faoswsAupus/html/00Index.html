@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Package to perform the AUPUS calculation.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="R.css">
+</head><body>
+<h1> Package to perform the AUPUS calculation.
+<img class="toplogo" src="../../../doc/html/logo.jpg" alt="[R logo]">
+</h1>
+<hr>
+<div align="center">
+<a href="../../../doc/html/packages.html"><img src="../../../doc/html/left.jpg" alt="[Up]" width="30" height="30" border="0"></a>
+<a href="../../../doc/html/index.html"><img src="../../../doc/html/up.jpg" alt="[Top]" width="30" height="30" border="0"></a>
+</div><h2>Documentation for package &lsquo;faoswsAupus&rsquo; version 1.0</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+<li><a href="../doc/index.html">User guides, package vignettes and other documentation.</a></li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<table width="100%">
+<tr><td width="25%"><a href="faoswsAupus-package.html">faoswsAupus-package</a></td>
+<td>Package to perform the AUPUS calculation.</td></tr>
+<tr><td width="25%"><a href="appendSymbol.html">appendSymbol</a></td>
+<td>Function to fill symbol based on calculated value</td></tr>
+<tr><td width="25%"><a href="Aupus.html">Aupus</a></td>
+<td>AUPUS</td></tr>
+<tr><td width="25%"><a href="aupusGroups.html">aupusGroups</a></td>
+<td>AUPUS Groups</td></tr>
+<tr><td width="25%"><a href="balanceProductionElements.html">balanceProductionElements</a></td>
+<td>Balance Production Elements</td></tr>
+<tr><td width="25%"><a href="buildEdges.html">buildEdges</a></td>
+<td>Build Edges</td></tr>
+<tr><td width="25%"><a href="buildNodes.html">buildNodes</a></td>
+<td>Build Nodes</td></tr>
+<tr><td width="25%"><a href="calculateAupusElements.html">calculateAupusElements</a></td>
+<td>Calculate AUPUS Elements</td></tr>
+<tr><td width="25%"><a href="calculateBalance.html">calculateBalance</a></td>
+<td>Calculate Balance</td></tr>
+<tr><td width="25%"><a href="calculateDailyNutritive.html">calculateDailyNutritive</a></td>
+<td>Calculate Daily Nutritive (Calories, Proteins, and Fats)</td></tr>
+<tr><td width="25%"><a href="calculateEle101.html">calculateEle101</a></td>
+<td>Calculate Element 101 (Use for Animals)</td></tr>
+<tr><td width="25%"><a href="calculateEle11.html">calculateEle11</a></td>
+<td>Calculate Element 11 (Initial Existence)</td></tr>
+<tr><td width="25%"><a href="calculateEle111.html">calculateEle111</a></td>
+<td>Calculate Element 111 (Use for Same Product)</td></tr>
+<tr><td width="25%"><a href="calculateEle121.html">calculateEle121</a></td>
+<td>Calculate Element 121 (Losses)</td></tr>
+<tr><td width="25%"><a href="calculateEle131.html">calculateEle131</a></td>
+<td>Calculate Element 131 (Reemployment Same Sector)</td></tr>
+<tr><td width="25%"><a href="calculateEle141.html">calculateEle141</a></td>
+<td>Calculate Element 141 (Consumption)</td></tr>
+<tr><td width="25%"><a href="calculateEle144.html">calculateEle144</a></td>
+<td>Calculate Element 144 (Consumption Per Day)</td></tr>
+<tr><td width="25%"><a href="calculateEle151.html">calculateEle151</a></td>
+<td>Calculate Element 151 (Reemployment other sector)</td></tr>
+<tr><td width="25%"><a href="calculateEle161.html">calculateEle161</a></td>
+<td>Calculate Element 161 (Final existence)</td></tr>
+<tr><td width="25%"><a href="calculateEle171.html">calculateEle171</a></td>
+<td>Calculate Element 171 (Consumption, Sugar only)</td></tr>
+<tr><td width="25%"><a href="calculateEle174.html">calculateEle174</a></td>
+<td>Calculate Element 174 (Consumption per Caput, Sugar only)</td></tr>
+<tr><td width="25%"><a href="calculateEle21.html">calculateEle21</a></td>
+<td>Calculate Element 21 (Potential Producing Factor)</td></tr>
+<tr><td width="25%"><a href="calculateEle31.html">calculateEle31</a></td>
+<td>Calculate Element 31</td></tr>
+<tr><td width="25%"><a href="calculateEle314151.html">calculateEle314151</a></td>
+<td>Calculate Elements 31, 41, and 51</td></tr>
+<tr><td width="25%"><a href="calculateEle41.html">calculateEle41</a></td>
+<td>Calculate Element 41 (Productivity Element)</td></tr>
+<tr><td width="25%"><a href="calculateEle51.html">calculateEle51</a></td>
+<td>Calculate Element 51</td></tr>
+<tr><td width="25%"><a href="calculateEle541.html">calculateEle541</a></td>
+<td>Calculate Element 541 (Final Demand)</td></tr>
+<tr><td width="25%"><a href="calculateEle546.html">calculateEle546</a></td>
+<td>Calculate Element 546 (Total Demand)</td></tr>
+<tr><td width="25%"><a href="calculateEle58.html">calculateEle58</a></td>
+<td>Calculate Element 58 (Production Crop Year)</td></tr>
+<tr><td width="25%"><a href="calculateEle63.html">calculateEle63</a></td>
+<td>Calculate Element 63</td></tr>
+<tr><td width="25%"><a href="calculateEle66.html">calculateEle66</a></td>
+<td>Calculate Element 66 (standardized inflow)</td></tr>
+<tr><td width="25%"><a href="calculateEle71.html">calculateEle71</a></td>
+<td>Calculate Element 71</td></tr>
+<tr><td width="25%"><a href="calculateEle93.html">calculateEle93</a></td>
+<td>Calculate Element 93</td></tr>
+<tr><td width="25%"><a href="calculateEle96.html">calculateEle96</a></td>
+<td>Calculate Element 96 (Standardized Outflow)</td></tr>
+<tr><td width="25%"><a href="calculateTotalInput.html">calculateTotalInput</a></td>
+<td>Calculate Total Input</td></tr>
+<tr><td width="25%"><a href="calculateTotalNutritive.html">calculateTotalNutritive</a></td>
+<td>Calculate Total Nutritive (Calories, Proteins, Fats)</td></tr>
+<tr><td width="25%"><a href="calculateTotalSupply.html">calculateTotalSupply</a></td>
+<td>Calculate Total Supply</td></tr>
+<tr><td width="25%"><a href="calculateTotalUtilization.html">calculateTotalUtilization</a></td>
+<td>Calculate Total Utilization</td></tr>
+<tr><td width="25%"><a href="checkShareUnity.html">checkShareUnity</a></td>
+<td>This is a function checking whether the shares sums up to 100.</td></tr>
+<tr><td width="25%"><a href="coerceColumnTypes.html">coerceColumnTypes</a></td>
+<td>Coerce Column Types</td></tr>
+<tr><td width="25%"><a href="collapseShare.html">collapseShare</a></td>
+<td>Collapse Share</td></tr>
+<tr><td width="25%"><a href="collapseSpecificData.html">collapseSpecificData</a></td>
+<td>Collapse Specific Data</td></tr>
+<tr><td width="25%"><a href="constructStandardizationGraph.html">constructStandardizationGraph</a></td>
+<td>Construct Standardization Graph</td></tr>
+<tr><td width="25%"><a href="defineElementVariables.html">defineElementVariables</a></td>
+<td>Define Element Variables</td></tr>
+<tr><td width="25%"><a href="elementCodeDescription.html">elementCodeDescription</a></td>
+<td>Element Code Description</td></tr>
+<tr><td width="25%"><a href="ensureAupusParameter.html">ensureAupusParameter</a></td>
+<td>Ensure AUPUS parameters</td></tr>
+<tr><td width="25%"><a href="fbsStandardization.html">fbsStandardization</a></td>
+<td>FBS Standardization</td></tr>
+<tr><td width="25%"><a href="fillBalance.html">fillBalance</a></td>
+<td>Fill Balance</td></tr>
+<tr><td width="25%"><a href="fillMissingColumn.html">fillMissingColumn</a></td>
+<td>This function creates columns which are missing.</td></tr>
+<tr><td width="25%"><a href="findConnectedGraph.html">findConnectedGraph</a></td>
+<td>Find Connected Graph</td></tr>
+<tr><td width="25%"><a href="findProcessingLevel.html">findProcessingLevel</a></td>
+<td>Find Processing Level</td></tr>
+<tr><td width="25%"><a href="getAupusData.html">getAupusData</a></td>
+<td>Get AUPUS Data</td></tr>
+<tr><td width="25%"><a href="getAupusDataset.html">getAupusDataset</a></td>
+<td>Get AUPUS Data</td></tr>
+<tr><td width="25%"><a href="getAupusParameter.html">getAupusParameter</a></td>
+<td>Get AUPUS Parameters</td></tr>
+<tr><td width="25%"><a href="getBalanceElementData.html">getBalanceElementData</a></td>
+<td>Get Balance Element Data</td></tr>
+<tr><td width="25%"><a href="getExtractionRateData.html">getExtractionRateData</a></td>
+<td>Get Extraction Rate Data</td></tr>
+<tr><td width="25%"><a href="getInputFromProcessData.html">getInputFromProcessData</a></td>
+<td>Get Input from Processing Data</td></tr>
+<tr><td width="25%"><a href="getItemInfoData.html">getItemInfoData</a></td>
+<td>Get Item Information Data</td></tr>
+<tr><td width="25%"><a href="getPopulationData.html">getPopulationData</a></td>
+<td>Get Population Data</td></tr>
+<tr><td width="25%"><a href="getRatioData.html">getRatioData</a></td>
+<td>Get Ratio Data</td></tr>
+<tr><td width="25%"><a href="getShareData.html">getShareData</a></td>
+<td>Get Share Data</td></tr>
+<tr><td width="25%"><a href="itemTree.html">itemTree</a></td>
+<td>Commodity Item Tree</td></tr>
+<tr><td width="25%"><a href="itemTypeDescription.html">itemTypeDescription</a></td>
+<td>Item Type Description</td></tr>
+<tr><td width="25%"><a href="numberOfMissingElement.html">numberOfMissingElement</a></td>
+<td>Number of Missing Elements</td></tr>
+<tr><td width="25%"><a href="numberOfTrendingElement.html">numberOfTrendingElement</a></td>
+<td>Number of Trended Elements</td></tr>
+<tr><td width="25%"><a href="plotCommodityTree.html">plotCommodityTree</a></td>
+<td>Plot Commodity Tree</td></tr>
+<tr><td width="25%"><a href="replaceable.html">replaceable</a></td>
+<td>Returns the index of which values can be replaced</td></tr>
+<tr><td width="25%"><a href="SaveAupusData.html">SaveAupusData</a></td>
+<td>Save AUPUS Data</td></tr>
+<tr><td width="25%"><a href="SaveInputFromProcessingData.html">SaveInputFromProcessingData</a></td>
+<td>Save Inputs from Processing Data</td></tr>
+<tr><td width="25%"><a href="SavePopulationData.html">SavePopulationData</a></td>
+<td>Save Population Data</td></tr>
+<tr><td width="25%"><a href="standardization.html">standardization</a></td>
+<td>Standardization</td></tr>
+<tr><td width="25%"><a href="standardizeNode.html">standardizeNode</a></td>
+<td>Standardize Node</td></tr>
+<tr><td width="25%"><a href="suaToNetworkRepresentation.html">suaToNetworkRepresentation</a></td>
+<td>SUA to Network Representation</td></tr>
+<tr><td width="25%"><a href="subsetAupus.html">subsetAupus</a></td>
+<td>Subset AUPUS Data</td></tr>
+<tr><td width="25%"><a href="symbolDescription.html">symbolDescription</a></td>
+<td>Symbol Description</td></tr>
+<tr><td width="25%"><a href="transferSymb.html">transferSymb</a></td>
+<td>Transfer Symbol</td></tr>
+<tr><td width="25%"><a href="trendOnce.html">trendOnce</a></td>
+<td>Trend Once</td></tr>
+<tr><td width="25%"><a href="updateEdges.html">updateEdges</a></td>
+<td>Update Edges</td></tr>
+<tr><td width="25%"><a href="updateInputFromProcessing.html">updateInputFromProcessing</a></td>
+<td>Update Input from Processing</td></tr>
+<tr><td width="25%"><a href="US.html">US</a></td>
+<td>US Sample dataset</td></tr>
+<tr><td width="25%"><a href="usAupusParam.html">usAupusParam</a></td>
+<td>Example AUPUS Parameters</td></tr>
+<tr><td width="25%"><a href="wildCardFill.html">wildCardFill</a></td>
+<td>Wild Card Fill</td></tr>
+</table>
+</body></html>

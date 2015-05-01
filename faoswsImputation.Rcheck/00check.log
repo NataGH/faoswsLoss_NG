@@ -1,0 +1,261 @@
+* using log directory 'C:/Users/rockc_000/Documents/SVN/faoswsImputation.Rcheck'
+* using R version 3.1.3 (2015-03-09)
+* using platform: x86_64-w64-mingw32 (64-bit)
+* using session charset: ISO8859-1
+* checking for file 'faoswsImputation/DESCRIPTION' ... OK
+* checking extension type ... Package
+* this is package 'faoswsImputation' version '5.0.1'
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking whether package 'faoswsImputation' can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking 'build' directory ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking dependencies in R code ... WARNING
+'library' or 'require' call not declared from: 'zoo'
+'library' or 'require' call to 'zoo' in package code.
+  Please use :: or requireNamespace() instead.
+  See section 'Suggested packages' in the 'Writing R Extensions' manual.
+Namespaces in Imports field not imported from:
+  'reshape2' 'zoo'
+  All declared Imports should be used.
+Packages in Depends field not imported from:
+  'data.table' 'faoswsFlag' 'faoswsUtil' 'ggplot2' 'splines'
+  These packages need to be imported from (in the NAMESPACE file)
+  for when this namespace is loaded but not attached.
+Unexported object imported by a ':::' call: 'data.table:::melt.data.table'
+  See the note in ?`:::` about the use of this operator.
+package 'methods' is used but not declared
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+Found the following possibly unsafe calls:
+File 'faoswsImputation/R/reassignGlobalVariable.R':
+  unlockBinding(var, .GlobalEnv)
+
+addNoDataModels: no visible global function definition for ':='
+addNoDataModels: no visible binding for global variable 'averageError'
+addNoDataModels: no visible binding for global variable 'model'
+addNoDataModels: no visible global function definition for
+  'as.data.table'
+addNoDataModels: no visible binding for global variable 'weight'
+computeEnsembleFit: no visible binding for global variable
+  'ensuredImputationData'
+computeEnsembleWeight: no visible binding for global variable
+  'ensuredImputationData'
+computeEnsembleWeight: no visible binding for global variable 'V1'
+computeEnsembleWeight: no visible binding for global variable 'weight'
+computeEnsembleWeight: no visible global function definition for ':='
+computeEnsembleWeight: no visible binding for global variable
+  'validModelCnt'
+computeEnsembleWeight: no visible binding for global variable
+  'averageError'
+computeErrorLOOCV: no visible binding for global variable
+  'ensuredImputationData'
+computeErrorLOOCV: no visible global function definition for 'copy'
+computeErrorLOOCV: no visible global function definition for 'setnames'
+computeErrorLOOCV: no visible global function definition for ':='
+computeErrorLOOCV: no visible binding for global variable
+  'imputationValueColumn'
+computeErrorRate: no visible binding for global variable
+  'ensuredImputationData'
+computeLoocvFits: no visible binding for global variable
+  'ensuredImputationData'
+computeLoocvFits : <anonymous>: no visible global function definition
+  for 'copy'
+computeLoocvFits : <anonymous>: no visible global function definition
+  for ':='
+defaultGlobalMean: no visible binding for global variable
+  'ensuredImputationData'
+defaultGlobalMedian: no visible binding for global variable
+  'ensuredImputationData'
+defaultImputationParameters: no visible binding for global variable
+  'faoswsFlagTable'
+defaultImputationParameters: no visible binding for '<<-' assignment to
+  'ensuredImputationData'
+defaultMixedModel: no visible binding for global variable
+  'ensuredImputationData'
+defaultMixedModel: no visible global function definition for ':='
+defaultMixedModelOptimized: no visible binding for global variable
+  'ensuredImputationData'
+defaultMixedModelOptimized: no visible global function definition for
+  ':='
+defaultNaive: no visible global function definition for 'na.locf'
+defaultNaive: no visible global function definition for 'na.approx'
+ensembleImpute: no visible binding for global variable
+  'ensuredImputationData'
+ensembleImpute: no visible global function definition for 'setkeyv'
+ensureImputationInputs: no visible global function definition for ':='
+ensureImputationInputs: no visible global function definition for
+  'checkObservationFlag'
+ensureImputationInputs: no visible binding for '<<-' assignment to
+  'ensuredImputationData'
+extendSimpleModel: no visible binding for global variable
+  'ensuredImputationData'
+getInverseWeights: no visible binding for global variable
+  'ensuredImputationData'
+getInverseWeights : <anonymous>: no visible global function definition
+  for 'data.table'
+getInverseWeights: no visible global function definition for ':='
+getInverseWeights: no visible binding for global variable
+  'missingValue'
+getInverseWeights: no visible binding for global variable 'modelFailed'
+getInverseWeights: no visible binding for global variable 'fit'
+getInverseWeights: no visible global function definition for 'setnames'
+getInverseWeights: no visible binding for global variable
+  'averageErrorByKey'
+getInverseWeights: no visible binding for global variable
+  'averageError'
+getInverseWeights: no visible binding for global variable 'weight'
+getStackingWeights: no visible binding for global variable
+  'ensuredImputationData'
+getStackingWeights: no visible global function definition for
+  'data.table'
+getStackingWeights: no visible binding for global variable 'y'
+getStackingWeights: no visible binding for global variable 'byKey'
+getStackingWeights: no visible binding for global variable 'V1'
+getStackingWeights: no visible global function definition for ':='
+getStackingWeights : lassoModel: no visible global function definition
+  for 'cv.glmnet'
+getStackingWeights: no visible binding for global variable '.SD'
+getWeightMatrix: no visible binding for global variable
+  'ensuredImputationData'
+getWeightMatrix: no visible global function definition for ':='
+getWeightMatrix: no visible binding for global variable
+  'extrapolationRange'
+getWeightMatrix: no visible binding for global variable 'allowedRange'
+getWeightMatrix: no visible binding for global variable 'model'
+getWeightMatrix: no visible binding for global variable 'weight'
+getWeightMatrix: no visible global function definition for
+  'dcast.data.table'
+imputeVariable: no visible binding for global variable
+  'ensuredImputationData'
+imputeVariable: no visible global function definition for ':='
+makeCvGroup: no visible binding for global variable
+  'ensuredImputationData'
+makeCvGroup: no visible binding for global variable '.N'
+mixedModelFixedDf: no visible binding for global variable
+  'ensuredImputationData'
+mixedModelFixedDf: no visible global function definition for 'lmer'
+plotEnsemble: no visible binding for global variable
+  'ensuredImputationData'
+plotEnsemble: no visible global function definition for 'copy'
+plotEnsemble: no visible binding for global variable 'V1'
+plotEnsemble: no visible global function definition for ':='
+plotEnsemble: no visible binding for global variable 'rowIndex'
+plotEnsemble: no visible global function definition for 'setnames'
+plotEnsemble: no visible binding for global variable
+  'imputedObservation'
+plotEnsemble: no visible binding for global variable
+  'imputationValueColumn'
+plotEnsemble: no visible binding for global variable 'year'
+plotEnsemble: no visible binding for global variable 'maxY'
+plotEnsemble: no visible binding for global variable 'modelFit'
+plotEnsemble: no visible binding for global variable 'ribbonWidth'
+plotEnsemble: no visible binding for global variable 'modelWeight'
+plotEnsemble: no visible global function definition for 'ggplot'
+plotEnsemble: no visible global function definition for 'aes'
+plotEnsemble: no visible binding for global variable 'variable'
+plotEnsemble: no visible global function definition for 'geom_ribbon'
+plotEnsemble: no visible global function definition for 'geom_point'
+plotEnsemble: no visible global function definition for 'facet_wrap'
+plotEnsemble: no visible global function definition for
+  'scale_size_continuous'
+plotEnsemble: no visible global function definition for
+  'scale_color_manual'
+plotEnsemble: no visible global function definition for
+  'scale_fill_manual'
+plotEnsemble: no visible global function definition for 'labs'
+plotEnsemble: no visible global function definition for
+  'scale_shape_manual'
+plotEnsemble: no visible global function definition for 'expand_limits'
+plotEnsemble : <anonymous>: no visible global function definition for
+  'ggplot'
+plotEnsemble : <anonymous>: no visible global function definition for
+  'aes'
+plotEnsemble : <anonymous>: no visible binding for global variable
+  'year'
+plotEnsemble : <anonymous>: no visible binding for global variable
+  'variable'
+plotEnsemble : <anonymous>: no visible global function definition for
+  'geom_ribbon'
+plotEnsemble : <anonymous>: no visible binding for global variable
+  'modelFit'
+plotEnsemble : <anonymous>: no visible binding for global variable
+  'ribbonWidth'
+plotEnsemble : <anonymous>: no visible global function definition for
+  'geom_point'
+plotEnsemble : <anonymous>: no visible global function definition for
+  'scale_size_continuous'
+plotEnsemble : <anonymous>: no visible global function definition for
+  'scale_color_manual'
+plotEnsemble : <anonymous>: no visible global function definition for
+  'scale_fill_manual'
+plotEnsemble : <anonymous>: no visible global function definition for
+  'labs'
+plotEnsemble : <anonymous>: no visible global function definition for
+  'scale_shape_manual'
+plotEnsemble : <anonymous>: no visible global function definition for
+  'expand_limits'
+plotEnsembleOld: no visible binding for global variable
+  'imputationValueColumn'
+plotEnsembleOld: no visible binding for global variable 'byKey'
+plotEnsembleOld: no visible global function definition for 'brewer.pal'
+plotEnsembleOld: no visible binding for global variable 'missIndex'
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... WARNING
+Undocumented code objects:
+  'productionData' 'seedData'
+Undocumented data sets:
+  'productionData' 'seedData'
+All user-level objects in a package should have documentation entries.
+See chapter 'Writing R documentation files' in the 'Writing R
+Extensions' manual.
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... WARNING
+Documented arguments not in \usage in documentation object 'plotEnsembleOld':
+  'value' 'byKey' 'yearValue'
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See chapter 'Writing R documentation files' in the 'Writing R
+Extensions' manual.
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of 'data' directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking installed files from 'inst/doc' ... OK
+* checking files in 'vignettes' ... OK
+* checking examples ... OK
+* checking for unstated dependencies in vignettes ... NOTE
+'library' or 'require' calls not declared from:
+  'FAOSTAT' 'faoswsProduction' 'lattice'
+* checking package vignettes in 'inst/doc' ... OK
+* checking running R code from vignettes ... OK
+* checking re-building of vignette outputs ... OK
+* checking PDF version of manual ... OK
+* DONE
+WARNING: There were 3 warnings.
+NOTE: There were 2 notes.

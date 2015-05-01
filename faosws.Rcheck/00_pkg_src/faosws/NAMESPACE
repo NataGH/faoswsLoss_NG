@@ -1,0 +1,43 @@
+import(RCurl)
+import(RJSONIO)
+import(data.table)
+
+exportClasses(
+	Dimension,
+	DatasetKey,
+	MappingTableKey,
+	Pivoting
+)
+
+export(
+	Dimension,
+	"addKey<-",
+	DatasetKey,
+	MappingTableKey,
+	Pivoting,
+	KeyDefinition,
+	MetadataElement,
+	Metadata,
+	BlockMetadata,
+	BlockMetadataSet,
+	GetData,
+	GetCodeList,
+	GetCodeTree,
+	GetHistory,
+	GetMapping,
+	GetBlockMetadata,
+	SaveData,
+	SaveValidation,
+	SaveBlockMetadata,
+	GetTestEnvironment,
+	GetTableData,
+	SetTableData,
+	NullToNa,
+	
+	.buildModifiedCells,
+
+	swsContext.clientCertificate,
+	swsContext.clientKey,
+	swsContext.serverCertificate,
+	swsContext.noProxy
+)

@@ -1,0 +1,169 @@
+* using log directory 'C:/Users/rockc_000/Documents/SVN/faoswsProduction.Rcheck'
+* using R version 3.1.3 (2015-03-09)
+* using platform: x86_64-w64-mingw32 (64-bit)
+* using session charset: ISO8859-1
+* checking for file 'faoswsProduction/DESCRIPTION' ... OK
+* checking extension type ... Package
+* this is package 'faoswsProduction' version '1.0.0'
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking whether package 'faoswsProduction' can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking 'build' directory ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking dependencies in R code ... WARNING
+'::' or ':::' import not declared from: 'faosws'
+Namespaces in Imports field not imported from:
+  'RColorBrewer' 'earth' 'forecast' 'lme4' 'reshape2' 'zoo'
+  All declared Imports should be used.
+Packages in Depends field not imported from:
+  'data.table' 'faoswsFlag' 'faoswsImputation' 'faoswsUtil' 'splines'
+  These packages need to be imported from (in the NAMESPACE file)
+  for when this namespace is loaded but not attached.
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+getAllHistory: warning in factor(measuredItemCPC, level = allItems):
+  partial argument match of 'level' to 'levels'
+balanceAreaHarvested: no visible binding for global variable
+  'ensuredImputationData'
+balanceAreaHarvested: no visible global function definition for
+  'ensureImputationInputs'
+balanceAreaHarvested: no visible binding for global variable
+  'ensuredProductionData'
+balanceAreaHarvested: no visible global function definition for ':='
+balanceAreaHarvested: no visible global function definition for
+  'computeRatio'
+balanceAreaHarvested: no visible global function definition for
+  'aggregateObservationFlag'
+balanceProduction: no visible binding for global variable
+  'ensuredImputationData'
+balanceProduction: no visible global function definition for
+  'ensureImputationInputs'
+balanceProduction: no visible global function definition for ':='
+balanceProduction: no visible global function definition for
+  'aggregateObservationFlag'
+computeYield: no visible binding for global variable 'faoswsFlagTable'
+computeYield: no visible binding for global variable
+  'ensuredProductionData'
+computeYield: no visible global function definition for ':='
+computeYield: no visible global function definition for
+  'aggregateObservationFlag'
+ensureProductionInputs: no visible global function definition for ':='
+ensureProductionInputs: no visible binding for '<<-' assignment to
+  'ensuredProductionData'
+getAllHistory: no visible global function definition for 'GetCodeList'
+getAllHistory: no visible binding for global variable 'type'
+getAllHistory: no visible binding for global variable 'code'
+getAllHistory: no visible global function definition for
+  'adjacent2edge'
+getAllHistory: no visible global function definition for 'GetCodeTree'
+getAllHistory: no visible binding for global variable 'description'
+getAllHistory: no visible global function definition for 'DatasetKey'
+getAllHistory: no visible global function definition for 'Dimension'
+getAllHistory: no visible binding for global variable 'yearVar'
+getAllHistory: no visible global function definition for 'Pivoting'
+getAllHistory: no visible global function definition for 'GetHistory'
+getAllHistory: no visible global function definition for ':='
+getAllHistory: no visible binding for global variable
+  'geographicAreaM49'
+getAllHistory: no visible binding for global variable 'measuredItemCPC'
+getAllHistory: no visible binding for global variable 'measuredElement'
+getAllHistory: no visible binding for global variable 'timePointYears'
+getAllHistory: no visible binding for global variable 'flagMethod'
+getAllHistory: no visible binding for global variable
+  'flagObservationStatus'
+getAllHistory: no visible binding for global variable 'valid'
+getAllHistory: no visible binding for global variable 'EndDate'
+getAllHistory: no visible binding for global variable 'validValue'
+getAllHistory: no visible binding for global variable 'Value'
+getAllHistory: no visible binding for global variable 'productionValue'
+getAllHistory: no visible binding for global variable '.SD'
+getProductionDomainData: no visible global function definition for
+  'Pivoting'
+getProductionDomainData: no visible global function definition for
+  'GetData'
+getProductionDomainData: no visible global function definition for ':='
+getProductionDomainData: no visible binding for global variable
+  'timePointYears'
+getProductionDomainData: no visible binding for global variable
+  'Value_measuredElement_5312'
+getProductionDomainData: no visible binding for global variable
+  'Value_measuredElement_5416'
+getProductionDomainData: no visible binding for global variable
+  'Value_measuredElement_5510'
+getProductionDomainData: no visible binding for global variable
+  'flagObservationStatus_measuredElement_5312'
+getProductionDomainData: no visible binding for global variable
+  'flagObservationStatus_measuredElement_5416'
+getProductionDomainData: no visible binding for global variable
+  'flagObservationStatus_measuredElement_5510'
+getProductionDomainData: no visible binding for global variable
+  'flagMethod_measuredElement_5312'
+getProductionDomainData: no visible binding for global variable
+  'flagMethod_measuredElement_5416'
+getProductionDomainData: no visible binding for global variable
+  'flagMethod_measuredElement_5510'
+imputeProductionDomain: no visible global function definition for
+  'ensureImputationInputs'
+imputeProductionDomain: no visible global function definition for
+  'copy'
+imputeProductionDomain: no visible global function definition for
+  'setkeyv'
+imputeProductionDomain: no visible global function definition for
+  'imputeVariable'
+imputeProductionDomain: no visible binding for global variable
+  'imputationParameters'
+processProductionDomain: no visible binding for global variable
+  'ensuredProductionData'
+saveProductionData: no visible global function definition for
+  'removeInvalidDates'
+saveProductionData: no visible global function definition for ':='
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... WARNING
+Undocumented arguments in documentation object 'saveProductionData'
+  'areaHarvestedCode' 'yieldCode' 'productionCode'
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See chapter 'Writing R documentation files' in the 'Writing R
+Extensions' manual.
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of 'data' directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking installed files from 'inst/doc' ... OK
+* checking files in 'vignettes' ... OK
+* checking examples ... NONE
+* checking for unstated dependencies in vignettes ... OK
+* checking package vignettes in 'inst/doc' ... OK
+* checking running R code from vignettes ... OK
+* checking re-building of vignette outputs ... OK
+* checking PDF version of manual ... OK
+* DONE
+WARNING: There were 2 warnings.
+NOTE: There was 1 note.
