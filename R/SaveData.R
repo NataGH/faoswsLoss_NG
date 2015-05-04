@@ -15,7 +15,10 @@
 ##' @param dataset A character value specifying the dataset for which the code
 ##' list is required.
 ##' @param data A data.table object containing keys, data and flags.
-##' @param metadata A data.table object containing the metadata.
+##' @param metadata A data.table object containing the metadata.  The first
+##' columns of this object should contain the keys, and immediately following
+##' these key columns should be a column named "Metadata" which contains the
+##' metadata to write.
 ##' @param normalized Logical, indicates whether data is in a normalized or
 ##' denormalized format.
 ##' @param waitMode A character string indicating how to behave with respect to
