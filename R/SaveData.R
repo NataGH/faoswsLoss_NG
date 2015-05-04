@@ -635,7 +635,19 @@ SaveData.buildMetadataContentJSON <- function(metadata) {
   # Prepare list to hold JSON data.
   #
   json <- list()
-  
+#   ###################################################
+#   # COMMENT: (JOSH) Does this code below do the same 
+#   # thing as that big, ugly, nested for loop?  Should
+#   # verify same results are returned in all cases...
+#   #Reorder columns to ensure the proper ordering for the JSON object
+#   metadata <- metadata[, c(keys, "Metadata", "Metadata_Language",
+#                            "Metadata_Element", "Metadata_Value"), with = FALSE]
+#   json <- apply(metadata, 1, function(x) list(x))
+#   json <- lapply(json, function(x){
+#       out = x[[1]]
+#       names(out) = NULL
+#       out
+#   })
   
   # Extract the set of unique keys for external loop.
   #
