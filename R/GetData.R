@@ -22,7 +22,6 @@
 ##' otherwise not returned (FALSE).
 ##' @param normalized Logical, if true then data are returned in normalized
 ##' format, otherwise the format is denormalized.
-##' @param metadata Logical, if true then metadata are returned otherwise not.
 ##' @param pivoting A vector, each of whose elements must be an object of type
 ##' Pivoting.  If omitted, no pivoting is performed on the dataset.  Using this
 ##' argument can allow for convenient reshaping of the data prior to pulling it
