@@ -4,7 +4,7 @@ Title: API providing access to the FAO Statistical Working System
 Version: 0.3.5
 Date: 2015-05-05
 Author: Engineering Ingegneria Informatica
-Maintainer: Ettore.DeMaio@fao.org, Joshua.Browning@fao.org
+Maintainer: Josh Browning <Joshua.Browning@fao.org>
 Description: API providing access to the FAO Statistical Working System
 License: @FAO 2013
 Depends: R (>= 3.0)

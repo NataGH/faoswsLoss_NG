@@ -39,6 +39,7 @@ man/GetCodeTree.Rd -text
 man/GetData.Rd -text
 man/GetHistory.Rd -text
 man/GetMapping.Rd -text
+man/GetMetadata.Rd -text
 man/GetRestCall.Rd -text
 man/GetTableData.Rd -text
 man/GetTestEnvironment.Rd -text
@@ -54,5 +55,6 @@ man/SaveBlockMetadata.Rd -text
 man/SaveData.Rd -text
 man/SaveValidation.Rd -text
 man/SetTableData.Rd -text
+man/cleanMetadata.Rd -text
 man/normalizeData.Rd -text
 man/swsContext.Rd -text
