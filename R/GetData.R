@@ -64,15 +64,15 @@
 ##' }
 ##' 
 
-GetData <- function(key, flags = TRUE, normalized = TRUE, metadata = FALSE, pivoting) {
+GetData <- function(key, flags = TRUE, normalized = TRUE, pivoting) {
 
 	# Validate passed arguments.
 	#
-	GetData.validate(key, flags, normalized, metadata, pivoting)
+	GetData.validate(key, flags, normalized, metadata = FALSE, pivoting)
 
 	# Prepare JSON for REST call.
 	#
-	json <- GetData.buildJSON(key, flags, normalized, metadata, pivoting)
+	json <- GetData.buildJSON(key, flags, normalized, metadata = FALSE, pivoting)
 
 	# Perform REST call.
 	#
@@ -82,7 +82,7 @@ GetData <- function(key, flags = TRUE, normalized = TRUE, metadata = FALSE, pivo
 	# Create result data table.
 	#
 	if(normalized){
-	  query <- GetData.processNormalizedResult(data, metadata)
+	  query <- GetData.processNormalizedResult(data, flags)
 	} else {
 	  query <- GetData.processDenormalizedResult(data)
 	}
@@ -99,6 +99,91 @@ GetData <- function(key, flags = TRUE, normalized = TRUE, metadata = FALSE, pivo
 	)
 }
 
+##' Get Metadata
+##' 
+##' This function provides an interface between an R session and the database.
+##' Note that swsContext files must exist in your session, so you should run
+##' GetTestEnvironment before calling this function.
+##' 
+##' If the pivoting vector is present, the dimensions are extracted in the
+##' specified order and applying the requested sort direction.
+##' 
+##' @param key An object of class DatasetKey.  Often, this will be one of the
+##' list elements of swsContext.datasets (if running in a debug/local session,
+##' create this object with GetTestEnvironment).
+##' @param pivoting A vector, each of whose elements must be an object of type
+##' Pivoting.  If omitted, no pivoting is performed on the dataset.  Using this
+##' argument can allow for convenient reshaping of the data prior to pulling it
+##' into R.  Note: if this argument is included, then all of the dimensions in
+##' key must be included in this vector.  See ?Pivoting for a description on
+##' creating this argument and for some examples on how to use it.
+##' 
+##' @return A data table containing the metadata matching the key (may be empty).
+##' 
+##' @examples
+##' \dontrun{
+##' # swsContext files are necessary for GetData to run (token may need to be updated)
+##' GetTestEnvironment(
+##'    baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
+##'    token = "7823c00b-b82e-47bc-8708-1be103ac91e4"
+##' )
+##' 
+##' # Use GetCodeList to find all countries and commodities
+##' areaCodes = GetCodeList("agriculture", "agriculture", "geographicAreaM49")
+##' itemCodes = GetCodeList("agriculture", "agriculture", "measuredItemCPC")
+##' 
+##' # Pull data for one country and all commodities
+##' dim1 = Dimension(name = "geographicAreaM49", keys = "12")
+##' dim2 = Dimension(name = "measuredElement", keys = "5510")
+##' dim3 = Dimension(name = "measuredItemCPC", keys = itemCodes[, code])
+##' dim4 = Dimension(name = "timePointYears", keys = as.character(2000:2013))
+##' key = DatasetKey(domain = "agriculture", dataset = "agriculture",
+##'                  dimensions = list(dim1, dim2, dim3, dim4))
+##' GetMetadata(key)
+##' 
+##' # Pull data for all countries and one commodity
+##' dim1 = Dimension(name = "geographicAreaM49", keys = areaCodes[, code])
+##' dim2 = Dimension(name = "measuredElement", keys = "5510")
+##' dim3 = Dimension(name = "measuredItemCPC", keys = "0111")
+##' dim4 = Dimension(name = "timePointYears", keys = as.character(2000:2013))
+##' key = DatasetKey(domain = "agriculture", dataset = "agriculture",
+##'                  dimensions = list(dim1, dim2, dim3, dim4))
+##' GetMetadata(key)
+##' }
+##' 
+
+GetMetadata <- function(key, pivoting) {
+
+	# Validate passed arguments.
+	#
+	GetData.validate(key, flags = FALSE, normalized = TRUE,
+	                 metadata = TRUE, pivoting)
+
+	# Prepare JSON for REST call.
+	#
+	json <- GetData.buildJSON(key, flags = FALSE, normalized = TRUE,
+	                          metadata = TRUE, pivoting)
+
+	# Perform REST call.
+	#
+	url <- paste0(swsContext.baseRestUrl, "/r/data/", swsContext.executionId)
+	data <- PostRestCall(url, json)
+
+	# Create result data table.
+	#
+	query <- GetData.processNormalizedResultMetadata(data = data)
+
+	# normalizes result transforming columns from list of NULLs to vector of NAs
+	as.data.table(
+	  lapply(query,
+            FUN = function(x){
+              if(is.list(x))
+                x = NullToNa(x)
+              x
+            }
+	  )
+	)
+}
 
 GetData.validate <- function(key, flags, normalized, metadata, pivoting) {
 
@@ -190,200 +275,69 @@ GetData.buildJSON <- function(key, flags, normalized, metadata, pivoting) {
 }
 
 
-GetData.processNormalizedResult <- function(data, metadata) {
-
-	columns <- list()
-
-	# Extract key columns.
-	#
-	i <- 0
-	for(col in data$keyDefinitions) {
-		i <- i + 1
-		column <- unlist(sapply(data$data, function(x) { 
-
-			if(length(x[["metadata"]]) > 0) {
-				
-				len <- 0
-				for(metadata in x[["metadata"]]) {
-					len <- len + length(metadata$elements)
-				}
-				rep(x[["keys"]][i], len)
-
-			} else {
-
-				x[["keys"]][i] 
-
-			}
-		}))
-		dim(column) <- NULL
-		columns[[col["code"]]] <- column
-	}
-
-	# Extract metadata if needed.
-	#
-	if(metadata) {
-		column <- unlist(sapply(data$data, function(x) { 
-
-				if(length(x[["metadata"]]) > 0) {
-					
-					tmp <- NULL
-					for(metadata in x[["metadata"]]) {
-						tmp <- c(tmp, rep(metadata$typeCode, length(metadata$elements)))
-					}
-					tmp
-
-				} else {
-
-					NA
-
-				}
-		}))
-		dim(column) <- NULL
-		columns[["Metadata"]] <- column
-
-		column <- unlist(sapply(data$data, function(x) { 
-
-				if(length(x[["metadata"]]) > 0) {
-					
-					tmp <- NULL
-					for(metadata in x[["metadata"]]) {
-						tmp <- c(tmp, rep(metadata$language, length(metadata$elements)))
-					}
-					tmp
-
-				} else {
-
-					NA
-
-				}
-		}))
-		dim(column) <- NULL
-		columns[["Metadata_Language"]] <- column
-
-		column <- unlist(sapply(data$data, function(x) { 
-
-				if(length(x[["metadata"]]) > 0) {
-					
-					tmp <- NULL
-					group <- 0
-					for(metadata in x[["metadata"]]) {
-						group <- group + 1
-						tmp <- c(tmp, rep(group, length(metadata$elements)))
-					}
-					tmp
-
-				} else {
-
-					NA
-
-				}
-		}))
-		dim(column) <- NULL
-		columns[["Metadata_Group"]] <- column
-
-		column <- unlist(sapply(data$data, function(x) { 
-
-				if(length(x[["metadata"]]) > 0) {
-					
-					tmp <- NULL
-					for(metadata in x[["metadata"]]) {
-						tmp <- c(tmp, unlist(sapply(metadata$elements, function(y) {
-							y[["typeCode"]]
-						})))
-					}
-					tmp
-
-				} else {
-
-					NA
-
-				}
-		}))
-		dim(column) <- NULL
-		columns[["Metadata_Element"]] <- column
-
-		column <- unlist(sapply(data$data, function(x) { 
-
-				if(length(x[["metadata"]]) > 0) {
-					
-					tmp <- NULL
-					for(metadata in x[["metadata"]]) {
-						tmp <- c(tmp, unlist(sapply(metadata$elements, function(y) {
-							y[["value"]]
-						})))
-					}
-					tmp
-
-				} else {
-
-					NA
-
-				}
-		}))
-		dim(column) <- NULL
-		columns[["Metadata_Value"]] <- column
-	}
-
-	# Extract value column.
-	#
-	column <- unlist(sapply(data$data, function(x) { 
-
-			tmp <- ifelse(is.null(x[["value"]]), NA, x[["value"]])
-
-			if(length(x[["metadata"]]) > 0) {
-				
-				len <- 0
-				for(metadata in x[["metadata"]]) {
-					len <- len + length(metadata$elements)
-				}
-				rep(tmp, len)
-
-			} else {
-
-				tmp
-
-			}
-	}))
-	dim(column) <- NULL
-	columns[["Value"]] <- column
-
-	# Extract flag columns.
-	#
-	i <- 0
-	for(col in data$flagDefinitions) {
-		i <- i + 1
-		column <- unlist(sapply(data$data, function(x) 
-		{ 
-
-			if(length(x[["metadata"]]) > 0) {
-				
-				len <- 0
-				for(metadata in x[["metadata"]]) {
-					len <- len + length(metadata$elements)
-				}
-				rep(x[["flags"]][i], len)
-
-			} else {
-
-				x[["flags"]][i] 
-
-			}
-		}))
-		dim(column) <- NULL
-		columns[[col["code"]]] <- column
-	}
-
-	# Bind columns into a data table object.
-	#
-	do.call("data.table", columns)
+GetData.processNormalizedResult <- function(data, flags) {
+	keyNames <- sapply(data$keyDefinitions, function(x) x[1])
+	if(flags)
+	    flagNames <- sapply(data$flagDefinitions, function(x) x[1])
+	rows <- lapply(data$data, function(listElement){
+	    out <- data.table(Value = listElement$value)
+	    out[, c(keyNames) := as.list(listElement$keys)]
+    	if(flags){
+    	    out[, c(flagNames) := as.list(listElement$flags)]
+    	    ## Reorder columns
+    	    setcolorder(out, c(keyNames, "Value", flagNames))
+    	} else {
+    	    ## Reorder columns
+    	    setcolorder(out, c(keyNames, "Value"))
+    	}
+	})
+	do.call("rbind", rows)
 }
 
+##' Clean metadata
+##' 
+##' This function takes a metadata object as created by a call to PostRestCall
+##' and restructures it into a data.table object.
+##' 
+##' @param metadata The list created by the PostRestCall.
+##' 
+##' @return A data.table object containing the metadata values extracted
+##' from the list.
+##' 
+
+cleanMetadata <- function(metadata){
+    result <- lapply(metadata, function(x){
+        ## Multiple elements may exist for each metadata record.  These can
+        ## just be combined using an "rbind".
+        out <- data.table(do.call("rbind", x$elements))
+        out[, language := x$language]
+    })
+    lapply(1:length(result), function(i){
+        result[[i]][, Metadata_Group := i]
+    })
+    do.call("rbind", result)
+}
+
+GetData.processNormalizedResultMetadata <- function(data){
+	keyNames <- sapply(data$keyDefinitions, function(x) x[1])
+	rows <- lapply(data$data, function(listElement){
+	    out <- cleanMetadata(listElement$metadata)
+	    out[, c(keyNames) := as.list(listElement$keys)]
+	    out[, typeDescription := NULL] # not needed
+	    ## Reassign column name for consistency
+	    setnames(out, c("typeCode", "value", "language"),
+	             c("Metadata", "Metadata_Value", "Metadata_Language"))
+	    ## Reorder columns
+	    setcolorder(out, c(keyNames, "Metadata", "Metadata_Language",
+	                       "Metadata_Group", "Metadata_Value"))
+	})
+	do.call("rbind", rows)
+}
 
 GetData.processDenormalizedResult <- function(data) {
 
 
 	columns <- list()
-
 	# Extract grouping key columns.
 	#
 	i <- 0
