@@ -1,8 +1,8 @@
 Package: faosws
 Type: Package
 Title: API providing access to the FAO Statistical Working System
-Version: 0.3.5
-Date: 2015-05-05
+Version: 0.3.6
+Date: 2015-05-29
 Author: Engineering Ingegneria Informatica
 Maintainer: Josh Browning <Joshua.Browning@fao.org>
 Description: API providing access to the FAO Statistical Working System
