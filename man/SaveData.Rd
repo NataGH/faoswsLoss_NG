@@ -40,10 +40,11 @@ value helps prevent server timeouts, and shouldn't usually need to be
 adjusted from the default value of 50,000.}
 }
 \value{
-A list is returned, which contains the following values:
+A list is returned, which contains the following values (note that
+"version" below refers to the version of the observation in the database):
 \itemize{
-\item inserted =  the number of rows inserted 'ex novo' (with version=1: there
-            wasn't any already existing observation for same coordinates)
+\item inserted =  the number of rows inserted 'ex novo' (with version=1:
+                  there wasn't any already existing observation for same coordinates)
 \item appended =  the number of rows inserted in append mode (with version=max+1:
             there was one or more observation/s: version number incremented)
 \item ignored =   the number of rows not inserted because an already existing
@@ -56,7 +57,7 @@ A list is returned, which contains the following values:
             discarded (max 10 rows), any of which with following info:
             \itemize{
                 \item row     = the positional row number in the data as sent
-                \uitem reason  = a description of the discarding error
+                \item reason  = a description of the discarding error
             }
 }
 If waitMode is 'forget', NULL is returned always
