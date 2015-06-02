@@ -22,7 +22,7 @@ these key columns should be a column named "Metadata" which contains the
 metadata to write.}
 
 \item{normalized}{Logical, indicates whether data is in a normalized or
-denormalized format.}
+denormalized format.list}
 
 \item{waitMode}{A character string indicating how to behave with respect to
 the backend.  Should be either "wait", "forget", or "synch".  "wait" allows
@@ -40,8 +40,26 @@ value helps prevent server timeouts, and shouldn't usually need to be
 adjusted from the default value of 50,000.}
 }
 \value{
-No object is returned, as this function just writes data to the
-SWS.
+A list is returned, which contains the following values:
+\itemize{
+\item inserted =  the number of rows inserted 'ex novo' (with version=1: there
+            wasn't any already existing observation for same coordinates)
+\item appended =  the number of rows inserted in append mode (with version=max+1:
+            there was one or more observation/s: version number incremented)
+\item ignored =   the number of rows not inserted because an already existing
+            observation was in place with identical attributes
+\item discarded = the number of new observations not created because of non blocking
+            errors (i.e. 'warnings' which caused the row to be discarded
+            without blocking other rows insertion)
+\item warnings =  a data.table which can be NULL or contain 1 to 10 rows.if value
+            of "discarded" is > 0, the data.table contains an excerpt of rows
+            discarded (max 10 rows), any of which with following info:
+            \itemize{
+                \item row     = the positional row number in the data as sent
+                \uitem reason  = a description of the discarding error
+            }
+}
+If waitMode is 'forget', NULL is returned always
 }
 \description{
 This is the main function used to write data back to a user's session.  The

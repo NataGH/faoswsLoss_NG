@@ -18,13 +18,12 @@ otherwise not returned (FALSE).}
 format, otherwise the format is denormalized.}
 
 \item{pivoting}{A vector, each of whose elements must be an object of type
-Pivoting.  If omitted, no pivoting is performed on the dataset.  Using this
-argument can allow for convenient reshaping of the data prior to pulling it
-into R.  Note: if this argument is included, then all of the dimensions in
-key must be included in this vector.  See ?Pivoting for a description on
-creating this argument and for some examples on how to use it.}
-
-\item{metadata}{Logical, if true then metadata are returned otherwise not.}
+  Pivoting.  If omitted, no pivoting is performed on the dataset.  Using
+  this argument can allow for convenient reshaping of the data prior to
+  pulling it into R.  Note: if this argument is included, then all of the
+  dimensions in key must be included in this vector.  See ?Pivoting for a
+  description on creating this argument and for some examples on how to use
+  it.}
 }
 \value{
 A data table containing the data matching the key (may be empty).
@@ -35,16 +34,24 @@ Note that swsContext files must exist in your session, so you should run
 GetTestEnvironment before calling this function.
 }
 \details{
+NOTE: This function will either pull directly from the database or from the
+local session you set up.  This is important, as analysts may have changed
+values within a local session and may then execute GetData.  To avoid
+overwriting the values they updated, you should make sure to include the
+session ID in the key argument.  This is fairly easy to do: when
+constructing the DatasetKey, simply pass sessionId =
+slot(swsContext.datasets[[1]], "sessionId") as an argument.
+
 If the denormalized value is not set then the data is normalized; if set the
 data is denormalized along the axis specified.
 
 If the pivoting vector is present, the dimensions are extracted in the
-specified order and applying the requested sort direction. This affects
-both normalized and denormalized extractions. For normalized extractions
-only the order of the dimensions is influenced, while for denormalized
-extraction the effect is more evident since the last dimension specified in
-the pivoting vector gets its values developed along the column of the
-generated data.table result object.
+specified order and applying the requested sort direction. This affects both
+normalized and denormalized extractions. For normalized extractions only the
+order of the dimensions is influenced, while for denormalized extraction the
+effect is more evident since the last dimension specified in the pivoting
+vector gets its values developed along the column of the generated
+data.table result object.
 }
 \examples{
 \dontrun{
