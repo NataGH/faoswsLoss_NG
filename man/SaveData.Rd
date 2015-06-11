@@ -40,21 +40,26 @@ value helps prevent server timeouts, and shouldn't usually need to be
 adjusted from the default value of 50,000.}
 }
 \value{
-a list is returned, which contains the following values:
-inserted =  the number of rows inserted 'ex novo' (with version=1: there
-            wasn't any already existing observation for same coordinates)
-appended =  the number of rows inserted in append mode (with version=max+1:
+A list is returned, which contains the following values (note that
+"version" below refers to the version of the observation in the database):
+\itemize{
+\item inserted =  the number of rows inserted 'ex novo' (with version=1:
+                  there wasn't any already existing observation for same coordinates)
+\item appended =  the number of rows inserted in append mode (with version=max+1:
             there was one or more observation/s: version number incremented)
-ignored =   the number of rows not inserted because an already existing
+\item ignored =   the number of rows not inserted because an already existing
             observation was in place with identical attributes
-discarded = the number of new observations not created because of non blocking
+\item discarded = the number of new observations not created because of non blocking
             errors (i.e. 'warnings' which caused the row to be discarded
             without blocking other rows insertion)
-warnings =  a data.table which can be NULL or contain 1 to 10 rows.if value
+\item warnings =  a data.table which can be NULL or contain 1 to 10 rows.if value
             of "discarded" is > 0, the data.table contains an excerpt of rows
             discarded (max 10 rows), any of which with following info:
-                row     = the positional row number in the data as sent
-                reason  = a description of the discarding error
+            \itemize{
+                \item row     = the positional row number in the data as sent
+                \item reason  = a description of the discarding error
+            }
+}
 If waitMode is 'forget', NULL is returned always
 }
 \description{
