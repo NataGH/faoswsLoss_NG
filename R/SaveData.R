@@ -469,11 +469,9 @@ SaveData.buildDenormalizedDataDefJSON <- function(data) {
   
   # Do not consider metadata column, if they have been passed.
   #
-  metadataColumnsFilter <- colnames(data) != "Metadata"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Language"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Group"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Element"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Value"
+  metadataColumns <- c("Metadata", "Metadata_Language", "Metadata_Group",
+                       "Metadata_Element", "Metadata_Value")
+  metadataColumnsFilter <- !colnames(data) %in% metadataColumns
   
   # Prepare list to hold JSON data.
   #
@@ -481,11 +479,11 @@ SaveData.buildDenormalizedDataDefJSON <- function(data) {
   
   # Extract fixed key column names.
   #
-  filteredColumnNames <- colnames(data[, metadataColumnsFilter, with = FALSE])
-  if(length(which(grepl("^Value_", filteredColumnNames))) <= 0) {
+  filteredColumnNames <- colnames(data)[metadataColumnsFilter]
+  if(!any(grepl("^Value_", filteredColumnNames))) {
     stop("Unexpected data table structure detected: could not locate the first Value column.")
   }
-  index <- head(which(grepl("^Value_", filteredColumnNames)), 1)
+  index <- which(grepl("^Value_", filteredColumnNames))[1]
   if(index <= 0) {
     stop("Unexpected data table structure detected: Value column located before any key column")
   }
@@ -493,8 +491,9 @@ SaveData.buildDenormalizedDataDefJSON <- function(data) {
   
   # Extract denormalized key column name.
   #
-  denormalizedKey <- substr(filteredColumnNames[index], nchar("Value_") + 1, regexpr("_[^_]+$", filteredColumnNames[index]) - 1)
-  allKeys <- append(keys, denormalizedKey)
+  denormalizedKey <- substr(filteredColumnNames[index], nchar("Value_") + 1,
+                            regexpr("_[^_]+$", filteredColumnNames[index]) - 1)
+  allKeys <- c(keys, denormalizedKey)
   
   # Set up section declaring data key definition.
   #
@@ -527,11 +526,10 @@ SaveData.buildDenormalizedDataDefJSON <- function(data) {
   
   # Extract all denormalized column keys.
   #
-  denormalizedKeys <- c()
-  for(col in filteredColumnNames[which(grepl("^Value_", filteredColumnNames))]) {
-    denormalizedKeys <- append(denormalizedKeys, substr(col, regexpr("_[^_]+$", col) + 1, nchar(col)))
-  }
-  
+  valueColumnNames <- filteredColumnNames[which(grepl("^Value_", filteredColumnNames))]
+  denormalizedKey <- substr(valueColumnNames, regexpr("_[^_]+$", valueColumnNames) + 1,
+                            nchar(valueColumnNames))
+
   # Set data table key.
   #
   setkeyv(data, keys, verbose = FALSE)
@@ -613,9 +611,12 @@ SaveData.buildDenormalizedDataContentJSON <- function(data) {
     flags <- append(flags, substr(col, 1, regexpr(paste0("_", denormalizedKey), col) - 1))
   }
   
-  # Extract the set of unique keys
+  #Extract the set of unique keys
   #
-  uniqueKeys <- unique(data)
+  ## Note: use the unique.data.frame function, as unique.data.table removes rows
+  ## with duplicate keys even if the rows aren't identical in all of the non-key
+  ## values.
+  uniqueKeys <- data.table(unique.data.frame(data))
   normalizedData <- normalizeData(uniqueKeys, keys = keys,
                                  denormalizedKey = denormalizedKey)
   normalizedData <- normalizedData[, c(keys, denormalizedKey, "Value", flags),
