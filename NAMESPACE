@@ -33,6 +33,9 @@ export(
 	GetTableData,
 	SetTableData,
 	NullToNa,
+	GetDomainNames,
+	GetDatasetNames,
+	GetDatasetConfig,
 	
 	.buildModifiedCells,
 

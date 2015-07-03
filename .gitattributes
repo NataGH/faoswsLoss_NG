@@ -10,6 +10,9 @@ R/GetBlockMetadata.R -text
 R/GetCodeList.R -text
 R/GetCodeTree.R -text
 R/GetData.R -text
+R/GetDatasetConfig.R -text
+R/GetDatasetNames.R -text
+R/GetDomainNames.R -text
 R/GetHistory.R -text
 R/GetMapping.R -text
 R/GetRestCall.R -text

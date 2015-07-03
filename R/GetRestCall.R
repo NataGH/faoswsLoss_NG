@@ -5,18 +5,30 @@
 
 GetRestCall <- function(url) {
 
-	ch <- RCurl::getCurlHandle()
-	response <- RCurl::getURL(
-		url = url,
-		curl = ch,
-		verbose = FALSE,
-		noproxy = swsContext.noProxy,
-		ssl.verifypeer = FALSE, 
-		sslcert = path.expand(swsContext.clientCertificate),
-		sslkey = path.expand(swsContext.clientKey),
-		#cacert = path.expand(swsContext.serverCertificate),
-		ssl.verifyhost = 2,
-		httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"))
+  ch <- RCurl::getCurlHandle()
+  if (Sys.info()['sysname'] == 'Darwin') { 
+    response <- RCurl::getURL(
+      url = url,
+      curl = ch,
+      verbose = FALSE,
+      noproxy = swsContext.noProxy,
+      ssl.verifypeer = FALSE, 
+      sslcert = path.expand(swsContext.clientP12),
+      sslcertpasswd = swsContext.p12Password,
+      ssl.verifyhost = 2,
+      httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"))
+  } else {
+    response <- RCurl::getURL(
+      url = url,
+      curl = ch,
+      verbose = FALSE,
+      noproxy = swsContext.noProxy,
+      ssl.verifypeer = FALSE, 
+      sslcert = path.expand(swsContext.clientCertificate),
+      sslkey = path.expand(swsContext.clientKey),
+      ssl.verifyhost = 2,
+      httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"))
+  }
 
 	# Check returned status code.
 	#

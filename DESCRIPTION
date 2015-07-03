@@ -17,5 +17,5 @@ Collate:
 	GetTestEnvironment.R
 	zzz.R
 	buildModifiedCells.R
-	GetTableData.R SetTableData.R NullToNa.R
+	GetTableData.R SetTableData.R NullToNa.R GetDomainNames.R GetDatasetNames.R GetDatasetConfig.R 
 Suggests: testthat

@@ -12,5 +12,7 @@
 
 swsContext.clientCertificate <- "~/.R/client.crt"
 swsContext.clientKey <- "~/.R/client.key"
+swsContext.clientP12 <- "~/.R/client.p12"
+swsContext.p12Password <- "changeme"
 swsContext.serverCertificate <- "~/.R/s1as.pem"
 swsContext.noProxy <- "*"
