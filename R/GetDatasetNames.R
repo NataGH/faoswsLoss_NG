@@ -21,7 +21,7 @@ GetDatasetNames <- function(domainCode) {
 	
 	} else {
 	
-	  jsonOut[["result"]]
+	  jsonOut[["results"]]
     
 	}
 }
