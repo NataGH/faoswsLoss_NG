@@ -19,7 +19,7 @@ GetDomainNames <- function() {
 	
 	} else {
 	
-	  jsonOut[["result"]]
+	  jsonOut[["results"]]
     
 	}
 }
