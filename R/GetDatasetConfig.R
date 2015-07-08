@@ -20,7 +20,7 @@ GetDatasetConfig <- function(domainCode, datasetCode) {
 	
 	if (!jsonOut[["success"]]) {
 
-    stop(paste("An error occurred: ", jsonOut[["message"]]))
+    stop(paste("An error occurred: ", jsonOut[["result"]]))
 	
 	} else {
 	
