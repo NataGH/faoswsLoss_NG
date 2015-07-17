@@ -21,6 +21,7 @@ export(
 	BlockMetadata,
 	BlockMetadataSet,
 	GetData,
+    GetMetadata,
 	GetCodeList,
 	GetCodeTree,
 	GetHistory,
