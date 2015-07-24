@@ -29,7 +29,19 @@ GetHistory <- function(key, pivoting) {
 
 	# Create result data table.
 	#
-	GetHistory.processNormalizedResult(data)
+	query <- GetHistory.NEW_processNormalizedResult(data)
+	
+	# normalizes result transforming columns from list of NULLs to vector of NAs
+	as.data.table(
+	  lapply(query,
+            FUN = function(x){
+              if(is.list(x))
+                x = NullToNa(x)
+              x
+            }
+	  )
+	)
+	
 }
 
 
@@ -114,6 +126,75 @@ GetHistory.buildJSON <- function(key, pivoting) {
 	json
 }
 
+GetHistory.NEW_processNormalizedResult <- function(data) {
+
+	keyNames <- sapply(data$keyDefinitions, function(x) x[1])
+	flagNames <- sapply(data$flagDefinitions, function(x) x[1])
+
+	cols <- c(keyNames, "Value", "Version", "StartDate", "EndDate", flagNames, "Metadata", "Metadata_Language", "Metadata_Group", "Metadata_Element", "Metadata_Value")
+	offset <- length(keyNames) + 4 + length(flagNames)
+
+	result = lapply(data$data, function(listElement) {
+		currList <- listElement[1:offset]
+		currMeta <- list()
+		if (length(listElement[[offset+1]]) > 0) {
+			currMeta <- listElement[[offset+1]]
+		}
+		currList[[11]] <- currMeta
+		currList <- list(currList)
+		totalList <- NULL
+		if (length(listElement[[offset+2]]) > 0) {
+			histList = lapply(listElement[[offset+2]], function(listElement) {
+				out <- append(currList[[1]][1:length(keyNames)], listElement)
+				return(out)
+			})
+			totalList <- append(currList, histList)
+		} else {
+			totalList <- currList
+		}
+		out = lapply(totalList, function(listElement) {
+			out = NULL
+			elem <- listElement[1:offset]
+			lapply(1:offset, function(i) {
+				if (is.null(elem[[i]])) {
+					elem[[i]] <<- NA
+				} 
+			})
+			elem <- list(elem)
+			if (length(listElement[[offset+1]]) > 0) {
+				meta1 = lapply(listElement[[offset+1]], function(listElement) {
+					meta2 = lapply(listElement[[4]], function(listElement) {
+						out = data.frame(list(0, listElement[[1]], listElement[[3]]))
+						colnames(out) = c(cols[(offset+3):length(cols)])
+						return(out)
+					})
+					lapply(1:length(meta2), function(i) {
+						meta2[[i]]$Metadata_Group <<- i
+					})
+					out = data.frame(list(listElement[[1]], listElement[[3]]))
+					out = merge(out, do.call(rbind, meta2))
+					colnames(out) = c(cols[(offset+1):length(cols)])
+					return(out)
+				})
+				out = data.frame(elem)
+				out = merge(out, do.call(rbind, meta1))
+			} else {
+				lapply(1:5, function(i) {
+					elem[[1]][[offset+i]] <<- NA
+				})
+				out = data.frame(elem)
+			}
+			colnames(out) = cols
+			return(out)
+		})
+		out = do.call("rbind", out)
+		colnames(out) = cols
+		return(out)
+	})
+	result = do.call("rbind", result)
+	result = data.table(result)
+	setcolorder(result, c(keyNames, "Version", "StartDate", "EndDate", "Metadata", "Metadata_Language", "Metadata_Group", "Metadata_Element", "Metadata_Value", "Value", flagNames))
+}
 
 GetHistory.processNormalizedResult <- function(data) {
 

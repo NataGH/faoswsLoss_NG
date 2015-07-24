@@ -73,39 +73,149 @@
 ##' 
 
 GetData <- function(key, flags = TRUE, normalized = TRUE, pivoting) {
-
-	# Validate passed arguments.
-	#
-	GetData.validate(key, flags, normalized, metadata = FALSE, pivoting)
-
-	# Prepare JSON for REST call.
-	#
-	json <- GetData.buildJSON(key, flags, normalized, metadata = FALSE, pivoting)
-
-	# Perform REST call.
-	#
-	url <- paste0(swsContext.baseRestUrl, "/r/data/", swsContext.executionId) 
-	data <- PostRestCall(url, json)
-
-	# Create result data table.
-	#
-	if(normalized){
-	  query <- GetData.processNormalizedResult(data, flags)
-	} else {
-	  query <- GetData.processDenormalizedResult(data)
-	}
-	
-	# normalizes result transforming columns from list of NULLs to vector of NAs
-	as.data.table(
-	  lapply(query,
-            FUN = function(x){
-              if(is.list(x))
-                x = NullToNa(x)
-              x
-            }
-	  )
-	)
+  
+  # Validate passed arguments.
+  #
+  GetData.validate(key, flags, normalized, metadata = FALSE, pivoting)
+  
+  # Prepare JSON for REST call.
+  #
+  json <- GetData.buildJSON(key, flags, normalized, metadata = FALSE, pivoting)
+  
+  # Perform REST call.
+  #
+  url <- paste0(swsContext.baseRestUrl, "/r/data/", swsContext.executionId) 
+  data <- PostRestCall(url, json)
+  
+  # Create result data table.
+  #
+  if(normalized){
+    query <- GetData.NEW_processNormalizedResult(data, flags)
+  } else {
+    query <- GetData.NEW_processDenormalizedResult(data)
+  }
+  
+  # normalizes result transforming columns from list of NULLs to vector of NAs
+  as.data.table(
+    lapply(query,
+           FUN = function(x){
+             if(is.list(x))
+               x = NullToNa(x)
+             x
+           }
+    )
+  )
 }
+
+
+
+## ---------------------------------------------------------
+
+GetData.NEW_processNormalizedResult <- function(data, flags) {
+  keyNames <- sapply(data$keyDefinitions, function(x) x[1])
+  if(flags){
+    flagNames <- sapply(data$flagDefinitions, function(x) x[1])
+    if(length(flagNames) == 0){
+      flags = FALSE
+      warning("flags set to TRUE but no flags are available in this ",
+              "dataset.  Setting flags to FALSE and proceeding.")
+    }
+  }
+  rows <- lapply(data$data, function(listElement){
+    out <- data.table(Value = listElement[[length(keyNames)+1]])
+    out[, c(keyNames) := as.list(listElement[1:length(keyNames)])]
+    if(flags){
+      out[, c(flagNames) := as.list(listElement[(length(keyNames)+2):length(listElement)])]
+      ## Reorder columns
+      setcolorder(out, c(keyNames, "Value", flagNames))
+    } else {
+      ## Reorder columns
+      setcolorder(out, c(keyNames, "Value"))
+    }
+  })
+  do.call("rbind", rows)
+}
+
+GetData.NEW_processDenormalizedResult <- function(data) {
+  fixCols <- sapply(data$groupingKeyDefinitions, function(x) x[[1]])
+  varPost <- sapply(data$columnKey$codes, function(x) paste(data$columnKey$definition[[1]], x, sep = "_"))
+  varPref <- append("Value", sapply(data$flagDefinitions, function(x) x[[1]]))
+  varCols <- list()
+  for (post in varPost) {
+    for (pref in varPref) {
+      varCols[[length(varCols) + 1]] <- paste(pref, post, sep="_")
+    }
+  }
+  cols <- c(fixCols, unlist(varCols))
+  result = lapply(data$data, function(listElement) {
+    if (is.list(listElement[[4]]) && length(listElement[[4]]) > 0) {
+      flatten <- listElement[1:length(fixCols)]
+      atLeastOne = FALSE
+      lapply(1:length(data$columnKey$codes), function(i) {
+        if (is.list(listElement[[4]][[i]]) && length(listElement[[4]][[i]]) > 0) {
+          atLeastOne <<- TRUE
+        } else {
+          listElement[[4]][[i]] <- list()
+          lapply(1:length(varPref), function(y) {
+            listElement[[4]][[i]][[y]] <<- NA
+          })
+        }
+        lapply(1:length(listElement[[4]][[i]]), function(y) {
+          flatten <<- append(flatten, listElement[[4]][[i]][[y]])
+        })
+      })
+      if (atLeastOne == TRUE) {
+        out = data.frame(flatten)
+        colnames(out) = cols
+        return(out)
+      } else {
+        return(NULL)
+      }
+    } else {
+      return(NULL)
+    }
+  })
+  result = do.call("rbind", result)
+  result = data.table(result)
+}
+
+GetData.NEW_processNormalizedResultMetadata <- function(data) {
+  keyNames <- sapply(data$keyDefinitions, function(x) x[1])
+  cols <- c(keyNames, "Metadata_Language", "Metadata", "Metadata_Group", "Metadata_Value")
+  result = lapply(data$data, function(listElement) {
+    if (length(listElement[[length(keyNames)+2]]) > 0) {
+      meta1 = lapply(listElement[[length(keyNames)+2]], function(listElement) {
+        meta2 = lapply(listElement[[4]], function(listElement) {
+          out = data.frame(list(listElement[[1]], 0, listElement[[3]]))
+          colnames(out) = c(cols[(length(keyNames)+2):length(cols)])
+          return(out)
+        })
+        lapply(1:length(meta2), function(i) {
+          meta2[[i]]$Metadata_Group <<- i
+        })
+        out = data.frame(list(listElement[[3]]))
+        out = merge(out, do.call(rbind, meta2))
+        colnames(out) = c(cols[(length(keyNames)+1):length(cols)])
+        return(out)
+      })
+      out = data.frame(listElement[1:length(keyNames)])
+      out = merge(out, do.call(rbind, meta1))
+      colnames(out) = cols
+      return(out)
+    } else {
+      return(NULL)
+    }
+  })
+  result = do.call("rbind", result)
+  result = data.table(result)
+  setcolorder(result, c(keyNames, "Metadata", "Metadata_Language", "Metadata_Group", "Metadata_Value"))
+}
+
+## ---------------------------------------------------------
+
+
+
+
 
 ##' Get Metadata
 ##' 
@@ -161,151 +271,151 @@ GetData <- function(key, flags = TRUE, normalized = TRUE, pivoting) {
 ##' 
 
 GetMetadata <- function(key, pivoting) {
-
-	# Validate passed arguments.
-	#
-	GetData.validate(key, flags = FALSE, normalized = TRUE,
-	                 metadata = TRUE, pivoting)
-
-	# Prepare JSON for REST call.
-	#
-	json <- GetData.buildJSON(key, flags = FALSE, normalized = TRUE,
-	                          metadata = TRUE, pivoting)
-
-	# Perform REST call.
-	#
-	url <- paste0(swsContext.baseRestUrl, "/r/data/", swsContext.executionId)
-	data <- PostRestCall(url, json)
-
-	# Create result data table.
-	#
-	query <- GetData.processNormalizedResultMetadata(data = data)
-
-	# normalizes result transforming columns from list of NULLs to vector of NAs
-	as.data.table(
-	  lapply(query,
-            FUN = function(x){
-              if(is.list(x))
-                x = NullToNa(x)
-              x
-            }
-	  )
-	)
+  
+  # Validate passed arguments.
+  #
+  GetData.validate(key, flags = FALSE, normalized = TRUE,
+                   metadata = TRUE, pivoting)
+  
+  # Prepare JSON for REST call.
+  #
+  json <- GetData.buildJSON(key, flags = FALSE, normalized = TRUE,
+                            metadata = TRUE, pivoting)
+  
+  # Perform REST call.
+  #
+  url <- paste0(swsContext.baseRestUrl, "/r/data/", swsContext.executionId)
+  data <- PostRestCall(url, json)
+  
+  # Create result data table.
+  #
+  query <- GetData.NEW_processNormalizedResultMetadata(data = data)
+  
+  # normalizes result transforming columns from list of NULLs to vector of NAs
+  as.data.table(
+    lapply(query,
+           FUN = function(x){
+             if(is.list(x))
+               x = NullToNa(x)
+             x
+           }
+    )
+  )
 }
 
 GetData.validate <- function(key, flags, normalized, metadata, pivoting) {
-
-	# Validate passed key.
-	#
-	if(missing(key)) {
-		stop("The key argument is mandatory.")
-	}
-	if(class(key) != "DatasetKey") {
-		stop("The passed key argument is not an instance of the DatasetKey class.")
-	}
-	if(!validObject(key)) {
-		stop("The passed key argument is not valid.")
-	}
-
-	# Validate that at least one key per dimension has been specified.
-	#
-	for(d in key@dimensions) {
-		if(is.null(d@keys)) {
-			stop(paste("The passed dimension", d@name, "has a null key array. It is necessary to specify at least one key for every dimension of the target dataset."))
-		}
-		if(length(d@keys) == 0) {
-			stop(paste("The passed dimension", d@name, "has an empty key array. It is necessary to specify at least one key for every dimension of the target dataset."))
-		}
-	}
-	
-	# Validate pivoting, if present.
-	#
-	if(!missing(pivoting)) {
-		if(!is.list(pivoting))
-            stop("The pivoting argument must be a list of Pivoting objects.")
-		for(p in pivoting) {
-			if(class(p) != "Pivoting") {
-				stop("At least one of the objects in the list passed for the pivoting argument is not an instance of the Pivoting class.")
-			}
-			if(!validObject(p)) {
-				stop("At least one of the objects in the list passed for the pivoting argument is not valid.")
-			}
-		}
-        dimensionNames = sapply(key@dimensions, slot, "name")
-        pivotNames = sapply(pivoting, slot, "code")
-        if(!setequal(pivotNames, dimensionNames))
-            stop("pivoting must contain all the same elements as dimensions (specified in key), and no more.")
-	}
-
-	# Denormalized format with metadata is not supported.
-	#
-	if(!normalized && metadata) {
-		stop("Denormalized data format with metadata is not supported.")
-	}
+  
+  # Validate passed key.
+  #
+  if(missing(key)) {
+    stop("The key argument is mandatory.")
+  }
+  if(class(key) != "DatasetKey") {
+    stop("The passed key argument is not an instance of the DatasetKey class.")
+  }
+  if(!validObject(key)) {
+    stop("The passed key argument is not valid.")
+  }
+  
+  # Validate that at least one key per dimension has been specified.
+  #
+  for(d in key@dimensions) {
+    if(is.null(d@keys)) {
+      stop(paste("The passed dimension", d@name, "has a null key array. It is necessary to specify at least one key for every dimension of the target dataset."))
+    }
+    if(length(d@keys) == 0) {
+      stop(paste("The passed dimension", d@name, "has an empty key array. It is necessary to specify at least one key for every dimension of the target dataset."))
+    }
+  }
+  
+  # Validate pivoting, if present.
+  #
+  if(!missing(pivoting)) {
+    if(!is.list(pivoting))
+      stop("The pivoting argument must be a list of Pivoting objects.")
+    for(p in pivoting) {
+      if(class(p) != "Pivoting") {
+        stop("At least one of the objects in the list passed for the pivoting argument is not an instance of the Pivoting class.")
+      }
+      if(!validObject(p)) {
+        stop("At least one of the objects in the list passed for the pivoting argument is not valid.")
+      }
+    }
+    dimensionNames = sapply(key@dimensions, slot, "name")
+    pivotNames = sapply(pivoting, slot, "code")
+    if(!setequal(pivotNames, dimensionNames))
+      stop("pivoting must contain all the same elements as dimensions (specified in key), and no more.")
+  }
+  
+  # Denormalized format with metadata is not supported.
+  #
+  if(!normalized && metadata) {
+    stop("Denormalized data format with metadata is not supported.")
+  }
 }
 
 
 GetData.buildJSON <- function(key, flags, normalized, metadata, pivoting) {
-	
-	# Build JSON for REST call.
-	#
-	json <- list(
-		token = swsContext.token,
-		domain = key@domain,
-		dataSet = key@dataset)
-
-	# Set up dimensions and selected keys.
-	#
-	json[["dimension2codes"]] <- list()
-	for(d in key@dimensions) {
-		json[["dimension2codes"]][[d@name]] <- I(d@keys)
-	}
-
-	# Add pivoting parameters, if requested.
-	#
-	if(!missing(pivoting) && !is.na(pivoting) && length(pivoting) > 0) {
-		json[["pivotingDimensions"]] <- pivoting
-	}
-
-	# Add parameter controlling the inclusion of flags.
-	#
-	json[["includeFlags"]] <- flags
-
-	# Add parameter controlling the inclusion of metadata.
-	#
-	json[["includeMetadata"]] <- metadata
-
-	# Add parameter used to request normalized or denormalized data.
-	#
-	json[["denormalized"]] <- !normalized
-
-	json
+  
+  # Build JSON for REST call.
+  #
+  json <- list(
+    token = swsContext.token,
+    domain = key@domain,
+    dataSet = key@dataset)
+  
+  # Set up dimensions and selected keys.
+  #
+  json[["dimension2codes"]] <- list()
+  for(d in key@dimensions) {
+    json[["dimension2codes"]][[d@name]] <- I(d@keys)
+  }
+  
+  # Add pivoting parameters, if requested.
+  #
+  if(!missing(pivoting) && !is.na(pivoting) && length(pivoting) > 0) {
+    json[["pivotingDimensions"]] <- pivoting
+  }
+  
+  # Add parameter controlling the inclusion of flags.
+  #
+  json[["includeFlags"]] <- flags
+  
+  # Add parameter controlling the inclusion of metadata.
+  #
+  json[["includeMetadata"]] <- metadata
+  
+  # Add parameter used to request normalized or denormalized data.
+  #
+  json[["denormalized"]] <- !normalized
+  
+  json
 }
 
 
 GetData.processNormalizedResult <- function(data, flags) {
-	keyNames <- sapply(data$keyDefinitions, function(x) x[1])
-	if(flags){
-	    flagNames <- sapply(data$flagDefinitions, function(x) x[1])
-	    if(length(flagNames) == 0){
-	        flags = FALSE
-	        warning("flags set to TRUE but no flags are available in this ",
-	                "dataset.  Setting flags to FALSE and proceeding.")
-	    }
-	}
-	rows <- lapply(data$data, function(listElement){
-	    out <- data.table(Value = listElement$value)
-	    out[, c(keyNames) := as.list(listElement$keys)]
-    	if(flags){
-    	    out[, c(flagNames) := as.list(listElement$flags)]
-    	    ## Reorder columns
-    	    setcolorder(out, c(keyNames, "Value", flagNames))
-    	} else {
-    	    ## Reorder columns
-    	    setcolorder(out, c(keyNames, "Value"))
-    	}
-	})
-	do.call("rbind", rows)
+  keyNames <- sapply(data$keyDefinitions, function(x) x[1])
+  if(flags){
+    flagNames <- sapply(data$flagDefinitions, function(x) x[1])
+    if(length(flagNames) == 0){
+      flags = FALSE
+      warning("flags set to TRUE but no flags are available in this ",
+              "dataset.  Setting flags to FALSE and proceeding.")
+    }
+  }
+  rows <- lapply(data$data, function(listElement){
+    out <- data.table(Value = listElement$value)
+    out[, c(keyNames) := as.list(listElement$keys)]
+    if(flags){
+      out[, c(flagNames) := as.list(listElement$flags)]
+      ## Reorder columns
+      setcolorder(out, c(keyNames, "Value", flagNames))
+    } else {
+      ## Reorder columns
+      setcolorder(out, c(keyNames, "Value"))
+    }
+  })
+  do.call("rbind", rows)
 }
 
 ##' Clean metadata
@@ -320,67 +430,67 @@ GetData.processNormalizedResult <- function(data, flags) {
 ##' 
 
 cleanMetadata <- function(metadata){
-    result <- lapply(metadata, function(x){
-        ## Multiple elements may exist for each metadata record.  These can
-        ## just be combined using an "rbind".
-        out <- data.table(do.call("rbind", x$elements))
-        out[, language := x$language]
-    })
-    lapply(1:length(result), function(i){
-        result[[i]][, Metadata_Group := i]
-    })
-    do.call("rbind", result)
+  result <- lapply(metadata, function(x){
+    ## Multiple elements may exist for each metadata record.  These can
+    ## just be combined using an "rbind".
+    out <- data.table(do.call("rbind", x$elements))
+    out[, language := x$language]
+  })
+  lapply(1:length(result), function(i){
+    result[[i]][, Metadata_Group := i]
+  })
+  do.call("rbind", result)
 }
 
 GetData.processNormalizedResultMetadata <- function(data){
-	keyNames <- sapply(data$keyDefinitions, function(x) x[1])
-	rows <- lapply(data$data, function(listElement){
-	    out <- cleanMetadata(listElement$metadata)
-	    out[, c(keyNames) := as.list(listElement$keys)]
-	    out[, typeDescription := NULL] # not needed
-	    ## Reassign column name for consistency
-	    setnames(out, c("typeCode", "value", "language"),
-	             c("Metadata", "Metadata_Value", "Metadata_Language"))
-	    ## Reorder columns
-	    setcolorder(out, c(keyNames, "Metadata", "Metadata_Language",
-	                       "Metadata_Group", "Metadata_Value"))
-	})
-	do.call("rbind", rows)
+  keyNames <- sapply(data$keyDefinitions, function(x) x[1])
+  rows <- lapply(data$data, function(listElement){
+    out <- cleanMetadata(listElement$metadata)
+    out[, c(keyNames) := as.list(listElement$keys)]
+    out[, typeDescription := NULL] # not needed
+    ## Reassign column name for consistency
+    setnames(out, c("typeCode", "value", "language"),
+             c("Metadata", "Metadata_Value", "Metadata_Language"))
+    ## Reorder columns
+    setcolorder(out, c(keyNames, "Metadata", "Metadata_Language",
+                       "Metadata_Group", "Metadata_Value"))
+  })
+  do.call("rbind", rows)
 }
 
 GetData.processDenormalizedResult <- function(data) {
-
-
-	columns <- list()
-	# Extract grouping key columns.
-	#
-	i <- 0
-	for(col in data$groupingKeyDefinitions) {
-		i <- i + 1
-		columns[[col["code"]]] <- sapply(data$data, function(x) { x[["groupingKeys"]][i] })
-	}
-
-	# Extract denormalized column keys.
-	#
-	denormalizedDimension <- data$columnKey$definition[["code"]]
-	i <- 0
-	for(col in data$columnKey$codes) {
-		i <- i + 1
-		columns[[paste0("Value_", denormalizedDimension, "_", col)]] <- sapply(data$data, function(x) { 
-			y <- x[["content"]][[i]][["value"]] 
-			ifelse(is.null(y), NA, y)
-		})
-
-		# Extract flag columns.
-		#
-		j <- 0
-		for(flag in data$flagDefinitions) {
-			j <- j + 1
-			columns[[paste0(flag["code"], "_", denormalizedDimension, "_", col)]] <- sapply(data$data, function(x) { x[["content"]][[i]][["flags"]][j] })
-		}
-	}
-
-	# Bind columns into a data table object.
-	#
-	do.call("data.table", columns)
+  
+  
+  columns <- list()
+  # Extract grouping key columns.
+  #
+  i <- 0
+  for(col in data$groupingKeyDefinitions) {
+    i <- i + 1
+    columns[[col["code"]]] <- sapply(data$data, function(x) { x[["groupingKeys"]][i] })
+  }
+  
+  # Extract denormalized column keys.
+  #
+  denormalizedDimension <- data$columnKey$definition[["code"]]
+  i <- 0
+  for(col in data$columnKey$codes) {
+    i <- i + 1
+    columns[[paste0("Value_", denormalizedDimension, "_", col)]] <- sapply(data$data, function(x) { 
+      y <- x[["content"]][[i]][["value"]] 
+      ifelse(is.null(y), NA, y)
+    })
+    
+    # Extract flag columns.
+    #
+    j <- 0
+    for(flag in data$flagDefinitions) {
+      j <- j + 1
+      columns[[paste0(flag["code"], "_", denormalizedDimension, "_", col)]] <- sapply(data$data, function(x) { x[["content"]][[i]][["flags"]][j] })
+    }
+  }
+  
+  # Bind columns into a data table object.
+  #
+  do.call("data.table", columns)
 }
