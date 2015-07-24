@@ -285,8 +285,14 @@ GetData.buildJSON <- function(key, flags, normalized, metadata, pivoting) {
 
 GetData.processNormalizedResult <- function(data, flags) {
 	keyNames <- sapply(data$keyDefinitions, function(x) x[1])
-	if(flags)
+	if(flags){
 	    flagNames <- sapply(data$flagDefinitions, function(x) x[1])
+	    if(length(flagNames) == 0){
+	        flags = FALSE
+	        warning("flags set to TRUE but no flags are available in this ",
+	                "dataset.  Setting flags to FALSE and proceeding.")
+	    }
+	}
 	rows <- lapply(data$data, function(listElement){
 	    out <- data.table(Value = listElement$value)
 	    out[, c(keyNames) := as.list(listElement$keys)]
