@@ -80,21 +80,30 @@ GetData <- function(key, flags = TRUE, normalized = TRUE, pivoting) {
   
   # Prepare JSON for REST call.
   #
-  json <- GetData.buildJSON(key, flags, normalized, metadata = FALSE, pivoting)
+  json <- GetData.buildJSON(key, flags, normalized = TRUE, metadata = FALSE, pivoting)
   
   # Perform REST call.
   #
   url <- paste0(swsContext.baseRestUrl, "/r/data/", swsContext.executionId) 
   data <- PostRestCall(url, json)
-  
+
   # Create result data table.
   #
-  if(normalized){
-    query <- GetData.NEW_processNormalizedResult(data, flags)
-  } else {
-    query <- GetData.NEW_processDenormalizedResult(data)
+  query <- GetData.NEW_processNormalizedResult(data, flags)
+  if(!missing(pivoting)){
+    colOrder <- sapply(pivoting, function(x) x@code)
+    newKeyDefinitions <- as.list(colOrder)
+    data$keyDefinitions <- sapply(newKeyDefinitions, function(x){
+        position <- sapply(data$keyDefinitions, function(y) y[["code"]] == x)
+        newKeyDefinitions <- data$keyDefinitions[position]
+    })
+    colOrder <- c(colOrder, colnames(query)[!colnames(query) %in% colOrder])
+    setcolorder(query, colOrder)
   }
-  
+  if(!normalized){
+    query <- denormalizeResult(data, query, key)
+  }
+
   # normalizes result transforming columns from list of NULLs to vector of NAs
   as.data.table(
     lapply(query,
@@ -116,67 +125,93 @@ GetData.NEW_processNormalizedResult <- function(data, flags) {
   if(flags){
     flagNames <- sapply(data$flagDefinitions, function(x) x[1])
     if(length(flagNames) == 0){
-      flags = FALSE
+      flags <- FALSE
+      flagNames <- c()
       warning("flags set to TRUE but no flags are available in this ",
               "dataset.  Setting flags to FALSE and proceeding.")
     }
+  } else {
+    flagNames <- c()
   }
-  rows <- lapply(data$data, function(listElement){
-    out <- data.table(Value = listElement[[length(keyNames)+1]])
-    out[, c(keyNames) := as.list(listElement[1:length(keyNames)])]
-    if(flags){
-      out[, c(flagNames) := as.list(listElement[(length(keyNames)+2):length(listElement)])]
-      ## Reorder columns
-      setcolorder(out, c(keyNames, "Value", flagNames))
-    } else {
-      ## Reorder columns
-      setcolorder(out, c(keyNames, "Value"))
-    }
-  })
-  do.call("rbind", rows)
+  columns <- c(keyNames, "Value", flagNames)
+  ## Drop any additional data (i.e. metadata)
+  data$data <- lapply(data$data, function(x) x[1:length(columns)])
+  out <- data.table(do.call("rbind", data$data))
+  ## Columns are of type list, convert to vector
+  ## lapply(out, class)
+  out = as.data.table(lapply(out, unlist))
+  if(nrow(out) > 0){
+    ## lapply(out, class)
+    setnames(out, columns)
+    setcolorder(out, c(keyNames, "Value", flagNames))
+  } else {
+    out = data.table(matrix(nrow = 0, ncol = length(keyNames) +
+                                length(flagNames) + 1))
+    setnames(out, c(keyNames, "Value", flagNames))
+  }
+  out
 }
 
-GetData.NEW_processDenormalizedResult <- function(data) {
-  fixCols <- sapply(data$groupingKeyDefinitions, function(x) x[[1]])
-  varPost <- sapply(data$columnKey$codes, function(x) paste(data$columnKey$definition[[1]], x, sep = "_"))
-  varPref <- append("Value", sapply(data$flagDefinitions, function(x) x[[1]]))
-  varCols <- list()
-  for (post in varPost) {
-    for (pref in varPref) {
-      varCols[[length(varCols) + 1]] <- paste(pref, post, sep="_")
-    }
-  }
-  cols <- c(fixCols, unlist(varCols))
-  result = lapply(data$data, function(listElement) {
-    if (is.list(listElement[[4]]) && length(listElement[[4]]) > 0) {
-      flatten <- listElement[1:length(fixCols)]
-      atLeastOne = FALSE
-      lapply(1:length(data$columnKey$codes), function(i) {
-        if (is.list(listElement[[4]][[i]]) && length(listElement[[4]][[i]]) > 0) {
-          atLeastOne <<- TRUE
-        } else {
-          listElement[[4]][[i]] <- list()
-          lapply(1:length(varPref), function(y) {
-            listElement[[4]][[i]][[y]] <<- NA
-          })
-        }
-        lapply(1:length(listElement[[4]][[i]]), function(y) {
-          flatten <<- append(flatten, listElement[[4]][[i]][[y]])
-        })
-      })
-      if (atLeastOne == TRUE) {
-        out = data.frame(flatten)
-        colnames(out) = cols
-        return(out)
-      } else {
-        return(NULL)
-      }
-    } else {
-      return(NULL)
-    }
+denormalizeResult <- function(data, query, key){
+  # If flags is FALSE, data$flagDefinitions will be NULL and so flagNames will
+  # be an empty list
+  noData = nrow(query) == 0 # Need this logical for later flow structure.
+  flagNames <- sapply(data$flagDefinitions, function(x) x[1])
+  keyNames <- sapply(data$keyDefinitions, function(x) x[1])
+  normalizedKeys <- keyNames[-length(keyNames)]
+  denormalizedKey <- keyNames[length(keyNames)]
+  denormalizedPosition <- lapply(key@dimensions, function(x) x@name) ==
+      denormalizedKey
+  denormalizedValues <- sort(key@dimensions[denormalizedPosition][[1]]@keys)
+  
+  # If one of the denormalized values never has any data, it won't show up in
+  # the data with missing values.  We want a column for each value, though,
+  # whether it has data or not.  So, add them in:
+  missingKeys <- denormalizedValues[!denormalizedValues %in%
+                                        query[[denormalizedKey]]]
+  toMerge = data.table(missingKeys)
+  setnames(toMerge, denormalizedKey)
+  query = rbindlist(list(query, toMerge), fill = TRUE)
+  
+  castFormula <- paste0(paste(normalizedKeys, collapse = "+"),
+                        "~", keyNames[length(keyNames)])
+  ## Specify which variables we wish to have in the denormalization.  This
+  ## should include all the flags as well as the Value column.
+  value.vars <- c("Value", flagNames)
+  ## For each element of value.vars, denormalize the data across the last key
+  denormalizedTables <- lapply(value.vars, function(valName){
+    valueTable <- dcast.data.table(query, formula = castFormula,
+                                   value.var = valName)
+    keyColNames <- colnames(valueTable)[!colnames(valueTable) %in% keyNames]
+    setnames(valueTable, keyColNames,
+             paste0(valName, "_", keyNames[length(keyNames)],
+                    "_", keyColNames))
+    valueTable
   })
-  result = do.call("rbind", result)
-  result = data.table(result)
+  # Merge all the tables together
+  mergeFunc <- function(x, y){
+      merge(x, y, by = normalizedKeys)
+  }
+  out <- Reduce(mergeFunc, denormalizedTables)
+
+  # Order the output so that we have normalized keys followed by columns for
+  # each denormalized key.  Keep the values and flags together for the same
+  # denormalized value, if applicable.
+  setcolorder(out, c(normalizedKeys,
+                     paste0(c("Value", flagNames), "_",
+                            denormalizedKey, "_",
+                            # repeat the denormalized values for the Value and
+                            # each flag column:
+                            rep(denormalizedValues, each = length(flagNames) + 1))))
+
+  # Note: If the normalized data.frame has no rows, then the denormalized should
+  # also have 0 rows.  However, the above code will create one row of NAs.  To
+  # fix that one special case, just delete that row.
+  if(noData){
+    out = out[-1, ]
+  }
+  
+  return(out)
 }
 
 GetData.NEW_processNormalizedResultMetadata <- function(data) {

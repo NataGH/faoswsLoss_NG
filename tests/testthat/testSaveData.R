@@ -12,12 +12,18 @@ library(data.table)
 library(testthat)
 sessionInfo() # Confirmed that I'm running version 0.3.6
 
-GetTestEnvironment(
-    baseUrl = "https://hqlprswsas1.hq.un.fao.org:8181/sws",
-    token = "fd7b11a1-f144-41ec-8bfb-1003da93ec7f"
-    ## baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
-    ## token = "7449da27-d4ab-43c2-8e8e-55fe806d473b"
-)
+## QA only has two files:
+if(length(list.files("~/.R/")) == 2){
+    GetTestEnvironment(
+        baseUrl = "https://hqlprswsas1.hq.un.fao.org:8181/sws",
+        token = "fd7b11a1-f144-41ec-8bfb-1003da93ec7f"
+    )
+} else {
+    GetTestEnvironment(
+        baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
+        token = "7449da27-d4ab-43c2-8e8e-55fe806d473b"
+    )
+}
 
 swsContext.datasets[[1]] = DatasetKey(
     domain = "agriculture",

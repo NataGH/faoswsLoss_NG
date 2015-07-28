@@ -1,4 +1,5 @@
 * text=auto !eol
+/.Rbuildignore -text
 /.Rhistory -text
 /DESCRIPTION -text
 /NAMESPACE -text
@@ -40,6 +41,9 @@ man/GetBlockMetadata.Rd -text
 man/GetCodeList.Rd -text
 man/GetCodeTree.Rd -text
 man/GetData.Rd -text
+man/GetDatasetConfig.Rd -text
+man/GetDatasetNames.Rd -text
+man/GetDomainNames.Rd -text
 man/GetHistory.Rd -text
 man/GetMapping.Rd -text
 man/GetMetadata.Rd -text
