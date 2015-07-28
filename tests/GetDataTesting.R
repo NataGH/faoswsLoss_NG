@@ -89,3 +89,20 @@ GetData(key5, normalized = TRUE, flags = FALSE, pivoting = randomPivot)
 GetData(key5, normalized = TRUE, flags = TRUE, pivoting = randomPivot)
 GetData(key5, normalized = FALSE, flags = FALSE, pivoting = randomPivot)
 GetData(key5, normalized = FALSE, flags = TRUE, pivoting = randomPivot)
+
+
+## Test with a large dataset
+
+key4 = DatasetKey(domain = "agriculture", dataset = "agriculture", dimensions = list(
+    ## All countries (needed for models)
+    Dimension(name = "geographicAreaM49",
+              keys = GetCodeList("agriculture", "agriculture", "geographicAreaM49")[, code]),
+    Dimension(name = "measuredElement",
+              keys = GetCodeList("agriculture", "agriculture", "measuredElement")[, code]),
+    Dimension(name = "measuredItemCPC", keys = c("0111", "0112", "0115")),
+    Dimension(name = "timePointYears", keys = as.character(2005:2010))
+))
+
+start = Sys.time()
+GetData(key4)
+Sys.time() - start
