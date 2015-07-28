@@ -65,5 +65,5 @@ man/SetTableData.Rd -text
 man/cleanMetadata.Rd -text
 man/normalizeData.Rd -text
 man/swsContext.Rd -text
-tests/testthat.R -text
+tests/GetDataTesting.R -text
 tests/testthat/testSaveData.R -text
