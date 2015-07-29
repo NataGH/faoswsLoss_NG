@@ -149,6 +149,7 @@ GetData.NEW_processNormalizedResult <- function(data, flags) {
                                 length(flagNames) + 1))
     setnames(out, c(keyNames, "Value", flagNames))
   }
+  out[, Value := as.numeric(Value)]
   out
 }
 

@@ -32,9 +32,13 @@ key5 = DatasetKey(domain = "agriculture", dataset = "aupus_share", dimensions = 
 
 
 GetData(key3, normalized = TRUE, flags = FALSE)
+sapply(GetData(key3, normalized = TRUE, flags = FALSE), class)
 GetData(key3, normalized = TRUE, flags = TRUE)
+sapply(GetData(key3, normalized = TRUE, flags = TRUE), class)
 GetData(key3, normalized = FALSE, flags = FALSE)
+sapply(GetData(key3, normalized = FALSE, flags = FALSE), class)
 GetData(key3, normalized = FALSE, flags = TRUE)
+sapply(GetData(key3, normalized = FALSE, flags = TRUE), class)
 dimNames = lapply(key3@dimensions, function(x) x@name)
 randomPivot = sample(lapply(dimNames, function(x){
     Pivoting(code = x, ascending = sample(c(T,F), size = 1))
@@ -46,6 +50,7 @@ GetData(key3, normalized = FALSE, flags = TRUE, pivoting = randomPivot)
 
 
 GetData(key4, normalized = TRUE, flags = FALSE)
+sapply(GetData(key4, normalized = TRUE, flags = FALSE), class)
 GetData(key4, normalized = TRUE, flags = TRUE)
 GetData(key4, normalized = FALSE, flags = FALSE)
 GetData(key4, normalized = FALSE, flags = TRUE)
