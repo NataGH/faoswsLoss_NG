@@ -2,13 +2,14 @@
 % Please edit documentation in R/zzz.R
 \docType{data}
 \name{swsContext}
+\alias{.swsenv}
 \alias{swsContext}
 \alias{swsContext.clientCertificate}
 \title{swsContext}
-\format{\preformatted{ chr "~/.R/client.crt"
+\format{\preformatted{<environment: 0x00000000084a2cf8> 
 }}
 \usage{
-swsContext.clientCertificate
+.swsenv
 }
 \description{
 These objects specify the location of important files for data access.

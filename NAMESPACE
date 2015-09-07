@@ -38,10 +38,6 @@ export(
 	GetDatasetNames,
 	GetDatasetConfig,
 	
-	.buildModifiedCells,
+	.buildModifiedCells
 
-	swsContext.clientCertificate,
-	swsContext.clientKey,
-	swsContext.serverCertificate,
-	swsContext.noProxy
 )

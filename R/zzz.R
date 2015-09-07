@@ -10,9 +10,11 @@
 ##' @details Most of these objects are created by a call to GetTestEnvironment.
 ##' 
 
-swsContext.clientCertificate <- "~/.R/client.crt"
-swsContext.clientKey <- "~/.R/client.key"
-swsContext.clientP12 <- "~/.R/client.p12"
-swsContext.p12Password <- "changeme"
-swsContext.serverCertificate <- "~/.R/s1as.pem"
-swsContext.noProxy <- "*"
+.swsenv <- new.env()
+
+.swsenv$swsContext.clientCertificate <- "~/.R/client.crt"
+.swsenv$swsContext.clientKey <- "~/.R/client.key"
+.swsenv$swsContext.clientP12 <- "~/.R/client.p12"
+.swsenv$swsContext.p12Password <- "changeme"
+.swsenv$swsContext.serverCertificate <- "~/.R/s1as.pem"
+.swsenv$swsContext.noProxy <- "*"
