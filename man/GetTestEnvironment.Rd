@@ -7,11 +7,14 @@
 GetTestEnvironment(baseUrl, token)
 }
 \arguments{
-\item{baseUrl}{The url for the SWS server, typically
-"https://hqlqasws1:8181/sws" or something similar.}
+\item{baseUrl}{The url for the SWS server:
+\itemize{
+  \item QA: \code{https://hqlqasws1.hq.un.fao.org:8181/sws}
+  \item Production: \code{https://hqlprswsas1.hq.un.fao.org:8181/sws}
+}}
 
-\item{token}{A token which tells the SWS system what dataset to access.
-This token can be obtained from the system by
+\item{token}{A token which tells the SWS system what dataset to access. This
+  token can be obtained from the system by
 
 \itemize{
     \item Opening a session with the relevant data.
@@ -19,13 +22,15 @@ This token can be obtained from the system by
     \item Selecting the relevant script to analyze.
     \item Clicking "New debug session".
 }
+
 If the module does not currently exist on the system, you will need to
-upload a zipped file with an xml file specifying the dataset
-configurations.}
+upload a zipped file with an xml file specifying the dataset configurations.}
 }
 \value{
-This function doesn't return any objects but creates "swsContext"
-objects, such as swsContext.datasets, swsContexts.token, etc.
+This function silently returns a list containing a DatasetKey object and creates
+  "swsContext" objects, such as \code{swsContext.datasets}, \code{swsContexts.token},
+  etc., including \code{swsContext.datasets} which is identical to the object
+  returned.
 }
 \description{
 Get Test Environment

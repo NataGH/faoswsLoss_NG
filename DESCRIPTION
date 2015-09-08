@@ -18,4 +18,5 @@ Collate:
 	zzz.R
 	buildModifiedCells.R
 	GetTableData.R SetTableData.R NullToNa.R GetDomainNames.R GetDatasetNames.R GetDatasetConfig.R 
+	package.R
 Suggests: testthat
