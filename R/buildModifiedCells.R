@@ -3,6 +3,8 @@
 ##' @param dimensions
 ##' @param coordinates
 ##' 
+##' @import data.table 
+
 
 .buildModifiedCells <- function(dimensions, coordinates) {
 

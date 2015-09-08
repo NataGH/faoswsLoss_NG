@@ -10,6 +10,7 @@
 ##' @param selection A list of instances of the Dimension class.
 ##' @param metadata An instance of the Metadata class.
 ##' 
+##' @export
 
 BlockMetadata <- setClass(
 	"BlockMetadata", 

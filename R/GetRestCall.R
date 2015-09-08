@@ -2,6 +2,8 @@
 ##' 
 ##' @param url
 ##' 
+##' @import RJSONIO
+##' @import RCurl
 
 GetRestCall <- function(url) {
 

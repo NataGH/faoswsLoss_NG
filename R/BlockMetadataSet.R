@@ -5,6 +5,7 @@
 ##' KeyDefinition.
 ##' @param blockMetadata A list of BlockMetaData objects.
 ##' 
+##' @export
 
 BlockMetadataSet <- setClass("BlockMetadataSet", 
 	representation(

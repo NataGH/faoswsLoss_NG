@@ -7,6 +7,7 @@
 ##' @param type A character value.  Valid values are "normal",
 ##' "measurementUnit", and "time".
 ##' 
+##' @export
 
 KeyDefinition <- setClass("KeyDefinition",
     representation(

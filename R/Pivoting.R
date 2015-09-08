@@ -47,6 +47,7 @@
 ##' GetData(key, pivoting = c(pivot2, pivot3, pivot4, pivot1), normalized = F)
 ##' }
 ##' 
+##' @export
 
 Pivoting <- setClass("Pivoting", 
 	representation(code = "character", ascending = "logical"),

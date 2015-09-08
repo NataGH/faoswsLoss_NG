@@ -12,6 +12,7 @@
 ##' @return A data table containing the map entries matching the key (may be
 ##' empty).
 ##' 
+##' @export GetMapping
 
 GetMapping <- function(key) {
 

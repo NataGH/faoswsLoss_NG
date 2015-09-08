@@ -2,6 +2,7 @@
 ##' 
 ##' @param nullList
 ##' 
+##' @export NullToNa
 
 NullToNa = function(nullList) {
   if (is.null(nullList) || !is.list(nullList)) {

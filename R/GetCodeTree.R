@@ -18,6 +18,7 @@
 ##'                      dimension = "geographicAreaM49", roots = "953")
 ##' }
 ##' 
+##' @export GetCodeTree
 
 GetCodeTree <- function(domain, dataset, dimension, roots) {
 

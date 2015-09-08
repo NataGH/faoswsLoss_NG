@@ -35,6 +35,7 @@
 ##' 
 ##' @seealso \code{\link{Dimension}}, \code{\link{GetData}}
 ##' 
+##' @export
 
 DatasetKey <- setClass("DatasetKey", 
 	representation(

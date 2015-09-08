@@ -9,6 +9,7 @@
 ##' 
 ##' @return A object containing the full information
 ##' 
+##' @export GetDatasetConfig
 
 GetDatasetConfig <- function(domainCode, datasetCode) {
 

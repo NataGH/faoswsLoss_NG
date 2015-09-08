@@ -8,6 +8,7 @@
 ##' 
 ##' @return A list of dataset names
 ##' 
+##' @export GetDatasetNames
 
 GetDatasetNames <- function(domainCode) {
 

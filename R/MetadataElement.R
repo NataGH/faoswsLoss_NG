@@ -6,6 +6,7 @@
 ##' the metadata element.
 ##' @param value The character value associated to the metadata element.
 ##' 
+##' @export
 
 MetadataElement <- setClass("MetadataElement", 
 	representation(

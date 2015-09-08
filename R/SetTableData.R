@@ -39,6 +39,7 @@
 ##'     \item skipped (if replace was FALSE and rec found by key)
 ##' }
 ##' 
+##' @export SetTableData
 
 SetTableData <- function(schemaName, tableName, data, replace = FALSE, purge = FALSE, purgeFilter = NULL) {
 

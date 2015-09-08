@@ -3,6 +3,7 @@
 ##' @param mappingTable
 ##' @param dimensions
 ##' 
+##' @export
 
 MappingTableKey <- setClass("MappingTableKey", 
 	representation(

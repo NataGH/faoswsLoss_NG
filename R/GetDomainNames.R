@@ -6,6 +6,7 @@
 ##' 
 ##' @return A list of domain names
 ##' 
+##' @export GetDomainNames
 
 GetDomainNames <- function() {
 

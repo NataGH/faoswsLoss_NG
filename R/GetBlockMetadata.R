@@ -2,6 +2,7 @@
 ##' 
 ##' @param key A key object, as contained in a BlockMetadata object.
 ##' 
+##' @export GetBlockMetadata
 
 GetBlockMetadata <- function(key) {
 

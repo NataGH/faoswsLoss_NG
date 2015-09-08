@@ -11,6 +11,7 @@
 ##' @return A data table of observation objects containing the values and flags
 ##' through history with the associated history metadata.
 ##' 
+##' @export GetHistory
 
 GetHistory <- function(key, pivoting) {
 

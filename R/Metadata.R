@@ -18,6 +18,7 @@
 ##' }
 ##' @param elements A list of objects of class MetadataElement.
 ##' 
+##' @export
 
 Metadata <- setClass("Metadata", 
 	representation(
