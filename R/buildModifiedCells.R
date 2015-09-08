@@ -1,5 +1,5 @@
 ##' Build Modified Cells
-##' 
+##' @rdname buildModifiedCells
 ##' @param dimensions
 ##' @param coordinates
 ##' 

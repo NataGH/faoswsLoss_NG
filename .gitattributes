@@ -1,6 +1,5 @@
 * text=auto !eol
 /.Rbuildignore -text
-/.Rhistory -text
 /DESCRIPTION -text
 /NAMESPACE -text
 R/BlockMetadata.R -text
