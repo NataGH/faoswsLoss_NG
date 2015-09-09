@@ -5,14 +5,20 @@
 \alias{Metadata}
 \alias{Metadata-class}
 \title{Metadata Class Definition}
-\arguments{
-\item{code}{A character value identifying the metadata type represented
+\description{
+This object represents the metadata associated to the block of data
+specified by the keys held by the "selection" slot for BlockMetaData.
+}
+\section{Slots}{
+
+\describe{
+\item{\code{code}}{A character value identifying the metadata type represented
 (for instance ACCURACY or GENERAL).}
 
-\item{description}{A character value of the description of the metadata
+\item{\code{description}}{A character value of the description of the metadata
 type.}
 
-\item{language}{Should be one of the following character values:
+\item{\code{language}}{Should be one of the following character values:
 \itemize{
     \item "ar": Arabic
     \item "en": English
@@ -22,10 +28,6 @@ type.}
     \item "zh": Chinese
 }}
 
-\item{elements}{A list of objects of class MetadataElement.}
-}
-\description{
-This object represents the metadata associated to the block of data
-specified by the keys held by the "selection" slot for BlockMetaData.
-}
+\item{\code{elements}}{A list of objects of class MetadataElement.}
+}}
 

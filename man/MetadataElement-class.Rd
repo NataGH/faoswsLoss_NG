@@ -5,16 +5,18 @@
 \alias{MetadataElement}
 \alias{MetadataElement-class}
 \title{MetadataElement Class Definition}
-\arguments{
-\item{code}{A character value specifying the metadata element type (such as
-"SAMPLING_ERROR" or "COMMENT").}
-
-\item{description}{A character value holding the extended description of
-the metadata element.}
-
-\item{value}{The character value associated to the metadata element.}
-}
 \description{
 MetadataElement Class Definition
 }
+\section{Slots}{
+
+\describe{
+\item{\code{code}}{A character value specifying the metadata element type (such as
+"SAMPLING_ERROR" or "COMMENT").}
+
+\item{\code{description}}{A character value holding the extended description of
+the metadata element.}
+
+\item{\code{value}}{The character value associated to the metadata element.}
+}}
 

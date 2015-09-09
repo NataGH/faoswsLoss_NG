@@ -2,13 +2,13 @@
 ##' 
 ##' This S4 object represents a single block metadata.
 ##' 
-##' @param blockId Numeric value that holds the unique ID of the block metadata.
+##' @slot blockId Numeric value that holds the unique ID of the block metadata.
 ##' The GetBlockMetadata call returns this information in order to allow update
 ##' operation on block metadata, by specifying an existing ID in a
 ##' SaveBlockMetadata call.  Omitting this information in a SaveBlockMetadata
 ##' call will create a new block metadata.
-##' @param selection A list of instances of the Dimension class.
-##' @param metadata An instance of the Metadata class.
+##' @slot selection A list of instances of the Dimension class.
+##' @slot metadata An instance of the Metadata class.
 ##' 
 ##' @export
 

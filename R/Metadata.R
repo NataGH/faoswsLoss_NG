@@ -3,11 +3,11 @@
 ##' This object represents the metadata associated to the block of data
 ##' specified by the keys held by the "selection" slot for BlockMetaData.
 ##' 
-##' @param code A character value identifying the metadata type represented
+##' @slot code A character value identifying the metadata type represented
 ##' (for instance ACCURACY or GENERAL).
-##' @param description A character value of the description of the metadata
+##' @slot description A character value of the description of the metadata
 ##' type.
-##' @param language Should be one of the following character values:
+##' @slot language Should be one of the following character values:
 ##' \itemize{
 ##'     \item "ar": Arabic
 ##'     \item "en": English
@@ -16,7 +16,7 @@
 ##'     \item "ru": Russian
 ##'     \item "zh": Chinese
 ##' }
-##' @param elements A list of objects of class MetadataElement.
+##' @slot elements A list of objects of class MetadataElement.
 ##' 
 ##' @export
 

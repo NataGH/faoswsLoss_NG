@@ -5,12 +5,14 @@
 \alias{MappingTableKey}
 \alias{MappingTableKey-class}
 \title{Mapping Table Key}
-\arguments{
-\item{mappingTable}{}
-
-\item{dimensions}{}
-}
 \description{
 Mapping Table Key
 }
+\section{Slots}{
+
+\describe{
+\item{\code{mappingTable}}{}
+
+\item{\code{dimensions}}{}
+}}
 

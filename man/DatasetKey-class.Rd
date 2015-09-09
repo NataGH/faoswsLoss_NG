@@ -5,23 +5,25 @@
 \alias{DatasetKey}
 \alias{DatasetKey-class}
 \title{Dataset Key Class}
-\arguments{
-\item{domain}{A character value specifying the domain of interest, such as
-"agriculture".}
-
-\item{dataset}{A character value specifying the dataset within the domain,
-such as "agriculture".}
-
-\item{dimensions}{A list of objects, each of class Dimension.}
-
-\item{sessionId}{The ID of the session from which data should be accessed.
-  If NULL, the database is used directly.}
-}
 \description{
 This class provides a mechanism for pulling data from the SWS.  You must
 pass a DatasetKey object into the GetData function in order to read data
 from the SWS.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{domain}}{A character value specifying the domain of interest, such as
+"agriculture".}
+
+\item{\code{dataset}}{A character value specifying the dataset within the domain,
+such as "agriculture".}
+
+\item{\code{dimensions}}{A list of objects, each of class Dimension.}
+
+\item{\code{sessionId}}{The ID of the session from which data should be accessed.
+  If NULL, the database is used directly.}
+}}
 \note{
 Many of these variables (domain, dataset, and dimensions) can be found
   by examining some of the swsContext objects which are created in a

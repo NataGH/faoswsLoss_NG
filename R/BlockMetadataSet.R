@@ -1,9 +1,9 @@
 ##' The Block Metadata Set Class
 ##' 
-##' @param keyDefinitions List of dimensions that characterize the underlying
+##' @slot keyDefinitions List of dimensions that characterize the underlying
 ##' dataset.  Each list element has to be an instance of the S4 class
 ##' KeyDefinition.
-##' @param blockMetadata A list of BlockMetaData objects.
+##' @slot blockMetadata A list of BlockMetaData objects.
 ##' 
 ##' @export
 

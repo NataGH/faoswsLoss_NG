@@ -12,9 +12,9 @@
 ##' on the columns of the returned data.table the values corresponding to the
 ##' last Pivoting dimension.
 ##' 
-##' @param code A character value containing the descriptive string of the
+##' @slot code A character value containing the descriptive string of the
 ##' referred dimension (i.e. "geographicAreaM49").
-##' @param ascending Logical, indicates the sort direction to be applied to the
+##' @slot ascending Logical, indicates the sort direction to be applied to the
 ##' specified dimension.
 ##' 
 ##' @return An object of class Pivoting
