@@ -38,7 +38,7 @@ export(
 	GetDatasetNames,
 	GetDatasetConfig,
 	SetClientFiles,
-	
+	CheckDebug,
 	.buildModifiedCells
 
 )
