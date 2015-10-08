@@ -10,6 +10,7 @@
 ##' @slot selection A list of instances of the Dimension class.
 ##' @slot metadata An instance of the Metadata class.
 ##' 
+##' @export BlockMetadata
 ##' @export
 
 BlockMetadata <- setClass(

@@ -36,6 +36,7 @@
 ##' @seealso \code{\link{DatasetKey}}, \code{\link{GetData}}
 ##' 
 ##' @export "addKey<-"
+##' @export Dimension
 ##' @export
 
 Dimension <- setClass("Dimension",

@@ -5,6 +5,7 @@
 ##' KeyDefinition.
 ##' @slot blockMetadata A list of BlockMetaData objects.
 ##' 
+##' @export BlockMetadataSet
 ##' @export
 
 BlockMetadataSet <- setClass("BlockMetadataSet", 

@@ -21,12 +21,12 @@
 ##' 
 ##' @examples
 ##' 
-##' \dontrun{
 ##' pivot1 = Pivoting(code = "geographicAreaM49", ascending = TRUE)
 ##' pivot2 = Pivoting(code = "timePointYears", ascending = FALSE)
 ##' pivot3 = Pivoting(code = "measuredElement", ascending = FALSE)
 ##' pivot4 = Pivoting(code = "measuredItemCPC", ascending = FALSE)
 ##' 
+##' \dontrun{
 ##' ##' # swsContext files are necessary for GetData to run (token may need to be updated)
 ##' GetTestEnvironment(
 ##'    baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
@@ -47,6 +47,7 @@
 ##' GetData(key, pivoting = c(pivot2, pivot3, pivot4, pivot1), normalized = F)
 ##' }
 ##' 
+##' @export Pivoting
 ##' @export
 
 Pivoting <- setClass("Pivoting", 

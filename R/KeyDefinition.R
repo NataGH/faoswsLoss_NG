@@ -7,6 +7,7 @@
 ##' @slot type A character value.  Valid values are "normal",
 ##' "measurementUnit", and "time".
 ##' 
+##' @export KeyDefinition
 ##' @export
 
 KeyDefinition <- setClass("KeyDefinition",
