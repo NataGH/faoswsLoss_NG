@@ -3,6 +3,7 @@
 export("addKey<-")
 export(BlockMetadata)
 export(BlockMetadataSet)
+export(CheckDebug)
 export(DatasetKey)
 export(Dimension)
 export(GetBlockMetadata)
