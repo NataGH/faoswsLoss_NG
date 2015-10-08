@@ -56,6 +56,7 @@
 ##' }
 ##' If waitMode is 'forget', NULL is returned always
 ##' 
+##' @export SaveData
 
 SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMode = "wait", waitTimeout = 600, chunkSize = 50000) {
   

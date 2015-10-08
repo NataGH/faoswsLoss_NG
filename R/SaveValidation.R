@@ -9,6 +9,7 @@
 ##' @return The data passed to this function is saved to the database, and
 ##' nothing is explicitly returned by this function.
 ##' 
+##' @export SaveValidation
 
 SaveValidation <- function(domain, dataset, validation) {
 

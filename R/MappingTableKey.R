@@ -3,6 +3,7 @@
 ##' @slot mappingTable
 ##' @slot dimensions
 ##' 
+##' @export
 
 MappingTableKey <- setClass("MappingTableKey", 
 	representation(

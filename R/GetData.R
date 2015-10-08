@@ -71,6 +71,7 @@
 ##' GetData(key)
 ##' }
 ##' 
+##' @export GetData
 
 GetData <- function(key, flags = TRUE, normalized = TRUE, pivoting) {
   
@@ -305,6 +306,7 @@ GetData.NEW_processNormalizedResultMetadata <- function(data) {
 ##' GetMetadata(key)
 ##' }
 ##' 
+##' @export GetMetadata
 
 GetMetadata <- function(key, pivoting) {
   

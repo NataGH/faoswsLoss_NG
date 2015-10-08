@@ -7,6 +7,7 @@
 ##' @param blockMetadata An object of type BlockMetadata which should be saved
 ##' back to the user's session.
 ##' 
+##' @export SaveBlockMetadata
 
 SaveBlockMetadata <- function(domain, dataset, blockMetadata) {
 

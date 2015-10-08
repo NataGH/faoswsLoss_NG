@@ -25,6 +25,7 @@
 ##' 
 ##' @return A data.table object containing the queried dataset.
 ##' 
+##' @export GetTableData
 
 GetTableData <- function(schemaName, tableName, whereClause = NULL, selectColumns = NULL) {
 

@@ -22,6 +22,8 @@
 ##'             dimension = "geographicAreaM49", codes = c("4", "8", "112"))
 ##' }
 ##' 
+##' @import data.table
+##' @export GetCodeList
 
 GetCodeList <- function(domain, dataset, dimension, codes) {
 
