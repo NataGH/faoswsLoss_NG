@@ -31,7 +31,6 @@ R/SaveData.R -text
 R/SaveValidation.R -text
 R/SetTableData.R -text
 R/buildModifiedCells.R -text
-R/zzz.R -text
 man/BlockMetadata-class.Rd -text
 man/BlockMetadataSet-class.Rd -text
 man/DatasetKey-class.Rd -text
@@ -63,6 +62,5 @@ man/SaveValidation.Rd -text
 man/SetTableData.Rd -text
 man/cleanMetadata.Rd -text
 man/normalizeData.Rd -text
-man/swsContext.Rd -text
 tests/GetDataTesting.R -text
 tests/testthat/testSaveData.R -text

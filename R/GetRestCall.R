@@ -13,10 +13,10 @@ GetRestCall <- function(url) {
       url = url,
       curl = ch,
       verbose = FALSE,
-      noproxy = swsContext.noProxy,
+      noproxy = .swsenv$swsContext.noProxy,
       ssl.verifypeer = FALSE, 
-      sslcert = path.expand(swsContext.clientP12),
-      sslcertpasswd = swsContext.p12Password,
+      sslcert = path.expand(.swsenv$swsContext.clientP12),
+      sslcertpasswd = .swsenv$swsContext.p12Password,
       ssl.verifyhost = 2,
       httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"))
   } else {
@@ -24,10 +24,10 @@ GetRestCall <- function(url) {
       url = url,
       curl = ch,
       verbose = FALSE,
-      noproxy = swsContext.noProxy,
+      noproxy = .swsenv$swsContext.noProxy,
       ssl.verifypeer = FALSE, 
-      sslcert = path.expand(swsContext.clientCertificate),
-      sslkey = path.expand(swsContext.clientKey),
+      sslcert = path.expand(.swsenv$swsContext.clientCertificate),
+      sslkey = path.expand(.swsenv$swsContext.clientKey),
       ssl.verifyhost = 2,
       httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"))
   }
