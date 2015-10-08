@@ -5,13 +5,6 @@
 \alias{Pivoting}
 \alias{Pivoting-class}
 \title{Pivoting Class Definition}
-\arguments{
-\item{code}{A character value containing the descriptive string of the
-referred dimension (i.e. "geographicAreaM49").}
-
-\item{ascending}{Logical, indicates the sort direction to be applied to the
-specified dimension.}
-}
 \value{
 An object of class Pivoting
 }
@@ -29,14 +22,24 @@ corresponding dimensions and, in case of denormalized extractions, it puts
 on the columns of the returned data.table the values corresponding to the
 last Pivoting dimension.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{code}}{A character value containing the descriptive string of the
+referred dimension (i.e. "geographicAreaM49").}
+
+\item{\code{ascending}}{Logical, indicates the sort direction to be applied to the
+specified dimension.}
+}}
 \examples{
+\dontrun{
+
 pivot1 = Pivoting(code = "geographicAreaM49", ascending = TRUE)
 pivot2 = Pivoting(code = "timePointYears", ascending = FALSE)
 pivot3 = Pivoting(code = "measuredElement", ascending = FALSE)
 pivot4 = Pivoting(code = "measuredItemCPC", ascending = FALSE)
+# swsContext files are necessary for GetData to run (token may need to be updated)
 
-\dontrun{
-##' # swsContext files are necessary for GetData to run (token may need to be updated)
 GetTestEnvironment(
    baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
    token = "7823c00b-b82e-47bc-8708-1be103ac91e4"
