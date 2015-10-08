@@ -5,17 +5,19 @@
 \alias{KeyDefinition}
 \alias{KeyDefinition-class}
 \title{Definition for KeyDefinition Class}
-\arguments{
-\item{code}{A character value holding the name of the dimension in the
-system (for example, "geographicAreaM49").}
-
-\item{description}{A character value holding the description of the
-dimension.}
-
-\item{type}{A character value.  Valid values are "normal",
-"measurementUnit", and "time".}
-}
 \description{
 Definition for KeyDefinition Class
 }
+\section{Slots}{
+
+\describe{
+\item{\code{code}}{A character value holding the name of the dimension in the
+system (for example, "geographicAreaM49").}
+
+\item{\code{description}}{A character value holding the description of the
+dimension.}
+
+\item{\code{type}}{A character value.  Valid values are "normal",
+"measurementUnit", and "time".}
+}}
 

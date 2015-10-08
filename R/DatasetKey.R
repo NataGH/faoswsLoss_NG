@@ -4,12 +4,12 @@
 ##' pass a DatasetKey object into the GetData function in order to read data
 ##' from the SWS.
 ##' 
-##' @param domain A character value specifying the domain of interest, such as 
+##' @slot domain A character value specifying the domain of interest, such as 
 ##'   "agriculture".
-##' @param dataset A character value specifying the dataset within the domain, 
+##' @slot dataset A character value specifying the dataset within the domain, 
 ##'   such as "agriculture".
-##' @param dimensions A list of objects, each of class Dimension.
-##' @param sessionId The ID of the session from which data should be accessed. 
+##' @slot dimensions A list of objects, each of class Dimension.
+##' @slot sessionId The ID of the session from which data should be accessed. 
 ##'   If NULL, the database is used directly.
 ##'   
 ##' @note Many of these variables (domain, dataset, and dimensions) can be found

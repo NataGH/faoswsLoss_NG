@@ -1,7 +1,7 @@
 ##' Mapping Table Key
 ##' 
-##' @param mappingTable
-##' @param dimensions
+##' @slot mappingTable
+##' @slot dimensions
 ##' 
 
 MappingTableKey <- setClass("MappingTableKey", 

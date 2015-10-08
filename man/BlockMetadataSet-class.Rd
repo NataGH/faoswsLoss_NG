@@ -5,14 +5,16 @@
 \alias{BlockMetadataSet}
 \alias{BlockMetadataSet-class}
 \title{The Block Metadata Set Class}
-\arguments{
-\item{keyDefinitions}{List of dimensions that characterize the underlying
-dataset.  Each list element has to be an instance of the S4 class
-KeyDefinition.}
-
-\item{blockMetadata}{A list of BlockMetaData objects.}
-}
 \description{
 The Block Metadata Set Class
 }
+\section{Slots}{
+
+\describe{
+\item{\code{keyDefinitions}}{List of dimensions that characterize the underlying
+dataset.  Each list element has to be an instance of the S4 class
+KeyDefinition.}
+
+\item{\code{blockMetadata}}{A list of BlockMetaData objects.}
+}}
 

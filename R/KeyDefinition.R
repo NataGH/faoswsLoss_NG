@@ -1,10 +1,10 @@
 ##' Definition for KeyDefinition Class
 ##' 
-##' @param code A character value holding the name of the dimension in the
+##' @slot code A character value holding the name of the dimension in the
 ##' system (for example, "geographicAreaM49").
-##' @param description A character value holding the description of the
+##' @slot description A character value holding the description of the
 ##' dimension.
-##' @param type A character value.  Valid values are "normal",
+##' @slot type A character value.  Valid values are "normal",
 ##' "measurementUnit", and "time".
 ##' 
 
