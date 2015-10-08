@@ -8,16 +8,24 @@
 #' defaults. As a result running \code{SetClientFiles()} will reset all
 #' parameters to their default values.
 #' 
-#' @param certificate
+#' @param dir Directory where the client certificates are installed
+#' @param certificate Path to "client.crt" file
+#' @param key Path to "client.key" file
+#' @param p12 path to "client.p12" file
+#' @param p12password Password relating to logging in using Mac? 
+#' @param servercertificate See above.
+#' @param noproxy ?
+#' 
 #'   
-#'   
+#' @author Sebastian Campbell
 #' @export SetClientFiles  
 
-SetClientFiles <- function(certificate = "~/.R/client.crt", 
-                           key = "~/.R/client.key", 
-                           p12 = "~/.R/client.p12", 
+SetClientFiles <- function(dir = "~/.R",
+                           certificate = file.path(dir, "client.crt"), 
+                           key = file.path(dir, "client.key"), 
+                           p12 = file.path(dir, "client.p12"), 
                            p12password = "changeme",
-                           servercertificate = "~/.R/s1as.pem",
+                           servercertificate = file.path(dir, "s1as.pem"),
                            noproxy = "*"){
   
   .swsenv$swsContext.clientCertificate <- certificate

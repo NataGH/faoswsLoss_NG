@@ -24,7 +24,7 @@
 ##'   etc., including \code{swsContext.datasets} which is identical to the object 
 ##'   returned.
 ##'   
-##'   @export GetTestEnvironment
+##' @export GetTestEnvironment
 
 GetTestEnvironment <- function(baseUrl, token) {
   if (CheckDebug()) {

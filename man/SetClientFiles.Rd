@@ -4,12 +4,25 @@
 \alias{SetClientFiles}
 \title{Set Client File locations}
 \usage{
-SetClientFiles(certificate = "~/.R/client.crt", key = "~/.R/client.key",
-  p12 = "~/.R/client.p12", p12password = "changeme",
-  servercertificate = "~/.R/s1as.pem", noproxy = "*")
+SetClientFiles(dir = "~/.R", certificate = file.path(dir, "client.crt"),
+  key = file.path(dir, "client.key"), p12 = file.path(dir, "client.p12"),
+  p12password = "changeme", servercertificate = file.path(dir, "s1as.pem"),
+  noproxy = "*")
 }
 \arguments{
-\item{certificate}{}
+\item{dir}{Directory where the client certificates are installed}
+
+\item{certificate}{Path to "client.crt" file}
+
+\item{key}{Path to "client.key" file}
+
+\item{p12}{path to "client.p12" file}
+
+\item{p12password}{Password relating to logging in using Mac?}
+
+\item{servercertificate}{See above.}
+
+\item{noproxy}{?}
 }
 \description{
 This function allows changing of the the locations of the client files from
@@ -19,5 +32,8 @@ client key and a client certificate. Run this command before running
 locations. Any parameter that is not explicitly set will be reset to
 defaults. As a result running \code{SetClientFiles()} will reset all
 parameters to their default values.
+}
+\author{
+Sebastian Campbell
 }
 
