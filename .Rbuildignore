@@ -1,3 +1,12 @@
 tests
+tests-
+
 ^.*\.Rproj$
 ^\.Rproj\.user$
+.Rprofile
+.Rhistory
+packrat
+
+#Git things
+.git
+.gitignore
