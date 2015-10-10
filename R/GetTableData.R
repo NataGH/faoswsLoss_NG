@@ -70,6 +70,14 @@ GetTableData <- function(schemaName, tableName, whereClause = NULL, selectColumn
 
 			# transforms the list of json-like objects in a data.table
       constructor <- "data.frame(stringsAsFactors=FALSE"
+      #sanitise column names
+      jsonOut$columnsMetadata <- lapply(jsonOut$columnsMetadata,
+                                        function(x){
+                                          nom <- names(x)
+                                          setNames(make.names(x), nom)
+                                          }
+                                        )
+      
       for (i in 1:length(jsonOut$columnsMetadata)) {
         colname <- jsonOut$columnsMetadata[[i]][["name"]]
         coltype <- jsonOut$columnsMetadata[[i]][["type"]]
