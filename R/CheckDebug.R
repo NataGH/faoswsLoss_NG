@@ -13,6 +13,6 @@
 CheckDebug <- function(){
   
   debug <- Sys.getenv("R_DEBUG_MODE")
-  return(debug == "")
+  return(!is.na(debug) && debug != "FALSE")
   
 }
