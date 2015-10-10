@@ -8,13 +8,13 @@
 ##' So, you will need to always specify "name =" and "key =" in your call to 
 ##' Dimension.
 ##' 
-##' @param name The name of the dimension to access, some examples are 
+##' @slot name The name of the dimension to access, some examples are 
 ##'   "timePointYears", "measuredElement", or "geographicAreaM49".  These 
 ##'   correspond to the dimensions on the SWS, but the names are slightly 
 ##'   different.  Currently, if you want to find the name of a dimension, you 
 ##'   can check the following url: 
 ##'   http://hqlqasws1.hq.un.fao.org:8080/dataset_configuration.html.
-##' @param keys The key codes specifying what values should be pulled for the 
+##' @slot keys The key codes specifying what values should be pulled for the 
 ##'   dimension.
 ##'   
 ##' @return An object of class Dimension.  This is used to pass onto the 

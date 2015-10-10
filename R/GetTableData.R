@@ -50,7 +50,7 @@ GetTableData <- function(schemaName, tableName, whereClause = NULL, selectColumn
   # if rc != 0, another object is returned "columnsMetadata", which contains a list of "column" objects, any of which with
   # the following properties: name, type (SQL java name for the DB column) and position in the list. These attributes are used
   # to build the resulting data.table with columns conforming with the DB SQL types.
-  # Please note only the most common SQL types are mapped/transformed, excluding bynary and complex ones: BLOB, CLOB, ARRAY, ...
+  # Please note only the most common SQL types are mapped/transformed, excluding binary and complex ones: BLOB, CLOB, ARRAY, ...
 	jsonOut <- PostRestCall(url, json)
 	
 	# if rc != 0 a SQL error occurred: halts by giving details

@@ -5,17 +5,6 @@
 \alias{Dimension}
 \alias{Dimension-class}
 \title{Dimension Class}
-\arguments{
-\item{name}{The name of the dimension to access, some examples are
-"timePointYears", "measuredElement", or "geographicAreaM49".  These
-correspond to the dimensions on the SWS, but the names are slightly
-different.  Currently, if you want to find the name of a dimension, you
-can check the following url:
-http://hqlqasws1.hq.un.fao.org:8080/dataset_configuration.html.}
-
-\item{keys}{The key codes specifying what values should be pulled for the
-  dimension.}
-}
 \value{
 An object of class Dimension.  This is used to pass onto the
   DatasetKey class.
@@ -30,6 +19,19 @@ Note: for some reason, this function fails if the arguments are not named.
 So, you will need to always specify "name =" and "key =" in your call to
 Dimension.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{name}}{The name of the dimension to access, some examples are
+"timePointYears", "measuredElement", or "geographicAreaM49".  These
+correspond to the dimensions on the SWS, but the names are slightly
+different.  Currently, if you want to find the name of a dimension, you
+can check the following url:
+http://hqlqasws1.hq.un.fao.org:8080/dataset_configuration.html.}
+
+\item{\code{keys}}{The key codes specifying what values should be pulled for the
+  dimension.}
+}}
 \examples{
 \dontrun{
 dim1 = Dimension(name = "geographicAreaM49", keys = c("12", "24", "204"))
