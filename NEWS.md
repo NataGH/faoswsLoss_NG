@@ -1,3 +1,11 @@
+# CHANGES IN faosws VERSION 0.4.1
+
+## MINOR CHANGES
+- `CheckDebug` made more robust
+- `GetTableData` now sanitises table names
+- Minor documentation fixes
+
+
 # CHANGES IN faosws VERSION 0.4.0
 
 ## NEW FEATURES
