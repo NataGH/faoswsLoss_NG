@@ -71,13 +71,16 @@ setMethod(f = "initialize",
           definition=function(.Object, name, keys){
             uniqueKeys <- unique(keys)
             
-            if(length(keys) > length(uniqueKeys)) {
-              warning("Duplicate keys present have been removed", call. = FALSE)
-            }
             .Object@name <- name
+            #keep only non-duplicated keys
             .Object@keys <- uniqueKeys
             
             validObject(.Object)
+            
+            if(length(keys) > length(uniqueKeys)) {
+              warning(paste("Duplicate keys present in", name , "have been removed"), call. = FALSE)
+            }
+            
             return(.Object)
           })
 
