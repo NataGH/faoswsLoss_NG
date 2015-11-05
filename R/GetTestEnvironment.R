@@ -27,7 +27,6 @@
 ##' @export GetTestEnvironment
 
 GetTestEnvironment <- function(baseUrl, token) {
-  if (CheckDebug()) {
     # Validate passed token
     #
     if (missing(token)) {
@@ -67,7 +66,4 @@ GetTestEnvironment <- function(baseUrl, token) {
         
         dk
       })
-  } else {
-    message("Running on server, test environment not fetched")
-  }
 }

@@ -1,6 +1,9 @@
 ## MINOR CHANGES
 
 - Duplicated keys in `DatasetKey` objects are now removed with a warning
+- `GetTestEnvironment` no longer checks to see if it is on the server (This 
+should be handled entirely by `if(CheckDebug())`)
+- Added README.md for non-R users
 
 ## BUG FIXES
 
