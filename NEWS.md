@@ -8,6 +8,7 @@ should be handled entirely by `if(CheckDebug())`)
 ## BUG FIXES
 
 - Temporary fix for Rdatatable/data.table#1352 until v1.9.8 comes out
+- All keys in an empty data.frame are now chars. Fixes #SWS-797
 
 
 # CHANGES IN faosws VERSION 0.4.1

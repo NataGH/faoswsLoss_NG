@@ -149,6 +149,11 @@ GetData.NEW_processNormalizedResult <- function(data, flags) {
     out = data.table(matrix(nrow = 0, ncol = length(keyNames) +
                                 length(flagNames) + 1))
     setnames(out, c(keyNames, "Value", flagNames))
+    # By default R makes empty cols logical. This replaces makes all key columns
+    # characters
+    for (col in keyNames) {
+      set(out, j = col, value = as.character(out[[col]]))
+    }
   }
   out[, Value := as.numeric(Value)]
   out
