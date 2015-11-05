@@ -36,7 +36,7 @@ GetRestCall <- function(url) {
 	#
 	status <- RCurl::getCurlInfo(ch, which = "response.code")
 	if(status != 200) {
-		stop(paste("Unable to perform REST call to SWS server. Status code was", status))
+	  HandleHTTPError(status, response)
 	}
 
 	RJSONIO::fromJSON(response)

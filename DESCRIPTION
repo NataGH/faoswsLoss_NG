@@ -29,6 +29,7 @@ Collate:
     PostRestCall.R
     PutRestCall.R
     SetClientFiles.R
+    HandleHTTPError.R
     GetData.R
     GetCodeList.R
     GetCodeTree.R
