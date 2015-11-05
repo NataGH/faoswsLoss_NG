@@ -54,15 +54,9 @@ SetTableData <- function(schemaName, tableName, data, replace = FALSE, purge = F
   #     - a value (the object corresponding to the actual value***)
   # ***Dates and POSIXct Timestamps are formatted as string
 	names <- names(data)
-	strRow <- "c("
-	for (y in 1:ncol(data)) {
-	  if (y == 1) {
-	    strRow <- paste(strRow, "field1", sep="")
-	  } else {
-	    strRow <- paste(strRow, ", field", y, sep="")
-	  }
-	}
-	strRow <- paste(strRow, ")", sep="")
+
+	strRow <- paste0("c(", paste0("field", seq_len(ncol(data)), collapse = ", "))
+
 	jsonData  <- list()
 	for (i in 1:nrow(data)) {
 	  for (y in 1:ncol(data)) {
