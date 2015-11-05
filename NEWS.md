@@ -1,3 +1,12 @@
+## MINOR CHANGES
+
+- Duplicated keys in `DatasetKey` objects are now removed with a warning
+
+## BUG FIXES
+
+- Temporary fix for Rdatatable/data.table#1352 until v1.9.8 comes out
+
+
 # CHANGES IN faosws VERSION 0.4.1
 
 ## MINOR CHANGES
