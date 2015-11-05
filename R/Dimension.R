@@ -48,21 +48,39 @@ Dimension <- setClass("Dimension",
 # The list of keys is not mandatory.
 #
 setValidity("Dimension", function(object) {
-	
-	msg <- NULL
-	valid <- TRUE
-
-	if(length(object@name) != 1) {
-		valid <- FALSE
-		msg <- c(msg, "The name of the dimension was not properly set.")
-	}
-
-	if (valid) {
-		TRUE
-	} else {
-		msg
-	}
+  
+  msg <- NULL
+  valid <- TRUE
+  
+  if(length(object@name) != 1) {
+    valid <- FALSE
+    msg <- c(msg, "The name of the dimension was not properly set.")
+  }
+  
+  if (valid) {
+    TRUE
+  } else {
+    msg
+  }
 })
+
+#Set construction method. Keys are forced to be unique
+
+setMethod(f = "initialize",
+          signature = "Dimension",
+          definition=function(.Object, name, keys){
+            uniqueKeys <- unique(keys)
+            
+            if(length(keys) > length(uniqueKeys)) {
+              warning("Duplicate keys present have been removed", call. = FALSE)
+            }
+            .Object@name <- name
+            .Object@keys <- uniqueKeys
+            
+            validObject(.Object)
+            return(.Object)
+          })
+
 
 # The addKey method can be used to add a key to the dimension.
 #
