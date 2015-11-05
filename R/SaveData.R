@@ -560,8 +560,9 @@ SaveData.buildDenormalizedDataDefJSON <- function(data) {
 
 normalizeData <- function(data, keys, denormalizedKey){
   newData <- suppressWarnings(
-  tidyr::gather(data, key = "Key", value = "Value",
-                (1:ncol(data))[!colnames(data) %in% keys]))
+    # This used to be a tidyr function but it kept stripping the data.table attribute
+    data.table::melt(data, id.vars=keys, variable.name="Key", value.name="Value")
+    )
   newData <- tidyr::separate(newData, col = "Key",
                             into = c("Key", denormalizedKey),
                             sep = paste0("_", denormalizedKey, "_"))
