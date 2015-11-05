@@ -192,7 +192,8 @@ denormalizeResult <- function(data, query, key){
   })
   # Merge all the tables together
   mergeFunc <- function(x, y){
-      merge(x, y, by = normalizedKeys)
+    #Unname is a hack fix to circumvent a bug in data.table 1.9.6 - https://github.com/Rdatatable/data.table/issues/1352 
+      merge(x, y, by = unname(normalizedKeys))
   }
   out <- Reduce(mergeFunc, denormalizedTables)
 
