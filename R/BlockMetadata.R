@@ -10,6 +10,8 @@
 ##' @slot selection A list of instances of the Dimension class.
 ##' @slot metadata An instance of the Metadata class.
 ##' 
+##' @include Metadata.R
+##' 
 ##' @export BlockMetadata
 ##' @export
 
