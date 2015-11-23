@@ -29,6 +29,8 @@
 
 GetTableData <- function(schemaName, tableName, whereClause = NULL, selectColumns = NULL) {
 
+  .Deprecated("ReadDatatable", msg="'GetTableData' is deprecated.\nWith the new Datatables, all old ad-hoc tables are being converted.\nUse 'ReadDatatable' instead.")
+  
 	# concats the base URL with the sub-path and the execution ID from session
 	url <- paste0(swsContext.baseRestUrl, "/r/gettabledata/", swsContext.executionId) 
 
