@@ -51,4 +51,4 @@ Collate:
     package.R
 Suggests:
     testthat
-RoxygenNote: 5.0.0
+RoxygenNote: 5.0.1

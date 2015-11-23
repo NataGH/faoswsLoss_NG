@@ -1,6 +1,6 @@
 ##' Get Rest Call
 ##' 
-##' @param url
+##' @param url URL to which to make a GET request.
 ##' 
 ##' @import RJSONIO
 ##' @import RCurl

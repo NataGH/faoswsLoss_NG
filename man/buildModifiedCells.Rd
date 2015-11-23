@@ -7,7 +7,10 @@
 .buildModifiedCells(dimensions, coordinates)
 }
 \arguments{
-\item{coordinates}{}
+\item{dimensions}{A table object of some kind}
+
+\item{coordinates}{A vector of length equal to the number of columns of
+\code{dimensions}}
 }
 \description{
 Build Modified Cells

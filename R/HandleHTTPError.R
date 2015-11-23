@@ -11,7 +11,8 @@
 #' 
 
 HandleHTTPError <- function(status, response){
-    erresponse <- fromJSON(response)
+    erresponse <- try(fromJSON(response))
+    if(inherits(erresponse, "try-error")) stop(response)
     message <- ifelse(exists("message", erresponse), paste0("\nError message: ", erresponse[["message"]]), "")
     details <- ifelse(exists("details", erresponse), paste0("\nDetails: ", erresponse[["details"]]), "")
     

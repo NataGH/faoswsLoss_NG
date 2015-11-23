@@ -1,9 +1,11 @@
 ##' Build Modified Cells
-##' @rdname buildModifiedCells
-##' @param dimensions
-##' @param coordinates
 ##' 
-##' @import data.table 
+##' @rdname buildModifiedCells
+##'   
+##' @param dimensions A table object of some kind
+##' @param coordinates A vector of length equal to the number of columns of
+##'   \code{dimensions}
+##'
 
 
 .buildModifiedCells <- function(dimensions, coordinates) {

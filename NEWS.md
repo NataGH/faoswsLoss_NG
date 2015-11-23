@@ -1,5 +1,15 @@
 ## MINOR CHANGES
 
+- Minor documentation fixes
+
+## BUG FIXES
+
+- Fixed export of MappingTableKey
+
+# CHANGES IN faosws VERSION 0.4.2
+
+## MINOR CHANGES
+
 - Duplicated keys in `DatasetKey` objects are now removed with a warning
 - `GetTestEnvironment` no longer checks to see if it is on the server (This 
 should be handled entirely by `if(CheckDebug())`)
@@ -10,10 +20,10 @@ should be handled entirely by `if(CheckDebug())`)
 - Temporary fix for Rdatatable/data.table#1352 until v1.9.8 comes out
 - All keys in an empty data.frame are now chars. Fixes #SWS-797
 
-
 # CHANGES IN faosws VERSION 0.4.1
 
 ## MINOR CHANGES
+
 - `CheckDebug` made more robust
 - `GetTableData` now sanitises table names
 - Minor documentation fixes

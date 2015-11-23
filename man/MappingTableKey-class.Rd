@@ -11,6 +11,8 @@ Mapping Table Key
 \section{Slots}{
 
 \describe{
-\item{\code{dimensions}}{}
+\item{\code{mappingTable}}{Must be a character of length 1}
+
+\item{\code{dimensions}}{List of \code{\link{Dimension}} objects.}
 }}
 

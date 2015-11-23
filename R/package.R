@@ -9,5 +9,7 @@
 #' @name faosws-package
 #' @aliases faosws
 #' @author Engineering Ingegneria Informatica
+#' 
+#' @import data.table
 
 NULL

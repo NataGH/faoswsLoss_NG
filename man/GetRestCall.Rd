@@ -7,7 +7,7 @@
 GetRestCall(url)
 }
 \arguments{
-\item{url}{}
+\item{url}{URL to which to make a GET request.}
 }
 \description{
 Get Rest Call
