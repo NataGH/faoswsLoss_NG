@@ -1,9 +1,9 @@
 ##' Mapping Table Key
 ##' 
-##' @slot mappingTable
-##' @slot dimensions
+##' @slot mappingTable Must be a character of length 1
+##' @slot dimensions List of \code{\link{Dimension}} objects.
 ##' 
-##' @export KeyDefinition
+##' @export MappingTableKey
 ##' @export
 
 MappingTableKey <- setClass("MappingTableKey", 
