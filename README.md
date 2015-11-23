@@ -9,4 +9,14 @@ If you are not on the FAO internal network, this will not work. At all.
 
 ## But I have a tar.gz, tgz or zip file
 
-install.packages("path to faosws", repos=NULL)`
+`install.packages("path to faosws", repos=NULL)`
+
+# Loading this package
+
+Once the package is installed, you can use:
+
+`library(faosws)`
+
+This will load the package. To get started, look at the package help file:
+
+`?faosws` OR `help(faosws)`
