@@ -62,5 +62,7 @@ Collate:
     'buildModifiedCells.R'
     'package.R'
 Suggests:
-    testthat
+    testthat,
+    R.rsp
+VignetteBuilder: R.rsp
 RoxygenNote: 5.0.1
