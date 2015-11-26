@@ -1,29 +1,31 @@
-#' Save data to Datatable
-#' 
-#' validation hasn't been implemented yet
-#' 
-#' @rdname SaveDatatable
-#' @aliases insertRows modifyRows deleteRows
-#' 
-#' @examples \dontrun{
-#' table <- "world_bank_climate_data"
-#' ntariff10K <- ReadDatatable(table, limit = 1e3, readOnly = F)
+#'Save data to Datatable
+#'
+#'validation hasn't been implemented yet
+#'
+#'@rdname SaveDatatable
+#'@aliases AddInsertions AddModifications AddDeletions
 #'  
-#' table <- "world_bank_climate_data_campbells_20151123_faodomain_campbells_2311174949"
-#' changeset <- Changeset(table, pagesize = 10)
-#' 
-#' 
-#' i <- 0 
-#' insertRows(changeset, table, ntariff10K[(i+1):(i+5),])
-#' i <- i+5
-#' finalise(changeset)
+#'@param changeset \code{\link{Changeset}} object
+#'@param data data.table. 
+#'  \itemize{ 
+#'  \item AddInsertions Any __id or __ts column 
+#'  will be stripped and then sent to the server as additional lines 
+#'  \item
+#'  AddModifications __id and __ts columns must be present and all data will be
+#'  sent to the server as modifications 
+#'  \item AddDeletions Only __id and __ts
+#'  columns are requires, all others will be stripped. Removes those entries
+#'  from the table on the server
+#'  }
+#'  
+#' @examples \dontrun{
 #'}
 #'
-#' @include SetClientFiles.R
-#' 
-#' @export insertRows
+#'@include SetClientFiles.R
+#'  
+#'@export AddInsertions
 
-insertRows <- function(changeset, data){
+AddInsertions <- function(changeset, data){
   data <- copy(data)
   syscols <- which(colnames(data) %in% c("__id", "__ts"))
   
@@ -42,9 +44,9 @@ insertRows <- function(changeset, data){
 }
 
 #' @rdname SaveDatatable
-#' @export modifyRows
+#' @export AddModifications
 
-modifyRows <- function(changeset, data){
+AddModifications <- function(changeset, data){
   if(!all(c("__id", "__ts") %in% colnames(data))){
     stop("If rows are to be modified, they must have ids and timestamps")
   }
@@ -60,9 +62,9 @@ modifyRows <- function(changeset, data){
 }
 
 #' @rdname SaveDatatable
-#' @export deleteRows
+#' @export AddDeletions
 
-deleteRows <- function(changeset, data){
+AddDeletions <- function(changeset, data){
   if(!all(c("__id", "__ts") %in% colnames(data))){
     stop("If rows are to be deleted, they must have ids and timestamps")
   }
@@ -96,6 +98,7 @@ Changeset <- function(table){
   
   pagesize <- FetchSWSVariable("changeset", .swsenv)$pagesize
   
+  assign("jsonlines", character(0), envir = changeset)
   assign("pagesize", pagesize, envir = changeset)
   assign("config", ReadDatatableList(table), envir = changeset)
   
@@ -103,24 +106,28 @@ Changeset <- function(table){
 }
 
 #' @rdname Changeset
+#' @param table character. Name of Datatable
+#' @param changeset Changeset object
 #' @export Finalize Finalise
 Finalize <- Finalise <- function(changeset){
   jsonlines <- get("jsonlines", changeset)
+  
+  len <- seq_along(jsonlines)
+  
   json <- paste0(jsonlines, collapse="\n")
   
   table <- names(get("config", envir=changeset))
   
   post_json(json, table)
-  rm("jsonlines", envir = changeset)
+  
+  jsonlines <- jsonlines[-len]
+  assign("jsonlines", jsonlines, envir=changeset)
 }
 
 combine_jsonlines <- function(changeset, jsonlines){
   
-  if(exists("jsonlines", envir=changeset)){
-    assign("jsonlines", c(get("jsonlines", envir=changeset), jsonlines), envir=changeset)
-  } else {
-    assign("jsonlines", jsonlines, envir=changeset)
-  }
+  assign("jsonlines", c(get("jsonlines", envir=changeset), jsonlines), envir=changeset)
+  
 }
 
 send_jsonlines <- function(changeset){
