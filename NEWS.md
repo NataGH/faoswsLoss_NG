@@ -1,3 +1,5 @@
+# CHANGES IN faosws VERSION 0.5.0
+
 ## NEW FEATURES
 
 - Added `ReadDatatable` to read Datatables, the new implementation of ad-hoc
