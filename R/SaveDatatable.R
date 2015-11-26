@@ -3,6 +3,7 @@
 #' validation hasn't been implemented yet
 #' 
 #' @rdname SaveDatatable
+#' @aliases insertRows modifyRows deleteRows
 #' 
 #' @examples \dontrun{
 #' table <- "world_bank_climate_data"
@@ -17,13 +18,12 @@
 #' i <- i+5
 #' finalise(changeset)
 #'}
+#'
+#' @include SetClientFiles.R
 #' 
-#' @export Changeset
 #' @export insertRows
-#' @export finalise
-#' @export finalize
 
-insertRows <- function(changeset, table, data){
+insertRows <- function(changeset, data){
   data <- copy(data)
   syscols <- which(colnames(data) %in% c("__id", "__ts"))
   
@@ -41,22 +41,74 @@ insertRows <- function(changeset, table, data){
   send_jsonlines(changeset)
 }
 
-Changeset <- function(table, pagesize = 5000){
+#' @rdname SaveDatatable
+#' @export modifyRows
+
+modifyRows <- function(changeset, data){
+  if(!all(c("__id", "__ts") %in% colnames(data))){
+    stop("If rows are to be modified, they must have ids and timestamps")
+  }
+  
+  jsonlines <- vapply(split(data, seq_len(nrow(data))), function(x){
+    jsonlite::toJSON(
+      list(values=as.list(x), remove = FALSE),
+      auto_unbox = TRUE)}, character(1)
+  )
+  
+  combine_jsonlines(changeset, jsonlines)
+  send_jsonlines(changeset)
+}
+
+#' @rdname SaveDatatable
+#' @export deleteRows
+
+deleteRows <- function(changeset, data){
+  if(!all(c("__id", "__ts") %in% colnames(data))){
+    stop("If rows are to be deleted, they must have ids and timestamps")
+  }
+  
+  nonsyscols <- which(!(colnames(data) %in% c("__id", "__ts")))
+  
+  if(length(colnames(data)) > 2){
+    set(data, j = nonsyscols, value = NULL)
+  }
+  
+  
+  jsonlines <- vapply(split(data, seq_len(nrow(data))), function(x){
+    jsonlite::toJSON(
+      list(values=as.list(x), remove = TRUE),
+      auto_unbox = TRUE)}, character(1)
+  )
+  
+  combine_jsonlines(changeset, jsonlines)
+  send_jsonlines(changeset)
+}
+
+#' Define changeset object
+#' 
+#' @rdname Changeset
+#' @aliases Finalise Finalize
+#' @export Changeset
+Changeset <- function(table){
   
   changeset <- new.env()
-  class(changeset) <- c(class(changeset), "Changeset")
+  class(changeset) <- append(class(changeset), "Changeset")
+  
+  pagesize <- FetchSWSVariable("changeset", .swsenv)$pagesize
   
   assign("pagesize", pagesize, envir = changeset)
-  assign("metadata", ReadDatatableList(table), envir = changeset)
+  assign("config", ReadDatatableList(table), envir = changeset)
   
   changeset
 }
 
-finalize <- finalise <- function(changeset){
+#' @rdname Changeset
+#' @export Finalize Finalise
+Finalize <- Finalise <- function(changeset){
   jsonlines <- get("jsonlines", changeset)
   json <- paste0(jsonlines, collapse="\n")
   
-  table <- names(get("metadata", envir=changeset))
+  table <- names(get("config", envir=changeset))
   
   post_json(json, table)
   rm("jsonlines", envir = changeset)
@@ -81,7 +133,7 @@ send_jsonlines <- function(changeset){
     page <- jsonlines[seq_len(pagesize)]
     
     json <- paste0(page, collapse="\n")
-    table <- names(get("metadata", envir=changeset))
+    table <- names(get("config", envir=changeset))
     post_json(json, table)
     
     assign("jsonlines", jsonlines[-seq_len(pagesize)], envir = changeset)
@@ -134,3 +186,7 @@ post_json <- function(json, table){
     HandleHTTPError(responseCode, errmessage)
   }
 }
+
+assign("changeset",  
+       list(pagesize = 5000),
+       envir = .swsenv)
