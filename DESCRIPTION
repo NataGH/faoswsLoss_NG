@@ -51,6 +51,7 @@ Collate:
     'ReadDatatableList.R'
     'SaveBlockMetadata.R'
     'SaveData.R'
+    'SaveDatatable.R'
     'SaveValidation.R'
     'SetClientFiles.R'
     'SetTableData.R'
