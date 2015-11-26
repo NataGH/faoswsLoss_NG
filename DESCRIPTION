@@ -1,7 +1,7 @@
 Package: faosws
 Type: Package
 Title: API providing access to the FAO Statistical Working System
-Version: 0.5.0.9001
+Version: 0.6.0
 Date: 2015-11-26
 Author: Engineering Ingegneria Informatica
 Maintainer: Josh Browning <Joshua.Browning@fao.org>
@@ -51,9 +51,9 @@ Collate:
     'ReadDatatable.R'
     'SaveBlockMetadata.R'
     'SaveData.R'
-    'SetClientFiles.R'
     'SaveDatatable.R'
     'SaveValidation.R'
+    'SetClientFiles.R'
     'SetTableData.R'
     'buildModifiedCells.R'
     'package.R'

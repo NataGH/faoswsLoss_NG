@@ -10,6 +10,19 @@
 #' @aliases faosws
 #' @author Engineering Ingegneria Informatica
 #' 
+#' @include SetClientFiles.R
+#' 
 #' @import data.table
 
+# prevent roxygen2 marking this as dataset
 NULL
+
+# Set environment in which authentication variables reside
+.swsenv <- new.env()
+# Populates it with default variables
+SetClientFiles()
+
+# Add params for changeset
+assign("changeset",  
+       list(pagesize = 5000),
+       envir = .swsenv)

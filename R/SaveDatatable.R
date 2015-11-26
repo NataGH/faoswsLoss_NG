@@ -45,7 +45,6 @@
 #' Finalise(changeset)
 #'}
 #'
-#' @include SetClientFiles.R
 #'  
 #' @export AddInsertions
 
@@ -229,7 +228,3 @@ post_json <- function(json, table){
     HandleHTTPError(responseCode, errmessage)
   }
 }
-
-assign("changeset",  
-       list(pagesize = 5000),
-       envir = .swsenv)

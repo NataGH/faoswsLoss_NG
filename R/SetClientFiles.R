@@ -35,8 +35,3 @@ SetClientFiles <- function(dir = "~/.R",
   .swsenv$swsContext.serverCertificate <- servercertificate
   .swsenv$swsContext.noProxy <- noproxy
 }
-
-# Set environment in which authentication variables reside
-.swsenv <- new.env()
-# Populates it with default variables
-SetClientFiles()
