@@ -1,7 +1,12 @@
 ## NEW FEATURES
 
-- Added `insertRows`, function to write rows to a Datatable with companion
+- Added `AddInsertions`, `AddModifications`, `AddDeletions` to write rows to a Datatable with companion
 `Changeset` which tracks lines already sent.
+
+## MINOR CHANGES
+
+- Changed name of `FetchDatatable` to `BoundDatatable` 
+- Changed name of `ReadDatatableList` to `FetchDatatableConfig`
 
 # CHANGES IN faosws VERSION 0.5.0
 
@@ -23,6 +28,7 @@ metadata for all Datatables
 
 - Fixed export of `MappingTableKey`
 
+
 # CHANGES IN faosws VERSION 0.4.2
 
 ## MINOR CHANGES
@@ -35,6 +41,7 @@ be handled entirely by `if(CheckDebug())`) - Added README.md for non-R users
 
 - Temporary fix for Rdatatable/data.table#1352 until v1.9.8 comes out - All keys
 in an empty data.frame are now chars. Fixes #SWS-797
+
 
 # CHANGES IN faosws VERSION 0.4.1
 

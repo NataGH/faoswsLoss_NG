@@ -19,6 +19,30 @@
 #'  }
 #'  
 #' @examples \dontrun{
+#' library(data.table)
+#' origtable <- "world_bank_climate_data"
+#' table <- "world_bank_climate_data_campbells_20151123_faodomain_campbells_2311174949"
+#' 
+#' newdat <- ReadDatatable(table, readOnly = FALSE)
+#' dat <- ReadDatatable(origtable, limit=10)
+#' #Erase all data
+#' changeset <- Changeset(table)
+#' AddDeletions(changeset, newdat)
+#' Finalise(changeset)
+#' 
+#' # Add new data
+#' AddInsertions(changeset, dat)
+#' AddInsertions(changeset, dat)
+#' Finalise(changeset)
+#' 
+#' #reload new table
+#' newdat <- ReadDatatable(table, readOnly = FALSE)
+#' # Double precipitation in first half
+#' newdat[1:ncol(dat),precipitation := precipitation * 2]
+#' AddModifications(changeset, newdat[1:nrow(dat),])
+#' #Delete the second
+#' AddDeletions(changeset, newdat[nrow(dat):(nrow(dat)*2),])
+#' Finalise(changeset)
 #'}
 #'
 #'@include SetClientFiles.R
