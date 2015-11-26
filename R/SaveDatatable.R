@@ -1,12 +1,12 @@
-#'Save data to Datatable
+#' Save data to Datatable
 #'
-#'validation hasn't been implemented yet
+#' Functions to save to Datatables on SWS.
 #'
-#'@rdname SaveDatatable
-#'@aliases AddInsertions AddModifications AddDeletions
+#' @rdname SaveDatatable
+#' @aliases SaveDatatable AddInsertions AddModifications AddDeletions
 #'  
-#'@param changeset \code{\link{Changeset}} object
-#'@param data data.table. 
+#' @param changeset \code{\link{Changeset}} object
+#' @param data data.table. 
 #'  \itemize{ 
 #'  \item AddInsertions Any __id or __ts column 
 #'  will be stripped and then sent to the server as additional lines 
@@ -45,9 +45,9 @@
 #' Finalise(changeset)
 #'}
 #'
-#'@include SetClientFiles.R
+#' @include SetClientFiles.R
 #'  
-#'@export AddInsertions
+#' @export AddInsertions
 
 AddInsertions <- function(changeset, data){
   data <- copy(data)
@@ -112,6 +112,13 @@ AddDeletions <- function(changeset, data){
 
 #' Define changeset object
 #' 
+#' Changeset is called to initiate a Changeset object, an object which tracks 
+#' the rows requests sent to it (be they insert, modify or delete). When it 
+#' accumulates enough requests (by default, 5000 rows), it sends that chunk to 
+#' the server. To finalise your script, use \code{Finalize} or \code{Finalise}
+#' with the changeset object to indicate that there are no more rows to add and
+#' that the process of writing to a table is finished.
+#' 
 #' @rdname Changeset
 #' @aliases Finalise Finalize
 #' @export Changeset
@@ -130,9 +137,14 @@ Changeset <- function(table){
 }
 
 #' @rdname Changeset
-#' @param table character. Name of Datatable
+#' @param table character. Name of Datatable on server. Use 
+#'   \code{\link{FetchDatatableConfig}} to get a list of tables on the server.
 #' @param changeset Changeset object
+#'   
+#' @return \code{Changeset} returns a Changeset object that can be used with the
+#'   \code{\link{SaveDatatable}} class of functions.
 #' @export Finalize Finalise
+#'   
 Finalize <- Finalise <- function(changeset){
   jsonlines <- get("jsonlines", changeset)
   

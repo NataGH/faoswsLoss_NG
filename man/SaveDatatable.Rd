@@ -4,6 +4,7 @@
 \alias{AddDeletions}
 \alias{AddInsertions}
 \alias{AddModifications}
+\alias{SaveDatatable}
 \title{Save data to Datatable}
 \usage{
 AddInsertions(changeset, data)
@@ -28,7 +29,7 @@ from the table on the server
 }}
 }
 \description{
-validation hasn't been implemented yet
+Functions to save to Datatables on SWS.
 }
 \examples{
 \dontrun{

@@ -11,11 +11,21 @@ Changeset(table)
 Finalize(changeset)
 }
 \arguments{
-\item{table}{character. Name of Datatable}
+\item{table}{character. Name of Datatable on server. Use 
+\code{\link{FetchDatatableConfig}} to get a list of tables on the server.}
 
 \item{changeset}{Changeset object}
 }
+\value{
+\code{Changeset} returns a Changeset object that can be used with the
+  \code{\link{SaveDatatable}} class of functions.
+}
 \description{
-Define changeset object
+Changeset is called to initiate a Changeset object, an object which tracks 
+the rows requests sent to it (be they insert, modify or delete). When it 
+accumulates enough requests (by default, 5000 rows), it sends that chunk to 
+the server. To finalise your script, use \code{Finalize} or \code{Finalise}
+with the changeset object to indicate that there are no more rows to add and
+that the process of writing to a table is finished.
 }
 

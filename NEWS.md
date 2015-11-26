@@ -1,12 +1,15 @@
+# CHANGES IN faosws VERSION 0.6.0
+
 ## NEW FEATURES
 
-- Added `AddInsertions`, `AddModifications`, `AddDeletions` to write rows to a Datatable with companion
-`Changeset` which tracks lines already sent.
+- Added `AddInsertions`, `AddModifications`, `AddDeletions` to write rows to a Datatable with companions
+`Changeset` and `Finalize` which track lines already sent.
 
 ## MINOR CHANGES
 
 - Changed name of `FetchDatatable` to `BoundDatatable` 
 - Changed name of `ReadDatatableList` to `FetchDatatableConfig`
+
 
 # CHANGES IN faosws VERSION 0.5.0
 
