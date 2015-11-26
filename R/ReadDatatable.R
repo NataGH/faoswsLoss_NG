@@ -159,7 +159,6 @@ runStreaming <- function(url, json){
                 verbose = FALSE,
                 noproxy = .swsenv$swsContext.noProxy,
                 ssl_verifypeer = FALSE, 
-                accept_encoding = "gzip, deflate",
                 sslcert = path.expand(.swsenv$swsContext.clientCertificate),
                 sslkey = path.expand(.swsenv$swsContext.clientKey),
                 ssl_verifyhost = 2,
