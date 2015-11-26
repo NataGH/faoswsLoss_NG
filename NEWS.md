@@ -1,10 +1,15 @@
+## NEW FEATURES
+
+- Added `insertRows`, function to write rows to a Datatable with companion
+`Changeset` which tracks lines already sent.
+
 # CHANGES IN faosws VERSION 0.5.0
 
 ## NEW FEATURES
 
-- Added `ReadDatatable` to read Datatables, the new implementation of ad-hoc
-tables. `GetTableData` has been deprecated.
-- Added `ReadDatatableList` to get metadata for all Datatables
+- Added `ReadDatatable` to read Datatables, the new implementation of ad-hoc 
+tables. `GetTableData` has been deprecated. - Added `ReadDatatableList` to get
+metadata for all Datatables
 
 ## MAJOR CHANGES
 
