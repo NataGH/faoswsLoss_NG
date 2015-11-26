@@ -100,7 +100,7 @@ Changeset <- function(table){
   
   assign("jsonlines", character(0), envir = changeset)
   assign("pagesize", pagesize, envir = changeset)
-  assign("config", ReadDatatableList(table), envir = changeset)
+  assign("config", FetchDatatableConfig(table), envir = changeset)
   
   changeset
 }

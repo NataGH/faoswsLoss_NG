@@ -1,7 +1,7 @@
 #' Read Datatable
 #' 
 #' This function allows retrieval of a Datatable from the SWS. To get a full 
-#' list of config data, use \code{\link{ReadDatatableList}}.
+#' list of config data, use \code{\link{FetchDatatableConfig}}.
 #' 
 #' @param table character. Name of desired Datatable. By default, the one from 
 #'   the token.
@@ -51,7 +51,7 @@
 
 
 
-ReadDatatable <- function(table=FetchDatatable(), columns = list(), includeAll = TRUE, where=NULL, readOnly = TRUE, limit=NULL) {
+ReadDatatable <- function(table=BoundDatatable(), columns = list(), includeAll = TRUE, where=NULL, readOnly = TRUE, limit=NULL) {
 
   baseurl <- paste(swsContext.baseRestUrl, "api", "datatable", table, "export", sep = "/")
   queryparams <- paste(paste0("_xid=", swsContext.token), collapse= "&")

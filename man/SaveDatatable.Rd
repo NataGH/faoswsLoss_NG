@@ -32,17 +32,6 @@ validation hasn't been implemented yet
 }
 \examples{
 \dontrun{
-table <- "world_bank_climate_data"
-ntariff10K <- ReadDatatable(table, limit = 1e3, readOnly = F)
- 
-table <- "world_bank_climate_data_campbells_20151123_faodomain_campbells_2311174949"
-changeset <- Changeset(table, pagesize = 10)
-
-
-i <- 0 
-AddInsertions(changeset, table, ntariff10K[(i+1):(i+5),])
-i <- i+5
-finalise(changeset)
 }
 
 }

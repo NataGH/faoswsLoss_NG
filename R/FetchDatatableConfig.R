@@ -11,9 +11,9 @@
 #'   
 #' @return A list containing table metadata
 #'   
-#' @export ReadDatatableList
+#' @export FetchDatatableConfig
 
-ReadDatatableList <- function(tables, baseurl = swsContext.baseRestUrl){
+FetchDatatableConfig <- function(tables, baseurl = swsContext.baseRestUrl){
   rawDt <- faosws:::GetRestCall(paste0(baseurl, "/datatable"))
   Dt <- setNames(rawDt, vapply(rawDt, getID, character(1)))
   

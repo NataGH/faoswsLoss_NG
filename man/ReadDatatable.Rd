@@ -4,7 +4,7 @@
 \alias{ReadDatatable}
 \title{Read Datatable}
 \usage{
-ReadDatatable(table = FetchDatatable(), columns = list(),
+ReadDatatable(table = BoundDatatable(), columns = list(),
   includeAll = TRUE, where = NULL, readOnly = TRUE, limit = NULL)
 }
 \arguments{
@@ -35,7 +35,7 @@ data.table as specified by params.
 }
 \description{
 This function allows retrieval of a Datatable from the SWS. To get a full 
-list of config data, use \code{\link{ReadDatatableList}}.
+list of config data, use \code{\link{FetchDatatableConfig}}.
 }
 \examples{
 \dontrun{

@@ -4,9 +4,9 @@
 #' pointed toward. The internals may change at any time and it is not
 #' recommended to access the object directly.
 #' 
-#' @export FetchDatatable
+#' @export BoundDatatable
 
-FetchDatatable <- function(){
+BoundDatatable <- function(){
   
   tableName <- try(FetchSWSVariable(variable = "swsContext.computationParams", environment = .GlobalEnv)[[".DATATABLE"]], silent = TRUE)
   

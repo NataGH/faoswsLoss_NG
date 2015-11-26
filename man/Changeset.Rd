@@ -11,9 +11,9 @@ Changeset(table)
 Finalize(changeset)
 }
 \arguments{
-\item{table}{character. Name of Datatable.}
+\item{table}{character. Name of Datatable}
 
-\item{changeset}{Changeset object.}
+\item{changeset}{Changeset object}
 }
 \description{
 Define changeset object
