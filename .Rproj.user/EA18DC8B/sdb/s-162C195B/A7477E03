@@ -1,0 +1,16 @@
+{
+    "contents" : "Package: faoswsLoss_NG\nType: Package\nTitle: Package to performe the computation of food loss FAO food balance sheets\nVersion: 0.0.1\nDate: 2015-12-01\nAuthors@R: c(person(\"Natalia\", \"Golini\", role = c(\"aut\", \"cre\"), email = \"natalia.golini@fao.org\"))\nAuthor: Natalia Golini <natalia.golini@fao.org>, Michael?\nMaintainer: Natalia Golini <natalia.golini@fao.org>, Josh? \nDescription: This package provides all the functions to perfom computation of food loss for the FAO food balance sheets. \nThe first model was developed by Michael Kao and then modified by Natalia Golini.\nURL: https://github.com/SWS-Methodology/faoswsLoss\nLicense: FAO\nDepends:  faosws (>= 0.6.1)\nImports: faoswsUtil\nswsRFunctionsDepends:  sws_query.R\nswsDatasetDepends: agriculture:aproduction,\n                   loss_food_group,\n                   m49_2_fs,\n                   cpc_2_fcl\nswsModuleDepends:                   \nLazyData: true\n",
+    "created" : 1448982559613.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2239135250",
+    "id" : "A7477E03",
+    "lastKnownWriteTime" : 1448982596,
+    "path" : "~/GitHub/faoswsLoss_NG/DESCRIPTION",
+    "project_path" : "DESCRIPTION",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "dcf"
+}

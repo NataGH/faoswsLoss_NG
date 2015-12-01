@@ -1,0 +1,17 @@
+{
+    "contents" : "devtools::install_github(\"NataGH/faoswsLoss_NG\")\n",
+    "created" : 1448982611719.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "2046255847",
+    "id" : "8D6BDE20",
+    "lastKnownWriteTime" : 1448982596,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
