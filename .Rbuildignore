@@ -1,0 +1,4 @@
+*.Rproj
+lossModule.R
+.gitattributes
+.gitignore
