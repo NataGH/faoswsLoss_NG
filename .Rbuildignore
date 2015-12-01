@@ -2,3 +2,5 @@
 lossModule.R
 .gitattributes
 .gitignore
+R/ojdbc14.jar
+.Rhistory

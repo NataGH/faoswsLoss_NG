@@ -1,10 +1,10 @@
 {
-    "contents" : "devtools::install_github(\"NataGH/faoswsLoss_NG\")\n",
+    "contents" : "devtools::document(\"~/GitHub/faoswsLoss_NG/\")\ndevtools::install_github(\"NataGH/faoswsLoss_NG\")\n",
     "created" : 1448982611719.000,
     "dirty" : true,
     "encoding" : "",
     "folds" : "",
-    "hash" : "2046255847",
+    "hash" : "3531265718",
     "id" : "8D6BDE20",
     "lastKnownWriteTime" : 1448982596,
     "path" : null,

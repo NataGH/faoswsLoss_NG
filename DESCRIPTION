@@ -6,8 +6,7 @@ Date: 2015-12-01
 Authors@R: c(person("Natalia", "Golini", role = c("aut", "cre"), email = "natalia.golini@fao.org"))
 Author: Natalia Golini <natalia.golini@fao.org>, Michael?
 Maintainer: Natalia Golini <natalia.golini@fao.org>, Josh? 
-Description: This package provides all the functions to perfom computation of food loss for the FAO food balance sheets. 
-The first model was developed by Michael Kao and then modified by Natalia Golini.
+Description: This package provides all the functions to perfom computation of food loss for the FAO food balance sheets.  The first model was developed by Michael Kao and then modified by Natalia Golini.
 URL: https://github.com/SWS-Methodology/faoswsLoss
 License: FAO
 Depends:  faosws (>= 0.6.1)

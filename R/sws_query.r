@@ -32,7 +32,7 @@
 sws_query <- function(area, item, ele, year, symb = T, melted = TRUE, 
                       value.names = T, 
                       stringsAsFactors = default.stringsAsFactors(),
-                      dbquery, class.path = 'ojdbc14.jar',
+                      dbquery, class.path = '../ojdbc14.jar',
                       user = 'demo', pass = 'demo') {
   
   
