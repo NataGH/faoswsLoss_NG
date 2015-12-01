@@ -1,4 +1,4 @@
-Package: faoswsLoss_NG
+Package: faoswsLoss
 Type: Package
 Title: Package to performe the computation of food loss FAO food balance sheets
 Version: 0.0.1
