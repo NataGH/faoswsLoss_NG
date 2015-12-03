@@ -43,6 +43,11 @@
 
 SetTableData <- function(schemaName, tableName, data, replace = FALSE, purge = FALSE, purgeFilter = NULL) {
 
+  .Deprecated("SaveDatatable", package = "faosws", 
+              msg = "'SetTableData' is deprecated.
+With the new Datatables, all old ad-hoc tables are being converted.
+Use the functions described in '?SaveDatatable' instead.")
+  
 	# concats the base URL with the sub-path and the execution ID from session
 	url <- paste0(swsContext.baseRestUrl, "/r/settabledata/", swsContext.executionId) 
 
