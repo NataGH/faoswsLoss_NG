@@ -189,15 +189,31 @@ post_json <- function(json, table){
                           "Content-Type: application/jsonl",
                           "Accept-Encoding: gzip, deflate")
   
-  curl::handle_setopt(h, customrequest="POST",
-                      verbose = FALSE,
-                      noproxy = .swsenv$swsContext.noProxy,
-                      ssl_verifypeer = FALSE, 
-                      sslcert = path.expand(.swsenv$swsContext.clientCertificate),
-                      sslkey = path.expand(.swsenv$swsContext.clientKey),
-                      ssl_verifyhost = 2,
-                      post = 1,
-                      postfields = json)
+  if (Sys.info()['sysname'] == 'Darwin') {
+    
+    curl::handle_setopt(h, customrequest="POST",
+                        verbose = FALSE,
+                        noproxy = .swsenv$swsContext.noProxy,
+                        ssl_verifypeer = FALSE, 
+                        sslcert = path.expand(.swsenv$swsContext.clientP12),
+                        sslcertpasswd = .swsenv$swsContext.p12Password,
+                        ssl_verifyhost = 2,
+                        post = 1,
+                        postfields = json)
+  } else {
+    
+    curl::handle_setopt(h, customrequest="POST",
+                        verbose = FALSE,
+                        noproxy = .swsenv$swsContext.noProxy,
+                        ssl_verifypeer = FALSE, 
+                        sslcert = path.expand(.swsenv$swsContext.clientCertificate),
+                        sslkey = path.expand(.swsenv$swsContext.clientKey),
+                        ssl_verifyhost = 2,
+                        post = 1,
+                        postfields = json)
+  }
+  
+  
   
   on.exit(
     if(exists("conn")) {

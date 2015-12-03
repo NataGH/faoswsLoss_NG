@@ -1,6 +1,9 @@
+# CHANGES IN faosws VERSION 0.6.2
+
 ## BUG FIXES
 
 - Fixed bug where `AddDeletions` would remove columns from table passed to it.
+- Fixed Mac incompatibility with `ReadDatatable`
 
 
 # CHANGES IN faosws VERSION 0.6.1
