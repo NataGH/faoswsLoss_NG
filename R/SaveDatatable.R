@@ -199,7 +199,7 @@ post_json <- function(json, table){
                         noproxy = .swsenv$swsContext.noProxy,
                         ssl_verifypeer = FALSE, 
                         sslcert = path.expand(.swsenv$swsContext.clientP12),
-                        password = .swsenv$swsContext.p12Password,
+                        keypasswd = .swsenv$swsContext.p12Password,
                         ssl_verifyhost = 2,
                         post = 1,
                         postfields = json)
