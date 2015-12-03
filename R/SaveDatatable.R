@@ -92,12 +92,7 @@ AddDeletions <- function(changeset, data){
     stop("If rows are to be deleted, they must have ids and timestamps")
   }
   
-  nonsyscols <- which(!(colnames(data) %in% c("__id", "__ts")))
-  
-  if(length(colnames(data)) > 2){
-    set(data, j = nonsyscols, value = NULL)
-  }
-  
+  data <- data[ , .(`__id`, `__ts`)]
   
   jsonlines <- vapply(split(data, seq_len(nrow(data))), function(x){
     jsonlite::toJSON(

@@ -1,3 +1,15 @@
+## BUG FIXES
+
+- Fixed bug where `AddDeletions` would remove columns from table passed to it.
+
+
+# CHANGES IN faosws VERSION 0.6.1
+
+## BUG FIXES
+
+- Fixed incompatibility with old version of libcurl
+
+
 # CHANGES IN faosws VERSION 0.6.0
 
 ## NEW FEATURES
