@@ -161,7 +161,7 @@ runStreaming <- function(url, json){
                         noproxy = .swsenv$swsContext.noProxy,
                         ssl_verifypeer = FALSE, 
                         sslcert = path.expand(.swsenv$swsContext.clientP12),
-                        sslcertpasswd = .swsenv$swsContext.p12Password,
+                        password = .swsenv$swsContext.p12Password,
                         ssl_verifyhost = 2,
                         post = 1,
                         postfields = RJSONIO::toJSON(json, digits = 30))

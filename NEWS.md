@@ -1,8 +1,12 @@
 # CHANGES IN faosws VERSION 0.6.2
 
+## MINOR CHANGES
+
+- `SetTableData` has been deprecated in favor of new functions specified in `?SaveDatatable`
+
 ## BUG FIXES
 
-- Fixed bug where `AddDeletions` would remove columns from table passed to it.
+- Fixed bug where `AddDeletions` would remove columns from table passed to it
 - Fixed Mac incompatibility with `ReadDatatable`
 
 
