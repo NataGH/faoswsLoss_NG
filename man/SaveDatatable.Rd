@@ -24,7 +24,7 @@ will be stripped and then sent to the server as additional lines
 AddModifications __id and __ts columns must be present and all data will be
 sent to the server as modifications 
 \item AddDeletions Only __id and __ts
-columns are requires, all others will be stripped. Removes those entries
+columns are required, all others will be stripped. Removes those entries
 from the table on the server
 }}
 }
@@ -39,7 +39,8 @@ table <- "world_bank_climate_data_campbells_20151123_faodomain_campbells_2311174
 
 newdat <- ReadDatatable(table, readOnly = FALSE)
 dat <- ReadDatatable(origtable, limit=10)
-#Erase all data
+
+# Erase all data
 changeset <- Changeset(table)
 AddDeletions(changeset, newdat)
 Finalise(changeset)
@@ -49,12 +50,14 @@ AddInsertions(changeset, dat)
 AddInsertions(changeset, dat)
 Finalise(changeset)
 
-#reload new table
+# Reload new table
 newdat <- ReadDatatable(table, readOnly = FALSE)
+
 # Double precipitation in first half
 newdat[1:ncol(dat),precipitation := precipitation * 2]
 AddModifications(changeset, newdat[1:nrow(dat),])
-#Delete the second
+
+# Delete the second
 AddDeletions(changeset, newdat[nrow(dat):(nrow(dat)*2),])
 Finalise(changeset)
 }
