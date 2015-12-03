@@ -4,3 +4,5 @@ lossModule.R
 .gitignore
 R/ojdbc14.jar
 .Rhistory
+^.*\.Rproj$
+^\.Rproj\.user$
