@@ -17,7 +17,10 @@ FetchDatatableConfig <- function(tables, baseurl = swsContext.baseRestUrl){
   rawDt <- faosws:::GetRestCall(paste0(baseurl, "/datatable"))
   Dt <- setNames(rawDt, vapply(rawDt, getID, character(1)))
   
-  if(!missing(tables)) Dt <- Dt[tables]
+  if(!missing(tables)) {
+    if(!(tables %in% names(Dt))) stop("Table '", tables, "' does not exist")
+    Dt <- Dt[tables]
+    }
   
   Dt <- lapply(Dt, function(x){
     cols <- x[["columns"]]

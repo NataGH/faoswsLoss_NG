@@ -1,5 +1,9 @@
 # CHANGES IN faosws VERSION 0.6.3
 
+## MINOR CHANGES
+
+- `FetchDatatableConfig` now throws an informative error if a table doesn't exist.
+
 ## BUG FIXES
 
 - Fixed header format on `ReadDatatable` and `SaveDatatable` POST requests
