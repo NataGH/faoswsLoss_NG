@@ -144,6 +144,17 @@ streamIn <- function (con, colstats, pagesize = 500, verbose = FALSE, ...) {
   
   if (verbose) cat("\r Imported", count, "records. Simplifying into dataframe...\n")
   out <- as.list(out, sorted = FALSE)
+  
+  # If nothing comes back, return an empty table with all the correct cols
+  if(length(out) == 0){
+    tab <- read.table(text = "",
+                      colClasses = colstats$type,
+                      col.names = colstats$id, 
+                      check.names=FALSE)
+    setDT(tab)
+    out <- list("1" = tab)
+  }
+  
   rbindlist(out[order(as.numeric(names(out)))])
   
 }

@@ -3,6 +3,7 @@
 ## MINOR CHANGES
 
 - `FetchDatatableConfig` now throws an informative error if a table doesn't exist.
+- Reading from an empty Datatable now results in a table with the correct columns.
 
 ## BUG FIXES
 
