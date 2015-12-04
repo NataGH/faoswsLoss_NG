@@ -151,9 +151,9 @@ streamIn <- function (con, colstats, pagesize = 500, verbose = FALSE, ...) {
 runStreaming <- function(url, json){
   
   h <- curl::new_handle()
-  curl::handle_setheaders(h, "Accept: application/jsonl",
-                          "Content-Type: application/json",
-                          "Accept-Encoding: gzip, deflate")
+  curl::handle_setheaders(h, "Accept" = "application/json, application/jsonl",
+                          "Content-Type" = "application/json",
+                          "Accept-Encoding" = "gzip, deflate")
   
   if (Sys.info()['sysname'] == 'Darwin') {
     curl::handle_setopt(h, customrequest="POST",

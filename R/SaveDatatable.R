@@ -188,9 +188,9 @@ post_json <- function(json, table){
   url <- paste(baseurl, queryparams, sep="?")  
   
   h <- curl::new_handle()
-  curl::handle_setheaders(h, "Accept: application/json",
-                          "Content-Type: application/jsonl",
-                          "Accept-Encoding: gzip, deflate")
+  curl::handle_setheaders(h, "Accept" = "application/json",
+                          "Content-Type" = "application/jsonl",
+                          "Accept-Encoding" = "gzip, deflate")
   
   if (Sys.info()['sysname'] == 'Darwin') {
     
