@@ -24,7 +24,7 @@
 #' @param pass optional string with password of SWS DB user instead of default 
 #'   password 'demo'.
 #'   
-#' @import RJDBC stringr reshape2
+#' @import RJDBC plyr stringr reshape2
 #'   
 #' @return data.frame with results from SWS DB.
 
@@ -32,14 +32,11 @@
 sws_query <- function(area, item, ele, year, symb = T, melted = TRUE, 
                       value.names = T, 
                       stringsAsFactors = default.stringsAsFactors(),
-                      dbquery, class.path = '../ojdbc14.jar',
-                      user = 'demo', pass = 'demo') {
+                      dbquery, user = 'demo', pass = 'demo') {
   
-  
-  
-  # Check for ojdbc14.jar
-  if(!file.exists(class.path)) 
-    stop("Oracle JDBC class not found. Please, put file ojdbc14.jar
+  class.path = file.path(path.package("faoswsLoss"),'ojdbc14.jar')
+# Check for ojdbc14.jar
+  if(!file.exists(class.path)) stop("Oracle JDBC class not found. Please, put file ojdbc14.jar
 into the working directory or specify full path with class.path argument.")
   
   # Check for the internal connection
@@ -56,10 +53,6 @@ into the working directory or specify full path with class.path argument.")
     stop("SWS DB accepts only internal connections. Please get a cable and find 
 the nearest ethernet socket :)")
   
-  # Packages
-  library(RJDBC)
-
-  
   drv <- JDBC(driverClass = "oracle.jdbc.driver.OracleDriver",
               classPath = class.path)
   conn <- dbConnect(drv, "jdbc:oracle:thin:@lprdbwo1:3310:fstp",
@@ -73,19 +66,15 @@ the nearest ethernet socket :)")
     return(dboutput)
   }
 
-  library(stringr)
-  library(reshape2)
   year_shift <- 1960
   
   # Function to convert year in colnames, e.g. from 00 to 1960
   convertyear <- function(x) {
     # Vectorizing the function
     if(length(x) > 1) {
-      require(plyr)
-      return(unlist(llply(x, convertyear)))
+      return(unlist(plyr::llply(x, convertyear)))
     }
     
-    require(stringr)
     if(!str_detect(x, '[0-9]{2}$')) return(x)
     orignumb <- as.numeric(str_extract(x, '[0-9]{2}$'))
     corryear <- orignumb + year_shift
@@ -158,7 +147,7 @@ the nearest ethernet socket :)")
   )
 
   # Ask the DB with constructed query
-  dboutput <- sws_query(class.path=class.path, dbquery=constrdbquery)
+  dboutput <- sws_query(dbquery=constrdbquery)
   
   colnames(dboutput) <- tolower(colnames(dboutput))
 #   colnames(dboutput)[1:2] <- c('area', 'item')
@@ -172,7 +161,7 @@ the nearest ethernet socket :)")
     
     # Selecting part with values only (without symbols/flags)
     valueswithoutsymb <- dboutput[, colnames(dboutput)[
-      str_detect(colnames(dboutput), perl('^(?!symb)'))]]
+      str_detect(colnames(dboutput), regex('^(?!symb)'))]]
     
     # Melting
     valueswithoutsymb <- 
@@ -188,7 +177,7 @@ the nearest ethernet socket :)")
     # Converting part with symbols/flags
     if(symb) {
       flags <- dboutput[, colnames(dboutput)[
-        str_detect(colnames(dboutput), perl('^(?!num)'))]]
+        str_detect(colnames(dboutput), regex('^(?!num)'))]]
       
       flags <- 
         melt(flags, measure.vars=

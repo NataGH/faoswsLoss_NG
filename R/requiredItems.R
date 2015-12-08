@@ -3,10 +3,12 @@
 ##' Table to obtain all primary item with CPC and FCL codes
 ##' 
 ##' Table to check
+##' 
+##' @export
 
 getRequiredItems <- function(){
   
-  requiredItems = GetTableData(schemaName = "ess", tableName = "loss_food_group") %>%
+  requiredItems = ReadDatatable(table = "loss_food_group") %>%
   select(measured_item_fs,food_general_group,measured_item_cpc) %>%
   filter(food_general_group == "primary")
 }

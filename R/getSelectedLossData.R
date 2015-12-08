@@ -2,13 +2,12 @@
 #'
 #' Function to obtain food loss data at primary level 
 #'
+#'
+#' @export
 
 getSelectedLossData = function(){
-  
-  
-  source("sws_query.r")
-  
-  measuredItemFS = GetTableData(schemaName = "ess", tableName = "loss_food_group") %>%
+
+  measuredItemFS = ReadDatatable(table = "loss_food_group") %>%
     select(measured_item_fs,food_general_group,measured_item_cpc) %>%
     filter(food_general_group == "primary")
   
@@ -17,8 +16,7 @@ getSelectedLossData = function(){
                                    item = as.character(measuredItemFS$measured_item_fs), 
                                    ele = 121, 
                                    year = 1961:2015, 
-                                   value.names = F,
-                                   class.path="ojdbc14.jar"
+                                   value.names = F
   ))
   
   

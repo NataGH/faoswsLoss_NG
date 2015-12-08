@@ -1,6 +1,6 @@
 suppressMessages({
-  library(bit64)
-  library(curl)
+  #library(bit64)
+  #library(curl)
   library(faosws)
   library(faoswsUtil)
   library(lme4)
@@ -10,34 +10,33 @@ suppressMessages({
   library(igraph)
   library(plyr)
   library(dplyr)
-  library(RJDBC)
-  library(ggplot2)
+  #library(RJDBC)
 })
 
+library(faoswsLoss)
 
 updateModel = TRUE
 
 ## Set up for the test environment and parameters
-R_SWS_SHARE_PATH <- Sys.getenv("R_SWS_SHARE_PATH")
-DEBUG_MODE <- Sys.getenv("R_DEBUG_MODE")
 
-
-if(!exists("DEBUG_MODE") || DEBUG_MODE == "") {
-  if(Sys.info()[7] == "Golini"){ # Nata's work computer
+if(CheckDebug()) {
+  if(Sys.info()["user"] == "campbells"){ # Seb's work computer
+    SetClientFiles(dir = "~/certificates/production")
+    token = "e16a500b-2077-471b-8edf-6d810a85814d" # Nata's token 
+  } else if(Sys.info()["user"] == "Golini"){
+    # Nata's work computer
     SetClientFiles(dir = "~/R certificate files/Production/")
-     files = dir("~/GitHub/faoswsLoss_NG/R/", full.names = TRUE)[-10]
     token = "e16a500b-2077-471b-8edf-6d810a85814d" # Nata's token 
   } else {
     stop("User not yet implemented!")
   }
+  
   
   GetTestEnvironment(
     ## baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
     baseUrl = "https://hqlprswsas1.hq.un.fao.org:8181/sws",
     token = token
   )  
-  
-  sapply(files, source)
 }
 
 ## Year should be a paramameter selected.
@@ -59,8 +58,6 @@ if(updateModel){
 {
   requiredItems <<- getRequiredItems()
   production <<- getProductionData()
-  setwd("~/GitHub/faoswsLoss_NG/R/")
-  source("sws_query.r")
   import <<- getImportData()
   loss <<- getOfficialLossData()
   lossFoodGroup <<- getLossFoodGroup()
@@ -116,9 +113,6 @@ lossLmeModel =
 # par(mfrow=c(1,1))
 # qqnorm(residuals(lossLmeModel))
 # qqline(residuals(lossLmeModel))
-
-# lossModelPath = paste0(R_SWS_SHARE_PATH, "/lossLmeModel")
-# saveRDS(lossLmeModel, lossModelPath)
 }
 
 
@@ -179,9 +173,8 @@ finalPredictData %>%
              lossObservationFlagVar =
                "flagObservationStatus_measuredElement_5120",
              lossMethodFlagVar = "flagMethod_measuredElement_5120",
-             lossModel = lossLmeModel) 
-#   %>%
-#   saveImputedLoss(data = .)
+             lossModel = lossLmeModel) %>%
+  saveImputedLoss(data = .)
 
 # finalPredictDataSet %>%
 #   filter(flagObservationStatus_measuredElement_5120 == " ")

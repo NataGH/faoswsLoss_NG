@@ -1,5 +1,6 @@
 #' Remove Carry Loss
-#'
+#' 
+#' @export
 #'
 
 removeCarryLoss = function(data, lossVar){

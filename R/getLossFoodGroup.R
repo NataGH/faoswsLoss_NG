@@ -1,11 +1,12 @@
 ##' Get Loss Food Group
 ##'
 ##' Function to load the loss food group classification
-##'
+##' 
+##' @export
 
 
 getLossFoodGroup = function(){
-  lossFoodGroup = GetTableData(schemaName = "ess", tableName = "loss_food_group")
+  lossFoodGroup = ReadDatatable(table = "loss_food_group")
   setnames(lossFoodGroup, old = colnames(lossFoodGroup),
            new = c("measuredItemFCL", "measuredItemNameFS", "foodGroupName",
                    "foodGroup", "foodGeneralGroup", "foodPerishableGroup",

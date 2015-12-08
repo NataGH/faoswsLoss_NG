@@ -1,7 +1,8 @@
 ##' Get Production Data
 ##' 
-##'Function to obtain production data at primary level
-##'
+##' Function to obtain production data at primary level
+##' 
+##' @export
 
 
 getProductionData = function(){
