@@ -1,5 +1,6 @@
 #' Merge All Loss Data
-#'
+#' 
+#' @export
 
 
 

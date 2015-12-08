@@ -16,7 +16,8 @@ License: FAO
 Depends:
     faosws (>= 0.6.1)
 Imports:
-    faoswsUtil
+    faoswsUtil,
+    data.table
 swsRFunctionsDepends: sws_query.R
 swsDatasetDepends: agriculture:aproduction,
     TS_ICS_WORK_YR (old system SUA Working Dataset),

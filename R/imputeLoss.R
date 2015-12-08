@@ -1,6 +1,6 @@
 #' Impute Loss Data
 #' 
-#' 
+#' @export
 
 imputeLoss = function(data, lossVar, lossObservationFlagVar, lossMethodFlagVar,
                       lossModel){

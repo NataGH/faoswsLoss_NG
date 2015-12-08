@@ -5,8 +5,8 @@
 \title{Get data from FAO statistical working system (SWS).}
 \usage{
 sws_query(area, item, ele, year, symb = T, melted = TRUE, value.names = T,
-  stringsAsFactors = default.stringsAsFactors(), dbquery,
-  class.path = "../ojdbc14.jar", user = "demo", pass = "demo")
+  stringsAsFactors = default.stringsAsFactors(), dbquery, user = "demo",
+  pass = "demo")
 }
 \arguments{
 \item{area}{numeric or character vector with countries' ids (numeric) or 
@@ -35,14 +35,14 @@ identificational vectors be converted to factors.}
 
 \item{dbquery}{optional string with SQL-query to request from SWS.}
 
-\item{class.path}{optional string with path to Oracle Java Data Base
-Connectivity library. By default 'ojdbc14.jar' in working directory.}
-
 \item{user}{optional string with name of SWS DB user instead of default user 
 'demo'.}
 
 \item{pass}{optional string with password of SWS DB user instead of default 
 password 'demo'.}
+
+\item{class.path}{optional string with path to Oracle Java Data Base
+Connectivity library. By default 'ojdbc14.jar' in working directory.}
 }
 \value{
 data.frame with results from SWS DB.
