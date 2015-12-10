@@ -1,8 +1,8 @@
 Package: faoswsLoss
 Type: Package
-Title: Package to performe the computation of food loss FAO food balance sheets
-Version: 0.0.1
-Date: 2015-12-01
+Title: Package to perform the computation of food loss FAO food balance sheets
+Version: 0.1.0
+Date: 2015-12-10
 Authors@R: c(person("Natalia", "Golini", role = c("aut", "cre"), email = "natalia.golini@fao.org"))
 Author: Natalia Golini <natalia.golini@fao.org>, Michael Kao
     <michael.kao@fao.org>
@@ -22,7 +22,6 @@ Imports:
     plyr,
     reshape2,
     stringr
-swsRFunctionsDepends: sws_query.R
 swsDatasetDepends: agriculture:aproduction,
     TS_ICS_WORK_YR (old system SUA Working Dataset),
     loss_food_group,
