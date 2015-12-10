@@ -17,8 +17,6 @@
 #' @param stringsAsFactors logical. Should character 
 #'   identificational vectors be converted to factors.
 #' @param dbquery optional string with SQL-query to request from SWS.
-#' @param class.path optional string with path to Oracle Java Data Base
-#'   Connectivity library. By default 'ojdbc14.jar' in working directory.
 #' @param user optional string with name of SWS DB user instead of default user 
 #'   'demo'.
 #' @param pass optional string with password of SWS DB user instead of default 

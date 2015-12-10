@@ -17,7 +17,11 @@ Depends:
     faosws (>= 0.6.1)
 Imports:
     faoswsUtil,
-    data.table
+    data.table,
+    RJDBC,
+    plyr,
+    reshape2,
+    stringr
 swsRFunctionsDepends: sws_query.R
 swsDatasetDepends: agriculture:aproduction,
     TS_ICS_WORK_YR (old system SUA Working Dataset),

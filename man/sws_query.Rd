@@ -40,9 +40,6 @@ identificational vectors be converted to factors.}
 
 \item{pass}{optional string with password of SWS DB user instead of default 
 password 'demo'.}
-
-\item{class.path}{optional string with path to Oracle Java Data Base
-Connectivity library. By default 'ojdbc14.jar' in working directory.}
 }
 \value{
 data.frame with results from SWS DB.
