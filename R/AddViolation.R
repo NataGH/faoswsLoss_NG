@@ -22,6 +22,12 @@ AddViolation <- function(changeset, violationtable) {
   valid_cols <- c("__id", "column", "type", "severity", "message")
   
   violationtable <- violationtable[, .SD, .SDcols = valid_cols]
+
+  ## Validate table
+  stopifnot(is.character(violationtable[, column]) || all(is.na(violationtable[, column])))
+  stopifnot(all(violationtable[!is.na(column), type] %in% c("error", "warning")))
+  stopifnot(all(violationtable[!is.na(column), severity] %in% 1:10))
+  stopifnot(is.character(violationtable[, message]) || all(is.na(violationtable[, message])))
   
   newids <- unique(violationtable[,`__id`])
   
