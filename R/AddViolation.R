@@ -1,0 +1,51 @@
+#' Add violation to faosws
+#' 
+#' To mark a row as valid, just return NA for everything except ID
+#'
+#' @param changeset \link{Changeset} object.
+#' @param violationtable. data.table with the following columns:
+#' \itemize{
+#'   \item __id
+#'   \item column
+#'   \item type
+#'   \item gravity
+#'   \item message}
+#'
+#' @export 
+#' 
+
+
+AddViolation <- function(changeset, violationtable) {
+  
+  if (get("type" , envir = changeset) != "validation") stop("Changeset is not of type 'validation'")
+  
+  valid_cols <- c("__id", "column", "type", "gravity", "message")
+  
+  violationtable <- violationtable[, .SD, .SDcols = valid_cols]
+  
+  newids <- unique(violationtable[,`__id`])
+  
+  validation_ids <- get("validation_ids", envir = changeset)
+  
+  if (any(newids %in% validation_ids)) {
+    stop("The following ids already have a validation: ", 
+         paste0(intersect(newids, get("validation_ids", envir = changeset)), collapse = ", "))
+  }
+  
+  ## CREATE LINES
+  ## This can be better optimised with a data.table function
+  dtl <- split(violationtable[, .SD, .SDcols = -"__id"], violationtable[, `__id`])
+  sp <- function(x){
+    lapply(split(x[,!"column", with = FALSE], x[,column]), as.list)
+  }
+  
+  dtl <- lapply(dtl, sp)
+  dtl <- Map(function(x,y){y <- c(id_row = as.integer(x), list(violations = y))}, names(dtl), dtl)
+  
+  jsonlines <- vapply(dtl, jsonlite::toJSON, character(1), auto_unbox = TRUE)
+  combine_jsonlines(changeset, jsonlines)
+  
+  assign("validation_ids", c(validation_ids, newids), envir = changeset)
+  
+}
+

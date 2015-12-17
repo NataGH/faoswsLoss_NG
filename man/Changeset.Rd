@@ -6,13 +6,18 @@
 \alias{Finalize}
 \title{Define changeset object}
 \usage{
-Changeset(table)
+Changeset(table, type = "write")
 
 Finalize(changeset)
 }
 \arguments{
 \item{table}{character. Name of Datatable on server. Use 
 \code{\link{FetchDatatableConfig}} to get a list of tables on the server.}
+
+\item{type}{character. API to write to. At the moment:
+\itemize{
+\item write
+\item validation}}
 
 \item{changeset}{Changeset object}
 }

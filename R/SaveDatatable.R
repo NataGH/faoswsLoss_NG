@@ -124,7 +124,10 @@ send_jsonlines <- function(changeset){
     
     json <- paste0(page, collapse="\n")
     table <- names(get("config", envir=changeset))
-    post_json(json, table)
+    
+    url <- get("url", envir = changeset)
+    
+    post_json(url, json)
     
     assign("jsonlines", jsonlines[-seq_len(pagesize)], envir = changeset)
     
@@ -132,10 +135,7 @@ send_jsonlines <- function(changeset){
   
 }
 
-post_json <- function(json, table){
-  baseurl <- paste(swsContext.baseRestUrl, "api", "datatable", table, "import", sep = "/")
-  queryparams <- paste(paste0("_xid=", swsContext.token), collapse= "&")
-  url <- paste(baseurl, queryparams, sep="?")  
+post_json <- function(url, json){
   
   h <- curl::new_handle()
   curl::handle_setheaders(h, "Accept" = "application/json",

@@ -21,6 +21,7 @@ Imports:
     tidyr,
     bit64
 Collate:
+    'AddViolation.R'
     'Metadata.R'
     'BlockMetadata.R'
     'BlockMetadataSet.R'
