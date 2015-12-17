@@ -24,6 +24,7 @@ Collate:
     'Metadata.R'
     'BlockMetadata.R'
     'BlockMetadataSet.R'
+    'Changeset.R'
     'CheckDebug.R'
     'DatasetKey.R'
     'Dimension.R'
