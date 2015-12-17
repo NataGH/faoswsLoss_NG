@@ -11,11 +11,11 @@ AddViolation(changeset, violationtable)
 
 \item{violationtable.}{data.table with the following columns:
 \itemize{
-  \item __id
-  \item column
-  \item type
-  \item severity
-  \item message}}
+  \item __id id columns from data
+  \item column character. Column name in data
+  \item type character. One of 'error' or 'warning'
+  \item severity integer from 1 to 10. Currently, only colours for 1 to 5 are displayed
+  \item message character. Reason for invalidating}}
 }
 \description{
 To mark a row as valid, just return NA for everything except ID
