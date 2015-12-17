@@ -8,7 +8,7 @@
 #'   \item __id
 #'   \item column
 #'   \item type
-#'   \item gravity
+#'   \item severity
 #'   \item message}
 #'
 #' @export 
@@ -19,17 +19,25 @@ AddViolation <- function(changeset, violationtable) {
   
   if (get("type" , envir = changeset) != "validation") stop("Changeset is not of type 'validation'")
   
-  valid_cols <- c("__id", "column", "type", "gravity", "message")
+  valid_cols <- c("__id", "column", "type", "severity", "message")
   
   violationtable <- violationtable[, .SD, .SDcols = valid_cols]
   
   newids <- unique(violationtable[,`__id`])
   
+  # Check that the row hasn't already been submitted
   validation_ids <- get("validation_ids", envir = changeset)
   
   if (any(newids %in% validation_ids)) {
     stop("The following ids already have a validation: ", 
          paste0(intersect(newids, get("validation_ids", envir = changeset)), collapse = ", "))
+  }
+  
+  # Reject if there are duplicates
+  
+  dups <- duplicated(violationtable[,.(`__id`, column)])
+  if(any(dups)){
+    stop("The ids: ", unique(violationtable[dups, `__id`]), " have duplicate elements")
   }
   
   ## CREATE LINES
@@ -43,8 +51,8 @@ AddViolation <- function(changeset, violationtable) {
   dtl <- Map(function(x,y){y <- c(id_row = as.integer(x), list(violations = y))}, names(dtl), dtl)
   
   jsonlines <- vapply(dtl, jsonlite::toJSON, character(1), auto_unbox = TRUE)
-  combine_jsonlines(changeset, jsonlines)
   
+  combine_jsonlines(changeset, jsonlines)
   assign("validation_ids", c(validation_ids, newids), envir = changeset)
   
 }

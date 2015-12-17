@@ -35,7 +35,7 @@ Functions to save to Datatables on SWS.
 \dontrun{
 library(data.table)
 origtable <- "world_bank_climate_data"
-table <- "world_bank_climate_data_campbells_20151123_faodomain_campbells_2311174949"
+table <- "world_bank_climate_data_test"
 
 newdat <- ReadDatatable(table, readOnly = FALSE)
 dat <- ReadDatatable(origtable, limit=10)

@@ -14,7 +14,7 @@ AddViolation(changeset, violationtable)
   \item __id
   \item column
   \item type
-  \item gravity
+  \item severity
   \item message}}
 }
 \description{

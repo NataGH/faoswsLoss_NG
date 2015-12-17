@@ -25,7 +25,7 @@ Changeset <- function(table, type = "write"){
   
   baseurl <- switch(type,
                     write = paste(swsContext.baseRestUrl, "api", "datatable", table, "import", sep = "/"),
-                    validation = paste(swsContext.baseRestUrl, "api", "datatable", table, "validation", "collect", sep = "/"))
+                    validation = paste(swsContext.baseRestUrl, "api", "datatable", table, "validation", "report", sep = "/"))
   
   
   queryparams <- paste(paste0("_xid=", swsContext.token), collapse = "&")

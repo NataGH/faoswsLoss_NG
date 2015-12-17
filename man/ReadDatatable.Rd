@@ -26,7 +26,7 @@ valid form.}
 
 \item{readOnly}{logical. Determines whether the table should include columns 
 only relevant for writing back to a table (id and timestamp) or just the 
-data.}
+data. Ignored when validationOptions are provided.}
 
 \item{limit}{numeric. Used mainly for testing, limit results to a certain 
 number of rows.}
@@ -64,7 +64,7 @@ cols <- list(DtDimension(id="rep", ascending=TRUE),
 tariffcselect <- ReadDatatable(table, columns=cols, includeAll = FALSE, limit = 1e3)
 
 #Get unvalidated rows:
-ReadDatatable("world_bank_climate_data_campbells_20151123_faodomain_campbells_2311174949", limit=1e3, validationOptions = list(incremental = TRUE))
+ReadDatatable("world_bank_climate_data_test", limit=1e3, validationOptions = list(incremental = TRUE))
 }
   
 }
