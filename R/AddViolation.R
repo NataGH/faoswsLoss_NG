@@ -1,7 +1,9 @@
 #' Add violation to faosws
 #' 
-#' To mark a row as valid, just return NA for everything except ID
-#' Any element which is not otherwise marked as invalid will be considered valid.
+#' To mark a row as valid, just return NA for everything except ID Any element
+#' which is not otherwise marked as invalid will be considered valid. When a
+#' changset is finalised, the whole table is considered as validated until a
+#' cell changes value.
 #'
 #' @param changeset \link{Changeset} object.
 #' @param violationtable. data.table with the following columns:
@@ -10,10 +12,22 @@
 #'   \item column character. Column name in data
 #'   \item type character. One of 'error' or 'warning'
 #'   \item severity integer from 1 to 10.
-#'   \item message character. Reason for invalidating}
+#'   \item message character. Reason for invalidating
+#'   }
+#' 
+#' @examples 
+#' \dontrun{
+#' table <- "world_bank_climate_data_test"
+#' newdat <- ReadDatatable(table, validationOptions = list(incremental = FALSE))
+#' inval <- newdat[precipitation > temperature, .(id)]
+#' inval[,`:=`(col = "precipitation", type="error", gravity=9, message="precipitation is greater than temperature")]
+#' vchangeset <- Changeset(table, type = "validation")
+#' AddViolation(vchangeset, inval)
+#' Finalise(vchangeset)
+#' }
 #' 
 #' @return Doesn't return anything, but modifies the provided changeset
-#' @export 
+#' @export AddViolation
 #' 
 
 
@@ -77,4 +91,3 @@ AddViolation <- function(changeset, violationtable) {
   assign("validation_ids", c(validation_ids, newids), envir = changeset)
   
 }
-
