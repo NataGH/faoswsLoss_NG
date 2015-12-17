@@ -37,7 +37,7 @@ Changeset <- function(table, type = "write"){
     assign("validation_ids", integer(0), envir = changeset)
   }
   
-  pagesize <- FetchSWSVariable("changeset", .swsenv)$pagesize
+  pagesize <- ExtractSWSVariable("changeset", .swsenv)$pagesize
   
   assign("jsonlines", character(0), envir = changeset)
   assign("pagesize", pagesize, envir = changeset)
@@ -76,4 +76,19 @@ Finalize <- Finalise <- function(changeset){
   
   jsonlines <- jsonlines[-len]
   assign("jsonlines", jsonlines, envir = changeset)
+}
+
+#' Fetch validation IDs from changeset
+#' 
+#' Changeset objects with the validation type store the IDs that have been sent 
+#' to them. This includes IDs. A changeset object with type validation will not 
+#' allow any rows already sent to be revalidated. The function
+#' \code{FetchValidationIDs} retrieves any IDs stored in this Changeset.
+#' 
+#' @rdname Changeset
+#
+
+ExtractValidationIDs <- function(changeset){
+  if(changeset$type != "validation") stop("Only validation changesets store IDs")
+  get("validation_ids", envir = changeset)
 }

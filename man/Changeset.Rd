@@ -2,6 +2,7 @@
 % Please edit documentation in R/Changeset.R
 \name{Changeset}
 \alias{Changeset}
+\alias{ExtractValidationIDs}
 \alias{Finalise}
 \alias{Finalize}
 \title{Define changeset object}
@@ -9,6 +10,8 @@
 Changeset(table, type = "write")
 
 Finalize(changeset)
+
+ExtractValidationIDs(changeset)
 }
 \arguments{
 \item{table}{character. Name of Datatable on server. Use 
@@ -32,5 +35,10 @@ accumulates enough requests (by default, 5000 rows), it sends that chunk to
 the server. To finalise your script, use \code{Finalize} or \code{Finalise}
 with the changeset object to indicate that there are no more rows to add and
 that the process of writing to a table is finished.
+
+Changeset objects with the validation type store the IDs that have been sent 
+to them. This includes IDs. A changeset object with type validation will not 
+allow any rows already sent to be revalidated. The function
+\code{FetchValidationIDs} retrieves any IDs stored in this Changeset.
 }
 

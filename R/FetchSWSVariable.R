@@ -8,7 +8,7 @@
 
 BoundDatatable <- function(){
   
-  tableName <- try(FetchSWSVariable(variable = "swsContext.computationParams", environment = .GlobalEnv)[[".DATATABLE"]], silent = TRUE)
+  tableName <- try(ExtractSWSVariable(variable = "swsContext.computationParams", environment = .GlobalEnv)[[".DATATABLE"]], silent = TRUE)
   
   if(inherits(tableName, "try-error") || is.null(tableName)){
     stop("No table found")
@@ -16,7 +16,7 @@ BoundDatatable <- function(){
   tableName
 }
 
-FetchSWSVariable <- function (variable, environment) {
+ExtractSWSVariable <- function (variable, environment) {
   
   if(missing(environment)){
     
