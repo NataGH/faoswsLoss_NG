@@ -14,7 +14,7 @@ AddViolation(changeset, violationtable)
   \item __id id columns from data
   \item column character. Column name in data
   \item type character. One of 'error' or 'warning'
-  \item severity integer from 1 to 10. Currently, only colours for 1 to 5 are displayed
+  \item severity integer from 1 to 10.
   \item message character. Reason for invalidating}}
 }
 \description{

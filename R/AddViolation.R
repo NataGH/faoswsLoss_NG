@@ -8,7 +8,7 @@
 #'   \item __id id columns from data
 #'   \item column character. Column name in data
 #'   \item type character. One of 'error' or 'warning'
-#'   \item severity integer from 1 to 10. Currently, only colours for 1 to 5 are displayed
+#'   \item severity integer from 1 to 10.
 #'   \item message character. Reason for invalidating}
 #'
 #' @export 
@@ -50,7 +50,7 @@ AddViolation <- function(changeset, violationtable) {
   dtl <- lapply(dtl, sp)
   dtl <- Map(function(x,y){y <- c(id_row = as.integer(x), list(violations = y))}, names(dtl), dtl)
   
-  jsonlines <- vapply(dtl, jsonlite::toJSON, character(1), auto_unbox = TRUE)
+  jsonlines <- vapply(dtl, jsonlite::toJSON, character(1), auto_unbox = TRUE, na = "null")
   
   combine_jsonlines(changeset, jsonlines)
   assign("validation_ids", c(validation_ids, newids), envir = changeset)
