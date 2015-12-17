@@ -1,15 +1,25 @@
+# CHANGES IN faosws VERSION 0.7.0
+
 ## NEW FEATURES
 
 - `ReadDatatable` now takes a `validationOptions` argument to read data from the
   validation API
+- New function `AddViolation` which allows updating of violation data
+
+## MINOR CHANGES
+
+- `Changeset` now has a new `type` option which differentiates between 
+  validation and writing to a dataset
 
 
 # CHANGES IN faosws VERSION 0.6.3
 
 ## MINOR CHANGES
 
-- `FetchDatatableConfig` now throws an informative error if a table doesn't exist.
-- Reading from an empty Datatable now results in a table with the correct columns
+- `FetchDatatableConfig` now throws an informative error if a table doesn't 
+  exist
+- Reading from an empty Datatable now results in a table with the correct 
+  columns
 
 ## BUG FIXES
 
@@ -105,8 +115,8 @@
 ## MAJOR CHANGES
 
 - NAMESPACE is now generated automatically - faosws objects regarding
-  authentication are now stored in an environment called .swsenv which is declared
-  in SetClientFiles.R
+  authentication are now stored in an environment called .swsenv which is 
+  declared in SetClientFiles.R
 
 ## MINOR CHANGES
 
