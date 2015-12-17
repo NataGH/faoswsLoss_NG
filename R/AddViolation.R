@@ -1,6 +1,7 @@
 #' Add violation to faosws
 #' 
 #' To mark a row as valid, just return NA for everything except ID
+#' Any element which is not otherwise marked as invalid will be considered valid.
 #'
 #' @param changeset \link{Changeset} object.
 #' @param violationtable. data.table with the following columns:
@@ -10,7 +11,8 @@
 #'   \item type character. One of 'error' or 'warning'
 #'   \item severity integer from 1 to 10.
 #'   \item message character. Reason for invalidating}
-#'
+#' 
+#' @return Doesn't return anything, but modifies the provided changeset
 #' @export 
 #' 
 
@@ -41,9 +43,22 @@ AddViolation <- function(changeset, violationtable) {
   
   # Reject if there are duplicates
   
-  dups <- duplicated(violationtable[!is.na(column), .(`__id`, column)])
+  dups <- duplicated(violationtable[, .(`__id`, column)])
+  
   if(any(dups)){
     stop("The ids: ", unique(violationtable[dups, `__id`]), " have duplicate elements")
+  }
+  
+  # Prevent user from adding valid and invalid rows together.
+  
+  find_na_add <- function(sd){
+    any(is.na(sd[, column])) && nrow(sd > 1)
+  }
+  
+  na_add <- violationtable[, .(badnas = find_na_add(.SD)) , by=`__id`][,badnas]
+  
+  if(any(na_add)){
+    stop("Trying to have validated and unvalidated at the same time")
   }
   
   ## CREATE LINES
