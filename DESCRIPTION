@@ -1,7 +1,7 @@
 Package: faosws
 Type: Package
 Title: API providing access to the FAO Statistical Working System
-Version: 0.6.3.9002
+Version: 0.6.3.9003
 Date: 2015-12-16
 Authors@R: c(
     person("Engineering Ingegneria Informatica", role="aut"),
