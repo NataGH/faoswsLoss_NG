@@ -1,9 +1,15 @@
+## NEW FEATURES
+
+- `ReadDatatable` now takes a `validationOptions` argument to read data from the
+  validation API
+
+
 # CHANGES IN faosws VERSION 0.6.3
 
 ## MINOR CHANGES
 
 - `FetchDatatableConfig` now throws an informative error if a table doesn't exist.
-- Reading from an empty Datatable now results in a table with the correct columns.
+- Reading from an empty Datatable now results in a table with the correct columns
 
 ## BUG FIXES
 
@@ -14,7 +20,8 @@
 
 ## MINOR CHANGES
 
-- `SetTableData` has been deprecated in favor of new functions specified in `?SaveDatatable`
+- `SetTableData` has been deprecated in favor of new functions specified in
+  `?SaveDatatable`
 
 ## BUG FIXES
 
@@ -33,8 +40,9 @@
 
 ## NEW FEATURES
 
-- Added `AddInsertions`, `AddModifications`, `AddDeletions` to write rows to a Datatable with companions
-`Changeset` and `Finalize` which track lines already sent.
+- Added `AddInsertions`, `AddModifications`, `AddDeletions` to write rows to a
+  Datatable with companions `Changeset` and `Finalize` which track lines already
+  sent
 
 ## MINOR CHANGES
 
@@ -47,8 +55,8 @@
 ## NEW FEATURES
 
 - Added `ReadDatatable` to read Datatables, the new implementation of ad-hoc 
-tables. `GetTableData` has been deprecated. - Added `ReadDatatableList` to get
-metadata for all Datatables
+  tables. `GetTableData` has been deprecated. 
+- Added `ReadDatatableList` to get metadata for all Datatables
 
 ## MAJOR CHANGES
 
@@ -67,40 +75,40 @@ metadata for all Datatables
 
 ## MINOR CHANGES
 
-- Duplicated keys in `DatasetKey` objects are now removed with a warning -
-`GetTestEnvironment` no longer checks to see if it is on the server (This should
-be handled entirely by `if(CheckDebug())`) 
+- Duplicated keys in `DatasetKey` objects are now removed with a warning 
+- `GetTestEnvironment` no longer checks to see if it is on the server (This
+  should be handled entirely by `if(CheckDebug())`)
 - Added README.md for non-R users
 
 ## BUG FIXES
 
-- Temporary fix for Rdatatable/data.table#1352 until v1.9.8 comes out - All keys
-in an empty data.frame are now chars. Fixes #SWS-797
+- Temporary fix for Rdatatable/data.table#1352 until v1.9.8 comes out 
+- All keys in an empty data.frame are now chars. Fixes #SWS-797
 
 
 # CHANGES IN faosws VERSION 0.4.1
 
 ## MINOR CHANGES
 
-- `CheckDebug` made more robust - `GetTableData` now sanitises table names -
-Minor documentation fixes
+- `CheckDebug` made more robust - `GetTableData` now sanitises table names 
+- Minor documentation fixes
 
 
 # CHANGES IN faosws VERSION 0.4.0
 
 ## NEW FEATURES
 
-- Added `CheckDebug`, a function which returns TRUE when not on the server -
-Added `SetClientFiles`, a function to change the directory where the client 
-certificates are stored
+- Added `CheckDebug`, a function which returns TRUE when not on the server 
+- Added `SetClientFiles`, a function to change the directory where the client 
+  certificates are stored
 
 ## MAJOR CHANGES
 
 - NAMESPACE is now generated automatically - faosws objects regarding
-authentication are now stored in an environment called .swsenv which is declared
-in SetClientFiles.R
+  authentication are now stored in an environment called .swsenv which is declared
+  in SetClientFiles.R
 
 ## MINOR CHANGES
 
-- `?faosws` and `?faosws-package` now give a help page with basic instructions -
-Slots are now properly documented as slots
+- `?faosws` and `?faosws-package` now give a help page with basic instructions 
+- Slots are now properly documented as slots

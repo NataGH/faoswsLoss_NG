@@ -7,7 +7,7 @@
 #'   the token.
 #' @param columns either a character vector of column names or list of 
 #'   \code{\link{DtDimension}} objects, each representing a desired column, how 
-#'   to sort it and by what value to filter it. If a character vector is
+#'   to sort it and by what value to filter it. If a character vector is 
 #'   supplied, \code{includeAll} is automatically set to FALSE.
 #' @param includeAll logical. If TRUE, include all columns in the result, 
 #'   including those not specified in \code{columns}. Otherwise, return only 
@@ -19,6 +19,11 @@
 #'   data.
 #' @param limit numeric. Used mainly for testing, limit results to a certain 
 #'   number of rows.
+#' @param validationOptions list. Key value pairs to be passed to directives.
+#'   Providing a value to this parameter causes the validation API to be called. Possible key value pairs include:
+#'   \itemize{
+#'   \item incremental - boolean, determines whether to only return rows that haven't yet been validated.
+#'   }
 #'   
 #' @return data.table as specified by params.
 #'   
@@ -40,8 +45,11 @@
 #' cols <- list(DtDimension(id="rep", ascending=TRUE),
 #'              DtDimension(id="tyear"),
 #'              DtDimension(id="hsrep", value="H4"))
-#'
+#' 
 #' tariffcselect <- ReadDatatable(table, columns=cols, includeAll = FALSE, limit = 1e3)
+#' 
+#' #Get unvalidated rows:
+#' ReadDatatable("world_bank_climate_data_campbells_20151123_faodomain_campbells_2311174949", limit=1e3, validationOptions = list(incremental = TRUE))
 #' }
 #'   
 #' @import curl
@@ -51,9 +59,15 @@
 
 
 
-ReadDatatable <- function(table=BoundDatatable(), columns = list(), includeAll = TRUE, where=NULL, readOnly = TRUE, limit=NULL) {
+ReadDatatable <- function(table=BoundDatatable(), columns = list(), includeAll = TRUE, where=NULL, readOnly = TRUE, limit=NULL, validationOptions) {
 
-  baseurl <- paste(swsContext.baseRestUrl, "api", "datatable", table, "export", sep = "/")
+  if(missing(validationOptions)){
+    api <- "export"
+  } else {
+    api <- "validation/collect"
+  }
+  
+  baseurl <- paste(swsContext.baseRestUrl, "api", "datatable", table, api, sep = "/")
   queryparams <- paste(paste0("_xid=", swsContext.token), collapse= "&")
   url <- paste(baseurl, queryparams, sep="?")  
   
@@ -76,8 +90,11 @@ ReadDatatable <- function(table=BoundDatatable(), columns = list(), includeAll =
       limit = limit,
       page = NULL
     ),
-    directives = list(format = "rowset",
-                      readonly = readOnly)
+    directives = if(missing(validationOptions)){
+      list(format = "rowset", readonly = readOnly)
+    } else {
+      validationOptions
+    }
   )
 
   runStreaming(url, json)

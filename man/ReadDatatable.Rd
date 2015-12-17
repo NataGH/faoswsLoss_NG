@@ -5,7 +5,8 @@
 \title{Read Datatable}
 \usage{
 ReadDatatable(table = BoundDatatable(), columns = list(),
-  includeAll = TRUE, where = NULL, readOnly = TRUE, limit = NULL)
+  includeAll = TRUE, where = NULL, readOnly = TRUE, limit = NULL,
+  validationOptions)
 }
 \arguments{
 \item{table}{character. Name of desired Datatable. By default, the one from 
@@ -13,7 +14,7 @@ the token.}
 
 \item{columns}{either a character vector of column names or list of 
 \code{\link{DtDimension}} objects, each representing a desired column, how 
-to sort it and by what value to filter it. If a character vector is
+to sort it and by what value to filter it. If a character vector is 
 supplied, \code{includeAll} is automatically set to FALSE.}
 
 \item{includeAll}{logical. If TRUE, include all columns in the result, 
@@ -29,6 +30,12 @@ data.}
 
 \item{limit}{numeric. Used mainly for testing, limit results to a certain 
 number of rows.}
+
+\item{validationOptions}{list. Key value pairs to be passed to directives.
+Providing a value to this parameter causes the validation API to be called. Possible key value pairs include:
+\itemize{
+\item incremental - boolean, determines whether to only return rows that haven't yet been validated.
+}}
 }
 \value{
 data.table as specified by params.
@@ -55,6 +62,9 @@ cols <- list(DtDimension(id="rep", ascending=TRUE),
              DtDimension(id="hsrep", value="H4"))
 
 tariffcselect <- ReadDatatable(table, columns=cols, includeAll = FALSE, limit = 1e3)
+
+#Get unvalidated rows:
+ReadDatatable("world_bank_climate_data_campbells_20151123_faodomain_campbells_2311174949", limit=1e3, validationOptions = list(incremental = TRUE))
 }
   
 }
