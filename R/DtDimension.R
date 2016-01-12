@@ -5,9 +5,9 @@
 #' @aliases DtDimension
 #'   
 #' @slot id character. Column name.
-#' @slot ascending. logical. Should this column be ascending (TRUE) or
+#' @slot ascending logical. Should this column be ascending (TRUE) or
 #'   descending (FALSE) order?
-#' @slot value. For character columns, specify a single filter value. More
+#' @slot value For character columns, specify a single filter value. More
 #'   complex filtering can be placed in the where clause of
 #'   \code{\link{ReadDatatable}}
 #'   

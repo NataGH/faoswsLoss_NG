@@ -8,7 +8,7 @@
 #' 
 #' When using this package to write scripts, follow these guidelines: 
 #' \itemize{ 
-#'    \item Use the \code{\link{GetDebug}} function for code you wish to run on
+#'    \item Use the \code{\link{CheckDebug}} function for code you wish to run on
 #'    your system, but not on the server. This includes (but is not limited to)
 #'    \code{\link{GetTestEnvironment}} calls, setting working directories and
 #'    turning on debug mode.

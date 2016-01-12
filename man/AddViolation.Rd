@@ -9,7 +9,7 @@ AddViolation(changeset, violationtable)
 \arguments{
 \item{changeset}{\link{Changeset} object.}
 
-\item{violationtable.}{data.table with the following columns:
+\item{violationtable}{data.table with the following columns:
 \itemize{
   \item __id id columns from data
   \item column character. Column name in data

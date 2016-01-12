@@ -14,7 +14,7 @@
 #' @export FetchDatatableConfig
 
 FetchDatatableConfig <- function(tables, baseurl = swsContext.baseRestUrl){
-  rawDt <- faosws:::GetRestCall(paste0(baseurl, "/datatable"))
+  rawDt <- GetRestCall(paste0(baseurl, "/datatable"))
   Dt <- setNames(rawDt, vapply(rawDt, getID, character(1)))
   
   if(!missing(tables)) {

@@ -1,6 +1,6 @@
 ##' Null to NA
 ##' 
-##' @param nullList
+##' @param nullList List containing NULLs
 ##' 
 ##' @export NullToNa
 

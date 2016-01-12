@@ -7,7 +7,7 @@
 NullToNa(nullList)
 }
 \arguments{
-\item{nullList}{}
+\item{nullList}{List containing NULLs}
 }
 \description{
 Null to NA

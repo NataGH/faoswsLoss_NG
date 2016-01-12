@@ -13,10 +13,10 @@ This class is for specifying Datatable columns
 \describe{
 \item{\code{id}}{character. Column name.}
 
-\item{\code{ascending.}}{logical. Should this column be ascending (TRUE) or
+\item{\code{ascending}}{logical. Should this column be ascending (TRUE) or
 descending (FALSE) order?}
 
-\item{\code{value.}}{For character columns, specify a single filter value. More
+\item{\code{value}}{For character columns, specify a single filter value. More
 complex filtering can be placed in the where clause of
 \code{\link{ReadDatatable}}}
 }}

@@ -6,7 +6,7 @@
 #' cell changes value.
 #'
 #' @param changeset \link{Changeset} object.
-#' @param violationtable. data.table with the following columns:
+#' @param violationtable data.table with the following columns:
 #' \itemize{
 #'   \item __id id columns from data
 #'   \item column character. Column name in data
