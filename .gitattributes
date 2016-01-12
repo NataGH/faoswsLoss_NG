@@ -31,6 +31,7 @@ R/SaveData.R -text
 R/SaveValidation.R -text
 R/SetTableData.R -text
 R/buildModifiedCells.R -text
+inst/doc/R_API_2014.pdf -text
 man/BlockMetadata-class.Rd -text
 man/BlockMetadataSet-class.Rd -text
 man/DatasetKey-class.Rd -text

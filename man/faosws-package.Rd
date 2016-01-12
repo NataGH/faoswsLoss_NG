@@ -8,8 +8,9 @@
 \description{
 This package allows access to the FAO SWS via its API when the appropriate 
 client certificates are present. The main workflow is to acquire a token from
-the SWS web interface and use the \code{\link{GetTestEnvironment}} function
-to open a session. After this, use the \code{\link{GetData}} function.
+the SWS web interface and use the \code{\link{GetTestEnvironment}} function 
+to open a session. After this, use the \code{\link{GetData}} function. To
+read the vignette: \code{vignette("R_API_2014")}
 }
 \author{
 Engineering Ingegneria Informatica

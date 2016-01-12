@@ -1,3 +1,8 @@
+## MINOR CHANGES
+
+- Added vignette R_API_2014 to package
+
+
 # CHANGES IN faosws VERSION 0.7.0
 
 ## NEW FEATURES
@@ -11,7 +16,7 @@
 - `Changeset` now has a new `type` option which differentiates between 
   validation and writing to a dataset
 
-
+  
 # CHANGES IN faosws VERSION 0.6.3
 
 ## MINOR CHANGES
