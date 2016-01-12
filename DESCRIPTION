@@ -60,7 +60,7 @@ Collate:
     'SetClientFiles.R'
     'SetTableData.R'
     'buildModifiedCells.R'
-    'package.R'
+    'faosws-package.R'
 Suggests:
     testthat,
     R.rsp
