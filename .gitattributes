@@ -63,5 +63,3 @@ man/SaveValidation.Rd -text
 man/SetTableData.Rd -text
 man/cleanMetadata.Rd -text
 man/normalizeData.Rd -text
-tests/GetDataTesting.R -text
-tests/testthat/testSaveData.R -text
