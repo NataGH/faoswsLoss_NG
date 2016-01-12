@@ -3,8 +3,26 @@
 #' This package allows access to the FAO SWS via its API when the appropriate 
 #' client certificates are present. The main workflow is to acquire a token from
 #' the SWS web interface and use the \code{\link{GetTestEnvironment}} function 
-#' to open a session. After this, use the \code{\link{GetData}} function. To
+#' to open a session. After this, use the \code{\link{GetData}} function. To 
 #' read the vignette: \code{vignette("R_API_2014")}
+#' 
+#' When using this package to write scripts, follow these guidelines: 
+#' \itemize{ 
+#'    \item Use the \code{\link{GetDebug}} function for code you wish to run on
+#'    your system, but not on the server. This includes (but is not limited to)
+#'    \code{\link{GetTestEnvironment}} calls, setting working directories and
+#'    turning on debug mode.
+#'    \item Avoid fixed paths. You shouldn't need to set a working directory - 
+#'    it should be implicitly set as the root folder of the project (use .Rproj 
+#'    files to make this easier with Rstudio). All paths should be relative to 
+#'    that.
+#'    \item If you have something dependent on the current user (say, a working
+#'    directory), use \code{Sys.info()["user"]},
+#'    \item For scripts to be run on the server, end them with a character
+#'    output. Messages and other objects will be interpreted in a way that is
+#'    difficult to comprehend.
+#' }
+#' 
 #' 
 #' @docType package
 #' @name faosws-package
