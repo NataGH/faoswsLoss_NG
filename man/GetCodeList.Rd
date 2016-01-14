@@ -19,7 +19,17 @@ the code list is required.}
 \item{codes}{(optional) A list of codes for which the key data is required.}
 }
 \value{
-A data table containing the key codes and matching labels.
+A data table containing the key codes and matching labels. Will have
+  the following columns:
+\itemize{
+\item code - Alphanumeric code in SWS
+\item description - Human-readable description
+\item selectionOnly - Boolean stating whether this item is a hierarchical
+category or a bottom level one containing data
+\item type - Depends on dimension
+\item startDate - Mainly for countries, start date for the country's existence
+\item endDate - As for startData, end date of existence
+}
 }
 \description{
 This function returns information about certain codes for a dimension.  For
