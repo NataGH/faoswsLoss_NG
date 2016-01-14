@@ -1,16 +1,19 @@
+suppressPackageStartupMessages(library(data.table))
 
 context("Dataset read/write")
+
 if(CheckDebug()) {
-  SetClientFiles("~/certificates/production")
-  GetTestEnvironment(
-    baseUrl = "https://hqlprswsas1.hq.un.fao.org:8181/sws",
-    token = "24c81c34-dd89-481e-9801-f9b6940c5002"
-  )
+  SetClientFiles("~/certificates/qa")
 }
+
+GetTestEnvironment(
+  baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
+  token = "515d04ce-dffd-44b9-9324-2a880dfe9f8e"
+)
 
 swsContext.datasets[[1]] = DatasetKey(
   domain = "agriculture",
-  dataset = "agriculture",
+  dataset = "aproduction",
   dimensions = list(
     Dimension(name = "geographicAreaM49", keys = "32"),
     Dimension(name = "measuredElement",
@@ -43,7 +46,7 @@ out = SaveData(domain = swsContext.datasets[[1]]@domain,
                dataset = swsContext.datasets[[1]]@dataset,
                temp)
 test_that("Default save works ok", {
-  expect_equal(out$ignored, 17)
+  expect_equal(out$ignored, 2)
   expect_equal(out$discarded, 0)
 })
 
@@ -52,8 +55,9 @@ out = SaveData(domain = swsContext.datasets[[1]]@domain,
                dataset = swsContext.datasets[[1]]@dataset,
                temp, normalized = FALSE)
 test_that("Denormalized save works ok", {
-  expect_equal(out$ignored, 17)
-  expect_equal(out$discarded, 3)
+  expect_equal(out$ignored, 2)
+  expect_equal(out$discarded, 6)
+  expect_equal(nrow(out$warnings), 6)
 })
 
 pivot = list(
@@ -67,7 +71,7 @@ out = SaveData(domain = swsContext.datasets[[1]]@domain,
                dataset = swsContext.datasets[[1]]@dataset,
                temp, normalized = FALSE)
 test_that("Denormalized/Pivoted save (first attempt) works ok", {
-  expect_equal(out$ignored, 17)
+  expect_equal(out$ignored, 2)
   expect_equal(out$discarded, 3)
 })
 
@@ -82,21 +86,6 @@ out = SaveData(domain = swsContext.datasets[[1]]@domain,
                dataset = swsContext.datasets[[1]]@dataset,
                temp, normalized = FALSE)
 test_that("Denormalized/Pivoted save (second attempt) works ok", {
-  expect_equal(out$ignored, 17)
-  expect_equal(out$discarded, 17)
-})
-
-
-###############################################################################
-# Check flag logic                                                            #
-###############################################################################
-
-
-temp = GetData(swsContext.datasets[[1]], flags = FALSE)
-out <- SaveData(domain = swsContext.datasets[[1]]@domain,
-                dataset = swsContext.datasets[[1]]@dataset,
-                temp)
-test_that("Fails with both flags missing", {
-  expect_equal(out$appended, 17)
-  expect_equal(out$discarded, 17)
+  expect_equal(out$ignored, 2)
+  expect_equal(out$discarded, 2)
 })

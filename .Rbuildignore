@@ -1,4 +1,7 @@
 tests-
+test-results.xml
+tests/test-results.xml
+
 devscripts
 
 ^.*\.Rproj$
