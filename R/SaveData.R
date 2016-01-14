@@ -56,6 +56,10 @@
 ##' }
 ##' If waitMode is 'forget', NULL is returned always
 ##' 
+##' @section Attempting to write invalid data:
+##' Currently, if no flags are provided, all rows with no flags will be marked
+##' as appended and rejected. Up to 10 warnings will be provided.
+##' 
 ##' @export SaveData
 
 SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMode = "wait", waitTimeout = 600, chunkSize = 50000) {

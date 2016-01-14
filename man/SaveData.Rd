@@ -74,4 +74,9 @@ data.  For example, some countries have restrictions on which time period
 they have data (as they recently became a country, or are no longer a
 country).  See ?GetCodeList.
 }
+\section{Attempting to write invalid data}{
+
+Currently, if no flags are provided, all rows with no flags will be marked
+as appended and rejected. Up to 10 warnings will be provided.
+}
 
