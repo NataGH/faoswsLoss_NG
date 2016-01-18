@@ -1,3 +1,3 @@
-library(testthat)
+#library(testthat)
 
-test_check("faosws")
+#test_check("faosws")
