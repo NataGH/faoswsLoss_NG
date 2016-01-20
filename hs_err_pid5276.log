@@ -1,0 +1,246 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x000000009aa736a6, pid=5276, tid=3928
+#
+# JRE version: 6.0_29-b11
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (20.4-b02 mixed mode windows-amd64 compressed oops)
+# Problematic frame:
+# J  java.lang.String.charAt(I)C
+#
+# If you would like to submit a bug report, please visit:
+#   http://java.sun.com/webapps/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000000003b1c0800):  JavaThread "main" [_thread_in_Java, id=3928, stack(0x0000000001c90000,0x0000000003090000)]
+
+siginfo: ExceptionCode=0xc0000005, reading address 0x000000011a610000
+
+Registers:
+RAX=0x000000000000006a, RBX=0x00000000dae0de88, RCX=0x00000000f57ed678, RDX=0x00000000f57ed678
+RSP=0x00000000030838f8, RBP=0x0000000003083960, RSI=0x000000003b1c0800, RDI=0x000000009aa15a0e
+R8 =0x0000000000000000, R9 =0x00000000daf00de0, R10=0x0000000000000011, R11=0x0000000000000011
+R12=0x0000000000000000, R13=0x0000000003083910, R14=0x0000000003083978, R15=0x000000003b1c0800
+RIP=0x000000009aa736a6, EFLAGS=0x0000000000010206
+
+Top of Stack: (sp=0x00000000030838f8)
+0x00000000030838f8:   000000009aa1593f 0000000003083920
+0x0000000003083908:   000000009aa1593f 0000000000000000
+0x0000000003083918:   00000000f57ed678 0000000003083920
+0x0000000003083928:   00000000dae27f1f 0000000003083978
+0x0000000003083938:   00000000daea6ad8 0000000000000000
+0x0000000003083948:   00000000dae27f30 0000000003083910
+0x0000000003083958:   0000000003083970 00000000030839c0
+0x0000000003083968:   000000009aa158fa 00000000f57ed678
+0x0000000003083978:   00000000f559a6c8 0000000003083980
+0x0000000003083988:   00000000dae2875a 00000000030839d8
+0x0000000003083998:   00000000daea6ad8 0000000000000000
+0x00000000030839a8:   00000000dae28768 0000000003083970
+0x00000000030839b8:   00000000030839d0 0000000003083a30
+0x00000000030839c8:   000000009aa159c9 00000000f57ed678
+0x00000000030839d8:   00000000f559a6c8 0000000000000000
+0x00000000030839e8:   00000000f559a6c8 00000000030839e0 
+
+Instructions: (pc=0x000000009aa736a6)
+0x000000009aa73686:   3b c3 7d 33 44 03 42 10 40 8b 6a 0c 44 8b 55 0c
+0x000000009aa73696:   45 3b c2 73 12 42 0f b7 44 45 10 48 83 c4 20 5d
+0x000000009aa736a6:   85 05 54 c9 b9 7f c3 ba e4 ff ff ff 44 89 04 24
+0x000000009aa736b6:   90 e8 e4 38 fd ff cc ba cc 00 00 00 41 8b e8 66 
+
+
+Register to memory mapping:
+
+RAX=0x000000000000006a is an unknown value
+RBX=0x00000000dae0de88 is an oop
+{method} 
+ - klass: {other class}
+RCX=0x00000000f57ed678 is an oop
+java.lang.String 
+ - klass: 'java/lang/String'
+RDX=0x00000000f57ed678 is an oop
+java.lang.String 
+ - klass: 'java/lang/String'
+RSP=0x00000000030838f8 is pointing into the stack for thread: 0x000000003b1c0800
+RBP=0x0000000003083960 is pointing into the stack for thread: 0x000000003b1c0800
+RSI=0x000000003b1c0800 is a thread
+RDI=0x000000009aa15a0e is an Interpreter codelet
+return entry points  [0x000000009aa151e0, 0x000000009aa167a0]  5568 bytes
+R8 =0x0000000000000000 is an unknown value
+R9 =0x00000000daf00de0 is an oop
+{instance class} 
+ - klass: {other class}
+R10=0x0000000000000011 is an unknown value
+R11=0x0000000000000011 is an unknown value
+R12=0x0000000000000000 is an unknown value
+R13=0x0000000003083910 is pointing into the stack for thread: 0x000000003b1c0800
+R14=0x0000000003083978 is pointing into the stack for thread: 0x000000003b1c0800
+R15=0x000000003b1c0800 is a thread
+
+
+Stack: [0x0000000001c90000,0x0000000003090000],  sp=0x00000000030838f8,  free space=20430k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+J  java.lang.String.charAt(I)C
+j  java.lang.ClassLoader.findLoadedClass(Ljava/lang/String;)Ljava/lang/Class;+2
+j  java.lang.ClassLoader.loadClass(Ljava/lang/String;Z)Ljava/lang/Class;+2
+j  java.lang.ClassLoader.loadClass(Ljava/lang/String;)Ljava/lang/Class;+3
+v  ~StubRoutines::call_stub
+V  [jvm.dll+0x1e9c17]
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x000000005b7b0800 JavaThread "Low Memory Detector" daemon [_thread_blocked, id=7016, stack(0x00000000af210000,0x00000000b0610000)]
+  0x0000000072180800 JavaThread "C2 CompilerThread1" daemon [_thread_in_native, id=7308, stack(0x00000000ade10000,0x00000000af210000)]
+  0x00000000606c0800 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=5452, stack(0x00000000aca10000,0x00000000ade10000)]
+  0x000000004da50800 JavaThread "Attach Listener" daemon [_thread_blocked, id=4592, stack(0x00000000ab610000,0x00000000aca10000)]
+  0x000000004bab0800 JavaThread "Finalizer" daemon [_thread_blocked, id=1140, stack(0x00000000aa210000,0x00000000ab610000)]
+  0x0000000031017800 JavaThread "Reference Handler" daemon [_thread_blocked, id=6484, stack(0x00000000a8e10000,0x00000000aa210000)]
+=>0x000000003b1c0800 JavaThread "main" [_thread_in_Java, id=3928, stack(0x0000000001c90000,0x0000000003090000)]
+
+Other Threads:
+  0x0000000078800800 VMThread [stack: 0x00000000a7a10000,0x00000000a8e10000] [id=1548]
+  0x0000000030928800 WatcherThread [stack: 0x00000000b0610000,0x00000000b1a10000] [id=6068]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap
+ PSYoungGen      total 38016K, used 2666K [0x00000000f5560000, 0x00000000f7fc0000, 0x0000000100000000)
+  eden space 32640K, 8% used [0x00000000f5560000,0x00000000f57fa830,0x00000000f7540000)
+  from space 5376K, 0% used [0x00000000f7a80000,0x00000000f7a80000,0x00000000f7fc0000)
+  to   space 5376K, 0% used [0x00000000f7540000,0x00000000f7540000,0x00000000f7a80000)
+ PSOldGen        total 86848K, used 0K [0x00000000e0000000, 0x00000000e54d0000, 0x00000000f5560000)
+  object space 86848K, 0% used [0x00000000e0000000,0x00000000e0000000,0x00000000e54d0000)
+ PSPermGen       total 21248K, used 4557K [0x00000000dae00000, 0x00000000dc2c0000, 0x00000000e0000000)
+  object space 21248K, 21% used [0x00000000dae00000,0x00000000db273770,0x00000000dc2c0000)
+
+Code Cache  [0x000000009aa10000, 0x000000009ac80000, 0x000000009da10000)
+ total_blobs=193 nmethods=4 adapters=142 free_code_cache=49924928 largest_free_block=13760
+
+Dynamic libraries:
+0x0000000000400000 - 0x0000000001c89000 	C:\Program Files\RStudio\bin\x64\rsession.exe
+0x0000000077650000 - 0x00000000777f9000 	C:\windows\SYSTEM32\ntdll.dll
+0x0000000076f50000 - 0x0000000077070000 	C:\windows\system32\kernel32.dll
+0x000007fefdb60000 - 0x000007fefdbcc000 	C:\windows\system32\KERNELBASE.dll
+0x000000006cec0000 - 0x000000006ced1000 	C:\Program Files\RStudio\bin\x64\libgcc_s_sjlj-1.dll
+0x000007fefe130000 - 0x000007fefe1cf000 	C:\windows\system32\msvcrt.dll
+0x000007fefe2b0000 - 0x000007fefe321000 	C:\windows\system32\SHLWAPI.dll
+0x000007fefe950000 - 0x000007fefe9b7000 	C:\windows\system32\GDI32.dll
+0x0000000077070000 - 0x000000007716a000 	C:\windows\system32\USER32.dll
+0x000007feff750000 - 0x000007feff75e000 	C:\windows\system32\LPK.dll
+0x000007fefe060000 - 0x000007fefe12a000 	C:\windows\system32\USP10.dll
+0x000007feff760000 - 0x000007feff83b000 	C:\windows\system32\ADVAPI32.dll
+0x000007feff940000 - 0x000007feff95f000 	C:\windows\SYSTEM32\sechost.dll
+0x000007fefdeb0000 - 0x000007fefdfdd000 	C:\windows\system32\RPCRT4.dll
+0x000007fefe620000 - 0x000007fefe823000 	C:\windows\system32\ole32.dll
+0x000007fefe9c0000 - 0x000007feff749000 	C:\windows\system32\SHELL32.dll
+0x000007feff8e0000 - 0x000007feff92d000 	C:\windows\system32\WS2_32.dll
+0x000007feff930000 - 0x000007feff938000 	C:\windows\system32\NSI.dll
+0x0000000063540000 - 0x00000000635b0000 	C:\Program Files\R\R-3.1.3\bin\x64\Rgraphapp.dll
+0x000000006c700000 - 0x000000006caec000 	C:\Program Files\R\R-3.1.3\bin\x64\R.dll
+0x0000000064e80000 - 0x0000000064eda000 	C:\Program Files\R\R-3.1.3\bin\x64\Rblas.dll
+0x00000000641c0000 - 0x00000000641e5000 	C:\Program Files\R\R-3.1.3\bin\x64\Riconv.dll
+0x000000006f8c0000 - 0x000000006f8f2000 	C:\Program Files\R\R-3.1.3\bin\x64\Rzlib.dll
+0x000007fefcca0000 - 0x000007fefccac000 	C:\windows\system32\VERSION.dll
+0x000007fef8360000 - 0x000007fef8400000 	C:\windows\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_5.82.7601.18837_none_a4d981ff711297b6\COMCTL32.dll
+0x000007feff840000 - 0x000007feff8d7000 	C:\windows\system32\comdlg32.dll
+0x000007fefde80000 - 0x000007fefdeae000 	C:\windows\system32\IMM32.dll
+0x000007fefe510000 - 0x000007fefe619000 	C:\windows\system32\MSCTF.dll
+0x000007fefb0a0000 - 0x000007fefb0a7000 	C:\windows\system32\MSIMG32.dll
+0x0000000074560000 - 0x0000000074598000 	C:\PROGRA~2\Sophos\SOPHOS~1\SOPHOS~2.DLL
+0x0000000077820000 - 0x0000000077827000 	C:\windows\system32\PSAPI.DLL
+0x000007fefdab0000 - 0x000007fefdabf000 	C:\windows\system32\profapi.dll
+0x000007fefd9e0000 - 0x000007fefd9ef000 	C:\windows\system32\CRYPTBASE.dll
+0x000007fefc450000 - 0x000007fefc4a6000 	C:\windows\system32\uxtheme.dll
+0x000000006e5c0000 - 0x000000006e5e7000 	C:\Program Files\R\R-3.1.3\library\utils\libs\x64\utils.dll
+0x0000000064a40000 - 0x0000000064a54000 	C:\Program Files\R\R-3.1.3\library\methods\libs\x64\methods.dll
+0x000000006fc80000 - 0x000000006fcd1000 	C:\Program Files\R\R-3.1.3\library\grDevices\libs\x64\grDevices.dll
+0x0000000063740000 - 0x0000000063787000 	C:\Program Files\R\R-3.1.3\library\graphics\libs\x64\graphics.dll
+0x0000000071100000 - 0x00000000711a1000 	C:\Program Files\R\R-3.1.3\library\stats\libs\x64\stats.dll
+0x000000000a700000 - 0x000000000a999000 	C:\Program Files\R\R-3.1.3\bin\x64\Rlapack.dll
+0x000000006d400000 - 0x000000006d41d000 	C:\Program Files\R\R-3.1.3\library\tools\libs\x64\tools.dll
+0x0000000065700000 - 0x0000000065757000 	C:\PROGRA~1\R\R-31~1.3\modules\x64\internet.dll
+0x000007fefccb0000 - 0x000007fefccdd000 	C:\ProgramData\Sophos\Web Intelligence\swi_ifslsp_64.dll
+0x000007fefd320000 - 0x000007fefd375000 	C:\windows\system32\mswsock.dll
+0x000007fefcc80000 - 0x000007fefcc87000 	C:\windows\System32\wshtcpip.dll
+0x000007fefd950000 - 0x000007fefd975000 	C:\windows\system32\SspiCli.dll
+0x000007fefd980000 - 0x000007fefd9d7000 	C:\windows\system32\apphelp.dll
+0x0000000063d00000 - 0x0000000063d0e000 	C:\Users\Golini\Documents\R\win-library\3.1\bitops\libs\x64\bitops.dll
+0x0000000063140000 - 0x0000000063345000 	C:\Users\Golini\Documents\R\win-library\3.1\RCurl\libs\x64\RCurl.dll
+0x000007fefb540000 - 0x000007fefb57b000 	C:\windows\system32\WINMM.dll
+0x000007fefe830000 - 0x000007fefe882000 	C:\windows\system32\WLDAP32.dll
+0x0000000064740000 - 0x0000000064785000 	C:\Users\Golini\Documents\R\win-library\3.1\RJSONIO\libs\x64\RJSONIO.dll
+0x0000000066d40000 - 0x0000000066d50000 	C:\Users\Golini\Documents\R\win-library\3.1\bit\libs\x64\bit.dll
+0x0000000063800000 - 0x0000000063826000 	C:\Users\Golini\Documents\R\win-library\3.1\bit64\libs\x64\bit64.dll
+0x0000000067200000 - 0x0000000067618000 	C:\Users\Golini\Documents\R\win-library\3.1\curl\libs\x64\curl.dll
+0x000007fefa030000 - 0x000007fefa0a1000 	C:\windows\system32\winhttp.dll
+0x000007fef9fc0000 - 0x000007fefa024000 	C:\windows\system32\webio.dll
+0x000007fefd910000 - 0x000007fefd91b000 	C:\windows\system32\secur32.dll
+0x000000006cb00000 - 0x000000006cb0e000 	C:\Users\Golini\Documents\R\win-library\3.1\chron\libs\x64\chron.dll
+0x0000000069300000 - 0x00000000693a5000 	C:\Users\Golini\Documents\R\win-library\3.1\data.table\libs\x64\datatable.dll
+0x000000006ea80000 - 0x000000006eaa6000 	C:\Program Files\R\R-3.1.3\library\grid\libs\x64\grid.dll
+0x000000006dfc0000 - 0x000000006dfcf000 	C:\Program Files\R\R-3.1.3\library\lattice\libs\x64\lattice.dll
+0x0000000065800000 - 0x00000000658b3000 	C:\Program Files\R\R-3.1.3\library\Matrix\libs\x64\Matrix.dll
+0x000000006abc0000 - 0x000000006acd9000 	C:\Users\Golini\Documents\R\win-library\3.1\Rcpp\libs\x64\Rcpp.dll
+0x000000006f7c0000 - 0x000000006f7cf000 	C:\Program Files\R\R-3.1.3\library\splines\libs\x64\splines.dll
+0x000000006ed40000 - 0x000000006ed51000 	C:\Program Files\R\R-3.1.3\library\MASS\libs\x64\MASS.dll
+0x000000006b1c0000 - 0x000000006b1db000 	C:\Program Files\R\R-3.1.3\library\nlme\libs\x64\nlme.dll
+0x00000000695c0000 - 0x0000000069691000 	C:\Users\Golini\Documents\R\win-library\3.1\minqa\libs\x64\minqa.dll
+0x000000006fa80000 - 0x000000006fb8f000 	C:\Users\Golini\Documents\R\win-library\3.1\nloptr\libs\x64\nloptr.dll
+0x0000000062000000 - 0x0000000062131000 	C:\Users\Golini\Documents\R\win-library\3.1\lme4\libs\x64\lme4.dll
+0x0000000066340000 - 0x00000000663f6000 	C:\Users\Golini\Documents\R\win-library\3.1\plyr\libs\x64\plyr.dll
+0x000000006bd40000 - 0x000000006c1cc000 	C:\Users\Golini\Documents\R\win-library\3.1\stringi\libs\x64\stringi.dll
+0x000000006e680000 - 0x000000006e73d000 	C:\Users\Golini\Documents\R\win-library\3.1\reshape2\libs\x64\reshape2.dll
+0x00000000154a0000 - 0x0000000015ab7000 	C:\Users\Golini\Documents\R\win-library\3.1\igraph\libs\x64\igraph.dll
+0x0000000062a80000 - 0x0000000062a8f000 	C:\Program Files\R\R-3.1.3\library\parallel\libs\x64\parallel.dll
+0x000000006d8c0000 - 0x000000006db9b000 	C:\Users\Golini\Documents\R\win-library\3.1\dplyr\libs\x64\dplyr.dll
+0x0000000064080000 - 0x0000000064096000 	C:\Users\Golini\Documents\R\win-library\3.1\rJava\libs\x64\rJava.dll
+0x00000000168f0000 - 0x00000000170a8000 	C:\Program Files\Java\jre6\bin\server\jvm.dll
+0x000007fefb370000 - 0x000007fefb385000 	C:\windows\system32\NLAapi.dll
+0x000007fef9cc0000 - 0x000007fef9cd5000 	C:\windows\system32\napinsp.dll
+0x000007fef9ce0000 - 0x000007fef9cf9000 	C:\windows\system32\pnrpnsp.dll
+0x000007fefd1a0000 - 0x000007fefd1fb000 	C:\windows\system32\DNSAPI.dll
+0x000007fef9cb0000 - 0x000007fef9cbb000 	C:\windows\System32\winrnr.dll
+0x000007fefc6b0000 - 0x000007fefc6d7000 	C:\windows\system32\IPHLPAPI.DLL
+0x000007fefcc90000 - 0x000007fefcc9b000 	C:\windows\system32\WINNSI.DLL
+0x000007fefa980000 - 0x000007fefa9d3000 	C:\windows\System32\fwpuclnt.dll
+0x000007fefa4d0000 - 0x000007fefa4d8000 	C:\windows\system32\rasadhlp.dll
+0x000007fefd380000 - 0x000007fefd398000 	C:\windows\system32\CRYPTSP.dll
+0x000007fefd080000 - 0x000007fefd0c7000 	C:\windows\system32\rsaenh.dll
+0x00000000640c0000 - 0x00000000640dc000 	C:\Users\Golini\Documents\R\win-library\3.1\jsonlite\libs\x64\jsonlite.dll
+0x00000000629c0000 - 0x00000000629cd000 	C:\Users\Golini\Documents\R\win-library\3.1\lazyeval\libs\x64\lazyeval.dll
+0x000000006d760000 - 0x000000006d76e000 	C:\Program Files\Java\jre6\bin\verify.dll
+0x000000001a5e0000 - 0x000000001a607000 	C:\Program Files\Java\jre6\bin\java.dll
+0x000000006d7b0000 - 0x000000006d7c2000 	C:\Program Files\Java\jre6\bin\zip.dll
+
+VM Arguments:
+jvm_args: -Dr.arch=/x64 -Xmx512m -Xrs 
+java_command: <unknown>
+Launcher Type: generic
+
+Environment Variables:
+PATH=C:\Program Files\R\R-3.1.3\bin\x64;C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Skype\Phone\
+USERNAME=Golini
+DISPLAY=:0
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 58 Stepping 9, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 7 , 64 bit Build 7601 Service Pack 1
+
+CPU:total 8 (4 cores per cpu, 2 threads per core) family 6 model 58 stepping 9, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, ht
+
+Memory: 4k page, physical 8331744k(5264488k free), swap 16661652k(11691284k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (20.4-b02) for windows-amd64 JRE (1.6.0_29-b11), built on Oct  3 2011 01:06:42 by "java_re" with MS VC++ 8.0 (VS2005)
+
+time: Tue Jan 19 09:56:18 2016
+elapsed time: 1 seconds
+

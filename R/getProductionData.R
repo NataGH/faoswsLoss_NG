@@ -48,12 +48,14 @@ getProductionData = function(){
   ## Convert geographicAreaM49 to geographicAreaFS
   productionQuery[, geographicAreaFS := as.numeric(faoswsUtil::m492fs(as.character(geographicAreaM49)))]
   
-  ## Convert measuredItemCPC to measuredItemFCL
+    ## Convert measuredItemCPC to measuredItemFCL
   productionQuery[, measuredItemFCL := faoswsUtil::cpc2fcl(as.character(measuredItemCPC),returnFirst = TRUE)]
   
   
   ## Convert time to numeric
   productionQuery[, timePointYears := as.numeric(timePointYears)]
+  
+  productionQuery[, geographicAreaM49 := as.numeric(geographicAreaM49)]
   
   
   

@@ -13,7 +13,7 @@ suppressMessages({
   #library(RJDBC)
 })
 
-library(faoswsLoss)
+#library(faoswsLoss)
 
 updateModel = TRUE
 
@@ -42,10 +42,14 @@ if(CheckDebug()) {
 ## Year should be a paramameter selected.
 selectedYear = as.character(1961:2015)
 
+
 areaVar = "geographicAreaM49"
+areaVarFS = "geographicAreaFS"
 yearVar = "timePointYears"
 itemVar = "measuredItemCPC"
+itemVarFS = "measuredItemFS"
 elementVar = "measuredElement"
+elementVarFS = "measuredElementFS"
 valuePrefix = "Value_"
 flagObsPrefix = "flagObservationStatus_"
 flagMethodPrefix = "flagMethod_"
