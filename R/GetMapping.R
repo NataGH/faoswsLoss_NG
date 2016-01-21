@@ -7,7 +7,7 @@
 ##' 
 ##' Map tables are always read-only
 ##' 
-##' @param key A DatasetKey class object.
+##' @param key A MappingTableKey class object.
 ##' 
 ##' @return A data table containing the map entries matching the key (may be
 ##' empty).

@@ -7,7 +7,7 @@
 GetMapping(key)
 }
 \arguments{
-\item{key}{A DatasetKey class object.}
+\item{key}{A MappingTableKey class object.}
 }
 \value{
 A data table containing the map entries matching the key (may be

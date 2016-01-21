@@ -15,8 +15,6 @@ GetDatasetConfig <- function(domainCode, datasetCode) {
 
 	url <- paste0(swsContext.baseRestUrl, "/r/configuration/", swsContext.executionId, "/", domainCode, "/", datasetCode, '?reqToken=', swsContext.token) 
 
-  warning(  url)
-  
   jsonOut <- GetRestCall(url)
 	
 	if (!jsonOut[["success"]]) {

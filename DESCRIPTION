@@ -13,6 +13,7 @@ BugReports: https://jira.fao.org/ciok/browse/SWS-1132
 Depends:
     R (>= 3.0)
 Imports:
+    methods,
     RCurl,
     curl,
     RJSONIO,
