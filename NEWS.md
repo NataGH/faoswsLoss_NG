@@ -1,6 +1,14 @@
+# CHANGES IN faosws VERSION 0.7.1
+
 ## MINOR CHANGES
 
 - Added vignette R_API_2014 to package
+- Added tests
+- Improved documentation for `GetCodeList`, `SaveData`, `GetMapping`
+
+## BUG FIXES
+
+- `AddViolation` now allows full table of NA values
 
 
 # CHANGES IN faosws VERSION 0.7.0
