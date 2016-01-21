@@ -66,7 +66,7 @@ AddViolation <- function(changeset, violationtable) {
   # Prevent user from adding valid and invalid rows together.
   
   find_na_add <- function(sd){
-    any(is.na(sd[, column])) && nrow(sd > 1)
+    any(is.na(sd[, column])) && nrow(sd) > 1
   }
   
   na_add <- violationtable[, .(badnas = find_na_add(.SD)) , by=`__id`][,badnas]
