@@ -85,7 +85,7 @@ getOfficialLossData = function(){
           Dimension(name = elementVarFS,
                 keys = "121"),
           Dimension(name = itemVarFS,
-                keys = as.character(requiredItems$measured_item_fs)),
+                keys = as.character(as.numeric(requiredItems$measuredItemFCL))),
           Dimension(name = yearVar,
                 keys = selectedYear)
          )

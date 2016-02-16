@@ -6,17 +6,20 @@
 
 
 getLossFoodGroup = function(){
-  lossFoodGroup = ReadDatatable(table = "loss_food_group")
-  setnames(lossFoodGroup, old = colnames(lossFoodGroup),
-           new = c("measuredItemFCL", "measuredItemNameFS", "foodGroupName",
-                   "foodGroup", "foodGeneralGroup", "foodPerishableGroup",
-                   "measuredItemCPC"))
+  #lossFoodGroup = ReadDatatable(table = "loss_food_group")
+  lossFoodGroup = data.table(read.csv("foodPerishableGroup.csv")) %>%
+    select(FCL..Item..code.,FCL..Title,Group.Name,P.D,FBS..GROUP.Number,PERISHABLE) %>%
+    filter(PERISHABLE != "")
+        
+  setnames(lossFoodGroup, 
+           old = colnames(lossFoodGroup),
+           new = c("measuredItemFCL", "measuredItemNameFCL", "foodGroupName",
+                   "foodGeneralGroup", "measuredItemFBS", "foodPerishableGroup"))
   lossFoodGroup = 
     lossFoodGroup[, list(measuredItemFCL, foodGroupName,
                          foodGeneralGroup, foodPerishableGroup)]
   
-  ## Adding headings to FS codes
+  ## Adding headings to FCL codes
   lossFoodGroup[, measuredItemFCL := addHeadingsFCL(measuredItemFCL)]
   
-  lossFoodGroup
 }

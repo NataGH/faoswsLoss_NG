@@ -1,0 +1,842 @@
+"FCL 
+Item 
+code ","FCL 
+Title",Group Nr.,Group Name,Scientific Name,Common Name,P/D,,"FBS 
+GROUP Number","FBS 
+GROUP Names","Def Comp
+Item
+Code","Def Comp
+Item
+Code",PERISHABLE
+0015,Wheat,1,CEREALS AND CEREAL PRODUCTS,"Triticum spp.: 
+Triticum aestivum 
+Triticum durum 
+Triticum spelta","
+common 
+durum 
+spelt",P,y,2511,Wheat,0015,Wheat,NON PERISHABLE
+0027,"Rice, paddy",1,CEREALS AND CEREAL PRODUCTS,"Oryza spp.: 
+Oryza sativa",,P,y,2805,Rice (Milled Equivalent),0027,"Rice, Paddy",NON PERISHABLE
+0044,Barley,1,CEREALS AND CEREAL PRODUCTS,"Hordeum spp.: 
+Hordeum disticum 
+Hordeum hexasticum 
+Hordeum vulgare","
+two-row barley 
+six-row barley 
+four-row barley",P,y,2513,Barley,0044,Barley,NON PERISHABLE
+0056,Maize,1,CEREALS AND CEREAL PRODUCTS,Zea mays,"corn, Indian corn, mealies",P,y,2514,Maize,0056,Maize,NON PERISHABLE
+0067,White Maize,1,CEREALS AND CEREAL PRODUCTS,,,P,,,,,,
+0068,Popcorn,1,CEREALS AND CEREAL PRODUCTS,Zea mays var. everta,,P,y,2520,"Cereals, Other",0068,Pop Corn,
+0071,Rye,1,CEREALS AND CEREAL PRODUCTS,Secale cereale,,P,y,2515,Rye,0071,Rye,NON PERISHABLE
+0075,Oats,1,CEREALS AND CEREAL PRODUCTS,"Avena spp.: 
+Avena sativa",,P,y,2516,Oats,0075,Oats,NON PERISHABLE
+0079,Millet,1,CEREALS AND CEREAL PRODUCTS,"Including among all: 
+Echinocloa frumentacea 
+Eleusine coracana 
+Panicum miliaceum 
+Paspalum scrobiculatum 
+Pennisetum glaucum 
+Setaria italica","
+barnyard or Japanese millet 
+ragi, finger or African millet 
+common, golden or proso millet 
+koda or ditch millet 
+pearl or cattail millet 
+foxtail millet",P,y,2517,Millet,0079,Millet,NON PERISHABLE
+0083,Sorghum,1,CEREALS AND CEREAL PRODUCTS,"Sorghum spp.: 
+Sorghum guineense 
+Sorghum vulgare 
+Sorghum dura","
+guinea corn 
+common, milo, feterita, kaffir corn 
+durra, jowar, kaoliang",P,y,2518,Sorghum,0083,Sorghum,NON PERISHABLE
+0089,Buckwheat,1,CEREALS AND CEREAL PRODUCTS,Fagopyrum esculentum (Polygonaceae),,P,y,2520,"Cereals, Other",0089,Buckwheat,NON PERISHABLE
+0092,Quinoa,1,CEREALS AND CEREAL PRODUCTS,Chenopodium quinoa (Chenopodiaceae),,P,y,2520,"Cereals, Other",0092,Quinoa,NON PERISHABLE
+0094,Fonio,1,CEREALS AND CEREAL PRODUCTS,"Digitaria spp.: 
+Digitaria exilis 
+Digitaria iburua","
+fonio or findi 
+black fonio or hungry rice",P,y,2520,"Cereals, Other",0094,Fonio,NON PERISHABLE
+0097,Triticale,1,CEREALS AND CEREAL PRODUCTS,,,P,y,2520,"Cereals, Other",0097,Triticale,NON PERISHABLE
+0101,Canary seed,1,CEREALS AND CEREAL PRODUCTS,Phalaris canariensis,,P,y,2520,"Cereals, Other",0101,Canary Seed,NON PERISHABLE
+0103,Mixed grain,1,CEREALS AND CEREAL PRODUCTS,,,P,y,2520,"Cereals, Other",0103,Mixed Grain,NON PERISHABLE
+0108,"Cereals, nes",1,CEREALS AND CEREAL PRODUCTS,"Including among all: 
+Chenopodium pallidicaule 
+Amaranthus caudatus 
+Coix lacryma-jobi 
+Zizania aquatica 
+Teff","
+canagua or coaihua 
+quihuicha or Inca wheat 
+adlay or Job's tears 
+wild rice 
+Eragrostis abyssinica",P,y,2520,"Cereals, Other",0108,Cereals nes,NON PERISHABLE
+0116,Potatoes,2,ROOTS AND TUBERS AND DERIVED PRODUCTS,Solanum tuberosum,Irish potato,P,y,2531,Potatoes,0116,Potatoes,SEMI PERISHABLE
+0122,Sweet potatoes,2,ROOTS AND TUBERS AND DERIVED PRODUCTS,Ipomoea batatas,,P,y,2533,Sweet Potatoes,0122,Sweet Potatoes,SEMI PERISHABLE
+0125,Cassava,2,ROOTS AND TUBERS AND DERIVED PRODUCTS,"Manihot esculenta; Manihot utilissima
+Manihot palmata; Manihot dulcis","manioc, mandioca, yuca
+yuca dulce",P,y,2532,Cassava,0125,Cassava,SEMI PERISHABLE
+0135,Yautia (Cocoyam),2,ROOTS AND TUBERS AND DERIVED PRODUCTS,"Xanthosoma spp.: 
+Xanthosoma sagittifolium","
+malanga, new cocoyam, ocumo, tannia",P,y,2534,"Roots, Other",0135,Yautia (Cocoyam),SEMI PERISHABLE
+0136,Taro (Cocoyam),2,ROOTS AND TUBERS AND DERIVED PRODUCTS,Colocasia esculenta,"Dasheen, eddoe, taro, old cocoyam",P,y,2534,"Roots, Other",0136,Taro (Coco Yam),SEMI PERISHABLE
+0137,Yams,2,ROOTS AND TUBERS AND DERIVED PRODUCTS,Dioscorea spp.,,P,y,2535,Yams,0137,Yams,SEMI PERISHABLE
+0149,Roots and tubers nes,2,ROOTS AND TUBERS AND DERIVED PRODUCTS,"Including among all: 
+Arracacoa xanthorrhiza 
+Maranta arundinacea 
+Cyperus esculentus 
+Metroxylon spp. 
+Oxalis tuberosa and Ullucus tuberosus 
+Pachyrxhizus erosus, Pachyrxhizus angulatus 
+Tropaeolum tuberosum 
+Helianthus tuberosus","
+arracacha 
+arrowroot 
+chufa 
+sago palm 
+oca and ullucu 
+yam bean, jicama 
+mashua 
+Jerusalem artichoke, topinambur",P,y,2534,"Roots, Other",0149,Roots and Tubers nes,SEMI PERISHABLE
+0156,Sugar cane,3,SUGAR CROPS AND SWEETENERS AND DERIVED PRODUCTS,Saccharum officinarum,,P,y,2536,Sugar Cane,0156,Sugar Cane,PERISHABLE
+0157,Sugar beet,3,SUGAR CROPS AND SWEETENERS AND DERIVED PRODUCTS,Beta vulgaris var. altissima,,P,y,2537,Sugar Beet,0157,Sugar Beets,PERISHABLE
+0161,Sugar crops nes,3,SUGAR CROPS AND SWEETENERS AND DERIVED PRODUCTS,"Including among all: 
+Acer saccharum 
+Sorghum saccharatum 
+Arenga saccharifera","
+sugar maple 
+sweet sorghum 
+sugar palm",P,y,2543,"Sweeteners, Other",0161,Sugar Crops nes,PERISHABLE
+0176,"Beans, dry",4,PULSES AND DERIVED PRODUCTS,"Phaseolus and Vigna spp.: 
+Phaseolus vulgaris 
+Phaseolus lunatus 
+Phaseolus angularis or Vigna angularis 
+Phaseolus aureus 
+Phaseolus mungo or Vigna mungo 
+Phaseolus coccineus 
+Phaseolus calcaratus 
+Phaseolus aconitifolius 
+Phaseolus acutifolius 
+Vigna radiata 
+Vigna aconitifolia","
+kidney, haricot bean 
+lima, butter bean 
+adzuki bean 
+mungo bean, golden, green gram 
+black gram, urd 
+scarlet runner bean 
+rice bean 
+moth bean 
+tepary bean",P,y,2546,Beans,0176,"Beans, Dry",NON PERISHABLE
+0181,"Broad beans, dry",4,PULSES AND DERIVED PRODUCTS,"Vicia faba: 
+Vicia faba var. equina 
+Vicia faba var. major 
+Vicia faba var. minor","
+horse-bean 
+broad bean 
+field bean",P,y,2549,"Pulses, Other",0181,"Broad Beans, Dry",NON PERISHABLE
+0187,"Peas, dry",4,PULSES AND DERIVED PRODUCTS,"Pisum sativum 
+Pisum arvense","garden pea 
+field pea",P,y,2547,Peas,0187,"Peas, Dry",NON PERISHABLE
+0191,"Chick-peas, dry",4,PULSES AND DERIVED PRODUCTS,Cicer arietinum,"chickpea, Bengal gram, garbanzos",P,y,2549,"Pulses, Other",0191,Chick-Peas,NON PERISHABLE
+0195,"Cow peas, dry",4,PULSES AND DERIVED PRODUCTS,Vigna sinensis; Dolichos sinensis,"cowpea, blackeye pea/bean",P,y,2549,"Pulses, Other",0195,"Cow Peas, Dry",NON PERISHABLE
+0197,Pigeon peas,4,PULSES AND DERIVED PRODUCTS,Cajanus cajan,"pigeon pea, cajan pea, Congo bean",P,y,2549,"Pulses, Other",0197,Pigeon Peas,NON PERISHABLE
+0201,"Lentils, dry",4,PULSES AND DERIVED PRODUCTS,"Lens esculenta 
+Ervum lens",,P,y,2549,"Pulses, Other",0201,Lentils,NON PERISHABLE
+0203,Bambara beans,4,PULSES AND DERIVED PRODUCTS,Voandzeia subterranea or Vigna subterranea,"bambara groundnut, earth pea",P,y,2549,"Pulses, Other",0203,Bambara Beans,NON PERISHABLE
+0205,Vetches,4,PULSES AND DERIVED PRODUCTS,Vicia sativa,spring/common vetch,P,y,2549,"Pulses, Other",0205,Vetches,NON PERISHABLE
+0210,Lupins,4,PULSES AND DERIVED PRODUCTS,Lupinus spp.,,P,y,2549,"Pulses, Other",0210,Lupins,NON PERISHABLE
+0211,Pulses nes,4,PULSES AND DERIVED PRODUCTS,"Including among all: 
+Dolichos spp. 
+Canavalia spp. 
+Psophocarpus tetragonolobus 
+Cyamopsis tetragonoloba 
+Stizolobium spp. 
+Pachyrrhizus erosus","
+lablab or hyacinth bean 
+jack or sword bean 
+winged bean 
+guar bean 
+velvet bean 
+yam bean",P,y,2549,"Pulses, Other",0211,Pulses nes,NON PERISHABLE
+0216,Brazil nuts,5,NUTS AND DERIVED PRODUCTS,Bertholletia excelsa,"Brazil, Para or cream nut",P,y,2551,Nuts,0216,Brazil Nuts,NON PERISHABLE
+0217,Cashew nuts,5,NUTS AND DERIVED PRODUCTS,Anacardium occidentale,,P,y,2551,Nuts,0217,Cashew Nuts,NON PERISHABLE
+0220,Chestnuts,5,NUTS AND DERIVED PRODUCTS,"Castanea spp.: 
+Castanea vesca 
+Castanea vulgaris 
+Castanea sativa",,P,y,2551,Nuts,0220,Chestnuts,NON PERISHABLE
+0221,Almonds,5,NUTS AND DERIVED PRODUCTS,"Prunus amygdalus 
+Prunus communis 
+Amygdalus communis",,P,y,2551,Nuts,0221,Almonds,NON PERISHABLE
+0222,Walnuts,5,NUTS AND DERIVED PRODUCTS,"Jugland spp.: 
+Jugland regia",,P,y,2551,Nuts,0222,Walnuts,NON PERISHABLE
+0223,Pistachios,5,NUTS AND DERIVED PRODUCTS,Pistacia vera,,P,y,2551,Nuts,0223,Pistachios,NON PERISHABLE
+0224,Kolanuts,5,NUTS AND DERIVED PRODUCTS,Cola nitida; Cola vera; Cola acuminata,"kola, cola, Sudan cola nut",P,y,2551,Nuts,0224,Kolanuts,NON PERISHABLE
+0225,Hazelnuts (Filberts),5,NUTS AND DERIVED PRODUCTS,Corylus avellana,,P,y,2551,Nuts,0225,Hazelnuts (Filberts),NON PERISHABLE
+0226,Areca nuts,5,NUTS AND DERIVED PRODUCTS,Areca catechu,"areca, betel nut",P,y,2551,Nuts,0226,Areca Nuts (Betel),NON PERISHABLE
+0234,Nuts nes,5,NUTS AND DERIVED PRODUCTS,"Including among all: 
+Carya illinoensis 
+Caryocar nuciferum 
+Canarium spp. 
+Lecythis zabucajo 
+Macadamia ternifolia 
+Pinus pinea","
+pecan nut 
+butter or swarri nut 
+pili nut, Java almond, Chinese olives 
+paradise or sapucaia nut 
+Queensland, macadamia nut 
+pignolia nut",P,y,2551,Nuts,0234,Nuts nes,NON PERISHABLE
+0236,Soybeans,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Glycine soja,,P,y,2555,Soyabeans,0236,Soybeans,NON PERISHABLE
+0242,"Groundnuts, in shell",6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Arachis hypogaea,,P,y,2556,Groundnuts (Shelled Eq),0242,Groundnuts in Shell,NON PERISHABLE
+0249,Coconuts,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Cocos nucifera,Husked coconut,P,y,2560,Coconuts - Incl Copra,0249,Coconuts,NON PERISHABLE
+0254,[Oil palm fruit],6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Elaeis guineensis,,P,y,2562,Palm kernels,0254,"Oil palm, fruit",PERISHABLE
+0256,Palm kernels,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,,,P,y,2562,Palm kernels,0256,Palm kernels,PERISHABLE
+0257,Oil of palm,14,VEGETABLE AND ANIMAL OILS AND FATS,,,P/D,y,2577,Palm Oil,0257,Oil of Palm,NON PERISHABLE
+0260,Olives,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Olea europaea,,P,y,2563,Olives,0260,Olives,PERISHABLE
+0263,Karite Nuts (Sheanuts),6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Butyrospermum parkii,,P,y,2570,"Oilcrops, Other",0263,Karite Nuts (Sheanuts),NON PERISHABLE
+0265,Castor Beans,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Ricinus communis,,P,y,2570,"Oilcrops, Other",0265,Castor Beans,NON PERISHABLE
+0267,Sunflower seed,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Helianthus annuus,,P,y,2557,Sunflowerseed,0267,Sunflower Seed,NON PERISHABLE
+0270,Rapeseed or colza seed,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Brassica napus var. oleifera,,P,y,2558,Rape and Mustardseed,0270,Rapeseed,NON PERISHABLE
+0275,Tung Nuts,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,"Aleurites cordata 
+Aleurites fordii",,P,y,2570,"Oilcrops, Other",0275,Tung Nuts,NON PERISHABLE
+0277,Jojoba Seeds,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Simmondsia californica or S. chinensis,,P,y,2570,"Oilcrops, Other",0277,Jojoba Seeds,SEMI PERISHABLE
+0280,Safflower seed,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Carthamus tinctorius,,P,y,2570,"Oilcrops, Other",0280,Safflower Seed,NON PERISHABLE
+0289,Sesame seed,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Sesamum indicum,,P,y,2561,Sesameseed,0289,Sesame Seed,NON PERISHABLE
+0292,Mustard seed,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,"Brassica alba; Brassica hirta; Sinapis alba
+Brassica nigra; Sinapis nigra","white mustard 
+black mustard",P,y,2558,Rape and Mustardseed,0292,Mustard seed,NON PERISHABLE
+0296,Poppy seed,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Papaver somniferum,,P,y,2570,"Oilcrops, Other",0296,Poppy Seed,NON PERISHABLE
+0299,Melonseed,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Cucumis melo,,P,y,2570,"Oilcrops, Other",0299,Melonseed,NON PERISHABLE
+0305,Tallowtree Seeds,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,"Shorea aptera; Shorea stenocarpa 
+Sapium sebiferum; Stillingia sebifera","Borneo tallow tree 
+Chinese tallow tree",P,y,2570,"Oilcrops, Other",0305,Tallowtree Seeds,NON PERISHABLE
+0306,Vegetable tallow,14,VEGETABLE AND ANIMAL OILS AND FATS,,,P/D,y,2586,"Oilcrops Oil, Other",0306,Vegetable Tallow,NON PERISHABLE
+0307,Stillingia oil,14,VEGETABLE AND ANIMAL OILS AND FATS,,,P/D,y,2586,"Oilcrops Oil, Other",0307,Oil of Stillingia,NON PERISHABLE
+0310,Kapok fruit,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Ceiba pentandra,,P,y,2570,"Oilcrops, Other",0310,Kapok Fruit,NON PERISHABLE
+0311,Kapokseed in shell,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,,,P,y,2570,"Oilcrops, Other",0311,Kapokseed in Shell,NON PERISHABLE
+0328,[Seed Cotton],6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Gossypium spp.,Unginned cotton,P,,,,,,
+0329,Cottonseed,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,,,P,,2559,Cottonseed,0329 ,Cottonseed,NON PERISHABLE
+0333,Linseed,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Linum usitatissimum,Flaxseed,P,y,2570,"Oilcrops, Other",0333,Linseed,NON PERISHABLE
+0336,Hempseed,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,Cannabis sativa,,P,y,2570,"Oilcrops, Other",0336,Hempseed,NON PERISHABLE
+0339,Oilseeds nes,6,OIL-BEARING CROPS AND DERIVED PRODUCTS,"Including among all: 
+Fagus sylvatica 
+Aleurites moluccana 
+Carapa guineensis 
+Croton tiglium 
+Bassia latifolia 
+Guizotia abyssinica 
+Licania rigida 
+Perilla frutescens 
+Jatropha curcas 
+Shorea robusta 
+Pongamia glabra 
+Astrocaryum spp.","
+beech nut 
+candlenut 
+carapa seed 
+croton seed 
+illipe seed 
+niger seed 
+oiticica seed 
+perilla seed 
+physic nut 
+sal tree seed 
+pongam seed 
+tukuma kernel",P,y,2570,"Oilcrops, Other",0339,Oilseeds nes,NON PERISHABLE
+0358,Cabbages,7,VEGETABLES AND DERIVED PRODUCTS,"Brassica chinensis 
+Brassica oleracea all var. except botrytis","Chinese, mustard cabbage, pak-choi 
+white, red, savoy cabbage, Brussels sprouts, collards, kale and kohlrabi",P,y,2605,"Vegetables, Other",0358,Cabbages,PERISHABLE
+0366,Artichokes,7,VEGETABLES AND DERIVED PRODUCTS,Cynara scolymus,,P,y,2605,"Vegetables, Other",0366,Artichokes,PERISHABLE
+0367,Asparagus,7,VEGETABLES AND DERIVED PRODUCTS,Asparagus officinalis,,P,y,2605,"Vegetables, Other",0367,Asparagus,PERISHABLE
+0372,Lettuce and chicory,7,VEGETABLES AND DERIVED PRODUCTS,"Lactuca sativa 
+Cichorium intybus var. foliosum 
+Cichorium endivia var. crispa 
+Cichorium endivia var. latifolia","
+witloof chicory 
+endive 
+escarole chicory",P,y,2605,"Vegetables, Other",0372,Lettuce,PERISHABLE
+0373,Spinach,7,VEGETABLES AND DERIVED PRODUCTS,Spinacia oleracea,,P,y,2605,"Vegetables, Other",0373,Spinach,PERISHABLE
+0378,Cassava leaves,7,VEGETABLES AND DERIVED PRODUCTS,"Manihot esculenta 
+Manihot utilissima",,P,y,2605,"Vegetables, Other",0378,Cassava Leaves,PERISHABLE
+0388,"Tomatoes, fresh",7,VEGETABLES AND DERIVED PRODUCTS,Lycopersicon esculentum,,P,y,2601,Tomatoes,0388,Tomatoes,PERISHABLE
+0393,Cauliflowers and broccoli,7,VEGETABLES AND DERIVED PRODUCTS,"Brassica oleracea var. botrytis, subvariety cauliflora and cymosa",,P,y,2605,"Vegetables, Other",0393,Cauliflower,PERISHABLE
+0394,"Pumpkins, squash and gourds",7,VEGETABLES AND DERIVED PRODUCTS,Cucurbita spp.,,P,y,2605,"Vegetables, Other",0394,"Pumpkins, Squash, Gourds",SEMI PERISHABLE
+0397,Cucumbers and gherkins,7,VEGETABLES AND DERIVED PRODUCTS,Cucumis sativus,,P,y,2605,"Vegetables, Other",0397,Cucumbers and Gherkins,PERISHABLE
+0399,Eggplants,7,VEGETABLES AND DERIVED PRODUCTS,Solanum melongena,,P,y,2605,"Vegetables, Other",0399,Eggplants,PERISHABLE
+0401,Chillies and peppers (green),7,VEGETABLES AND DERIVED PRODUCTS,"Capsicum annuum 
+Capsicum fructescens 
+Pimenta officinalis",,P,y,2605,"Vegetables, Other",0401,"Chillies&Peppers, Green",PERISHABLE
+0402,"Onions, shallots (green)",7,VEGETABLES AND DERIVED PRODUCTS,"Allium ascalonicum
+Allium cepa
+Allium fistulosum","shallots
+onions
+welsh onions",P,y,2605,"Vegetables, Other",0402,"Onions+Shallots, Green",PERISHABLE
+0403,"Onions, dry",7,VEGETABLES AND DERIVED PRODUCTS,Allium cepa,,P,y,2602,Onions,0403,"Onions, Dry",SEMI PERISHABLE
+0406,Garlic,7,VEGETABLES AND DERIVED PRODUCTS,Allium sativum,,P,y,2605,"Vegetables, Other",0406,Garlic,SEMI PERISHABLE
+0407,Leeks and other alliaceous vegetables,7,VEGETABLES AND DERIVED PRODUCTS,"Allium porrum
+Allium schoenoprasum","leeks
+chives
+",P,y,2605,"Vegetables, Other",0407,Leeks and Oth.Alliac.Veg,SEMI PERISHABLE
+0414,"Beans, green",7,VEGETABLES AND DERIVED PRODUCTS,"Phaseolus spp.
+Vigna spp.",,P,y,2605,"Vegetables, Other",0414,"Beans, Green",PERISHABLE
+0417,"Peas, green",7,VEGETABLES AND DERIVED PRODUCTS,Pisum sativum,,P,y,2605,"Vegetables, Other",0417,"Peas, Green",PERISHABLE
+0420,"Broad Beans, Green",7,VEGETABLES AND DERIVED PRODUCTS,Vicia faba,,P,y,2605,"Vegetables, Other",0420,"Broad Beans, Green",PERISHABLE
+0423,String Beans,7,VEGETABLES AND DERIVED PRODUCTS,Phaseolus vulgaris,,P,y,2605,"Vegetables, Other",0423,String Beans,PERISHABLE
+0426,Carrot,7,VEGETABLES AND DERIVED PRODUCTS,Daucus carota,,P,y,2605,"Vegetables, Other",0426,Carrots,SEMI PERISHABLE
+0430,Okra,7,VEGETABLES AND DERIVED PRODUCTS,"Abelmoschus esculentus 
+Hibiscus esculentus",,P,y,2605,"Vegetables, Other",0430,Okra,PERISHABLE
+0446,Green Corn (Maize),7,VEGETABLES AND DERIVED PRODUCTS,"Zea mays, particularly var. saccharata",,P,y,2605,"Vegetables, Other",0446,Green Corn (Maize),PERISHABLE
+0449,Mushrooms,7,VEGETABLES AND DERIVED PRODUCTS,"Including among all: 
+Boletus edulis 
+Agaricus campestris 
+Morchella spp. 
+Tuber magnatum",,P,y,2605,"Vegetables, Other",0449,Mushrooms,PERISHABLE
+0459,Chicory roots,13,TOBACCO AND RUBBER AND OTHER CROPS,"Cichorium intybus 
+Cichorium sativum",,P,y,2605,"Vegetables, Other",0459,Chicory Roots,SEMI PERISHABLE
+0460,"Vegetable products, fresh or dry nes",13,TOBACCO AND RUBBER AND OTHER CROPS,,,P/D,,,,,,
+0461,Carobs,13,TOBACCO AND RUBBER AND OTHER CROPS,Ceratonia siliqua,"Carob-tree, locust bean",P,y,2605,"Vegetables, Other",0461,Carobs,NON PERISHABLE
+0463,"Vegetables, Fresh n.e.s.",7,VEGETABLES AND DERIVED PRODUCTS,"Including among all: 
+Bambusa spp. 
+Beta vulgaris 
+Capparis spinosa 
+Cynara cardunculus 
+Apium graveolens 
+Anthriscus cerefolium 
+Lepidium sativum 
+Foeniculum vulgare 
+Cochlearia armoracia 
+Majorana hortensis 
+Tragopogon porrifolius 
+Petroselinum crispum 
+Pastinaca sativa 
+Raphanus sativu 
+Rheum spp. 
+Brassica napus 
+Satureja hortensis 
+Scorzonera hispanica 
+Rumex acetosa 
+Artemisia dracunculus 
+Nasturtium officinale","
+bamboo shoots 
+beets, chards 
+capers 
+cardoons 
+celery 
+chervil 
+cress 
+fennel 
+horseradish 
+marjoram, sweet 
+oyster plant 
+parsley 
+parsnips 
+radish 
+rhubarb 
+rutabagas, swedes 
+savory 
+scorzonera 
+sorrel 
+soybean sprouts tarragon 
+watercress 
+",P,y,2605,"Vegetables, Other",0463,Vegetables Fresh nes,PERISHABLE
+0486,Bananas,8,FRUITS AND DERIVED PRODUCTS,"Musa sapientum 
+Musa cavendishii 
+Musa nana",,P,y,2615,Bananas,0486,Bananas,PERISHABLE
+0489,Plantains,8,FRUITS AND DERIVED PRODUCTS,Musa paradisiaca,,P,y,2616,Plantains,0489,Plantains,PERISHABLE
+0490,Oranges,8,FRUITS AND DERIVED PRODUCTS,"Citrus sinensis
+Citrus aurantium","common, sweet orange
+bitter orange",P,y,2611,"Oranges, Mandarines",0490,Oranges,PERISHABLE
+0495,"Tangerines, mandarins, clementines, satsumas",8,FRUITS AND DERIVED PRODUCTS,"Citrus reticulata 
+Citrus unshiu","mandarin, tangerine 
+clementine, satsuma",P,y,2611,"Oranges, Mandarines",0495,Tang.Mand.Clement.Satsma,PERISHABLE
+0497,Lemons and limes,8,FRUITS AND DERIVED PRODUCTS,"Citrus limon 
+Citrus aurantifolia 
+Citrus limetta","lemon 
+sour lime 
+sweet lime",P,y,2612,"Lemons, Limes",0497,Lemons and Limes,PERISHABLE
+0507,Grapefruit and pomelo,8,FRUITS AND DERIVED PRODUCTS,"Citrus maxima 
+Citrus grandis 
+Citrus paradisi",,P,y,2613,Grapefruit,0507,Grapefruit and Pomelos,PERISHABLE
+0512,Citrus fruit nes,8,FRUITS AND DERIVED PRODUCTS,"Including among all: 
+Citrus bergamia 
+Citrus medica var. cedrata 
+Citrus myrtifolia 
+Fortunella japonica","
+bergamot 
+citron 
+chinotto 
+kumquat",P,y,2614,"Citrus, Other",0512,Citrus Fruit nes,PERISHABLE
+0515,Apples,8,FRUITS AND DERIVED PRODUCTS,"Malus pumila 
+Malus sylvestris 
+Malus communis 
+Pyrus malus",,P,y,2617,Apples,0515,Apples,SEMI PERISHABLE
+0521,Pears,8,FRUITS AND DERIVED PRODUCTS,Pyrus communis,,P,y,2625,"Fruits, Other",0521,Pears,PERISHABLE
+0523,Quinces,8,FRUITS AND DERIVED PRODUCTS,"Cydonia oblonga 
+Cydonia vulgaris 
+Cydonia japonica",,P,y,2625,"Fruits, Other",0523,Quinces,PERISHABLE
+0526,Apricots,8,FRUITS AND DERIVED PRODUCTS,Prunus armeniaca,,P,y,2625,"Fruits, Other",0526,Apricots,PERISHABLE
+0530,Sour cherries,8,FRUITS AND DERIVED PRODUCTS,"Prunus cerasus 
+Cerasus acida",,P,y,2625,"Fruits, Other",0530,Sour Cherries,PERISHABLE
+0531,Cherries,8,FRUITS AND DERIVED PRODUCTS,"Prunus avium; Cerasus avium 
+var. duracina 
+var. juliana","mazzard, sweet cherry 
+hard-fleshed cherry 
+heart cherry",P,y,2625,"Fruits, Other",0531,Cherries,PERISHABLE
+0534,Peaches and nectarines,8,FRUITS AND DERIVED PRODUCTS,"Prunus persica 
+Amygdalus persica 
+Persica laevis",,P,y,2625,"Fruits, Other",0534,Peaches and Nectarines,PERISHABLE
+0536,Plums,8,FRUITS AND DERIVED PRODUCTS,"Prunus domestica 
+Prunus spinosa","greengage, mirabelle, damson 
+sloe",P,y,2625,"Fruits, Other",0536,Plums,PERISHABLE
+0541,"Stone fruit, fresh nes",8,FRUITS AND DERIVED PRODUCTS,,,P,y,2625,"Fruits, Other",0541,"Stone Fruit nes, Fresh",PERISHABLE
+0542,Pome fruit nes,8,FRUITS AND DERIVED PRODUCTS,,,P,y,2625,"Fruits, Other",0542,"Pome Fruit nes, Fresh",PERISHABLE
+0544,Strawberries,8,FRUITS AND DERIVED PRODUCTS,Fragaria spp.,,P,y,2625,"Fruits, Other",0544,Strawberries,PERISHABLE
+0547,Raspberries,8,FRUITS AND DERIVED PRODUCTS,Rubus idaeus,,P,y,2625,"Fruits, Other",0547,Raspberries,PERISHABLE
+0549,Gooseberries,8,FRUITS AND DERIVED PRODUCTS,Ribes grossularia,,P,y,2625,"Fruits, Other",0549,Gooseberries,PERISHABLE
+0550,Currants,8,FRUITS AND DERIVED PRODUCTS,"Ribes nigrum
+Ribes rubrum","black
+red and white",P,y,2625,"Fruits, Other",0550,Currants,PERISHABLE
+0552,Blueberries,8,FRUITS AND DERIVED PRODUCTS,"Vaccinium myrtillus
+Vaccinium corymbosum","European blueberry, wild bilberry, whortleberry
+American blueberry",P,y,2625,"Fruits, Other",0552,Blueberries,PERISHABLE
+0554,Cranberries,8,FRUITS AND DERIVED PRODUCTS,"Vaccinium macrocarpon
+Vaccinium oxycoccus","American cranberry 
+European cranberry",P,y,2625,"Fruits, Other",0554,Cranberries,PERISHABLE
+0558,Berries nes,8,FRUITS AND DERIVED PRODUCTS,"Including among all: 
+Morus nigra 
+Morus alba; Morus rubra 
+Myrtus communis 
+Gaylussacia spp.","
+blackberry 
+loganberry; white, red mulberry 
+myrtle berry 
+huckleberry, dangleberry",P,y,2625,"Fruits, Other",0558,Berries nes,PERISHABLE
+0560,Grapes,8,FRUITS AND DERIVED PRODUCTS,Vitis vinifera,,P,y,2620,Grapes,0560,Grapes,PERISHABLE
+0567,Watermelons,7,VEGETABLES AND DERIVED PRODUCTS,Citrullus vulgaris,,P,y,2625,"Fruits, Other",0567,Watermelons,PERISHABLE
+0568,"Melons, Cantaloupes",7,VEGETABLES AND DERIVED PRODUCTS,Cucumis melo,,P,y,2625,"Fruits, Other",0568,Cantaloupes&oth Melons,PERISHABLE
+0569,Figs,8,FRUITS AND DERIVED PRODUCTS,Ficus carica,,P,y,2625,"Fruits, Other",0569,Figs,PERISHABLE
+0571,Mangoes,8,FRUITS AND DERIVED PRODUCTS,Mangifera indica,,P,y,2625,"Fruits, Other",0571,Mangoes,PERISHABLE
+0572,Avocados,8,FRUITS AND DERIVED PRODUCTS,Persea americana,,P,y,2625,"Fruits, Other",0572,Avocados,PERISHABLE
+0574,Pineapples,8,FRUITS AND DERIVED PRODUCTS,"Ananas comosus 
+Ananas sativus",,P,y,2618,Pineapples,0574,Pineapples,PERISHABLE
+0577,Dates,8,FRUITS AND DERIVED PRODUCTS,Phoenix dactylifera,,P,y,2619,Dates,0577,Dates,SEMI PERISHABLE
+0587,Persimmons,8,FRUITS AND DERIVED PRODUCTS,"Diospyros kaki 
+Diospyros virginiana",,P,y,2625,"Fruits, Other",0587,Persimmons,PERISHABLE
+0591,Cashewapple,8,FRUITS AND DERIVED PRODUCTS,Anacardium occidentale,,P,y,2625,"Fruits, Other",0591,Cashewapple,PERISHABLE
+0592,Kiwi fruit,8,FRUITS AND DERIVED PRODUCTS,Actinidia chinensis,,P,y,2625,"Fruits, Other",0592,Kiwi Fruit,PERISHABLE
+0600,Papayas,8,FRUITS AND DERIVED PRODUCTS,Carica papaya,,P,y,2625,"Fruits, Other",0600,Papayas,PERISHABLE
+0603,"Fruit, tropical (fresh) nes",8,FRUITS AND DERIVED PRODUCTS,"Including among all: 
+Artocarpus incisa 
+Averrhoa carambola 
+Annona spp. 
+Durio zibethinus 
+Feijoa sellowiana 
+Psidium guajava 
+Spondias spp. 
+Artocarpus integrifolia 
+Nephelium longan 
+Mammea americana 
+Garcinia mangostana 
+Solanum quitoense 
+Passiflora edulis 
+Nephelium lappaceum 
+Calocarpum mammosum 
+Achras sapota 
+Chrysophyllum spp","
+breadfruit 
+carambola 
+cherimoya, custard apple 
+durian 
+feijoa 
+guava 
+hog plum, mombin 
+jackfruit 
+longan 
+mammee 
+mangosteen 
+naranjillo 
+passion fruit 
+rambutan 
+sapote, mamey colorado 
+sapodilla 
+star apple, cainito",P,y,2625,"Fruits, Other",0603,Fruit Tropical Fresh nes,PERISHABLE
+0619,"Fruit, fresh nes",8,FRUITS AND DERIVED PRODUCTS,"Including among all: 
+Crataegus azarolus 
+Carica pentagona 
+Sambucus nigra 
+Zizyphus jujuba 
+Nephelium litchi 
+Eriobotrya japonica 
+Mespilus germanica 
+Asimina triloba 
+Punica granatum 
+Opuntia ficus-indica 
+Rosa spp. 
+Sorbus aucuparia 
+Sorbus domestica 
+Tamarindus indica 
+Arbutus unedo","
+azarole 
+babaco 
+elderberry 
+jujube 
+litchi 
+loquat 
+medlar 
+pawpaw 
+pomegranate 
+prickly pear 
+rose hips 
+rowanberry 
+service-apple 
+tamarind 
+tree-strawberry",P,y,2625,"Fruits, Other",0619,Fruit Fresh nes,PERISHABLE
+0636,Maize for forage,11,FODDER CROPS AND PRODUCTS,,,P,,,,,,
+0637,Sorghum for forage,11,FODDER CROPS AND PRODUCTS,,,P,,,,,,
+0638,Rye grass for forage,11,FODDER CROPS AND PRODUCTS,"Lolium multiflorum
+Lolium perenne","Italian ryegrass
+English, perennial ryegrass",P,,,,,,
+0639,Grasses nes for forage,11,FODDER CROPS AND PRODUCTS,"Including among all: 
+Agrostis spp. 
+Poa spp. 
+Sorghum almum 
+Festuca spp. 
+Pennisetum purpureum 
+Dactylis glomerata 
+Chloris gayana 
+Sorghum vulgare var. sudanense 
+Phleum pratense","
+bent, redtop, fiorin grass 
+bluegrass 
+Columbus grass 
+fescue 
+Napier, elephant grass 
+orchard grass 
+Rhodes grass 
+Sudan grass 
+Timothy grass",P,,,,,,
+0640,Clover for forage,11,FODDER CROPS AND PRODUCTS,Trifolium spp.,,P,,,,,,
+0641,Alfalfa for forage,11,FODDER CROPS AND PRODUCTS,Medicago sativa,,P,,,,,,
+0642,Green oilseeds for silage,11,FODDER CROPS AND PRODUCTS,,,P,,,,,,
+0643,Legumes for silage,11,FODDER CROPS AND PRODUCTS,"Including among all: 
+Lotus corniculatus 
+Lespedeza spp. 
+Pueraria lobata 
+Sesbania spp. 
+Onobrychis sativa 
+Hedysarum coronarium","
+birdsfoot, trefoil 
+lespedeza 
+kudzu 
+sesbania 
+sainfoin, esparcette 
+sulla",P,,,,,,
+0644,Cabbage for fodder,11,FODDER CROPS AND PRODUCTS,"Brassica chinensis 
+Brassica oleracea",,P,,,,,,
+0645,Pumpkins for fodder,11,FODDER CROPS AND PRODUCTS,Cucurbita spp.,,P,,,,,,
+0646,Turnips for fodder,11,FODDER CROPS AND PRODUCTS,Brassica rapa var. rapifera,,P,,,,,,
+0647,Beets for fodder,11,FODDER CROPS AND PRODUCTS,Beta vulgaris,"beet, beetroot, mangold",P,,,,,,
+0648,Carrots for fodder,11,FODDER CROPS AND PRODUCTS,Daucus carota,,P,,,,,,
+0649,Swedes for fodder,11,FODDER CROPS AND PRODUCTS,Brassica napus var. napobrassica,"rutabaga, swede, swede turnip",P,,,,,,
+0655,"Vegetables, roots fodder nes",11,FODDER CROPS AND PRODUCTS,,,P,,,,,,
+0656,Coffee green,12,STIMULANT CROPS AND DERIVED PRODUCTS,"Coffea spp.: 
+Coffea arabica 
+Coffea robusta 
+Coffea liberica",,P,y,2630,Coffee,0656,"Coffee, Green",NON PERISHABLE
+0661,Cocoa beans,12,STIMULANT CROPS AND DERIVED PRODUCTS,Theobroma cacao,,P,y,2633,Cocoa Beans,0661,Cocoa Beans,SEMI PERISHABLE
+0667,Tea,12,STIMULANT CROPS AND DERIVED PRODUCTS,"Camellia sinensis 
+Thea sinensis 
+Thea assaamica",,P,y,2635,Tea,0667,Tea,NON PERISHABLE
+0671,Mate,12,STIMULANT CROPS AND DERIVED PRODUCTS,Ilex paraguayensis,,P,y,2635,Tea,0671,Mate,NON PERISHABLE
+0674,Tea nes,12,STIMULANT CROPS AND DERIVED PRODUCTS,,,P,,,,,,
+0677,Hops,13,TOBACCO AND RUBBER AND OTHER CROPS,Humulus lupulus,,P,,,,,,
+0687,Pepper,10,SPICES,"Piper nigrum 
+Piper longum","black, white pepper 
+long pepper",P,y,2640,Pepper,0687,"Pepper,White/Long/Black",NON PERISHABLE
+0689,Pimento,10,SPICES,"Capsicum frutescens; Capsicum annuum 
+Pimenta officinalis","red and cayenne pepper, paprika, chillies 
+allspice, Jamaica pepper",P,y,2641,Pimento,0689,"Pimento, Allspice",NON PERISHABLE
+0692,Vanilla,10,SPICES,"Vanilla planifolia 
+Vanilla pompona",,P,y,2645,"Spices, Other",0692,Vanilla,NON PERISHABLE
+0693,Cinnamon (canella),10,SPICES,"Cinnamomum zeylanicum 
+Cinnamomum cassia","Ceylon cinnamon 
+Chinese, common cinnamon, cassia",P,y,2645,"Spices, Other",0693,Cinnamon (Canella),NON PERISHABLE
+0698,Cloves,10,SPICES,"Eugenia caryophyllata 
+Caryophyllus aromaticus",,P,y,2642,Cloves,0698,"Cloves, Whole+Stems",NON PERISHABLE
+0702,"Nutmeg, mace, cardamoms",10,SPICES,"Myristica fragrans 
+Elettaria cardamomum 
+Aframomum angustifolium; Aframomum hambury; Amomun aromaticum; Amomun cardamomum 
+Aframomum melegueta","Nutmeg, mace 
+cluster cardamon 
+other cardamons 
+
+Malaguetta pepper, grains of paradise",P,y,2645,"Spices, Other",0702,"Nutmeg, Mace, Cardamons",NON PERISHABLE
+0711,"Anise, badian, fennel",10,SPICES,"Including among all: 
+Pimpinella anisum 
+Illicium verum 
+Carum carvi 
+Coriandrum sativum 
+Cuminum cyminum 
+Foeniculum vulgare 
+Juniperus communis","
+anise 
+badian or star anise 
+caraway 
+coriander 
+cumin 
+fennel 
+juniper berries",P,y,2645,"Spices, Other",0711,"Anise, Badian, Fennel",NON PERISHABLE
+0720,Ginger,10,SPICES,Zingiber officinale,,P,y,2645,"Spices, Other",0720,Ginger,SEMI PERISHABLE
+0723,Spices nes,10,SPICES,"Including among all: 
+Laurus nobilis 
+Anethum graveolens 
+Trigonella foenum-graecum 
+Crocus sativus 
+Thymus vulgaris 
+Curcuma longa","
+bay leaves 
+dill seed 
+fenugreek seed 
+saffron 
+thyme 
+turmeric",P,y,2645,"Spices, Other",0723,Spices nes,NON PERISHABLE
+0737,Oil of citronella,13,TOBACCO AND RUBBER AND OTHER CROPS,,,P,,,,,,
+0748,"Peppermint, Spearmint",13,TOBACCO AND RUBBER AND OTHER CROPS,"Mentha spp.: 
+Mentha piperita",,P,,,,,,
+0753,Essential oils nes,13,TOBACCO AND RUBBER AND OTHER CROPS,,,P,,,,,,
+0754,"Pyrethrum, dried flowers",13,TOBACCO AND RUBBER AND OTHER CROPS,Chrysanthemum cinerariifolium,,P,,,,,,
+0767,Cotton Lint,9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,,Gossypium spp.,P,,,,,,
+0771,"Flax, raw or retted",9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,Linum usitatissimum,Flax Straw,P,,,,,,
+0773,Flax fibre and tow,9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,,,P,,,,,,
+0777,Hemp fibre and tow,9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,Cannabis sativa,,P,,,,,,
+0778,Kapok fibre,9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,Ceiba pentandra,,P,,,,,,
+0780,Jute,9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,"Corchorus capsularis
+Corchorus olitorius","white jute
+red jute, tossa",P,,,,,,
+0782,Jute-like fibres,9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,"Including among all: 
+Abutilon avicennae 
+Urena lobata; Urena sinuata 
+Abroma augusta 
+Hibiscus cannabinus 
+Hibiscus sabdariffa 
+Crotalaria juncea","
+China jute 
+Congo jute, malva, paka 
+Indian flax 
+kenaf, meshta 
+rosella hemp 
+sunn hemp",P,,,,,,
+0788,Ramie,9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,"Boehmeria nivea
+Boehmeria tenacissima","China grass, white ramie
+rhea, green ramie",P,,,,,,
+0789,Sisal,9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,Agave sisalana,,P,,,,,,
+0800,Agave fibres nes,9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,"Including among all: 
+Agave foetida 
+Agave fourcroydes 
+Agave lecheguilla 
+Agave cantala 
+Agave americana 
+Agave letonae","
+Haiti hemp 
+henequen 
+ixtle, tampico 
+maguey 
+pita 
+Salvador hemp",P,,,,,,
+0809,Abaca manila hemp,9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,Musa textilis,,P,,,,,,
+0813,Coir,9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,Cocos nucifera,,P,,,,,,
+0821,Fibre crops nes,9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,"Including among all: 
+Lygeum spartum; Stipa tenacissima 
+Sansevieria spp. 
+Neoglaziovia variegata 
+Furcraea macrophylla 
+Furcraea gigantea 
+Phormium tenax 
+Samuela carnerosana","
+alfa, esparto 
+bowstring hemp 
+caroa 
+fuque fibre 
+Mauritius hemp 
+New Zealand flax 
+palma ixtle",P,,,,,,
+0826,Tobacco leaves,13,TOBACCO AND RUBBER AND OTHER CROPS,Nicotiana tabacum,,P,,,,,,
+0836,Natural rubber,13,TOBACCO AND RUBBER AND OTHER CROPS,Hevea brasiliensis,Latex,P,,,,,,
+0839,Natural gums,13,TOBACCO AND RUBBER AND OTHER CROPS,"Including among all: 
+Manilkara bidentata 
+Manihot glaziovii 
+Achras zapota 
+Parthenium argentatum 
+Palachium gutta 
+Dieva costulana","
+balata 
+ceara 
+chicle gum 
+guayule 
+gutta-percha 
+jelutong",P,,,,,,
+0866,Cattle,16,LIVESTOCK,"Bos taurus
+Bos indicus
+subgenus Bibos
+Poephagus grunniens","common ox
+zebu, humped ox
+Asiatic ox
+Tibetan yak",P,,,,,,
+0867,Meat of cattle,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2731,Bovine Meat,0867,Beef and Veal,PERISHABLE
+0868,"Offals of cattle, edible",17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2736,"Offals, Edible",0868,"Offals of Cattle, Edible",PERISHABLE
+0869,Fat of cattle,14,VEGETABLE AND ANIMAL OILS AND FATS,,,P,y,2737,"Fats, Animals, Raw",0869,Fat of Cattle,PERISHABLE
+0870,"Meat of cattle, boneless",17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2731,Bovine Meat,0870,"Beef and Veal,Boneless",PERISHABLE
+0882,"Cow milk, whole (fresh)",18,PRODUCTS FROM LIVE ANIMALS,,,P,y,2848,Milk - Excluding Butter,0882,"Cow Milk, Whole, Fresh",PERISHABLE
+0919,"Cattle hides, fresh",19,HIDES AND SKINS,,,P,y,2748,Hides & Skins,0919,"Cattle Hides, Fresh",PERISHABLE
+0927,"Skins, fresh (calves)",19,HIDES AND SKINS,,,P,,,,,,
+0946,Buffaloes,16,LIVESTOCK,"Bubalus bubalus; Bubalus arnee; Bubalus depressicornis 
+genus Syncerus 
+Bison bison 
+Bison bonasus","Indian, Asiatic, pigmy, water buffalo 
+
+African buffalo 
+American bison 
+European bison 
+beeffalo (cross between a bison and a domesticated beef animal)",P,,,,,,
+0947,Buffalo meat,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2731,Bovine Meat,0947,Buffalo Meat,PERISHABLE
+0948,"Offals of buffalo, edible",17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2736,"Offals, Edible",0948,"Offals of Buffalo,Edible",PERISHABLE
+0949,Fat of buffalo,14,VEGETABLE AND ANIMAL OILS AND FATS,,,P,y,2737,"Fats, Animals, Raw",0949,Fat of Buffalo,PERISHABLE
+0951,Buffalo milk,18,PRODUCTS FROM LIVE ANIMALS,,,P,y,2848,Milk - Excluding Butter,0951,Buffalo Milk,PERISHABLE
+0957,"Buffalo hides, fresh",19,HIDES AND SKINS,,,P,y,2748,Hides & Skins,0957,"Buffalo Hides, Fresh",PERISHABLE
+0976,Sheep,16,LIVESTOCK,Ovis spp.,,P,,,,,,
+0977,Meat of sheep,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2732,Mutton & Goat Meat,0977,Mutton and Lamb,PERISHABLE
+0978,"Offals of sheep, edible",17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2736,"Offals, Edible",0978,"Offals of Sheep, Edible",PERISHABLE
+0979,Fat of sheep,14,VEGETABLE AND ANIMAL OILS AND FATS,,,P,y,2737,"Fats, Animals, Raw",0979,Fat of Sheep,PERISHABLE
+0982,Sheep milk,18,PRODUCTS FROM LIVE ANIMALS,,,P,y,2848,Milk - Excluding Butter,0982,Sheep Milk,PERISHABLE
+0987,"Wool, Greasy",9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,,,P,,,,,,
+0995,"Sheepskins, fresh",19,HIDES AND SKINS,,,P,y,2748,Hides & Skins,0995,"Sheepskins, Fresh",PERISHABLE
+1002,Karakul skins,19,HIDES AND SKINS,,,P,y,2748,Hides & Skins,1002,Karakul Skins,PERISHABLE
+1016,Goats,16,LIVESTOCK,Capra spp.,,P,,,,,,
+1017,Goat meat,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2732,Mutton & Goat Meat,1017,Goat Meat,PERISHABLE
+1018,"Offals of goats, edible",17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2736,"Offals, Edible",1018,"Offals of Goats, Edible",PERISHABLE
+1019,Fat of goats,14,VEGETABLE AND ANIMAL OILS AND FATS,,,P,y,2737,"Fats, Animals, Raw",1019,Fat of Goats,PERISHABLE
+1020,Goat milk,18,PRODUCTS FROM LIVE ANIMALS,,,P,y,2848,Milk - Excluding Butter,1020,Goat Milk,PERISHABLE
+1025,"Goatskins, fresh",19,HIDES AND SKINS,,,P,y,2748,Hides & Skins,1025,"Goatskins, Fresh",PERISHABLE
+1030,Fine goat hair,9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,,,P,,,,,,
+1031,Coarse goat hair,9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,,,P,,,,,,
+1034,Pigs,16,LIVESTOCK,"Sus domestica 
+Sus scrofa","domestic pig 
+wild boar",P,,,,,,
+1035,Pig meat,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2733,Pigmeat,1035,Pigmeat,PERISHABLE
+1036,"Offals of pigs, edible",17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2736,"Offals, Edible",1036,"Offals of Pigs, Edible",PERISHABLE
+1037,Fat of pigs,14,VEGETABLE AND ANIMAL OILS AND FATS,,,P,y,2737,"Fats, Animals, Raw",1037,Fat of Pigs,PERISHABLE
+1038,Pork,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2733,Pigmeat,1038,Pork,PERISHABLE
+1044,"Pigskins, fresh",19,HIDES AND SKINS,,,P,y,2748,Hides & Skins,1044,"Pigskins, Fresh",PERISHABLE
+1057,Chickens,16,LIVESTOCK,"Gallus domesticus 
+Numida meleagris","fowl 
+Guinea fowl",P,,,,,,
+1058,Chicken meat,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2734,Poultry Meat,1058,Chicken Meat,PERISHABLE
+1059,Offals and liver of chickens,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2736,"Offals, Edible",1059,Offals Liver of Chickens,PERISHABLE
+1062,Hen eggs,18,PRODUCTS FROM LIVE ANIMALS,,,P,y,2744,Eggs,1062,Hen Eggs,PERISHABLE
+1065,Fat of poultry,14,VEGETABLE AND ANIMAL OILS AND FATS,,,P,y,2737,"Fats, Animals, Raw",1065,Fat of Poultry,PERISHABLE
+1067,"Hen eggs, (number)",18,PRODUCTS FROM LIVE ANIMALS,,,P,,,,,,
+1068,Ducks,16,LIVESTOCK,Anas spp.,,P,,,,,,
+1069,Duck meat,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2734,Poultry Meat,1069,Duck Meat,PERISHABLE
+1072,Geese,16,LIVESTOCK,Anser spp.,,P,,,,,,
+1073,Goose meat,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2734,Poultry Meat,1073,Goose Meat,PERISHABLE
+1074,Offals and liver of geese,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2736,"Offals, Edible",1074,Offals Liver Geese,PERISHABLE
+1075,Offals and liver of ducks,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2736,"Offals, Edible",1075,Offals Liver Ducks,PERISHABLE
+1079,Turkeys,16,LIVESTOCK,Meleagris gallopavo,,P,,,,,,
+1080,Turkey meat,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2734,Poultry Meat,1080,Turkey Meat,PERISHABLE
+1081,Offals and liver of turkey,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2736,"Offals, Edible",1081,Offals Liver Turkeys,PERISHABLE
+1083,Pigeons and other birds,16,LIVESTOCK,"Including among all: 
+Alectoris rufa 
+Columba livia 
+Coturnis spp. 
+","
+partridge 
+pigeon 
+quail 
+turtle dove 
+pheasant",P,,,,,,
+1089,Meat of pigeons and other birds nes,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2735,"Meat, Other",1089,Meat of Pigeon Oth.Birds,PERISHABLE
+1091,"Eggs, excluding hen eggs",18,PRODUCTS FROM LIVE ANIMALS,,,P,y,2744,Eggs,1091,"Eggs, excluding Hen",PERISHABLE
+1092,"Eggs, excluding hen eggs (number)",18,PRODUCTS FROM LIVE ANIMALS,,,P,,,,,,
+1096,Horses,16,LIVESTOCK,Equus caballus,,P,,,,,,
+1097,Horse meat,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2735,"Meat, Other",1097,Horsemeat,PERISHABLE
+1098,Offals of horses,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2736,"Offals, Edible",1098,Offals of Horse,PERISHABLE
+1100,Hair of horses,9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,,,P,,,,,,
+1102,"Horse hides, fresh",19,HIDES AND SKINS,,,P,y,2748,Hides & Skins,1102,"Horse Hides, Fresh",PERISHABLE
+1107,Asses,16,LIVESTOCK,Equus asinus,,P,,,,,,
+1108,Meat of asses,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2735,"Meat, Other",1108,Meat of Asses,PERISHABLE
+1109,"Hides of asses, fresh",19,HIDES AND SKINS,,,P,y,2748,Hides & Skins,1109,Hides of Asses Fresh,PERISHABLE
+1110,Mules,16,LIVESTOCK,,,P,,,,,,
+1111,Meat of mules,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2735,"Meat, Other",1111,Meat of Mules,PERISHABLE
+1112,"Hides of mules, fresh",19,HIDES AND SKINS,,,P,y,2748,Hides & Skins,1112,Hides of Mules Fresh,PERISHABLE
+1126,Camels,16,LIVESTOCK,"Camelus bactrianus
+Camelus dromedarius","Bactrian camel
+Arabian camel",P,,,,,,
+1127,Meat of camels,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2735,"Meat, Other",1127,Meat of Camels,PERISHABLE
+1128,"Offals of camels, edibles",17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2736,"Offals, Edible",1128,"Offals of Camel, Edible",PERISHABLE
+1129,Fat of camels,14,VEGETABLE AND ANIMAL OILS AND FATS,,,P,y,2737,"Fats, Animals, Raw",1129,Fat of Camels,PERISHABLE
+1130,Camel milk,18,PRODUCTS FROM LIVE ANIMALS,,,P,y,2848,Milk - Excluding Butter,1130,Camel Milk,PERISHABLE
+1133,"Camel hides, fresh",19,HIDES AND SKINS,,,P,y,2748,Hides & Skins,1133,"Camel Hides, Fresh",PERISHABLE
+1140,Rabbits,16,LIVESTOCK,Oryctolagus cuniculus,,P,,,,,,
+1141,Rabbit meat,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2735,"Meat, Other",1141,Rabbit Meat,PERISHABLE
+1146,Rabbit skins,19,HIDES AND SKINS,,,P,y,2748,Hides & Skins,1146,Rabbit Skins,PERISHABLE
+1150,Other rodents,16,LIVESTOCK,,,P,,,,,,
+1151,Meat of other domestic rodents,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2735,"Meat, Other",1151,Meat of Other Rodents,PERISHABLE
+1157,Other camelids,16,LIVESTOCK,"Including among all: 
+glama pacos 
+peruana 
+huanacos 
+vicugna","
+alpaca 
+llama 
+guanaco 
+vicuC1a",P,,,,,,PERISHABLE
+1158,Meat of other domestic camelids,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2735,"Meat, Other",1158,Meat of Other Camelids,PERISHABLE
+1160,Fat of other camelids,14,VEGETABLE AND ANIMAL OILS AND FATS,,,P,y,2737,"Fats, Animals, Raw",1160,Fat of Other Camelids,PERISHABLE
+1163,Game meat,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2735,"Meat, Other",1163,Game Meat,PERISHABLE
+1166,Meat nes,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2735,"Meat, Other",1166,Meat nes,PERISHABLE
+1167,Offals nes,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2736,"Offals, Edible",1167,Offals nes,PERISHABLE
+1169,"Live animals, non food nes",16,LIVESTOCK,,,P,,,,,,
+1171,Live animals nes,16,LIVESTOCK,,,P,,,,,,
+1176,Snails o/t sea snails,17,PRODUCTS FROM SLAUGHTERED ANIMALS,,,P,y,2735,"Meat, Other",1176,Snails Not Sea Snails,PERISHABLE
+1181,Beehives,16,LIVESTOCK,"Apis mellifica 
+Apis dorsata 
+Apis florea 
+Apis indica",,P,,,,,,
+1182,Honey,3,SUGAR CROPS AND SWEETENERS AND DERIVED PRODUCTS,,,P,y,2745,Honey,1182,Honey,PERISHABLE
+1183,Beeswax,18,PRODUCTS FROM LIVE ANIMALS,,,P,,,,,,
+1185,"Cocoons, reelable",9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,,,P,,,,,,
+1195,Fur skin,19,HIDES AND SKINS,,,P,,,,,,
+1213,"Hides and skins nes, fresh",19,HIDES AND SKINS,,,P,,,,,,
+1218,"Hair, fine",9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,,,P,,,,,,
+1219,"Hair, coarse nes",9,FIBRES OF VEGETAL AND ANIMAL ORIGIN,,,P,,,,,,
+1291,Arabic gum,13,TOBACCO AND RUBBER AND OTHER CROPS,,,P,,,,,,
+1292,Other resins,13,TOBACCO AND RUBBER AND OTHER CROPS,"Including among all: 
+Copaifera spp. 
+Astragalus spp. 
+Boswellia spp. 
+Commiphora spp. 
+Myroxilon balsamum; Myroxilon Pereira","
+copaiba, copal 
+gum tragacanth 
+incense 
+myrrh, opopanax, Mecca balsam 
+tolu balsam, peru balsam",P,,,,,,
+1294,Seeds for Planting,13,TOBACCO AND RUBBER AND OTHER CROPS,,,P/D,,,,,,
+1296,Vegetable waxes,13,TOBACCO AND RUBBER AND OTHER CROPS,"Including among all: 
+Euphorbia antisyphilitica; Pedilanthus pavonis 
+Copernicia cerifera 
+Attalea excelsa 
+Ceroxylon andicolum","
+candelilla 
+carnauba 
+urucury 
+palm wax",P,,,,,,
+1501,Frwtr Diad F,N.A.,N.A.,N.A.,N.A.,P,,2761,Freshwater Fish,NA,NA,
+1514,Dmrsl Fresh,N.A.,N.A.,N.A.,N.A.,P,,2762,Demersal Fish,NA,NA,
+1527,Pelagic Frsh,N.A.,N.A.,N.A.,N.A.,P,,2763,Pelagic Fish,NA,NA,
+1540,Marine nes F,N.A.,N.A.,N.A.,N.A.,P,,2764,"Marine Fish, Other",NA,NA,
+1553,Crstaceans F,N.A.,N.A.,N.A.,N.A.,P,,2765,Crustaceans,NA,NA,
+1570,Cephlp Fresh,N.A.,N.A.,N.A.,N.A.,P,,2766,Cephalopods,NA,NA,
+1562,Mlluscs Frsh,N.A.,N.A.,N.A.,N.A.,P,,2767,"Molluscs, Other",NA,NA,
+1587,Aqutc Anim F ,N.A.,N.A.,N.A.,N.A.,P,,2769,"Aquatic Animals, Others",NA,NA,

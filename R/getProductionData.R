@@ -22,7 +22,7 @@ getProductionData = function(){
       Dimension(name = elementVar,
                 keys = "5510"),
       Dimension(name = itemVar,
-                keys = as.character(requiredItems$measured_item_cpc)),
+                keys = as.character(requiredItems$measuredItemCPC)),
       Dimension(name = yearVar,
                 keys = selectedYear)
     )

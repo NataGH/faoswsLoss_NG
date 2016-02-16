@@ -1,12 +1,12 @@
-#' Get Food Loss Data
+#' Get Selected Food Loss Data
 #'
-#' Function to obtain food loss data at primary level 
+#' Function to obtain official food loss data at primary level 
 #'
-#'
-#' @export
+#' @export getSelectedLossData
 
 getSelectedLossData = function(){
-
+  
+  
   ##################################################################################################
   #   Code to get Import data from the Old System 
   ##################################################################################################
@@ -85,7 +85,7 @@ getSelectedLossData = function(){
       Dimension(name = elementVarFS,
                 keys = "121"),
       Dimension(name = itemVarFS,
-                keys = as.character(requiredItems$measured_item_fs)),
+                keys = as.character(as.numeric(requiredItems$measuredItemFCL))),
       Dimension(name = yearVar,
                 keys = selectedYear)
     )
@@ -127,6 +127,7 @@ getSelectedLossData = function(){
   
   ## Convert time to numeric
   lossQuery[, timePointYears := as.numeric(timePointYears)]
+  
   lossQuery[, geographicAreaFS := as.numeric(geographicAreaFS)]
   
   

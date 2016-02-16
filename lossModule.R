@@ -13,7 +13,7 @@ suppressMessages({
   #library(RJDBC)
 })
 
-#library(faoswsLoss)
+library(faoswsLoss)
 
 updateModel = TRUE
 
