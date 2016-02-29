@@ -213,7 +213,7 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
     if (!is.null(outStats[["warnings"]])) {
       statistics <- list(
         inserted=outStats[["statistics"]][["inserted"]],
-        appended=outStats[["statistics"]][["appended"]],
+        appended=outStats[["statistics"]][["updated"]],
         ignored=outStats[["statistics"]][["ignored"]],
         discarded=outStats[["statistics"]][["discarded"]],
         warnings=data.table(
@@ -222,7 +222,7 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
     } else {
       statistics <- list(
         inserted=outStats[["statistics"]][["inserted"]],
-        appended=outStats[["statistics"]][["appended"]],
+        appended=outStats[["statistics"]][["updated"]],
         ignored=outStats[["statistics"]][["ignored"]],
         discarded=outStats[["statistics"]][["discarded"]],
         warnings=NULL)
