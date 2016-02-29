@@ -194,6 +194,10 @@ GetHistory.NEW_processNormalizedResult <- function(data) {
 	})
 	result = do.call("rbind", result)
 	result = data.table(result)
+  # If empty, don't break when trying to set col order
+	if(nrow(result) == 0){
+	  result <- as.data.table(setNames(replicate(length(cols),logical()), cols))
+	}
 	setcolorder(result, c(keyNames, "Version", "StartDate", "EndDate", "Metadata", "Metadata_Language", "Metadata_Group", "Metadata_Element", "Metadata_Value", "Value", flagNames))
 }
 
