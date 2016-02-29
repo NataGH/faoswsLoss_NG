@@ -6,6 +6,7 @@
 #' to open a session. After this, use the \code{\link{GetData}} function. To 
 #' read the vignette: \code{vignette("R_API_2014")}
 #' 
+#' @section Best practices:
 #' When using this package to write scripts, follow these guidelines: 
 #' \itemize{ 
 #'    \item Use the \code{\link{CheckDebug}} function for code you wish to run on
@@ -21,6 +22,7 @@
 #'    \item For scripts to be run on the server, end them with a character
 #'    output. Messages and other objects will be interpreted in a way that is
 #'    difficult to comprehend.
+#'    \item Avoid deprecated functions like \code{GetTableData}
 #' }
 #' 
 #' 

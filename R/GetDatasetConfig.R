@@ -9,6 +9,8 @@
 ##' 
 ##' @return A object containing the full information
 ##' 
+##' @seealso \code{\link{GetDatasetNames}} \code{\link{GetDomainNames}}
+##' 
 ##' @export GetDatasetConfig
 
 GetDatasetConfig <- function(domainCode, datasetCode) {

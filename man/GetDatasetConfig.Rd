@@ -19,4 +19,7 @@ Invokes a SWS RESTful GET to query for the details of a given dataset configurat
 Note: if the user of the request is not allowed for the dataset, this will not be
 included in the resulting list
 }
+\seealso{
+\code{\link{GetDatasetNames}} \code{\link{GetDomainNames}}
+}
 

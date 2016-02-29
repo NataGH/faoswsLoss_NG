@@ -45,15 +45,15 @@ A list is returned, which contains the following values (note that
 \itemize{
 \item inserted =  the number of rows inserted 'ex novo' (with version=1:
                   there wasn't any already existing observation for same coordinates)
-\item appended =  the number of rows inserted in append mode (with version=max+1: 
+\item appended =  the number of rows inserted in append mode (with version=max+1:
             there was one or more observation/s: version number incremented)
-\item ignored =   the number of rows not inserted because an already existing 
+\item ignored =   the number of rows not inserted because an already existing
             observation was in place with identical attributes
-\item discarded = the number of new observations not created because of non blocking 
-            errors (i.e. 'warnings' which caused the row to be discarded 
+\item discarded = the number of new observations not created because of non blocking
+            errors (i.e. 'warnings' which caused the row to be discarded
             without blocking other rows insertion)
 \item warnings =  a data.table which can be NULL or contain 1 to 10 rows.if value
-            of "discarded" is > 0, the data.table contains an excerpt of rows 
+            of "discarded" is > 0, the data.table contains an excerpt of rows
             discarded (max 10 rows), any of which with following info:
             \itemize{
                 \item row     = the positional row number in the data as sent

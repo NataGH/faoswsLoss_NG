@@ -6,6 +6,8 @@
 ##' 
 ##' @return A list of domain names
 ##' 
+##' @seealso \code{\link{GetDatasetConfig}} \code{\link{GetDatasetNames}}
+##' 
 ##' @export GetDomainNames
 
 GetDomainNames <- function() {

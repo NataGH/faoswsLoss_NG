@@ -17,4 +17,7 @@ Invokes a SWS RESTful GET to query for the list of all datasets in a domain
 Note: if the user of the request is not allowed for a dataset, this will not be
 included in the resulting list
 }
+\seealso{
+\code{\link{GetDatasetConfig}} \code{\link{GetDomainNames}}
+}
 
