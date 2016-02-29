@@ -1,3 +1,15 @@
+# CHANGES IN faosws VERSION 0.7.2
+
+## MINOR CHANGES
+
+- Additions to documentation
+
+## BUG FIXES
+
+- Prevented error in `GetHistory` when setting column order
+- Fixed 'appended/updated' issue in SWS API (not user-visible)
+
+
 # CHANGES IN faosws VERSION 0.7.1
 
 ## MINOR CHANGES
