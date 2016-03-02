@@ -1,3 +1,14 @@
+# CHANGES IN faosws VERSION 0.7.3
+
+## MINOR CHANGES
+
+- Added documentation for setup on Macs
+
+## BUG FIXES
+
+- Fixed error when there are no keys in `GetTestEnvironment`
+
+
 # CHANGES IN faosws VERSION 0.7.2
 
 ## MINOR CHANGES
