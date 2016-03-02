@@ -58,8 +58,16 @@ GetTestEnvironment <- function(baseUrl, token) {
         }
         
         dimensions <- sapply(names(x$dimensions2Codes), function(y) {
+          
+          keys <- unlist(x$dimensions2Codes[y], use.names = FALSE)
+          #If there are no keys, don't assign NULL (S4 doesn't allow it)
+          if(is.null(keys)){
+            keys <- character()
+          }
+          
           Dimension(name = y,
-                    keys = unlist(x$dimensions2Codes[y], use.names = FALSE))
+                    keys = keys)
+          
         })
         
         dk@dimensions <- dimensions
