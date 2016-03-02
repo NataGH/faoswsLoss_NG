@@ -27,12 +27,51 @@ If the module does not currently exist on the system, you will need to
 upload a zipped file with an xml file specifying the dataset configurations.}
 }
 \value{
-This function silently returns a list containing a DatasetKey object and creates 
-  "swsContext" objects, such as \code{swsContext.datasets}, \code{swsContexts.token}, 
-  etc., including \code{swsContext.datasets} which is identical to the object 
-  returned.
+This function silently returns a list containing a DatasetKey object
+  and creates "swsContext" objects, such as \code{swsContext.datasets},
+  \code{swsContexts.token}, etc., including \code{swsContext.datasets} which
+  is identical to the object returned.
 }
 \description{
 Get Test Environment
+}
+\section{Credentials on Windows and Linux}{
+
+
+In order to work the the SWS, credentials (certificates, keys, etc.) must be
+downloaded from Sharepoint 
+(\link{https://workspace.fao.org/tc/sws/userspace}). In this project it can 
+be found under 'Shared Documents/R Development'. Copy the contents of the 
+credentials for the server you wish to access into ~/.R on your local 
+machine. If you wish to place them somewhere else or you wish to access 
+different servers at different times, use \code{\link{SetClientFiles}} in
+your script to nominate a folder. The certificate should appear with a red
+flag (untrusted), change the certificate to be always trusted. To test, run
+the code in the example.
+}
+
+\section{Credentials on MacOS}{
+
+
+R developers that connect to SWS from MacOS need to use a different set of 
+credentials. This is due to different assumptions in the implementation of 
+the underlying libraries for secure communication. The credentials for Mac 
+users are in a single file - \code{client.p12} - which is distributed along 
+with all the other credentials under a \code{macos} folder. It needs to be 
+installed in the KeyChain (e.g. by double- clicking on the file). The
+password is 'changeme'.
+}
+\examples{
+\dontrun{
+
+library(faosws) 
+library(data.table) 
+if (CheckDebug()) { 
+  SetClientFiles("~/certificates/qa") 
+  GetTestEnvironment("https://hqlqasws1.hq.un.fao.org:8181/sws", "98a2d80b-e55b-424a-af62-05890a9bcb6b") 
+} 
+
+}
+  
 }
 
