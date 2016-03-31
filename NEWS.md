@@ -1,6 +1,12 @@
+## NEW FEATURES
+
+- New function `ClearSessionOnly` which allows clearing of keys marked 
+  session-only
+
 ## BUG FIXES
 
 - All data read in from the system now uses proper UTF-8 encoding
+- Prevented error when POST response is empty
 
 
 # CHANGES IN faosws VERSION 0.7.3

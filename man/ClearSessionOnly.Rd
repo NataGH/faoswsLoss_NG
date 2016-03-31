@@ -6,7 +6,22 @@
 \usage{
 ClearSessionOnly(domain, dataset)
 }
+\arguments{
+\item{domain}{character. Name of domain (e.g. "agriculture")}
+
+\item{dataset}{character. Name of dataset (e.g. "aproduction")}
+}
+\value{
+A list with two elements: 
+\itemize{ 
+\item message - A response
+  message describing if they were successfully cleared
+\item   success - Boolean for success status
+}
+}
 \description{
-Clear session of session-only data
+In a dataset, certain values can be marked as session-only. These values 
+cannot be saved to the database and can be cleared with a button press in the
+UI as well as with this function.
 }
 
