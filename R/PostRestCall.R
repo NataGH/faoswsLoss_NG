@@ -49,5 +49,10 @@ PostRestCall <- function(url, data) {
 		HandleHTTPError(status, response)
 	}
 
-	RJSONIO::fromJSON(response)
+	if(response == ""){
+	  invisible("")
+	} else {
+	  RJSONIO::fromJSON(response)
+	}
+	
 }
