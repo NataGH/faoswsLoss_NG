@@ -28,6 +28,7 @@ Collate:
     'BlockMetadataSet.R'
     'Changeset.R'
     'CheckDebug.R'
+    'ClearSessionOnly.R'
     'DatasetKey.R'
     'Dimension.R'
     'DtDimension.R'
