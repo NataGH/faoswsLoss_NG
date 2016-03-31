@@ -148,14 +148,14 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
 
   # wait mode -> has to check for execution result any 3 seconds
   if (waitMode == "wait") {
-    # counts time elapsed from invokation , to stop when the timeout is exeeded
+    # counts time elapsed from invocation , to stop when the timeout is exceeded
     elapsed <- 0
-    # subtracted in abovementioned check
+    # subtracted in above-mentioned check
     p1 <- proc.time()[['elapsed']]
     # it is used as condition for the subsequent loop
     statusOut <- NULL
 
-    # checks until one of the two is given: 1. the timeout is not exeeded; 2. a final result is obtained
+    # checks until one of the two is given: 1. the timeout is not exceeded; 2. a final result is obtained
     while ((elapsed < waitTimeout) & (is.null(statusOut))) {
 
       # out[['message']] contains the UUID for the exec. status check, it invokes the get by concatenating it to the
