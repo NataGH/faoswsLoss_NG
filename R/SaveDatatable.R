@@ -187,7 +187,7 @@ post_json <- function(url, json){
   }
   
   if(!(responseCode >= 200 && responseCode < 300)){
-    errmessage <- paste0(readLines(conn, warn = FALSE), collapse="\n")
+    errmessage <- paste0(readLines(conn, warn = FALSE, encoding = "UTF-8"), collapse="\n")
     HandleHTTPError(responseCode, errmessage)
   }
 }

@@ -18,7 +18,8 @@ GetRestCall <- function(url) {
       sslcert = path.expand(.swsenv$swsContext.clientP12),
       sslcertpasswd = .swsenv$swsContext.p12Password,
       ssl.verifyhost = 2,
-      httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"))
+      httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"),
+      .encoding = "UTF-8")
   } else {
     response <- RCurl::getURL(
       url = url,
@@ -29,7 +30,8 @@ GetRestCall <- function(url) {
       sslcert = path.expand(.swsenv$swsContext.clientCertificate),
       sslkey = path.expand(.swsenv$swsContext.clientKey),
       ssl.verifyhost = 2,
-      httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"))
+      httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"),
+      .encoding = "UTF-8")
   }
 
 	# Check returned status code.

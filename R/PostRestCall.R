@@ -24,7 +24,8 @@ PostRestCall <- function(url, data) {
       ssl.verifyhost = 2,
       httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"),
       post = 1,
-      postfields = RJSONIO::toJSON(data, digits = 30))
+      postfields = RJSONIO::toJSON(data, digits = 30),
+      .encoding = "UTF-8")
   } else {
     response <- RCurl::getURL(
       url = url,
@@ -37,7 +38,8 @@ PostRestCall <- function(url, data) {
       ssl.verifyhost = 2,
       httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"),
       post = 1,
-      postfields = RJSONIO::toJSON(data, digits = 30))
+      postfields = RJSONIO::toJSON(data, digits = 30),
+      .encoding = "UTF-8")
   }
 
   # Check returned status code.

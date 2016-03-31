@@ -1,3 +1,8 @@
+## BUG FIXES
+
+- All data read in from the system now uses proper UTF-8 encoding
+
+
 # CHANGES IN faosws VERSION 0.7.3
 
 ## MINOR CHANGES
