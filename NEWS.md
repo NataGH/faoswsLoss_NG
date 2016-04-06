@@ -1,3 +1,5 @@
+# CHANGES IN faosws VERSION 0.8.0
+
 ## NEW FEATURES
 
 - New function `ClearSessionOnly` which allows clearing of keys marked 
