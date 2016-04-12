@@ -1,9 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
 	<groupId>org.fao.sws</groupId>
 	<artifactId>sws-r-faosws</artifactId>
+	
 	<version>0.8.0</version>
+	
 	<packaging>pom</packaging>
 
 	<properties>
@@ -22,8 +25,7 @@
 					<executable>bash</executable>
 					<arguments>
 						<argument>inst/release/build-release.sh</argument>
-					</arguments>
-					
+					</arguments>		
 				</configuration>
 				<executions>
 					<execution>
@@ -50,7 +52,7 @@
 						<configuration>
 							<artifacts>
 								<artifact>
-									<file>faosws_${project.version}.tar.gz</file>
+									<file>faosws_0_8_0.tar.gz</file>
 									<type>tar.gz</type>
 								</artifact>
 							</artifacts>
@@ -58,31 +60,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
-<!-- 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.7</version>
-				<executions>
-					<execution>
-						<id>copy-R-resources</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<resources>
-								<resource>
-									<directory>release</directory>
-									<filtering>true</filtering>
-								</resource>
-							</resources>
-
-							<outputDirectory>${basedir}</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin> -->
 
 
 		</plugins>
