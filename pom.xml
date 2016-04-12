@@ -50,7 +50,7 @@
 						<configuration>
 							<artifacts>
 								<artifact>
-									<file>faosws_${version}.tar.gz</file>
+									<file>faosws_${project.version}.tar.gz</file>
 									<type>tar.gz</type>
 								</artifact>
 							</artifacts>
