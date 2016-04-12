@@ -21,7 +21,7 @@
 				<configuration>
 					<executable>bash</executable>
 					<arguments>
-						<argument>release/build-release.sh</argument>
+						<argument>inst/release/build-release.sh</argument>
 					</arguments>
 					
 				</configuration>
