@@ -63,3 +63,6 @@ man/SaveValidation.Rd -text
 man/SetTableData.Rd -text
 man/cleanMetadata.Rd -text
 man/normalizeData.Rd -text
+/pom.xml -text
+release/build-release.R -text
+release/build-release.sh -text
