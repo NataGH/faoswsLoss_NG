@@ -7,7 +7,7 @@ BASHDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 mkdir -p $R_LIBS
 
 # download deps, if required. then actually build
-Rscript "$BASHDIR/build-release.R" $R_LIBS $DIR && R CMD BUILD .
+Rscript "$BASHDIR/build-release.R" $R_LIBS $DIR && R CMD build .
 
 if [ $? -gt 0 ]
 then 
