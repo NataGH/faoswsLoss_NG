@@ -52,7 +52,7 @@
 						<configuration>
 							<artifacts>
 								<artifact>
-									<file>faosws_0.8.0.tar.gz</file>
+									<file>faosws_${project.version}.tar.gz</file>
 									<type>tar.gz</type>
 								</artifact>
 							</artifacts>
