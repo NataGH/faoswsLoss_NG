@@ -1,8 +1,9 @@
 arguments <- commandArgs(trailingOnly = TRUE)
-stopifnot(length(arguments) == 2)
+stopifnot(length(arguments) == 3)
 
 LIB <- arguments[1]
 setwd(arguments[2])
+FAOCRAN <- arguments[3]
 
 # Get dependencies from description file
 deps <- paste0(read.dcf("DESCRIPTION", fields=c("Depends", "Imports", "Suggests"))[1,], collapse = "")
@@ -12,7 +13,7 @@ deps <- strsplit(deps, ",?\n")[[1]]
 deps <- deps[deps != ""]
 
 # hardcode the fao-sws-cran repo for CRAN
-options(repos = c("CRAN" = "http://hqlprsws1.hq.un.fao.org/fao-sws-cran/"))
+options(repos = c("CRAN" = FAOCRAN))
 
 # Get non-base packages
 installed <- as.data.frame(installed.packages(lib.loc=.Library))
