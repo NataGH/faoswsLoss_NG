@@ -2,11 +2,11 @@
 % Please edit documentation in R/getSelectedLossData.R
 \name{getSelectedLossData}
 \alias{getSelectedLossData}
-\title{Get Food Loss Data}
+\title{Get Selected Food Loss Data}
 \usage{
 getSelectedLossData()
 }
 \description{
-Function to obtain food loss data at primary level
+Function to obtain official food loss data at primary level
 }
 

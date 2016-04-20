@@ -9,6 +9,6 @@
 A package which calculates loss
 }
 \author{
-Natalia Golini
+Natalia Golini, Michael C. J. Kao
 }
 

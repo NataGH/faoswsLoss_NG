@@ -1,10 +1,10 @@
 Package: faoswsLoss
 Type: Package
 Title: Package to perform the computation of food loss FAO food balance sheets
-Version: 0.1.0
-Date: 2015-12-10
+Version: 0.1.1
+Date: 2016-04-20
 Authors@R: c(person("Natalia", "Golini", role = c("aut", "cre"), email = "natalia.golini@fao.org"))
-Author: Natalia Golini <natalia.golini@fao.org>, Michael Kao
+Author: Natalia Golini <natalia.golini@fao.org>, Michael C. J. Kao
     <michael.kao@fao.org>
 Maintainer: Natalia Golini <natalia.golini@fao.org>, Josh Browning
     <joshua.browning@fao.org>
@@ -18,7 +18,6 @@ Depends:
 Imports:
     faoswsUtil,
     data.table,
-    RJDBC,
     plyr,
     reshape2,
     stringr
