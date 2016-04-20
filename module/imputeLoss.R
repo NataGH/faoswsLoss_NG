@@ -45,7 +45,7 @@ if(CheckDebug()){
             stop("User not yet implemented!")
         }
         GetTestEnvironment(
-            baseUrl = "https://hqlprswsas2.hq.un.fao.org:8181/sws",
+            baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
             token = token
             )
     } else {
@@ -72,65 +72,61 @@ flagMethodPrefix = "flagMethod_"
 
 
 if(updateModel){
-  finalModelData = 
-{
-  requiredItems <<- getRequiredItems()
-  production <<- getProductionData()
-  import <<- getImportData()
-  loss <<- getOfficialLossData()
-  lossFoodGroup <<- getLossFoodGroup()
-#   countryTable <<-
-#     GetCodeList(domain = "agriculture",
-#                 dataset = "agriculture",
-#                 dimension = "geographicAreaM49")[type == "country",
-#                                                  list(code, description)]
-#   setnames(countryTable,
-#            old = c("code", "description"),
-#            new = c("geographicAreaM49", "geographicAreaM49Name"))
-} %>%
-  mergeAllLossData(lossData = loss, production, import, lossFoodGroup) %>%
-  subset(x = .,
-         subset = ((Value_measuredElement_5510 == 0 & Value_measuredElement_5600 > 0) |
-                     (Value_measuredElement_5510 > 0 & Value_measuredElement_5600 >= 0)),
-         select = c("geographicAreaM49", 
-                    "measuredItemCPC", 
-                    "timePointYears",
-                    "Value_measuredElement_5120", # loss
-                    "Value_measuredElement_5510", # production
-                    "Value_measuredElement_5600", # import
-                    "foodGroupName",
-                    "foodPerishableGroup")) %>%
-  removeCarryLoss(data = ., lossVar = "Value_measuredElement_5120") %>%
-  ## Convert variables to factor
-  .[, `:=`(c("geographicAreaM49",
-             "measuredItemCPC", 
-             "foodGroupName", 
-             "foodPerishableGroup"),
-           lapply(c("geographicAreaM49",
-                    "measuredItemCPC", 
-                    "foodGroupName", 
-                    "foodPerishableGroup"),
-                  FUN = function(x) as.factor(.SD[[x]])
-           )
-  )
-  ]
-
-
-lossLmeModel =
-  lmer(log(Value_measuredElement_5120 + 1) ~
-         -1 +
-         timePointYears +
-         log(Value_measuredElement_5510 + 1) + 
-         (-1 + log(Value_measuredElement_5510 + 1)|
-            foodPerishableGroup/foodGroupName/measuredItemCPC/geographicAreaM49)+
-         log(Value_measuredElement_5600 + 1) +
-         (-1 + log(Value_measuredElement_5600 + 1)|
-            measuredItemCPC/geographicAreaM49),
-       data = finalModelData)
-
-# par(mfrow=c(1,1))
-# qqnorm(residuals(lossLmeModel))
-# qqline(residuals(lossLmeModel))
+    finalModelData = 
+        {
+            requiredItems <<- getRequiredItems()
+            production <<- getProductionData()
+            import <<- getImportData()
+            loss <<- getOfficialLossData()
+            lossFoodGroup <<- getLossFoodGroup()
+            ## countryTable <<-
+            ##   GetCodeList(domain = "agriculture",
+            ##               dataset = "agriculture",
+            ##               dimension = "geographicAreaM49")[type == "country",
+            ##                                                list(code, description)]
+            ## setnames(countryTable,
+            ##          old = c("code", "description"),
+            ##          new = c("geographicAreaM49", "geographicAreaM49Name"))
+        } %>%
+        mergeAllLossData(lossData = loss, production, import, lossFoodGroup) %>%
+        subset(x = .,
+               subset = ((Value_measuredElement_5510 == 0 &
+                          Value_measuredElement_5600 > 0) |
+                         (Value_measuredElement_5510 > 0 &
+                          Value_measuredElement_5600 >= 0)),
+               select = c("geographicAreaM49", 
+                          "measuredItemCPC", 
+                          "timePointYears",
+                          "Value_measuredElement_5120", # loss
+                          "Value_measuredElement_5510", # production
+                          "Value_measuredElement_5600", # import
+                          "foodGroupName",
+                          "foodPerishableGroup")) %>%
+        removeCarryLoss(data = ., lossVar = "Value_measuredElement_5120") %>%
+        ## Convert variables to factor
+        .[, `:=`(c("geographicAreaM49",
+                   "measuredItemCPC", 
+                   "foodGroupName", 
+                   "foodPerishableGroup"),
+                 lapply(c("geographicAreaM49",
+                          "measuredItemCPC", 
+                          "foodGroupName", 
+                          "foodPerishableGroup"),
+                        FUN = function(x) as.factor(.SD[[x]])
+                        )
+                 )
+          ]
+    lossLmeModel =
+        lmer(log(Value_measuredElement_5120 + 1) ~
+                 -1 +
+                 timePointYears +
+                 log(Value_measuredElement_5510 + 1) + 
+                 (-1 + log(Value_measuredElement_5510 + 1)|
+                  foodPerishableGroup/foodGroupName/measuredItemCPC/geographicAreaM49)+
+                 log(Value_measuredElement_5600 + 1) +
+                 (-1 + log(Value_measuredElement_5600 + 1)|
+                  measuredItemCPC/geographicAreaM49),
+             data = finalModelData)
 }
 
 
@@ -138,19 +134,19 @@ lossLmeModel =
 finalPredictData = 
 {
   if(!updateModel){
-#    requiredItems <<- getAllItemCPC()
+    ## requiredItems <<- getAllItemCPC()
     production <<- getProductionData()
     import <<- getImportData()
     lossFoodGroup <<- getLossFoodGroup()
-#    lossRegionClass <<- getLossRegionClass()
-#     countryTable <<-
-#       GetCodeList(domain = "agriculture",
-#                   dataset = "agriculture",
-#                   dimension = "geographicAreaM49")[type == "country",
-#                                                    list(code, description)]
-#     setnames(countryTable,
-#              old = c("code", "description"),
-#              new = c("geographicAreaM49", "geographicAreaM49Name"))
+    ## lossRegionClass <<- getLossRegionClass()
+    ##  countryTable <<-
+    ##    GetCodeList(domain = "agriculture",
+    ##                dataset = "agriculture",
+    ##                dimension = "geographicAreaM49")[type == "country",
+    ##                                                 list(code, description)]
+    ##  setnames(countryTable,
+    ##           old = c("code", "description"),
+    ##           new = c("geographicAreaM49", "geographicAreaM49Name"))
   }
   loss <<- getSelectedLossData()
 } %>%
