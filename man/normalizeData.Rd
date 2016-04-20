@@ -21,7 +21,6 @@ dimensions.}
 A data.table object in normalized format.
 }
 \description{
-This function takes denormalized data and casts it as normalized data,
-mostly with the help of the tidyr package.
+This function takes denormalized data and casts it as normalized data.
 }
 

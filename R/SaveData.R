@@ -548,8 +548,7 @@ SaveData.buildDenormalizedDataDefJSON <- function(data) {
 
 ##' Normalize Data
 ##'
-##' This function takes denormalized data and casts it as normalized data,
-##' mostly with the help of the tidyr package.
+##' This function takes denormalized data and casts it as normalized data.
 ##'
 ##' @param data The denormalized dataset, provided as a data.table.
 ##' @param keys A character vector of column names of data which correspond
@@ -567,11 +566,14 @@ normalizeData <- function(data, keys, denormalizedKey){
     # This used to be a tidyr function but it kept stripping the data.table attribute
     data.table::melt(data, id.vars=keys, variable.name="Key", value.name="Value")
     )
-  newData <- tidyr::separate(newData, col = "Key",
-                            into = c("Key", denormalizedKey),
-                            sep = paste0("_", denormalizedKey, "_"))
-  newData <- tidyr::spread(newData, key = "Key", value = "Value")
-  newData$Value <- as.numeric(newData$Value)
+  
+  newData[, c("Key", denormalizedKey) := tstrsplit(Key, split = sprintf("_%s_", denormalizedKey))]
+
+  newData <- dcast(newData, 
+        formula = paste0(paste(c(keys, denormalizedKey), collapse="+"), "~Key"), 
+        value.var="Value")
+  
+  newData[, Value := as.numeric(Value)]
   newData
 }
 
@@ -625,8 +627,11 @@ SaveData.buildDenormalizedDataContentJSON <- function(data) {
   uniqueKeys <- data.table(unique.data.frame(data))
   normalizedData <- normalizeData(uniqueKeys, keys = keys,
                                  denormalizedKey = denormalizedKey)
+
+  # Ensure columns are in the right order (often, flags are mixed)
   normalizedData <- normalizedData[, c(keys, denormalizedKey, "Value", flags),
-                                    with = FALSE]
+                                   with = FALSE]
+
   ## Now that data has been normalized, pass it to the normalized SaveData
   SaveData.buildNormalizedDataContentJSON(data = normalizedData)
 }
