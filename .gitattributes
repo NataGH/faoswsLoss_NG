@@ -34,6 +34,7 @@ R/buildModifiedCells.R -text
 inst/doc/R_API_2014.pdf -text
 inst/release/build-release.R -text
 inst/release/build-release.sh -text
+inst/release/tarball-descriptor.xml -text
 man/BlockMetadata-class.Rd -text
 man/BlockMetadataSet-class.Rd -text
 man/DatasetKey-class.Rd -text
