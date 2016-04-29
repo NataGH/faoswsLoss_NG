@@ -5,12 +5,13 @@ DIR=$(pwd)
 BASHDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 FAOCRAN=http://hqlprsws1.hq.un.fao.org/fao-sws-cran/
 VERSION=$1
+TEST="${TEST:-false}"
 
 # Make directory if it doesn't exist
 mkdir -p $R_LIBS
 
 # download deps, if required. then actually build
-Rscript "$BASHDIR/build-release.R" $R_LIBS $DIR $FAOCRAN && 
+Rscript "$BASHDIR/build-release.R" $R_LIBS $DIR $FAOCRAN $TEST && 
 
 # rewrites version in DESCRIPTION
 sed -i -e "s/^Version: .*/Version: $VERSION/" DESCRIPTION  &&

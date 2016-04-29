@@ -1,9 +1,13 @@
 arguments <- commandArgs(trailingOnly = TRUE)
-stopifnot(length(arguments) == 3)
+stopifnot(length(arguments) == 4)
 
 LIB <- arguments[1]
 setwd(arguments[2])
 FAOCRAN <- arguments[3]
+# Testing parameters
+TEST <- as.logical(toupper(arguments[4]))
+TEST_LIB = "~/testing_library"
+stopifnot(!is.na(TEST))
 
 # Get dependencies from description file
 deps <- paste0(read.dcf("DESCRIPTION", fields=c("Depends", "Imports", "Suggests"))[1,], collapse = "")
@@ -36,4 +40,12 @@ if(length(to_install) > 0){
 not_installed <- setdiff(packs, to_install)
 if(length(not_installed) > 0){
   message(sprintf("Package(s) %s not installed (already installed)", paste(not_installed, collapse = ", ")))
+}
+
+if(TEST){
+  .libPaths(TEST_LIB)
+  devtools::check(document=FALSE)
+  
+  library(testthat)
+  devtools::test(pkg = ".", reporter = JUnitReporter$new(file = "test-results.xml"))
 }
