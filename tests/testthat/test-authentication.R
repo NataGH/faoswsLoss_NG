@@ -1,16 +1,17 @@
-library(faosws)
-
 context("Authentication")
 
 #EA URL and token
-eabaseUrl <- "https://hqlqasws1.hq.un.fao.org:9453/sws"
-eatoken <- "50ced34b-2663-43c3-8691-eaad30924e16" 
-
-if(CheckDebug()){
-  certlocation <- "~/certificates/qa"
-  SetClientFiles(certlocation)
-}
-
+test_that("Authentication initiates successfully", {
+  
+  eabaseUrl <<- "https://hqlqasws1.hq.un.fao.org:9453/sws"
+  eatoken <<- "50ced34b-2663-43c3-8691-eaad30924e16" 
+  
+  if(CheckDebug()){
+      certlocation <- "~/certificates/qa"
+      SetClientFiles(certlocation)
+    }
+    
+})
 ## Skip if authentication fails
 #catch <- try(GetTestEnvironment(eabaseUrl, eatoken), silent = TRUE)
 #should_skip <- inherits(catch, "try-error")

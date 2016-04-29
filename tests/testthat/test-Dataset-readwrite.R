@@ -1,6 +1,6 @@
-suppressPackageStartupMessages(library(data.table))
-
 context("Dataset read/write")
+
+suppressPackageStartupMessages(library(data.table))
 
 if(CheckDebug()) {
   SetClientFiles("~/certificates/qa")
