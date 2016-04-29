@@ -1,6 +1,7 @@
 tests-
 test-results.xml
 tests/test-results.xml
+pom\.xml
 
 devscripts
 
@@ -14,3 +15,7 @@ packrat
 .svn
 .git
 .gitignore
+
+#Output files
+.*\.tar\.gz$
+.*\.zip$
