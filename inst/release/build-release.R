@@ -6,7 +6,6 @@ setwd(arguments[2])
 FAOCRAN <- arguments[3]
 # Testing parameters
 TEST <- as.logical(toupper(arguments[4]))
-TEST_LIB = "~/testing_library"
 stopifnot(!is.na(TEST))
 
 # Get dependencies from description file
@@ -15,6 +14,13 @@ deps <- paste0(read.dcf("DESCRIPTION", fields=c("Depends", "Imports", "Suggests"
 deps <- gsub("\nR |\\(.*?\\)", "", deps)
 deps <- strsplit(deps, ",?\n")[[1]]
 deps <- deps[deps != ""]
+
+# Add devtools if we're testing
+if(TEST){
+  # devtools and testthat as well
+  # testthat has devtools and XML as suggests.
+  deps <- c(deps, "devtools", "testthat", "roxygen2", "XML")
+}
 
 # hardcode the fao-sws-cran repo for CRAN
 options(repos = c("CRAN" = FAOCRAN))
@@ -28,10 +34,12 @@ packs <- setdiff(deps,
 # Only install non-base packages
 to_install <- setdiff(packs, installed.packages(lib.loc=LIB)[,"Package"])
 
-# If packages aren't available, there's a warning. Convert it into an error.
-options(warn=2)
 if(length(to_install) > 0){
-  install.packages(to_install, lib = LIB)
+  # If packages aren't available, there's a warning. Convert it into an error.  
+  withCallingHandlers(
+    install.packages(to_install, lib = LIB), 
+    warning = function(w) stop(w, "Package install failed")
+    )
   #Report results
   message(sprintf("Package(s) %s installed", paste(to_install, collapse = ", ")))
 }
@@ -42,10 +50,12 @@ if(length(not_installed) > 0){
   message(sprintf("Package(s) %s not installed (already installed)", paste(not_installed, collapse = ", ")))
 }
 
+# the test variable is set, 
 if(TEST){
-  .libPaths(TEST_LIB)
-  devtools::check(document=FALSE)
-  
-  library(testthat)
-  devtools::test(pkg = ".", reporter = JUnitReporter$new(file = "test-results.xml"))
+  library(devtools, lib.loc = LIB)
+  check(document=FALSE)
+  library(testthat, lib.loc = LIB)
+  test(pkg = ".", reporter = JUnitReporter$new(file = "test-results.xml"))
+  #library(testthat, lib.loc = "C:/Users/campbells/Documents/R/win-library/3.2")
+  #test(pkg = ".")
 }
