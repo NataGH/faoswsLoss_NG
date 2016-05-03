@@ -26,4 +26,3 @@ test_that("Authentication to EA database", {
   expect_is(object = testAuthentication(eabaseUrl, eatoken), "DatasetKey")
   expect_error(testAuthentication(eabaseUrl, "badtoken"))
 })
-

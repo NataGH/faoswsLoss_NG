@@ -54,3 +54,4 @@ library(testthat, lib.loc = LIB)
 test(pkg = ".", reporter = JUnitReporter$new(file = "test-results.xml"))
 #library(testthat, lib.loc = "C:/Users/campbells/Documents/R/win-library/3.2")
 #test(pkg = ".")
+
