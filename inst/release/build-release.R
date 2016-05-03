@@ -1,12 +1,9 @@
 arguments <- commandArgs(trailingOnly = TRUE)
-stopifnot(length(arguments) == 4)
+stopifnot(length(arguments) == 3)
 
 LIB <- arguments[1]
 setwd(arguments[2])
 FAOCRAN <- arguments[3]
-# Testing parameters
-TEST <- as.logical(toupper(arguments[4]))
-stopifnot(!is.na(TEST))
 
 # Get dependencies from description file
 deps <- paste0(read.dcf("DESCRIPTION", fields=c("Depends", "Imports", "Suggests"))[1,], collapse = "")
@@ -16,11 +13,10 @@ deps <- strsplit(deps, ",?\n")[[1]]
 deps <- deps[deps != ""]
 
 # Add devtools if we're testing
-if(TEST){
   # devtools and testthat as well
   # testthat has devtools and XML as suggests.
   deps <- c(deps, "devtools", "testthat", "roxygen2", "XML")
-}
+
 
 # hardcode the fao-sws-cran repo for CRAN
 options(repos = c("CRAN" = FAOCRAN))
@@ -50,12 +46,11 @@ if(length(not_installed) > 0){
   message(sprintf("Package(s) %s not installed (already installed)", paste(not_installed, collapse = ", ")))
 }
 
-# the test variable is set, 
-if(TEST){
-  library(devtools, lib.loc = LIB)
-  check(document=FALSE)
-  library(testthat, lib.loc = LIB)
-  test(pkg = ".", reporter = JUnitReporter$new(file = "test-results.xml"))
-  #library(testthat, lib.loc = "C:/Users/campbells/Documents/R/win-library/3.2")
-  #test(pkg = ".")
-}
+# RUN TESTS
+
+library(devtools, lib.loc = LIB)
+check(document=FALSE)
+library(testthat, lib.loc = LIB)
+test(pkg = ".", reporter = JUnitReporter$new(file = "test-results.xml"))
+#library(testthat, lib.loc = "C:/Users/campbells/Documents/R/win-library/3.2")
+#test(pkg = ".")
