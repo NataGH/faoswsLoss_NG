@@ -89,3 +89,4 @@ test_that("Denormalized/Pivoted save (second attempt) works ok", {
   expect_equal(out$ignored, 2)
   expect_equal(out$discarded, 2)
 })
+
