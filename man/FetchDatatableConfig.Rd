@@ -9,7 +9,7 @@ FetchDatatableConfig(tables, baseurl = swsContext.baseRestUrl)
 \arguments{
 \item{tables}{character. Optional specification of tables of interest.}
 
-\item{baseurl}{character. If specified, uses this URL instead of looking for 
+\item{baseurl}{character. If specified, uses this URL instead of looking for
 one obtained from a token. Must be of the form
 \code{http(s)://hostname:port/sws/rest}.}
 }
@@ -19,6 +19,8 @@ A list containing table metadata
 \description{
 This function pulls metadata regarding Datatables. If 
 \code{\link{GetTestEnvironment}} is not called beforehand, a URL may be 
-supplied, allowing access to this metadata without a token.
+supplied, allowing access to this metadata without a token. Of particular 
+note in each field is the 'label' element which gives the proper name of the 
+table as is displayed on the web interface of the Statistical Working System
 }
 
