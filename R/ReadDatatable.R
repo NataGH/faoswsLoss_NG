@@ -67,7 +67,7 @@ ReadDatatable <- function(table=BoundDatatable(), columns = list(), includeAll =
     api <- "validation/collect"
   }
   
-  baseurl <- paste(swsContext.baseRestUrl, "api", "datatable", table, api, sep = "/")
+  baseurl <- paste(swsContext.baseRestUrl, "api", "datatable", URLencode(table), api, sep = "/")
   queryparams <- paste(paste0("_xid=", swsContext.token), collapse= "&")
   url <- paste(baseurl, queryparams, sep="?")  
   
