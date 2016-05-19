@@ -28,7 +28,7 @@
 ##' 
 ##' @examples
 ##' \dontrun{
-##' GetCodeList(domain = "agriculture", dataset = "agriculture",
+##' GetCodeList(domain = "agriculture", dataset = "aproduction",
 ##'             dimension = "geographicAreaM49", codes = c("4", "8", "112"))
 ##' }
 ##' 

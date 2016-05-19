@@ -7,7 +7,7 @@
 ##' @slot domain A character value specifying the domain of interest, such as 
 ##'   "agriculture".
 ##' @slot dataset A character value specifying the dataset within the domain, 
-##'   such as "agriculture".
+##'   such as "aproduction".
 ##' @slot dimensions A list of objects, each of class Dimension.
 ##' @slot sessionId The ID of the session from which data should be accessed. 
 ##'   If NULL, the database is used directly.
@@ -27,7 +27,7 @@
 ##' dim3 = Dimension(name = "measuredItemCPC", keys = c("0111", "0112", "0113"))
 ##' dim4 = Dimension(name = "timePointYears", keys = as.character(1960:2010))
 ##' 
-##' key = DatasetKey(domain = "agriculture", dataset = "agriculture",
+##' key = DatasetKey(domain = "agriculture", dataset = "aproduction",
 ##'                  dimensions = list(dim1, dim2, dim3, dim4))
 ##' 
 ##' GetData(key = key)

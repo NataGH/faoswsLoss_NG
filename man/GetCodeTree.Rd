@@ -28,7 +28,7 @@ Get Code Tree
 }
 \examples{
 \dontrun{
-GetCodeTree(domain = "agriculture", dataset = "agriculture",
+GetCodeTree(domain = "agriculture", dataset = "aproduction",
                      dimension = "geographicAreaM49", roots = "953")
 }
 

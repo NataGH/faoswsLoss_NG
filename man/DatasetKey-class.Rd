@@ -17,7 +17,7 @@ from the SWS.
 "agriculture".}
 
 \item{\code{dataset}}{A character value specifying the dataset within the domain, 
-such as "agriculture".}
+such as "aproduction".}
 
 \item{\code{dimensions}}{A list of objects, each of class Dimension.}
 
@@ -40,7 +40,7 @@ dim2 = Dimension(name = "measuredElement", keys = c("51", "5510", "5607"))
 dim3 = Dimension(name = "measuredItemCPC", keys = c("0111", "0112", "0113"))
 dim4 = Dimension(name = "timePointYears", keys = as.character(1960:2010))
 
-key = DatasetKey(domain = "agriculture", dataset = "agriculture",
+key = DatasetKey(domain = "agriculture", dataset = "aproduction",
                  dimensions = list(dim1, dim2, dim3, dim4))
 
 GetData(key = key)

@@ -38,7 +38,7 @@
 ##' dim2 = Dimension(name = "measuredElement", keys = "5510")
 ##' dim3 = Dimension(name = "measuredItemCPC", keys = "0111")
 ##' dim4 = Dimension(name = "timePointYears", keys = as.character(2000:2013))
-##' key = DatasetKey(domain = "agriculture", dataset = "agriculture",
+##' key = DatasetKey(domain = "agriculture", dataset = "aproduction",
 ##'                  dimensions = list(dim1, dim2, dim3, dim4))
 ##' 
 ##' GetData(key, pivoting = c(pivot1, pivot2, pivot3, pivot4))
