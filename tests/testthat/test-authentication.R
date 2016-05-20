@@ -4,7 +4,7 @@ context("Authentication")
 test_that("Authentication initiates successfully", {
   
   eabaseUrl <<- "https://hqlqasws1.hq.un.fao.org:9453/sws"
-  eatoken <<- "50ced34b-2663-43c3-8691-eaad30924e16" 
+  eatoken <<- "7cb7f85c-9083-41f2-a034-721304db4574" 
   
   if(CheckDebug()){
       certlocation <- "~/certificates/qa"
@@ -16,8 +16,8 @@ test_that("Authentication initiates successfully", {
 #catch <- try(GetTestEnvironment(eabaseUrl, eatoken), silent = TRUE)
 #should_skip <- inherits(catch, "try-error")
 
-testAuthentication <- function(server="https://hqlprswsas1.hq.un.fao.org:8181/sws", 
-                               token="d0caea7d-c1c8-4259-9e1f-7ecaf4343706"){
+testAuthentication <- function(server, 
+                               token){
   #if(should_skip) skip("Unable to connect. Check the certificate locations")
   GetTestEnvironment(server, token)[[1]]
 }

@@ -8,7 +8,7 @@ if(CheckDebug()) {
 
 GetTestEnvironment(
   baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
-  token = "515d04ce-dffd-44b9-9324-2a880dfe9f8e"
+  token = "c6ce2c30-dc50-444a-99de-eceaa9bb1554"
 )
 
 swsContext.datasets[[1]] = DatasetKey(
