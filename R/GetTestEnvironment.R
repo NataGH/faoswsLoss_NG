@@ -23,7 +23,7 @@
 ##' 
 ##' In order to work the the SWS, credentials (certificates, keys, etc.) must be
 ##' downloaded from Sharepoint 
-##' (\link{https://workspace.fao.org/tc/sws/userspace}). In this project it can 
+##' (\url{https://workspace.fao.org/tc/sws/userspace}). In this project it can 
 ##' be found under 'Shared Documents/R Development'. Copy the contents of the 
 ##' credentials for the server you wish to access into ~/.R on your local 
 ##' machine. If you wish to place them somewhere else or you wish to access 
