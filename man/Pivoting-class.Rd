@@ -42,7 +42,7 @@ pivot4 = Pivoting(code = "measuredItemCPC", ascending = FALSE)
 ##' # swsContext files are necessary for GetData to run (token may need to be updated)
 GetTestEnvironment(
    baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
-   token = "7823c00b-b82e-47bc-8708-1be103ac91e4"
+   token = "8fa89a90-7595-461f-ae51-b7b15564bdb4"
 )
 
 # Pull data for one country and all commodities
