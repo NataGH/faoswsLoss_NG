@@ -20,31 +20,39 @@
 #'  
 #' @examples \dontrun{
 #' library(data.table)
+#' # define original Datatable
 #' origtable <- "world_bank_climate_data"
+#' # define test table to write to
 #' table <- "world_bank_climate_data_test"
 #' 
+#' # Read new table
 #' newdat <- ReadDatatable(table, readOnly = FALSE)
+#' # Read original table
 #' dat <- ReadDatatable(origtable, limit=10)
 #' 
-#' # Erase all data
+#' ## Erase all data in test table
+#' # Define changeset object
 #' changeset <- Changeset(table)
+#' # Add rows to delete to changeset
 #' AddDeletions(changeset, newdat)
+#' # Send modifications to the server
 #' Finalise(changeset)
 #' 
-#' # Add new data
+#' # Add new data (twice) to test from original
 #' AddInsertions(changeset, dat)
 #' AddInsertions(changeset, dat)
 #' Finalise(changeset)
 #' 
-#' # Reload new table
+#' # Reread test table
 #' newdat <- ReadDatatable(table, readOnly = FALSE)
 #' 
-#' # Double precipitation in first half
+#' # Double precipitation in first half of table
 #' newdat[1:ncol(dat),precipitation := precipitation * 2]
 #' AddModifications(changeset, newdat[1:nrow(dat),])
 #' 
-#' # Delete the second
+#' # Delete the second half of the table
 #' AddDeletions(changeset, newdat[nrow(dat):(nrow(dat)*2),])
+#' # Send it back to the server
 #' Finalise(changeset)
 #'}
 #'
@@ -92,7 +100,7 @@ AddModifications <- function(changeset, data){
 
 AddDeletions <- function(changeset, data){
   if(!all(c("__id", "__ts") %in% colnames(data))){
-    stop("If rows are to be deleted, they must have ids and timestamps")
+    stop("If rows are to be deleted, they must have ids and timestamps. Did you use 'readOnly = FALSE' parameter in ReadDatatable?")
   }
   
   data <- data[ , .(`__id`, `__ts`)]

@@ -1,12 +1,16 @@
 #' Define changeset object
 #' 
 #' Changeset is called to initiate a Changeset object, an object which tracks 
-#' the rows requests sent to it (be they insert, modify or delete). When it 
+#' the rows requests sent to it (be they \link[=SaveDatatable]{insert, modify, delete} or \link[=SaveValidation]{validate}). When it 
 #' accumulates enough requests (by default, 5000 rows), it sends that chunk to 
 #' the server. To finalise your script, use \code{Finalize} or \code{Finalise}
 #' with the changeset object to indicate that there are no more rows to add and
 #' that the process of writing to a table is finished.
 #' 
+#' @examples
+#' \dontrun{
+#' ch <- Changeset("world_bank_climate_data_test")
+#' }
 #' @rdname Changeset
 #' @aliases Finalise Finalize
 #' @export Changeset

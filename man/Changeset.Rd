@@ -30,7 +30,7 @@ ExtractValidationIDs(changeset)
 }
 \description{
 Changeset is called to initiate a Changeset object, an object which tracks 
-the rows requests sent to it (be they insert, modify or delete). When it 
+the rows requests sent to it (be they \link[=SaveDatatable]{insert, modify, delete} or \link[=SaveValidation]{validate}). When it 
 accumulates enough requests (by default, 5000 rows), it sends that chunk to 
 the server. To finalise your script, use \code{Finalize} or \code{Finalise}
 with the changeset object to indicate that there are no more rows to add and
@@ -40,5 +40,10 @@ Changeset objects with the validation type store the IDs that have been sent
 to them. This includes IDs. A changeset object with type validation will not 
 allow any rows already sent to be revalidated. The function
 \code{FetchValidationIDs} retrieves any IDs stored in this Changeset.
+}
+\examples{
+\dontrun{
+ch <- Changeset("world_bank_climate_data_test")
+}
 }
 
