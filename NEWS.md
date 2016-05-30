@@ -1,6 +1,12 @@
+## MINOR CHANGES
+
+- `SaveDatatable` functions now run more efficiently and can handle larger 
+  Datatables
+
 ## BUG FIXES
 
-- `FetchDatatableConfig` now correctly handles missing tables when there is more than one
+- `FetchDatatableConfig` now correctly handles missing tables when there is more
+  than one
 
 
 # CHANGES IN faosws VERSION 0.8.0

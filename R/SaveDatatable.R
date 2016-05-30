@@ -66,12 +66,10 @@ AddInsertions <- function(changeset, data){
   if(length(syscols) > 0){
     set(data, j = syscols, value = NULL)
   }
-  
-  jsonlines <- vapply(split(data, seq_len(nrow(data))), function(x){
-    jsonlite::toJSON(
-      list(values=as.list(x), remove = FALSE),
-      auto_unbox = TRUE)}, character(1)
-  )
+
+  jsonlines <- data[, jsonlite::toJSON(
+    list(values=as.list(.SD), remove = FALSE),
+    auto_unbox = TRUE, na = "null"), by = seq_len(nrow(data))][,V1]
   
   combine_jsonlines(changeset, jsonlines)
   send_jsonlines(changeset)
@@ -85,11 +83,9 @@ AddModifications <- function(changeset, data){
     stop("If rows are to be modified, they must have ids and timestamps")
   }
   
-  jsonlines <- vapply(split(data, seq_len(nrow(data))), function(x){
-    jsonlite::toJSON(
-      list(values=as.list(x), remove = FALSE),
-      auto_unbox = TRUE)}, character(1)
-  )
+  jsonlines <- data[, jsonlite::toJSON(
+    list(values=as.list(.SD), remove = FALSE),
+    auto_unbox = TRUE, na = "null"), by = seq_len(nrow(data))][,V1]
   
   combine_jsonlines(changeset, jsonlines)
   send_jsonlines(changeset)
@@ -105,11 +101,9 @@ AddDeletions <- function(changeset, data){
   
   data <- data[ , .(`__id`, `__ts`)]
   
-  jsonlines <- vapply(split(data, seq_len(nrow(data))), function(x){
-    jsonlite::toJSON(
-      list(values=as.list(x), remove = TRUE),
-      auto_unbox = TRUE)}, character(1)
-  )
+  jsonlines <- data[, jsonlite::toJSON(
+    list(values=as.list(.SD), remove = TRUE),
+    auto_unbox = TRUE, na = "null"), by = seq_len(nrow(data))][,V1]
   
   combine_jsonlines(changeset, jsonlines)
   send_jsonlines(changeset)
