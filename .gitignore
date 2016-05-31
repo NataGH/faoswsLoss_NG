@@ -21,6 +21,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# faoswsModule
+module/sws.yml
+
 # =========================
 # Operating System Files
 # =========================

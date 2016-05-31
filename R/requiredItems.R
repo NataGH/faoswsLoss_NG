@@ -12,7 +12,7 @@ getRequiredItems <- function(){
 #   select(measured_item_fs,food_general_group,measured_item_cpc) %>%
 #   filter(food_general_group == "primary")
   
-  lossFoodGroup = data.table(read.csv("foodPerishableGroup.csv")) %>%
+  lossFoodGroup = data.table(read.csv(file.path("data-raw", "foodPerishableGroup.csv"))) %>%
     select(FCL..Item..code.,FCL..Title,Group.Name,P.D,FBS..GROUP.Number,PERISHABLE) %>%
     filter(PERISHABLE != "")
   

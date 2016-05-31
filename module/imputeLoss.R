@@ -8,49 +8,26 @@ suppressMessages({
   library(igraph)
   library(plyr)
   library(dplyr)
+  library(faoswsModules)
 })
 
 library(faoswsLoss)
 
 updateModel = TRUE
-server = "QA"
+## server = "QA"
 ## Set up for the test environment and parameters
 
 if(CheckDebug()){
-    if(server == "prod"){
-        if(Sys.info()["user"] == "campbells"){ # Seb's work computer
-            SetClientFiles(dir = "~/certificates/production")
-            token = "e16a500b-2077-471b-8edf-6d810a85814d" # Nata's token 
-        } else if(Sys.info()["user"] == "Golini"){
-                                        # Nata's work computer
-            SetClientFiles(dir = "~/R certificate files/Production/")
-            token = "e16a500b-2077-471b-8edf-6d810a85814d" # Nata's token 
-        } else if(Sys.info()["user"] == "mk"){
-            SetClientFiles(dir = "~/.R/prod/")
-            token = "e16a500b-2077-471b-8edf-6d810a85814d"
-        } else {
-            stop("User not yet implemented!")
-        }
-        
-        
-        GetTestEnvironment(
-            baseUrl = "https://hqlprswsas1.hq.un.fao.org:8181/sws",
-            token = token
-        )
-    } else if(server == "QA"){
-        if(Sys.info()["user"] == "mk"){
-            SetClientFiles(dir = "~/.R/qa/")
-            token = "decf3c42-1f20-4257-b38e-766dfbce8f21"
-        } else {
-            stop("User not yet implemented!")
-        }
-        GetTestEnvironment(
-            baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
-            token = token
-            )
-    } else {
-        stop("Incorrect server specified")
-    }
+
+  settings <- ReadSettings(file = file.path("module", "sws.yml"))
+  SetClientFiles(dir = settings[["certdir"]])
+  GetTestEnvironment(
+    baseUrl = settings[["server"]],
+    token = settings[["token"]]
+  )
+  ## test connection
+  ## map = faosws::ReadDatatable(table = "fcl_2_cpc")
+
 }
 
 ## Year should be a paramameter selected.
@@ -72,12 +49,13 @@ flagMethodPrefix = "flagMethod_"
 
 
 if(updateModel){
-    finalModelData = 
+
+  finalModelData = 
         {
             requiredItems <<- getRequiredItems()
-            production <<- getProductionData()
-            import <<- getImportData()
-            loss <<- getOfficialLossData()
+            production <<- getProductionData() # Value_measuredElement_5510
+            import <<- getImportData()         # Value_measuredElement_5600
+            loss <<- getOfficialLossData()     # Value_measuredElement_5120
             lossFoodGroup <<- getLossFoodGroup()
             ## countryTable <<-
             ##   GetCodeList(domain = "agriculture",
@@ -116,6 +94,12 @@ if(updateModel){
                         )
                  )
           ]
+
+  ## modeldata <- file.path("module", "finalModelData.Rdata")
+  ## modeldata <- file.path(file.path(drypath, "faofbs", "data", "original", "finalModelData.Rdata"))
+  ## save(finalModelData, file = modeldata)
+  ## load(modeldata)
+  
     lossLmeModel =
         lmer(log(Value_measuredElement_5120 + 1) ~
                  -1 +
@@ -127,10 +111,13 @@ if(updateModel){
                  (-1 + log(Value_measuredElement_5600 + 1)|
                   measuredItemCPC/geographicAreaM49),
              data = finalModelData)
+    
 }
 
 
-
+## names(finalPredictData)
+## names(production)
+## names(loss)
 finalPredictData = 
 {
   if(!updateModel){
@@ -158,7 +145,8 @@ finalPredictData =
                     "measuredItemCPC", 
                     "timePointYears",
                     "Value_measuredElement_5120", # loss
-                    "flagObservationStatus_measuredElement_5120",
+                    ## "flagObservationStatus_measuredElement_5120", # column not found
+                    "flagFaostat_measuredElementFS_5120", # use faostat flag
                     "Value_measuredElement_5510", # production
                     "Value_measuredElement_5600", # import
                     "foodGroupName",
@@ -181,14 +169,17 @@ finalPredictData =
 
 
 ## Impute selected data
+
 finalPredictData %>%
   imputeLoss(data = .,
              lossVar = "Value_measuredElement_5120",
              lossObservationFlagVar =
-               "flagObservationStatus_measuredElement_5120",
+               ## "flagObservationStatus_measuredElement_5120",
+               "flagFaostat_measuredElementFS_5120", # use faostat flag
              lossMethodFlagVar = "flagMethod_measuredElement_5120",
              lossModel = lossLmeModel) %>%
   saveImputedLoss(data = .)
+## write.csv(finalPredictData, file.path(file.path(drypath, "faofbs", "data", "original", "imputeLoss_finalPredictData.csv")), row.names = FALSE)
 
 # finalPredictDataSet %>%
 #   filter(flagObservationStatus_measuredElement_5120 == " ")
