@@ -21,8 +21,12 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# faoswsModule
-module/sws.yml
+# token and certificates
+*sws.yml
+
+# Output files
+*.csv
+*.zip
 
 # =========================
 # Operating System Files
