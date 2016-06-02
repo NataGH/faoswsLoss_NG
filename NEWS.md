@@ -2,6 +2,7 @@
 
 - `SaveDatatable` functions now run more efficiently and can handle larger 
   Datatables
+- Added `methods` to NAMESPACE to allow Rscript to run checks on the package
 
 ## BUG FIXES
 

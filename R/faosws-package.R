@@ -33,7 +33,7 @@
 #'   
 #' @include SetClientFiles.R
 #'   
-#' @import data.table
+#' @import data.table methods
 
 # prevent roxygen2 marking this as dataset
 NULL
