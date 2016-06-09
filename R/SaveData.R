@@ -64,7 +64,7 @@
 
 SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMode = "wait", waitTimeout = 600, chunkSize = 50000) {
 
-  if (waitMode != "wait" && waitMode != "forget" && waitMode != "synch") {
+  if (!(waitMode %in% c("wait", "forget", "synch"))) {
     stop(paste("invalid waitMode: ", waitMode, ", expected one among 'wait', 'forget', 'synch'"))
   }
 

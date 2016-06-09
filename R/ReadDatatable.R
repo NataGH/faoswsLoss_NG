@@ -153,13 +153,13 @@ streamIn <- function (con, colstats, pagesize = 500, verbose = FALSE, ...) {
     if (length(page)) {
       cb(lapply(page, jsonlite:::parseJSON))
       if (verbose) 
-        cat("\r Found", count, "records...")
+        message("Found ", count, " records...")
     }
     if (length(page) < pagesize) 
       break
   }
   
-  if (verbose) cat("\r Imported", count, "records. Simplifying into dataframe...\n")
+  if (verbose) message("Imported ", count, " records. Simplifying into dataframe...")
   out <- as.list(out, sorted = FALSE)
   
   # If nothing comes back, return an empty table with all the correct cols
