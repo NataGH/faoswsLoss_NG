@@ -19,7 +19,7 @@ updateModel = TRUE
 
 if(CheckDebug()){
 
-  settings <- ReadSettings(file = file.path("module", "sws.yml"))
+  settings <- ReadSettings(file = file.path("modules", "impute_loss", "sws.yml"))
   SetClientFiles(dir = settings[["certdir"]])
   GetTestEnvironment(
     baseUrl = settings[["server"]],
