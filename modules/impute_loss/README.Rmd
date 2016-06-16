@@ -5,6 +5,8 @@ Module to impute the post-harvest loss.
 Author: Michael C. J. Kao
 Maintainer: Bo Werth
 
+$$\alpha, \beta,  \gamma, \Gamma$$
+
 ---
 
 

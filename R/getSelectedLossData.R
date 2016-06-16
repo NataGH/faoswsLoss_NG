@@ -8,55 +8,55 @@ getSelectedLossData = function(){
   
   
   ##################################################################################################
-  #   Code to get Import data from the Old System 
+  ##   Code to get Import data from the Old System 
   ##################################################################################################
-  #  
-  #   measuredItemFS = ReadDatatable(table = "loss_food_group") %>%
-  #     select(measured_item_fs,food_general_group,measured_item_cpc) %>%
-  #     filter(food_general_group == "primary")
-  #   
-  #   
-  #   lossQuery = data.table(sws_query(area = 1:299, 
-  #                                    item = as.character(measuredItemFS$measured_item_fs), 
-  #                                    ele = 121, 
-  #                                    year = 1961:2015, 
-  #                                    value.names = F
-  #   ))
-  #   
-  #   
-  #   setnames(lossQuery, 
-  #            old = c(names(lossQuery)),
-  #            new = c("geographicAreaFS","measuredItemFCL","measuredElement","timePointYears",
-  #                    "Value_measuredElement_5120","flagObservationStatus_measuredElement_5120")
-  #   )
-  #   
-  #   lossQuery = 
-  #     lossQuery%>%
-  #     select(geographicAreaFS,measuredItemFCL,timePointYears,
-  #            Value_measuredElement_5120,flagObservationStatus_measuredElement_5120)
-  #   
-  #   
-  #   ## Convert measuredItemFCL to measuredItemCPC
-  #   #   lossQuery[, measuredItemCPC := faoswsUtil::cpc2fcl(as.character(measuredItemFCL))]
-  #   
-  #   ## Convert geographicAreaFS to geographicAreaM49
-  #   #   lossQuery[, geographicAreaM49 := faoswsUtil::fs2m49(as.character(geographicAreaFS))]
-  #   
-  #   
-  #   ## Convert time to numeric
-  #   lossQuery[, timePointYears := as.numeric(timePointYears)]
-  #   
-  #   ## Taking only official data
-  #   lossQuery = lossQuery[flagObservationStatus_measuredElement_5120 == " ", ]
-  #   
-  #   ## Adding headings to FCL codes
-  #   lossQuery[, measuredItemFCL := addHeadingsFCL(measuredItemFCL)]
-  #   
-  ##################################################################################################  
+  ##  
+  ##   measuredItemFS = ReadDatatable(table = "loss_food_group") %>%
+  ##     select(measured_item_fs,food_general_group,measured_item_cpc) %>%
+  ##     filter(food_general_group == "primary")
+  ##   
+  ##   
+  ##   lossQuery = data.table(sws_query(area = 1:299, 
+  ##                                    item = as.character(measuredItemFS$measured_item_fs), 
+  ##                                    ele = 121, 
+  ##                                    year = 1961:2015, 
+  ##                                    value.names = F
+  ##   ))
+  ##   
+  ##   
+  ##   setnames(lossQuery, 
+  ##            old = c(names(lossQuery)),
+  ##            new = c("geographicAreaFS","measuredItemFCL","measuredElement","timePointYears",
+  ##                    "Value_measuredElement_5120","flagObservationStatus_measuredElement_5120")
+  ##   )
+  ##   
+  ##   lossQuery = 
+  ##     lossQuery%>%
+  ##     select(geographicAreaFS,measuredItemFCL,timePointYears,
+  ##            Value_measuredElement_5120,flagObservationStatus_measuredElement_5120)
+  ##   
+  ##   
+  ##   ## Convert measuredItemFCL to measuredItemCPC
+  ##   ##   lossQuery[, measuredItemCPC := faoswsUtil::cpc2fcl(as.character(measuredItemFCL))]
+  ##   
+  ##   ## Convert geographicAreaFS to geographicAreaM49
+  ##   ##   lossQuery[, geographicAreaM49 := faoswsUtil::fs2m49(as.character(geographicAreaFS))]
+  ##   
+  ##   
+  ##   ## Convert time to numeric
+  ##   lossQuery[, timePointYears := as.numeric(timePointYears)]
+  ##   
+  ##   ## Taking only official data
+  ##   lossQuery = lossQuery[flagObservationStatus_measuredElement_5120 == " ", ]
+  ##   
+  ##   ## Adding headings to FCL codes
+  ##   lossQuery[, measuredItemFCL := addHeadingsFCL(measuredItemFCL)]
+  ##   
+  ###################################################################################################  
   #
   #
   ##################################################################################################
-  #   Code to get Import data from the New System 
+  ##   Code to get Import data from the New System 
   ##################################################################################################
   
   allCountries =
@@ -64,12 +64,12 @@ getSelectedLossData = function(){
                 dataset = "aproduction",
                 dimension = "geographicAreaM49")[type == "country", code]
   
-  # Convert geographicAreaM49 to geographicAreaFS  
+  ## Convert geographicAreaM49 to geographicAreaFS  
   allCountriesFS = faoswsUtil::m492fs(as.character(allCountries))
-  # Remove "NULL"s  beacuse they are invalide codes for dimension geographicAreaFS
+  ## Remove "NULL"s  beacuse they are invalide codes for dimension geographicAreaFS
   allCountriesFS = na.omit(allCountriesFS) 
-  # Remove codes "274" "283" "280" "281" "279"
-  # because They are invalide codes for dimension geographicAreaFS
+  ## Remove codes "274" "283" "280" "281" "279"
+  ## because They are invalide codes for dimension geographicAreaFS
   allCountriesFS = allCountriesFS[-which(allCountriesFS == "274")]
   allCountriesFS = allCountriesFS[-which(allCountriesFS == "283")]
   allCountriesFS = allCountriesFS[-which(allCountriesFS == "280")]

@@ -7,27 +7,29 @@
 
 getProductionData = function(){
   
-  allCountries =
-    GetCodeList(domain = "agriculture",
-                dataset = "aproduction",
-                dimension = "geographicAreaM49")[type == "country", code]
-  
-  
-  productionKey = DatasetKey(
-    domain = "agriculture",
-    dataset = "aproduction",
-    dimensions = list(
-      Dimension(name = areaVar,
-                keys = allCountries),
-      Dimension(name = elementVar,
-                keys = "5510"),
-      Dimension(name = itemVar,
-                keys = as.character(requiredItems$measuredItemCPC)),
-      Dimension(name = yearVar,
-                keys = selectedYear)
-    )
-  )
-  
+  ## allCountries =
+  ##   GetCodeList(domain = "agriculture",
+  ##               dataset = "aproduction",
+  ##               dimension = "geographicAreaM49")[type == "country", code]
+  ## ##
+  ## productionKey = DatasetKey(
+  ##   domain = "agriculture",
+  ##   dataset = "aproduction",
+  ##   dimensions = list(
+  ##     Dimension(name = areaVar,
+  ##               keys = allCountries),
+  ##     Dimension(name = elementVar,
+  ##               keys = "5510"),
+  ##     Dimension(name = itemVar,
+  ##               keys = as.character(requiredItems$measuredItemCPC)),
+  ##     Dimension(name = yearVar,
+  ##               keys = selectedYear)
+  ##   )
+  ## )
+
+  ## create keys for data retrieval
+  productionKey <- faoswsUtil::getCompleteImputationKey(table = "production")
+
   ## Pivot to vectorize yield computation
   productionPivot = c(
     Pivoting(code = areaVar, ascending = TRUE),
@@ -45,11 +47,11 @@ getProductionData = function(){
   )
   
   
-  ## Convert geographicAreaM49 to geographicAreaFS
-  productionQuery[, geographicAreaFS := as.numeric(faoswsUtil::m492fs(as.character(geographicAreaM49)))]
+  ## ## Convert geographicAreaM49 to geographicAreaFS
+  ## productionQuery[, geographicAreaFS := as.numeric(faoswsUtil::m492fs(as.character(geographicAreaM49)))]
   
-    ## Convert measuredItemCPC to measuredItemFCL
-  productionQuery[, measuredItemFCL := faoswsUtil::cpc2fcl(as.character(measuredItemCPC),returnFirst = TRUE)]
+  ##   ## Convert measuredItemCPC to measuredItemFCL
+  ## productionQuery[, measuredItemFCL := faoswsUtil::cpc2fcl(as.character(measuredItemCPC),returnFirst = TRUE)]
   
   
   ## Convert time to numeric

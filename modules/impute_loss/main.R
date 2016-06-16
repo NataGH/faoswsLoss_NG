@@ -1,6 +1,8 @@
 suppressMessages({
   library(faosws)
   library(faoswsUtil)
+  library(faoswsFlag)
+  library(faoswsModules)
   library(lme4)
   library(data.table)
   library(magrittr)
@@ -8,7 +10,6 @@ suppressMessages({
   library(igraph)
   library(plyr)
   library(dplyr)
-  library(faoswsModules)
 })
 
 library(faoswsLoss)
@@ -27,20 +28,22 @@ if(CheckDebug()){
   )
   ## test connection
   ## map = faosws::ReadDatatable(table = "fcl_2_cpc")
-
+  ## sessionKey = swsContext.datasets[[1]]
+  
 }
 
 ## Year should be a paramameter selected.
-selectedYear = as.character(1961:2015)
+## selectedYear = as.character(1961:2015)
+selectedYear = as.character(1991:2015)
 
 
 areaVar = "geographicAreaM49"
-areaVarFS = "geographicAreaFS"
+## areaVarFS = "geographicAreaFS"
 yearVar = "timePointYears"
 itemVar = "measuredItemCPC"
-itemVarFS = "measuredItemFS"
+## itemVarFS = "measuredItemFS"
 elementVar = "measuredElement"
-elementVarFS = "measuredElementFS"
+## elementVarFS = "measuredElementFS"
 valuePrefix = "Value_"
 flagObsPrefix = "flagObservationStatus_"
 flagMethodPrefix = "flagMethod_"
@@ -51,67 +54,66 @@ flagMethodPrefix = "flagMethod_"
 if(updateModel){
 
   finalModelData = 
-        {
-            requiredItems <<- getRequiredItems()
-            production <<- getProductionData() # Value_measuredElement_5510
-            import <<- getImportData()         # Value_measuredElement_5600
-            loss <<- getOfficialLossData()     # Value_measuredElement_5120
-            lossFoodGroup <<- getLossFoodGroup()
-            ## countryTable <<-
-            ##   GetCodeList(domain = "agriculture",
-            ##               dataset = "agriculture",
-            ##               dimension = "geographicAreaM49")[type == "country",
-            ##                                                list(code, description)]
-            ## setnames(countryTable,
-            ##          old = c("code", "description"),
-            ##          new = c("geographicAreaM49", "geographicAreaM49Name"))
-        } %>%
-        mergeAllLossData(lossData = loss, production, import, lossFoodGroup) %>%
-        subset(x = .,
-               subset = ((Value_measuredElement_5510 == 0 &
-                          Value_measuredElement_5600 > 0) |
-                         (Value_measuredElement_5510 > 0 &
-                          Value_measuredElement_5600 >= 0)),
-               select = c("geographicAreaM49", 
-                          "measuredItemCPC", 
-                          "timePointYears",
-                          "Value_measuredElement_5120", # loss
-                          "Value_measuredElement_5510", # production
-                          "Value_measuredElement_5600", # import
-                          "foodGroupName",
-                          "foodPerishableGroup")) %>%
-        removeCarryLoss(data = ., lossVar = "Value_measuredElement_5120") %>%
-        ## Convert variables to factor
-        .[, `:=`(c("geographicAreaM49",
-                   "measuredItemCPC", 
-                   "foodGroupName", 
-                   "foodPerishableGroup"),
-                 lapply(c("geographicAreaM49",
-                          "measuredItemCPC", 
-                          "foodGroupName", 
-                          "foodPerishableGroup"),
-                        FUN = function(x) as.factor(.SD[[x]])
-                        )
-                 )
-          ]
+    {
+      requiredItems <<- getRequiredItems()
+      production <<- getProductionData() # Value_measuredElement_5510
+      import <<- getImportData()         # Value_measuredElementTrade_5610
+      ## loss <<- getOfficialLossData()     # Value_measuredElement_5016
+      loss <<- getLossData(protected = TRUE)     # Value_measuredElement_5016
+      lossFoodGroup <<- getLossFoodGroup()
+    } %>%
+    mergeAllLossData(lossData = loss, production, import, lossFoodGroup) %>%
+    ## returns around 13 000 obs
+    subset(x = .,
+           ## only use observations where:
+           ## a) production is zero and imports are positive
+           ## b) production is positive and imports are zero or positive
+           ## returns around 700 obs
+           subset = ((Value_measuredElement_5510 == 0 &
+                      Value_measuredElementTrade_5610 > 0) |
+                     (Value_measuredElement_5510 > 0 &
+                      Value_measuredElementTrade_5610 >= 0)),
+           select = c("geographicAreaM49", 
+                      "measuredItemCPC", 
+                      "timePointYears",
+                      "Value_measuredElement_5016", # loss
+                      "Value_measuredElement_5510", # production
+                      "Value_measuredElementTrade_5610", # import
+                      "foodGroupName",
+                      "foodPerishableGroup")) %>%
+    ## another filter: returns around 280 obs
+    removeCarryLoss(data = ., lossVar = "Value_measuredElement_5016") %>%
+    ## Convert variables to factor
+    .[, `:=`(c("geographicAreaM49",
+               "measuredItemCPC", 
+               "foodGroupName", 
+               "foodPerishableGroup"),
+             lapply(c("geographicAreaM49",
+                      "measuredItemCPC", 
+                      "foodGroupName", 
+                      "foodPerishableGroup"),
+                    FUN = function(x) as.factor(.SD[[x]])
+                    )
+             )
+      ]
 
-  ## modeldata <- file.path("module", "finalModelData.Rdata")
-  ## modeldata <- file.path(file.path(drypath, "faofbs", "data", "original", "finalModelData.Rdata"))
-  ## save(finalModelData, file = modeldata)
+  ## modeldata <- file.path(file.path(drypath, "faofbs", "data", "derived", "orig_imputeLoss_finalModelData_csv.Rdata"))
+  ## imputeLoss_finalModelData_csv_orig <- finalModelData
+  ## save(imputeLoss_finalModelData_csv_orig, file = modeldata)
   ## load(modeldata)
   
-    lossLmeModel =
-        lmer(log(Value_measuredElement_5120 + 1) ~
-                 -1 +
-                 timePointYears +
-                 log(Value_measuredElement_5510 + 1) + 
-                 (-1 + log(Value_measuredElement_5510 + 1)|
-                  foodPerishableGroup/foodGroupName/measuredItemCPC/geographicAreaM49)+
-                 log(Value_measuredElement_5600 + 1) +
-                 (-1 + log(Value_measuredElement_5600 + 1)|
-                  measuredItemCPC/geographicAreaM49),
-             data = finalModelData)
-    
+  lossLmeModel =
+    lmer(log(Value_measuredElement_5016 + 1) ~
+           -1 +
+           timePointYears +
+           log(Value_measuredElement_5510 + 1) + 
+           (-1 + log(Value_measuredElement_5510 + 1)|
+            foodPerishableGroup/foodGroupName/measuredItemCPC/geographicAreaM49)+
+           log(Value_measuredElementTrade_5610 + 1) +
+           (-1 + log(Value_measuredElementTrade_5610 + 1)|
+            measuredItemCPC/geographicAreaM49),
+         data = finalModelData)
+  
 }
 
 
@@ -119,39 +121,40 @@ if(updateModel){
 ## names(production)
 ## names(loss)
 finalPredictData = 
-{
-  if(!updateModel){
-    ## requiredItems <<- getAllItemCPC()
-    production <<- getProductionData()
-    import <<- getImportData()
-    lossFoodGroup <<- getLossFoodGroup()
-    ## lossRegionClass <<- getLossRegionClass()
-    ##  countryTable <<-
-    ##    GetCodeList(domain = "agriculture",
-    ##                dataset = "agriculture",
-    ##                dimension = "geographicAreaM49")[type == "country",
-    ##                                                 list(code, description)]
-    ##  setnames(countryTable,
-    ##           old = c("code", "description"),
-    ##           new = c("geographicAreaM49", "geographicAreaM49Name"))
-  }
-  loss <<- getSelectedLossData()
-} %>%
+  {
+    if(!updateModel){
+      ## requiredItems <<- getAllItemCPC()
+      production <<- getProductionData()
+      import <<- getImportData()
+      lossFoodGroup <<- getLossFoodGroup()
+      ## lossRegionClass <<- getLossRegionClass()
+      ##  countryTable <<-
+      ##    GetCodeList(domain = "agriculture",
+      ##                dataset = "agriculture",
+      ##                dimension = "geographicAreaM49")[type == "country",
+      ##                                                 list(code, description)]
+      ##  setnames(countryTable,
+      ##           old = c("code", "description"),
+      ##           new = c("geographicAreaM49", "geographicAreaM49Name"))
+    }
+    ## loss <<- getSelectedLossData()
+    loss <<- getLossData(protected = FALSE)
+  } %>%
   mergeAllLossData(lossData = loss, production, import, lossFoodGroup) %>%
   subset(x = .,
-         subset = ((Value_measuredElement_5510 == 0 & Value_measuredElement_5600 > 0) |
-                     (Value_measuredElement_5510 > 0 & Value_measuredElement_5600 >= 0)),
+         subset = ((Value_measuredElement_5510 == 0 & Value_measuredElementTrade_5610 > 0) |
+                   (Value_measuredElement_5510 > 0 & Value_measuredElementTrade_5610 >= 0)),
          select = c("geographicAreaM49", 
                     "measuredItemCPC", 
                     "timePointYears",
-                    "Value_measuredElement_5120", # loss
-                    ## "flagObservationStatus_measuredElement_5120", # column not found
-                    "flagFaostat_measuredElementFS_5120", # use faostat flag
+                    "Value_measuredElement_5016", # loss
+                    "flagObservationStatus_measuredElement_5016", # column not found
+                    ## "flagFaostat_measuredElementFS_5016", # use faostat flag
                     "Value_measuredElement_5510", # production
-                    "Value_measuredElement_5600", # import
+                    "Value_measuredElementTrade_5610", # import
                     "foodGroupName",
                     "foodPerishableGroup")) %>%
-  removeCarryLoss(data = ., lossVar = "Value_measuredElement_5120") %>%
+  removeCarryLoss(data = ., lossVar = "Value_measuredElement_5016") %>%
   ## Convert variables to factor
   .[, `:=`(c("geographicAreaM49",
              "measuredItemCPC", 
@@ -162,9 +165,9 @@ finalPredictData =
                     "foodGroupName", 
                     "foodPerishableGroup"),
                   FUN = function(x) as.factor(.SD[[x]])
+                  )
            )
-  )
-  ]
+    ]
 
 
 
@@ -172,15 +175,16 @@ finalPredictData =
 
 finalPredictData %>%
   imputeLoss(data = .,
-             lossVar = "Value_measuredElement_5120",
+             lossVar = "Value_measuredElement_5016",
              lossObservationFlagVar =
-               ## "flagObservationStatus_measuredElement_5120",
-               "flagFaostat_measuredElementFS_5120", # use faostat flag
-             lossMethodFlagVar = "flagMethod_measuredElement_5120",
+               "flagObservationStatus_measuredElement_5016",
+               ## "flagFaostat_measuredElementFS_5016", # use faostat flag
+             lossMethodFlagVar = "flagMethod_measuredElement_5016",
              lossModel = lossLmeModel) %>%
   saveImputedLoss(data = .)
-## write.csv(finalPredictData, file.path(file.path(drypath, "faofbs", "data", "original", "imputeLoss_finalPredictData.csv")), row.names = FALSE)
+## ## write.csv(finalPredictData, file.path(file.path(drypath, "faofbs", "data", "original", "imputeLoss_finalPredictData.csv")), row.names = FALSE)
+## predictdata <- file.path(file.path(drypath, "faofbs", "data", "derived", "orig_imputeLoss_finalPredictData_csv.Rdata"))
+## imputeLoss_finalPredictData_csv_orig <- finalPredictData
+## save(imputeLoss_finalPredictData_csv_orig, file = predictdata)
 
-# finalPredictDataSet %>%
-#   filter(flagObservationStatus_measuredElement_5120 == " ")
 

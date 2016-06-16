@@ -57,76 +57,93 @@ getImportData = function(){
 #   Code to get Import data from the New System 
 ##################################################################################################
 
-  allCountries =
-    GetCodeList(domain = "agriculture",
-                dataset = "aproduction",
-                dimension = "geographicAreaM49")[type == "country", code]
-  
-  # Convert geographicAreaM49 to geographicAreaFS  
-  allCountriesFS = faoswsUtil::m492fs(as.character(allCountries))
-  # Remove "NULL"s  beacuse they are invalide codes for dimension geographicAreaFS
-  allCountriesFS = na.omit(allCountriesFS) 
-  # Remove codes "274" "283" "280" "281" "279"
-  # because They are invalide codes for dimension geographicAreaFS
-  allCountriesFS = allCountriesFS[-which(allCountriesFS == "274")]
-  allCountriesFS = allCountriesFS[-which(allCountriesFS == "283")]
-  allCountriesFS = allCountriesFS[-which(allCountriesFS == "280")]
-  allCountriesFS = allCountriesFS[-which(allCountriesFS == "281")]
-  allCountriesFS = allCountriesFS[-which(allCountriesFS == "279")]
-
-  importKey = DatasetKey(
-    domain = "faostat_one",
-    dataset = "FS1_SUA",
-    dimensions = list(
-      Dimension(name = areaVarFS,
-                keys = allCountriesFS),
-      Dimension(name = elementVarFS,
-                keys = "61"),
-      Dimension(name = itemVarFS,
-                keys = as.character(as.numeric(requiredItems$measuredItemFCL))),
-      Dimension(name = yearVar,
-                keys = selectedYear)
-    )
-  )
-  
+  ## allCountries =
+  ##   GetCodeList(domain = "agriculture",
+  ##               dataset = "aproduction",
+  ##               dimension = "geographicAreaM49")[type == "country", code]
+  ##
+  ## # Convert geographicAreaM49 to geographicAreaFS  
+  ## allCountriesFS = faoswsUtil::m492fs(as.character(allCountries))
+  ## # Remove "NULL"s  beacuse they are invalide codes for dimension geographicAreaFS
+  ## allCountriesFS = na.omit(allCountriesFS) 
+  ## # Remove codes "274" "283" "280" "281" "279"
+  ## # because They are invalide codes for dimension geographicAreaFS
+  ## allCountriesFS = allCountriesFS[-which(allCountriesFS == "274")]
+  ## allCountriesFS = allCountriesFS[-which(allCountriesFS == "283")]
+  ## allCountriesFS = allCountriesFS[-which(allCountriesFS == "280")]
+  ## allCountriesFS = allCountriesFS[-which(allCountriesFS == "281")]
+  ## allCountriesFS = allCountriesFS[-which(allCountriesFS == "279")]
+  ##
+  ## importKey = DatasetKey(
+  ##   domain = "faostat_one",
+  ##   dataset = "FS1_SUA",
+  ##   dimensions = list(
+  ##     Dimension(name = areaVarFS,
+  ##               keys = allCountriesFS),
+  ##     Dimension(name = elementVarFS,
+  ##               keys = "61"),
+  ##     Dimension(name = itemVarFS,
+  ##               keys = as.character(as.numeric(requiredItems$measuredItemFCL))),
+  ##     Dimension(name = yearVar,
+  ##               keys = selectedYear)
+  ##   )
+  ## )
+  ##
+  importKey <- faoswsUtil::getCompleteImputationKey(table = "production")
+  importKey@domain <- "trade"
+  importKey@dataset <- "total_trade_cpc_m49"
+  names(importKey@dimensions) <-
+    sub("measuredElement", "measuredElementTrade", names(importKey@dimensions))
+  importKey@dimensions[["measuredElementTrade"]]@name <- "measuredElementTrade"
+  importKey@dimensions[["measuredElementTrade"]]@keys <- "5610"
+  ## ## currently not working due to insufficient permissions
+  ## faosws::GetDatasetConfig(domainCode = "trade",
+  ##                          datasetCode = "total_trade_cpc_m49")
   
   ## Pivot to vectorize yield computation
   importPivot = c(
-    Pivoting(code = areaVarFS, ascending = TRUE),
-    Pivoting(code = itemVarFS, ascending = TRUE),
+    ## Pivoting(code = areaVarFS, ascending = TRUE),
+    ## Pivoting(code = itemVarFS, ascending = TRUE),
+    ## Pivoting(code = yearVar, ascending = FALSE),
+    ## Pivoting(code = elementVarFS, ascending = TRUE)
+    Pivoting(code = areaVar, ascending = TRUE),
+    Pivoting(code = itemVar, ascending = TRUE),
     Pivoting(code = yearVar, ascending = FALSE),
-    Pivoting(code = elementVarFS, ascending = TRUE)
+    ## Pivoting(code = elementVar, ascending = TRUE)
+    Pivoting(code = "measuredElementTrade", ascending = TRUE)
   )
   
   ## Query the data
-  importQuery = GetData(
-    key = importKey,
-    flags = TRUE,
-    normalized = FALSE,
-    pivoting = importPivot
-  )
+  importQuery <-
+    GetData(
+      key = importKey,
+      flags = TRUE,
+      normalized = FALSE,
+      pivoting = importPivot
+    )
+
+  ## rename(measuredElement = measuredElementTrade)
   
-  
-  
-  setnames(importQuery,
-           old = names(importQuery),
-           new = c("geographicAreaFS","measuredItemFCL","timePointYears",
-                    "Value_measuredElement_5600","flagFaostat_measuredElementFS_5600")
-           )
+  ## setnames(importQuery,
+  ##          old = names(importQuery),
+  ##          new = c("geographicAreaFS","measuredItemFCL","timePointYears",
+  ##                   "Value_measuredElement_5600","flagFaostat_measuredElementFS_5600")
+  ##          )
 
 
-  ## Convert geographicAreaM49 to geographicAreaFS
-  importQuery[, geographicAreaM49 := as.numeric(faoswsUtil::fs2m49(as.character(geographicAreaFS)))]
+  ## ## Convert geographicAreaM49 to geographicAreaFS
+  ## importQuery[, geographicAreaM49 := as.numeric(faoswsUtil::fs2m49(as.character(geographicAreaFS)))]
   
-  ## Convert measuredItemCPC to measuredItemFCL
-  importQuery[, measuredItemFCL := addHeadingsFCL(measuredItemFCL)]
-  importQuery[, measuredItemCPC := faoswsUtil::fcl2cpc(as.character(measuredItemFCL))]
+  ## ## Convert measuredItemCPC to measuredItemFCL
+  ## importQuery[, measuredItemFCL := addHeadingsFCL(measuredItemFCL)]
+  ## importQuery[, measuredItemCPC := faoswsUtil::fcl2cpc(as.character(measuredItemFCL))]
   
   
   ## Convert time to numeric
   importQuery[, timePointYears := as.numeric(timePointYears)]
   
-  importQuery[, geographicAreaFS := as.numeric(geographicAreaFS)]
+  ## importQuery[, geographicAreaFS := as.numeric(geographicAreaFS)]
+  importQuery[, geographicAreaM49 := as.numeric(geographicAreaM49)]
   
   importQuery
   
