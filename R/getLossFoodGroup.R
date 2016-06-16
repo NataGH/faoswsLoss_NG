@@ -21,5 +21,6 @@ getLossFoodGroup = function(){
   
   ## Adding headings to FCL codes
   lossFoodGroup[, measuredItemFCL := addHeadingsFCL(measuredItemFCL)]
+  lossFoodGroup[, measuredItemCPC := faoswsUtil::fcl2cpc(as.character(measuredItemFCL))]
   
 }
