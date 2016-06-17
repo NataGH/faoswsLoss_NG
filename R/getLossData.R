@@ -3,7 +3,7 @@
 #' Function to obtain official food loss data at primary level
 #' @param protected Logical only return observations with protected flag combination 
 #'
-#' @export getOfficialLossData
+#' @export getLossData
 
 getLossData = function(protected = FALSE){
   

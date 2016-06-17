@@ -2,7 +2,6 @@ suppressMessages({
   library(faosws)
   library(faoswsUtil)
   library(faoswsFlag)
-  library(faoswsModules)
   library(lme4)
   library(data.table)
   library(magrittr)
@@ -20,6 +19,9 @@ updateModel = TRUE
 
 if(CheckDebug()){
 
+  ## ?devtools::install_github
+  ## devtools::install_github("SWS-Methodology/faoswsModules", ref = "fbb838f8f7d0d53446af18d96ad7300c5d0ac1c6")
+  library(faoswsModules)
   settings <- ReadSettings(file = file.path("modules", "impute_loss", "sws.yml"))
   SetClientFiles(dir = settings[["certdir"]])
   GetTestEnvironment(
@@ -29,7 +31,10 @@ if(CheckDebug()){
   ## test connection
   ## map = faosws::ReadDatatable(table = "fcl_2_cpc")
   ## sessionKey = swsContext.datasets[[1]]
-  
+  ## faoswsModules::CopyKey()
+  ## faoswsModules::CopyKey(swsContext.datasets[[1]])
+  ## swsContext.computationParams # empty list
+
 }
 
 ## Year should be a paramameter selected.
@@ -63,6 +68,7 @@ if(updateModel){
       lossFoodGroup <<- getLossFoodGroup()
     } %>%
     mergeAllLossData(lossData = loss, production, import, lossFoodGroup) %>%
+    ## temp <- mergeAllLossData(lossData = loss, production, import, lossFoodGroup) %>%
     ## returns around 13 000 obs
     subset(x = .,
            ## only use observations where:
@@ -150,6 +156,7 @@ finalPredictData =
                     "Value_measuredElement_5016", # loss
                     "flagObservationStatus_measuredElement_5016", # column not found
                     ## "flagFaostat_measuredElementFS_5016", # use faostat flag
+                    "flagMethod_measuredElement_5016", # column not found
                     "Value_measuredElement_5510", # production
                     "Value_measuredElementTrade_5610", # import
                     "foodGroupName",
