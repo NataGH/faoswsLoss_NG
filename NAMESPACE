@@ -2,8 +2,8 @@
 
 export(addHeadingsFCL)
 export(getImportData)
+export(getLossData)
 export(getLossFoodGroup)
-export(getOfficialLossData)
 export(getProductionData)
 export(getRequiredItems)
 export(getSelectedLossData)

@@ -1,36 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RScript xmlns="http://www.fao.org/rScript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	       xsi:schemaLocation="http://www.fao.org/rScript rScript.xsd ">
-	<Name>Impute Post-Harvest Loss</Name>
-	<Description>Impute values for Post-Harvest Loss.
-  </Description>
-	<Category>Computation</Category>
+	<Name>Impute Loss</Name>
+	<Description>Imputation of loss based on Hierarchical Linear Model (HLM).</Description>
+	<Category>Imputation</Category>
 	<Authors>
 		<Author>
 			<Name>Bo Werth</Name>
 			<Mail>bo.werth@fao.org</Mail>
 		</Author>
 	</Authors>
-	<Params>
-		<Param xsi:type="List">
-      <Code>computation_selection</Code>
-	    <Label>Perform computation on </Label>
-		  <Description>
-			  Please specify the selection to perform computation.
-		  </Description>
-			<Compulsory>false</Compulsory>
-			<Options>
-				<Option>
-					<Label>Session Only</Label>
-					<Value>session</Value>
-				</Option>	
-				<Option>
-					<Label>All Data</Label>
-					<Value>all</Value>
-				</Option>
-			</Options>
-		</Param>
-	</Params>
 	<Datasets>
 		<MainDataset>
 			<Code>aproduction</Code>
