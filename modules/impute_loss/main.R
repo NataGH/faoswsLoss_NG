@@ -65,7 +65,8 @@ if(updateModel){
       import <<- getImportData()         # Value_measuredElementTrade_5610
       ## loss <<- getOfficialLossData()     # Value_measuredElement_5016
       loss <<- getLossData(protected = TRUE)     # Value_measuredElement_5016
-      lossFoodGroup <<- getLossFoodGroup()
+      ## lossFoodGroup <<- getLossFoodGroup()
+      assign("lossFoodGroup", getLossFoodGroup(), envir = .GlobalEnv)
     } %>%
     mergeAllLossData(lossData = loss, production, import, lossFoodGroup) %>%
     ## temp <- mergeAllLossData(lossData = loss, production, import, lossFoodGroup) %>%
