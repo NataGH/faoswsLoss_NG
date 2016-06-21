@@ -430,7 +430,7 @@ SaveData.buildNormalizedDataContentJSON <- function(data) {
   # Extract key column names.
   #
   filteredColumnNames <- colnames(data[, metadataColumnsFilter, with = FALSE])
-  if(length(which(filteredColumnNames == "Value")) <= 0) {
+  if(!("Value" %in% filteredColumnNames)) {
     stop("Unexpected data table structure detected: could not locate Value column.")
   }
   index <- tail(which(filteredColumnNames == "Value"), 1)
@@ -455,7 +455,7 @@ SaveData.buildNormalizedDataContentJSON <- function(data) {
   #
   uniqueKeys <- unique(data)
   json <- split(uniqueKeys, rownames(uniqueKeys))
-  json <- lapply(json, as.character)
+  json <- lapply(json, function(v){as.character(unlist(v))})
   json <- json[order(as.numeric(names(json)))]
   names(json) <- NULL
 
