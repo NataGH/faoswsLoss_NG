@@ -8,75 +8,76 @@ SaveData(domain, dataset, data, metadata, normalized = TRUE,
   waitMode = "wait", waitTimeout = 600, chunkSize = 50000)
 }
 \arguments{
-\item{domain}{A character value specifying the domain for which the code
+\item{domain}{A character value specifying the domain for which the code 
 list is required.}
 
-\item{dataset}{A character value specifying the dataset for which the code
+\item{dataset}{A character value specifying the dataset for which the code 
 list is required.}
 
 \item{data}{A data.table object containing keys, data and flags.}
 
-\item{metadata}{A data.table object containing the metadata.  The first
-columns of this object should contain the keys, and immediately following
-these key columns should be a column named "Metadata" which contains the
+\item{metadata}{A data.table object containing the metadata.  The first 
+columns of this object should contain the keys, and immediately following 
+these key columns should be a column named "Metadata" which contains the 
 metadata to write.}
 
-\item{normalized}{Logical, indicates whether data is in a normalized or
+\item{normalized}{Logical, indicates whether data is in a normalized or 
 denormalized format.list}
 
-\item{waitMode}{A character string indicating how to behave with respect to
-the backend.  Should be either "wait", "forget", or "synch".  "wait" allows
-R to routinely check for completion of the save, up to pullTimeout seconds.
-"forget" returns control to R immediately without verifying that the object
-has been saved (this can be dangerous if the object is accessed later).
-"synch" gives the writing process a short time period, and returns an error
-if the write fails.}
+\item{waitMode}{A character string indicating how to behave with respect to 
+the backend.  Should be either "wait", "forget", or "synch".  "wait"
+allows R to routinely check for completion of the save, up to pullTimeout
+seconds. "forget" returns control to R immediately without verifying that
+the object has been saved (this can be dangerous if the object is accessed
+later). "synch" gives the writing process a short time period, and returns
+an error if the write fails.}
 
-\item{waitTimeout}{An integer giving the number of seconds to allow for the
+\item{waitTimeout}{An integer giving the number of seconds to allow for the 
 write process to the database before returning an error.}
 
-\item{chunkSize}{The largest number of rows to write at one time.  This
-value helps prevent server timeouts, and shouldn't usually need to be
+\item{chunkSize}{The largest number of rows to write at one time.  This 
+value helps prevent server timeouts, and shouldn't usually need to be 
 adjusted from the default value of 50,000.}
 }
 \value{
-A list is returned, which contains the following values (note that
-"version" below refers to the version of the observation in the database):
-\itemize{
-\item inserted =  the number of rows inserted 'ex novo' (with version=1:
-                  there wasn't any already existing observation for same coordinates)
-\item appended =  the number of rows inserted in append mode (with version=max+1:
-            there was one or more observation/s: version number incremented)
-\item ignored =   the number of rows not inserted because an already existing
-            observation was in place with identical attributes
-\item discarded = the number of new observations not created because of non blocking
-            errors (i.e. 'warnings' which caused the row to be discarded
-            without blocking other rows insertion)
-\item warnings =  a data.table which can be NULL or contain 1 to 10 rows.if value
-            of "discarded" is > 0, the data.table contains an excerpt of rows
-            discarded (max 10 rows), any of which with following info:
-            \itemize{
-                \item row     = the positional row number in the data as sent
-                \item reason  = a description of the discarding error
-            }
-}
-If waitMode is 'forget', NULL is returned always
+A list is returned, which contains the following values (note that 
+  "version" below refers to the version of the observation in the database):
+  \itemize{ \item inserted =  the number of rows inserted 'ex novo' (with
+  version=1: there wasn't any already existing observation for same
+  coordinates) \item appended =  the number of rows inserted in append mode
+  (with version=max+1: there was one or more observation/s: version number
+  incremented) \item ignored =   the number of rows not inserted because an
+  already existing observation was in place with identical attributes \item
+  discarded = the number of new observations not created because of non
+  blocking errors (i.e. 'warnings' which caused the row to be discarded 
+  without blocking other rows insertion) \item warnings =  a data.table
+  which can be NULL or contain 1 to 10 rows.if value of "discarded" is > 0,
+  the data.table contains an excerpt of rows discarded (max 10 rows), any of
+  which with following info: \itemize{ \item row     = the positional row
+  number in the data as sent \item reason  = a description of the discarding
+  error } } If waitMode is 'forget', NULL is returned always
 }
 \description{
-This is the main function used to write data back to a user's session.  The
-data must be in a particular format, and thus it's recommended to first
-read data via GetData, modify the data.table, and then write it back to the
+This is the main function used to write data back to a user's session.  The 
+data must be in a particular format, and thus it's recommended to first read
+data via GetData, modify the data.table, and then write it back to the 
 database with this function.
 }
 \details{
-Also, this function will throw an error if you attempt to write to invalid
-data.  For example, some countries have restrictions on which time period
-they have data (as they recently became a country, or are no longer a
+Also, this function will throw an error if you attempt to write to invalid 
+data.  For example, some countries have restrictions on which time period 
+they have data (as they recently became a country, or are no longer a 
 country).  See ?GetCodeList.
+
+
+
+In order to remove a value or flag, simply write NA in its place. Be careful
+not to accidentally include NAs in your data if you do not wish those values
+to be cleared.
 }
 \section{Attempting to write invalid data}{
-
-Currently, if no flags are provided, all rows with no flags will be marked
-as appended and rejected. Up to 10 warnings will be provided.
+ Currently, if no flags are
+  provided, all rows with no flags will be marked as appended and rejected.
+  Up to 10 warnings will be provided.
 }
 

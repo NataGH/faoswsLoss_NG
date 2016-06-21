@@ -8,6 +8,7 @@
 
 - `FetchDatatableConfig` now correctly handles missing tables when there is more
   than one
+- `SaveData` now correctly blanks NA values
 
 
 # CHANGES IN faosws VERSION 0.8.0
