@@ -4,12 +4,12 @@
 ##' Note that swsContext files must exist in your session, so you should run 
 ##' GetTestEnvironment before calling this function.
 ##' 
-##' NOTE: This function will either pull directly from the database or from the
-##' local session you set up.  This is important, as analysts may have changed
-##' values within a local session and may then execute GetData.  To avoid
-##' overwriting the values they updated, you should make sure to include the
-##' session ID in the key argument.  This is fairly easy to do: when
-##' constructing the DatasetKey, simply pass sessionId =
+##' NOTE: This function will either pull directly from the database or from the 
+##' local session you set up.  This is important, as analysts may have changed 
+##' values within a local session and may then execute GetData.  To avoid 
+##' overwriting the values they updated, you should make sure to include the 
+##' session ID in the key argument.  This is fairly easy to do: when 
+##' constructing the DatasetKey, simply pass sessionId = 
 ##' slot(swsContext.datasets[[1]], "sessionId") as an argument.
 ##' 
 ##' If the denormalized value is not set then the data is normalized; if set the
@@ -19,24 +19,27 @@
 ##' specified order and applying the requested sort direction. This affects both
 ##' normalized and denormalized extractions. For normalized extractions only the
 ##' order of the dimensions is influenced, while for denormalized extraction the
-##' effect is more evident since the last dimension specified in the pivoting
-##' vector gets its values developed along the column of the generated
+##' effect is more evident since the last dimension specified in the pivoting 
+##' vector gets its values developed along the column of the generated 
 ##' data.table result object.
 ##' 
-##' @param key An object of class DatasetKey.  Often, this will be one of the 
-##'   list elements of swsContext.datasets (if running in a debug/local session,
-##'   create this object with GetTestEnvironment).
-##' @param flags Logical, indicating if flags should be returned (TRUE) 
+##' @param key DatasetKey.  Often, this will be one of the list elements of
+##'   swsContext.datasets (if running in a debug/local session, create this
+##'   object with GetTestEnvironment).
+##' @param flags logical, indicating if flags should be returned (TRUE) 
 ##'   otherwise not returned (FALSE).
-##' @param normalized Logical, if true then data are returned in normalized 
+##' @param normalized logical. If true then data are returned in normalized 
 ##'   format, otherwise the format is denormalized.
-##' @param pivoting A vector, each of whose elements must be an object of type 
-##'   Pivoting.  If omitted, no pivoting is performed on the dataset.  Using
-##'   this argument can allow for convenient reshaping of the data prior to
-##'   pulling it into R.  Note: if this argument is included, then all of the
-##'   dimensions in key must be included in this vector.  See ?Pivoting for a
-##'   description on creating this argument and for some examples on how to use
+##' @param pivoting vector. Each of whose elements must be an object of type 
+##'   Pivoting.  If omitted, no pivoting is performed on the dataset.  Using 
+##'   this argument can allow for convenient reshaping of the data prior to 
+##'   pulling it into R.  Note: if this argument is included, then all of the 
+##'   dimensions in key must be included in this vector.  See ?Pivoting for a 
+##'   description on creating this argument and for some examples on how to use 
 ##'   it.
+##' @param omitna logical. By default, all empty values are not returned. If
+##'   this is set to FALSE, empty values that have been modified at some point
+##'   in the past are returned.
 ##'   
 ##' @return A data table containing the data matching the key (may be empty).
 ##'   
@@ -73,7 +76,7 @@
 ##' 
 ##' @export GetData
 
-GetData <- function(key, flags = TRUE, normalized = TRUE, pivoting) {
+GetData <- function(key, flags = TRUE, normalized = TRUE, pivoting, omitna = TRUE) {
   
   # Validate passed arguments.
   #
@@ -106,7 +109,7 @@ GetData <- function(key, flags = TRUE, normalized = TRUE, pivoting) {
   }
 
   # normalizes result transforming columns from list of NULLs to vector of NAs
-  as.data.table(
+  out <- as.data.table(
     lapply(query,
            FUN = function(x){
              if(is.list(x))
@@ -115,6 +118,12 @@ GetData <- function(key, flags = TRUE, normalized = TRUE, pivoting) {
            }
     )
   )
+  
+  if(omitna){
+    out <- out[!is.na(Value),]
+  }
+  
+  out
 }
 
 
