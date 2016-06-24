@@ -60,7 +60,10 @@
 #' @export AddInsertions
 
 AddInsertions <- function(changeset, data){
+  
   data <- copy(data)
+  data <- check_dt(data)
+
   syscols <- which(colnames(data) %in% c("__id", "__ts"))
   
   if(length(syscols) > 0){
@@ -79,6 +82,10 @@ AddInsertions <- function(changeset, data){
 #' @export AddModifications
 
 AddModifications <- function(changeset, data){
+  
+  data <- copy(data)
+  data <- check_dt(data)
+  
   if(!all(c("__id", "__ts") %in% colnames(data))){
     stop("If rows are to be modified, they must have ids and timestamps")
   }
@@ -95,6 +102,10 @@ AddModifications <- function(changeset, data){
 #' @export AddDeletions
 
 AddDeletions <- function(changeset, data){
+  
+  data <- copy(data)
+  data <- check_dt(data)
+  
   if(!all(c("__id", "__ts") %in% colnames(data))){
     stop("If rows are to be deleted, they must have ids and timestamps. Did you use 'readOnly = FALSE' parameter in ReadDatatable?")
   }
@@ -192,4 +203,15 @@ post_json <- function(url, json){
     errmessage <- paste0(readLines(conn, warn = FALSE, encoding = "UTF-8"), collapse="\n")
     HandleHTTPError(responseCode, errmessage)
   }
+}
+
+check_dt <- function(d){
+  if(is.data.frame(d)){
+    d <- as.data.table(d)
+  } 
+  
+  if(!is.data.table(d)){
+    stop("'data' must be provided as a data.table")
+  }
+  d
 }
