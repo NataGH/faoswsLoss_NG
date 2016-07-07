@@ -136,7 +136,7 @@ GetData.NEW_processNormalizedResult <- function(data, flags) {
   }
   columns <- c(keyNames, "Value", flagNames)
   ## Drop any additional data (i.e. metadata)
-  data$data <- lapply(data$data, function(x) x[1:length(columns)])
+  data$data <- lapply(data$data, function(x) x[seq_along(columns)])
   out <- data.table(do.call("rbind", data$data))
   ## Columns are of type list, convert to vector
   ## lapply(out, class)
@@ -225,12 +225,19 @@ denormalizeResult <- function(data, query, key){
 GetData.NEW_processNormalizedResultMetadata <- function(data) {
   keyNames <- sapply(data$keyDefinitions, function(x) x[1])
   cols <- c(keyNames, "Metadata_Language", "Metadata", "Metadata_Group", "Metadata_Value")
+  
+  MakeEmptyMetadata <- function(k, ct){
+    coltypes <- c(rep("character", length(k)), "character", "character", "integer", "character")
+    do.call(data.table, setNames(lapply(coltypes, new), ct))
+  }
   result = lapply(data$data, function(listElement) {
-    if (length(listElement[[length(keyNames)+2]]) > 0) {
-      meta1 = lapply(listElement[[length(keyNames)+2]], function(listElement) {
+    # Check if there is a metadata element and if it is populated.
+    metadataIndex <- which(vapply(listElement, is.list, logical(1)))
+    if (length(metadataIndex) > 0 && length(listElement[[metadataIndex]]) > 0) {
+      meta1 = lapply(listElement[[length(keyNames) + 2]], function(listElement) {
         meta2 = lapply(listElement[[4]], function(listElement) {
           out = data.frame(list(listElement[[1]], 0, listElement[[3]]))
-          colnames(out) = c(cols[(length(keyNames)+2):length(cols)])
+          colnames(out) = c(cols[(length(keyNames) + 2):length(cols)])
           return(out)
         })
         lapply(1:length(meta2), function(i) {
@@ -246,11 +253,15 @@ GetData.NEW_processNormalizedResultMetadata <- function(data) {
       colnames(out) = cols
       return(out)
     } else {
-      return(NULL)
+      MakeEmptyMetadata(keyNames, cols)
     }
   })
   result = do.call("rbind", result)
-  result = data.table(result)
+  
+  # If there is no metadata at all, the result can be length 0
+  if(length(result) == 0){
+    result <- MakeEmptyMetadata(keyNames, cols)
+  }
   setcolorder(result, c(keyNames, "Metadata", "Metadata_Language", "Metadata_Group", "Metadata_Value"))
 }
 
