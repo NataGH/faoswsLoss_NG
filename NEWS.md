@@ -1,3 +1,9 @@
+## BUG FIXES
+
+- `GetMetadata` now works where there is no metadata
+- `GetData` now omits NA Values by default
+
+
 # CHANGES IN faosws VERSION 0.8.1
 
 ## MINOR CHANGES
