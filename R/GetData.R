@@ -231,6 +231,21 @@ denormalizeResult <- function(data, query, key){
   return(out)
 }
 
+hasEmptyList <- function(x) {
+  # Thanks to @MrFlick on Stack Overflow:
+  # http://stackoverflow.com/a/38248206/1465387
+  if(is.list(x)) {
+    #list
+    if (length(x) == 0) {
+      return(TRUE)
+    } else {
+      return(any(vapply(x, hasEmptyList, logical(1))))
+    }
+  } else {
+    return(FALSE)
+  }
+}
+
 GetData.NEW_processNormalizedResultMetadata <- function(data) {
   keyNames <- sapply(data$keyDefinitions, function(x) x[1])
   cols <- c(keyNames, "Metadata_Language", "Metadata", "Metadata_Group", "Metadata_Value")
@@ -243,6 +258,10 @@ GetData.NEW_processNormalizedResultMetadata <- function(data) {
     # Check if there is a metadata element and if it is populated.
     metadataIndex <- which(vapply(listElement, is.list, logical(1)))
     if (length(metadataIndex) > 0 && length(listElement[[metadataIndex]]) > 0) {
+      if(hasEmptyList(listElement[[length(keyNames) + 2]])){
+        stop("The SWS server has provided corrupted metadata. 
+             Please contact the engineering team and file an issue.")
+      }
       meta1 = lapply(listElement[[length(keyNames) + 2]], function(listElement) {
         meta2 = lapply(listElement[[4]], function(listElement) {
           out = data.frame(list(listElement[[1]], 0, listElement[[3]]))
