@@ -162,8 +162,11 @@ GetHistory.NEW_processNormalizedResult <- function(data) {
 				} 
 			})
 			elem <- list(elem)
-			if (length(listElement[[offset+1]]) > 0) {
-				meta1 = lapply(listElement[[offset+1]], function(listElement) {
+			# Check if there is metadata
+			if (length(listElement) >= (offset + 1) && length(listElement[[offset + 1]]) > 0) {
+			## alternatively: 
+			## if (length(listElement) > offset && length(listElement[[offset+1]]) > 0) {
+			    meta1 = lapply(listElement[[offset+1]], function(listElement) {
 					meta2 = lapply(listElement[[4]], function(listElement) {
 						out = data.frame(list(0, listElement[[1]], listElement[[3]]))
 						colnames(out) = c(cols[(offset+3):length(cols)])
