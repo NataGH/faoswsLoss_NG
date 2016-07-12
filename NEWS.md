@@ -3,6 +3,7 @@
 - `GetMetadata` now works where there is no metadata
 - `GetData` now omits NA Values by default
 - `GetMetadata` provides better error message when API gives truncated data
+- `GetHistory` now works where there is no Value
 
 
 # CHANGES IN faosws VERSION 0.8.1
