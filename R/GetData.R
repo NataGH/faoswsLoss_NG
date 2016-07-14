@@ -94,6 +94,11 @@ GetData <- function(key, flags = TRUE, normalized = TRUE, pivoting, omitna = TRU
   # Create result data table.
   #
   query <- GetData.NEW_processNormalizedResult(data, flags)
+  
+  if(omitna){
+    query <- query[!is.na(Value),]
+  }
+  
   if(!missing(pivoting)){
     colOrder <- sapply(pivoting, function(x) x@code)
     newKeyDefinitions <- as.list(colOrder)
@@ -118,10 +123,6 @@ GetData <- function(key, flags = TRUE, normalized = TRUE, pivoting, omitna = TRU
            }
     )
   )
-  
-  if(omitna){
-    out <- out[!is.na(Value),]
-  }
   
   out
 }
