@@ -136,15 +136,27 @@ GetHistory.NEW_processNormalizedResult <- function(data) {
 	offset <- length(keyNames) + 4 + length(flagNames)
 
 	result = lapply(data$data, function(listElement) {
-		currList <- listElement[1:offset]
+		# Horrible hack to counter the fact that the list may not be the right length 
+		# and to pad it with NULLs correctly
+	  if(length(listElement) < offset){
+	    listPosition <- which(vapply(listElement, is.list, logical(1)))
+	    
+	    if(length(listPosition) != 1){
+	      stop("The API has changed unexpectedly. Please contact the engineering
+	      team to resolve the issue")
+	    }
+	    # Insert NULLs into middle rather than the end
+	    listElement <- c(listElement[1:(listPosition - 1 )], lapply(vector((offset + 1) - (listPosition - 1) , mode = "list"), as.null), listElement[listPosition])
+	  }
+	  currList <- listElement[1:offset]
 		currMeta <- list()
-		if (length(listElement[[offset+1]]) > 0) {
+		if (length(listElement) >= (offset + 1) && length(listElement[[offset+1]]) > 0) {
 			currMeta <- listElement[[offset+1]]
 		}
 		currList[[11]] <- currMeta
 		currList <- list(currList)
 		totalList <- NULL
-		if (length(listElement[[offset+2]]) > 0) {
+		if (length(listElement) >= (offset + 2) && length(listElement[[offset+2]]) > 0) {
 			histList = lapply(listElement[[offset+2]], function(listElement) {
 				out <- append(currList[[1]][1:length(keyNames)], listElement)
 				return(out)
