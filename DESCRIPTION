@@ -3,11 +3,9 @@ Type: Package
 Title: Package to perform the computation of food loss FAO food balance sheets
 Version: 0.1.3
 Date: 2016-06-17
-Authors@R: c(person("Natalia", "Golini", role = c("aut", "cre"), email = "natalia.golini@fao.org"))
-Author: Natalia Golini <natalia.golini@fao.org>, Michael C. J. Kao
-    <michael.kao@fao.org>
-Maintainer: Natalia Golini <natalia.golini@fao.org>, Josh Browning
-    <joshua.browning@fao.org>
+Authors@R: c(person("Natalia", "Golini", role = c("aut", "cre"), email = "natalia.golini@fao.org"),
+             person("Michael C. J.", "Kao", role = "aut", email  = "michael.kao@fao.org"),
+             person("Josh", "Browning", role = "ctb", email = "joshua.browning@fao.org"))
 Description: This package provides all the functions to perfom computation of
     food loss for the FAO food balance sheets. The first model was developed by
     Michael Kao and then modified by Natalia Golini.
@@ -27,5 +25,7 @@ swsDatasetDepends: agriculture:aproduction,
     m49_2_fs,
     cpc_2_fcl
 swsModuleDepends: 
+    faoswsProduction,
+    faoswsTrade
 LazyData: true
 RoxygenNote: 5.0.1
