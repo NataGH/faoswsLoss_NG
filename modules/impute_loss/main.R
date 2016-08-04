@@ -60,7 +60,7 @@ if(updateModel){
 
   finalModelData = 
     {
-      requiredItems <<- getRequiredItems()
+      ## requiredItems <<- getRequiredItems()
       production <<- getProductionData() # Value_measuredElement_5510
       import <<- getImportData()         # Value_measuredElementTrade_5610
       ## loss <<- getOfficialLossData()     # Value_measuredElement_5016
@@ -195,4 +195,4 @@ finalPredictData %>%
 ## imputeLoss_finalPredictData_csv_orig <- finalPredictData
 ## save(imputeLoss_finalPredictData_csv_orig, file = predictdata)
 
-
+print("Loss Module completed successfully")
