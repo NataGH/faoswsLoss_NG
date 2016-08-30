@@ -1,3 +1,5 @@
+# CHANGES IN faosws VERSION 0.8.2
+
 ## BUG FIXES
 
 - `GetMetadata` now works where there is no metadata
