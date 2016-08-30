@@ -6,6 +6,8 @@
 - `GetHistory` now works where there is no Value
 - Fixed bug in `GetData` where it would fail if there was pivoting
 - No REST calls fail on blank now
+- `GetCodeList` now returns empty if given empty character vector. 
+  Fixes SWS-1122
 
 
 # CHANGES IN faosws VERSION 0.8.1

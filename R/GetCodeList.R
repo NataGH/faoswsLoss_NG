@@ -41,18 +41,33 @@ GetCodeList <- function(domain, dataset, dimension, codes) {
 	#
 	GetCodeList.validate(domain, dataset, dimension, codes)
 
-	# Prepare JSON for REST call.
-	#
-	json <- GetCodeList.buildJSON(domain, dataset, dimension, codes)
+  if(!missing(codes) && !is.null(codes) && length(codes) == 0){
+    # If request is *actually* length 0 then no need to make a request
+    
+    data.table(code = character(),
+               description = character(),
+               selectionOnly = logical(),
+               type = character(),
+               startDate = character(),
+               endDate = character())
+  } else {
 
-	# Perform REST call.
-	#
-	url <- paste0(swsContext.baseRestUrl, "/r/dimensionValues/", domain, "/", dataset, "/", dimension, "/plain?plainDescription=true")
-	data <- PostRestCall(url, json)
+    # Prepare JSON for REST call.
+    #
+    json <- GetCodeList.buildJSON(domain, dataset, dimension, codes)
+    
+    # Perform REST call.
+    #
+    url <- paste0(swsContext.baseRestUrl, "/r/dimensionValues/", domain, "/", dataset, "/", dimension, "/plain?plainDescription=true")
+    data <- PostRestCall(url, json)
+    
+    # Create result data table.
+    #
+    GetCodeList.processResult(data)
+        
+  }
+  
 
-	# Create result data table.
-	#
-	GetCodeList.processResult(data)
 }
 
 
