@@ -45,5 +45,11 @@ PutRestCall <- function(url, data) {
 		HandleHTTPError(status, response)
 	}
 
-	RJSONIO::fromJSON(response)
+	# Prevent error on blank response
+	if(response == ""){
+	  invisible("")
+	} else {
+	  RJSONIO::fromJSON(response)
+	}
+	
 }

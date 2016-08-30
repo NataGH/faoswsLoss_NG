@@ -49,6 +49,7 @@ PostRestCall <- function(url, data) {
 		HandleHTTPError(status, response)
 	}
 
+	# Prevent error on blank response
 	if(response == ""){
 	  invisible("")
 	} else {
