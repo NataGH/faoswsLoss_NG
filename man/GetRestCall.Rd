@@ -4,10 +4,13 @@
 \alias{GetRestCall}
 \title{Get Rest Call}
 \usage{
-GetRestCall(url)
+GetRestCall(url, nullValue = NULL)
 }
 \arguments{
 \item{url}{URL to which to make a GET request.}
+
+\item{nullValue}{Value that should be used for missingValue. See
+\link{fromJSON} in RJSONIO for details.}
 }
 \description{
 Get Rest Call

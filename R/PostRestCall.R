@@ -55,7 +55,7 @@ PostRestCall <- function(url, data, nullValue = NULL) {
 	if(response == ""){
 	  invisible("")
 	} else {
-	  RJSONIO::fromJSON(response, nullValue)
+	  RJSONIO::fromJSON(response, nullValue = nullValue)
 	}
 	
 }

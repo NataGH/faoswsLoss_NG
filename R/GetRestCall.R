@@ -47,7 +47,7 @@ GetRestCall <- function(url, nullValue = NULL) {
 	if(response == ""){
 	  invisible("")
 	} else {
-	  RJSONIO::fromJSON(response, nullValue)
+	  RJSONIO::fromJSON(response, nullValue = nullValue)
 	}
 	
 }

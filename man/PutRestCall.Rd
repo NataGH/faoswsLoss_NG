@@ -4,7 +4,7 @@
 \alias{PutRestCall}
 \title{Put Rest Call}
 \usage{
-PutRestCall(url, data)
+PutRestCall(url, data, nullValue = NULL)
 }
 \arguments{
 \item{url}{The url specifying where the data should be uploaded.  Usually
@@ -13,6 +13,9 @@ information such as the token.}
 
 \item{data}{An object containing the data in json format.  Again, this is
 usually produced by a function rather than directly supplied by the user.}
+
+\item{nullValue}{Value that should be used for missing values. See
+\link{fromJSON} in RJSONIO for details.}
 }
 \value{
 The response from the server.
