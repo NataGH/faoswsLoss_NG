@@ -11,8 +11,8 @@
 #' 
 
 HandleHTTPError <- function(status, response){
-    erresponse <- try(fromJSON(response))
-    if(inherits(erresponse, "try-error")) stop(response)
+    erresponse <- try(fromJSON(response), silent = TRUE)
+    if(inherits(erresponse, "try-error")) stop("SWS could not return reason for error. HTTP error " , status, "\n", erresponse)
     message <- ifelse(exists("message", erresponse), paste0("\nError message: ", erresponse[["message"]]), "")
     details <- ifelse(exists("details", erresponse), paste0("\nDetails: ", erresponse[["details"]]), "")
     
