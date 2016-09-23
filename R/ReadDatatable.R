@@ -124,7 +124,7 @@ asSwitch <- function(object, class){
 }
 
 streamIn <- function (con, colstats, pagesize = 500, verbose = FALSE, ...) {
-  if (!is(con, "connection")) {
+  if (!inherits(con, "connection")) {
     stop("Argument 'con' must be a connection.")
   }
 
