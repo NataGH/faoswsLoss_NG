@@ -1,7 +1,7 @@
 ##' Dataset Key Class
 ##' 
-##' This class provides a mechanism for pulling data from the SWS.  You must
-##' pass a DatasetKey object into the GetData function in order to read data
+##' This class provides a mechanism for pulling data from the SWS.  You must 
+##' pass a DatasetKey object into the GetData function in order to read data 
 ##' from the SWS.
 ##' 
 ##' @slot domain A character value specifying the domain of interest, such as 
@@ -9,16 +9,18 @@
 ##' @slot dataset A character value specifying the dataset within the domain, 
 ##'   such as "aproduction".
 ##' @slot dimensions A list of objects, each of class Dimension.
-##' @slot sessionId The ID of the session from which data should be accessed. 
+##' @slot sessionId The ID of the session from which data was accessed if 
+##'   produced by the SWS. This is for reporting only and has no effect on a 
+##'   `\code{\link{GetData}} call.
 ##'   
 ##' @note Many of these variables (domain, dataset, and dimensions) can be found
 ##'   by examining some of the swsContext objects which are created in a 
 ##'   GetTestEnvironment call (in a debug session).  Moreover, after executing 
 ##'   GetTestEnvironment, the swsContext.datasets object will contain a list of 
-##'   objects of type DatasetKey.  Additionally, information about these objects
-##'   can be found at the following url: 
+##'   objects of type DatasetKey.  Additionally, information about datasets can 
+##'   be found by using \code{\link{GetDatasetConfig}} or at the following url: 
 ##'   http://hqlqasws1.hq.un.fao.org:8080/dataset_configuration.html
-##' 
+##'   
 ##' @examples
 ##' \dontrun{
 ##' dim1 = Dimension(name = "geographicAreaM49", keys = c("12", "24", "204"))
@@ -33,7 +35,7 @@
 ##' }
 ##' 
 ##' @seealso \code{\link{Dimension}}, \code{\link{GetData}}
-##' 
+##'   
 ##' @export DatasetKey
 ##' @export
 
