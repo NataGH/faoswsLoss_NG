@@ -10,7 +10,6 @@
 ##'   such as "aproduction".
 ##' @slot dimensions A list of objects, each of class Dimension.
 ##' @slot sessionId The ID of the session from which data should be accessed. 
-##'   If NULL, the database is used directly.
 ##'   
 ##' @note Many of these variables (domain, dataset, and dimensions) can be found
 ##'   by examining some of the swsContext objects which are created in a 

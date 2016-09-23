@@ -21,8 +21,7 @@ such as "aproduction".}
 
 \item{\code{dimensions}}{A list of objects, each of class Dimension.}
 
-\item{\code{sessionId}}{The ID of the session from which data should be accessed. 
-If NULL, the database is used directly.}
+\item{\code{sessionId}}{The ID of the session from which data should be accessed.}
 }}
 \note{
 Many of these variables (domain, dataset, and dimensions) can be found

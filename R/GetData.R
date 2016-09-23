@@ -4,14 +4,6 @@
 ##' Note that swsContext files must exist in your session, so you should run 
 ##' GetTestEnvironment before calling this function.
 ##' 
-##' NOTE: This function will either pull directly from the database or from the 
-##' local session you set up.  This is important, as analysts may have changed 
-##' values within a local session and may then execute GetData.  To avoid 
-##' overwriting the values they updated, you should make sure to include the 
-##' session ID in the key argument.  This is fairly easy to do: when 
-##' constructing the DatasetKey, simply pass sessionId = 
-##' slot(swsContext.datasets[[1]], "sessionId") as an argument.
-##' 
 ##' If the denormalized value is not set then the data is normalized; if set the
 ##' data is denormalized along the axis specified.
 ##' 
