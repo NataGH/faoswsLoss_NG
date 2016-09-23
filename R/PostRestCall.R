@@ -5,11 +5,13 @@
 ##' information such as the token.
 ##' @param data An object containing the data in json format.  Again, this is
 ##' usually produced by a function rather than directly supplied by the user.
+##' @param nullValue Value that should be used for missing values. See
+##'   \link{fromJSON} in RJSONIO for details.
 ##' 
 ##' @return The response from the server.
 ##' 
 
-PostRestCall <- function(url, data) {
+PostRestCall <- function(url, data, nullValue = NULL) {
 
   ch <- RCurl::getCurlHandle()
   if (Sys.info()['sysname'] == 'Darwin') { 
@@ -53,7 +55,7 @@ PostRestCall <- function(url, data) {
 	if(response == ""){
 	  invisible("")
 	} else {
-	  RJSONIO::fromJSON(response)
+	  RJSONIO::fromJSON(response, nullValue)
 	}
 	
 }

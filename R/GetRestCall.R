@@ -1,11 +1,13 @@
 ##' Get Rest Call
 ##' 
 ##' @param url URL to which to make a GET request.
-##' 
+##' @param nullValue Value that should be used for missingValue. See
+##'   \link{fromJSON} in RJSONIO for details.
+##'   
 ##' @import RJSONIO
 ##' @import RCurl
 
-GetRestCall <- function(url) {
+GetRestCall <- function(url, nullValue = NULL) {
 
   ch <- RCurl::getCurlHandle()
   if (Sys.info()['sysname'] == 'Darwin') { 
@@ -45,7 +47,7 @@ GetRestCall <- function(url) {
 	if(response == ""){
 	  invisible("")
 	} else {
-	  RJSONIO::fromJSON(response)
+	  RJSONIO::fromJSON(response, nullValue)
 	}
 	
 }
