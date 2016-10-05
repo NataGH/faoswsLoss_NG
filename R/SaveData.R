@@ -64,15 +64,15 @@
 ##' @export SaveData
 
 SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMode = "wait", waitTimeout = 600, chunkSize = 50000) {
-
+  
   if (!(waitMode %in% c("wait", "forget", "synch"))) {
     stop(paste("invalid waitMode: ", waitMode, ", expected one among 'wait', 'forget', 'synch'"))
   }
-
+  
   # Validate passed arguments.
   #
   SaveData.validate(domain, dataset, data, metadata, normalized)
-
+  
   uuid <- NULL
   baseUrl <- paste0(swsContext.baseRestUrl, "/r/data/")
   nRowData <- 0
@@ -85,7 +85,7 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
   }
   dataChunksCnt <- 0
   metaChunksCnt <- 0
-
+  
   if (waitMode != "synch" & (nRowData > chunkSize | nRowMeta > chunkSize)) {
     uuid <- SaveData.generateUuid()
     if (!missing(data)) {
@@ -138,7 +138,7 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
     )
     uuid <- out[['message']]
   }
-
+  
   ## STATUS:NOT-FOUND, STATUS:STARTED, STATUS:COMPLETED
   ## STATUS:VALID-ERRS
   ##   	VALID-ERR-1, VALID-ERR-2, ..., VALID-ERR-N
@@ -146,7 +146,7 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
   ## 		STACKTRACE
   ## 	ALL STATUSES (EXCEPT NOT-FOUND):
   ## 		STARTED-AT, EXEC-ID, USER-ID
-
+  
   # wait mode -> has to check for execution result any 3 seconds
   if (waitMode == "wait") {
     # counts time elapsed from invocation , to stop when the timeout is exceeded
@@ -155,18 +155,18 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
     p1 <- proc.time()[['elapsed']]
     # it is used as condition for the subsequent loop
     statusOut <- NULL
-
+    
     # checks until one of the two is given: 1. the timeout is not exceeded; 2. a final result is obtained
     while ((elapsed < waitTimeout) & (is.null(statusOut))) {
-
+      
       # out[['message']] contains the UUID for the exec. status check, it invokes the get by concatenating it to the
       # previously used PUT url
       statusOut = GetRestCall(paste0(baseUrl, "status/", uuid))
-
+      
       if (statusOut[['details']][['STATUS']] == "NOT-FOUND") {
         # this shouldn't happen: the status key is not found on the back end cache
         stop(paste("Error while executing CHECK STATUS on the SWS Server: Execution key not found in the cache"))
-
+        
       } else if (statusOut[['details']][['STATUS']] == 'STARTED') {
         # it has to sleep and check again, for this the loop condition is set
         statusOut <- NULL
@@ -175,7 +175,7 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
       }
       # for other cases (COMPLETED, FAILED, VALID-ERRS) statusOut is not null, exits the loop
     }
-
+    
     # if it exits the loop with null statusOut , it means the timeout is elapsed without a result
     if (is.null(statusOut)) {
       stop("Timeout reached while waiting for execution to be completed")
@@ -184,16 +184,16 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
       out <- statusOut
     }
   }
-
+  
   statistics <- NULL
-
+  
   # if not success can be FAILED or VALID-ERRS, provides details
   if (!out[["success"]]) {
-
+    
     # if FAILED the stacktrace is printed
     if (out[["details"]][["STATUS"]] == "FAILED") {
       stop(paste("Error while executing SAVE DATA on the SWS Server:", out[['details']][['STACKTRACE']]))
-
+      
       # if VALID-ERRS the list of validation details is printed
     } else if (out[["details"]][["STATUS"]] == "VALID-ERRS") {
       msg <- "Validation error/s occurred:"
@@ -229,9 +229,9 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
         warnings=NULL)
     }
   }
-
+  
   statistics
-
+  
 }
 
 SaveData.generateUuid <- function() {
@@ -254,7 +254,7 @@ SaveData.generateUuid <- function() {
 }
 
 SaveData.validate <- function(domain, dataset, data, metadata, normalized) {
-
+  
   # Validate passed domain.
   #
   if(missing(domain)) {
@@ -263,7 +263,7 @@ SaveData.validate <- function(domain, dataset, data, metadata, normalized) {
   if(class(domain) != "character") {
     stop("The passed domain argument is not a character value.")
   }
-
+  
   # Validate passed dataset
   #
   if(missing(dataset)) {
@@ -272,14 +272,14 @@ SaveData.validate <- function(domain, dataset, data, metadata, normalized) {
   if(class(dataset) != "character") {
     stop("The passed dataset argument is not a character value.")
   }
-
+  
   # At least one argument amoung data and metadata need to be
   # specified.
   #
   if(missing(data) & missing(metadata)) {
     stop("Neither data nor metadata arguments have been specified.")
   }
-
+  
   # Validate data argument, if passed.
   #
   if(!missing(data)) {
@@ -293,7 +293,7 @@ SaveData.validate <- function(domain, dataset, data, metadata, normalized) {
       stop("Unexpected factor columns in 'data' input parameter. ",
            "Bad columns:\n", paste(colnames(data)[badColumns], collapse = "\n"))
   }
-
+  
   # Validate metadata argument, if passed.
   #
   if(!missing(metadata)) {
@@ -306,7 +306,7 @@ SaveData.validate <- function(domain, dataset, data, metadata, normalized) {
 SaveData.splitIntoChunkTables <- function(tbl, chunkSize) {
   totChunks = ceiling(nrow(tbl) / chunkSize)
   chunks <- list()
-
+  
   for (i in 1 : totChunks) {
     firstRow <- (i * chunkSize) - chunkSize + 1
     lastRow <- (i * chunkSize)
@@ -321,9 +321,9 @@ SaveData.splitIntoChunkTables <- function(tbl, chunkSize) {
 
 
 SaveData.buildUniqueJSON <- function(data, metadata, normalized) {
-
+  
   json <- list()
-
+  
   if(!missing(data)) {
     if(normalized) {
       json[["data"]] <- SaveData.buildNormalizedDataDefJSON(data)
@@ -333,7 +333,7 @@ SaveData.buildUniqueJSON <- function(data, metadata, normalized) {
       json[["data"]][["data"]] <- SaveData.buildDenormalizedDataContentJSON(data)
     }
   }
-
+  
   if(!missing(metadata)) {
     json[["metadata"]] <- list()
     json[["metadata"]][[1]] <- SaveData.buildMetadataDefJSON(metadata)
@@ -342,16 +342,16 @@ SaveData.buildUniqueJSON <- function(data, metadata, normalized) {
       json[["metadata"]][[i+1]] <- jsonMetacont[[i]]
     }
   }
-
+  
   json
 }
 
 SaveData.buildNormalizedDataDefJSON <- function(data) {
-
+  
   # Save the original key of the passed data table.
   #
   origKey <- key(data)
-
+  
   # Do not consider metadata column, if they have been passed.
   #
   metadataColumnsFilter <- colnames(data) != "Metadata"
@@ -359,11 +359,11 @@ SaveData.buildNormalizedDataDefJSON <- function(data) {
   metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Group"
   metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Element"
   metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Value"
-
+  
   # Prepare list to hold JSON data.
   #
   json <- list()
-
+  
   # Extract key column names.
   #
   filteredColumnNames <- colnames(data[, metadataColumnsFilter, with = FALSE])
@@ -375,7 +375,7 @@ SaveData.buildNormalizedDataDefJSON <- function(data) {
     stop("Unexpected data table structure detected: Value column located before any key column")
   }
   keys <- filteredColumnNames[1:index - 1]
-
+  
   # Set up section declaring data key definition.
   #
   json[["keyDefinitions"]] <- list()
@@ -383,7 +383,7 @@ SaveData.buildNormalizedDataDefJSON <- function(data) {
     json[["keyDefinitions"]][[i]] <- list()
     json[["keyDefinitions"]][[i]][["code"]] <- keys[i]
   }
-
+  
   # Check if flag columns are present. They are all those immediately following
   # the Value column.
   #
@@ -391,7 +391,7 @@ SaveData.buildNormalizedDataDefJSON <- function(data) {
   if(length(filteredColumnNames) > index) {
     flags <- filteredColumnNames[(index + 1):(length(filteredColumnNames))]
   }
-
+  
   # Set up section declaring flags definition.
   #
   json[["flagDefinitions"]] <- list()
@@ -401,25 +401,25 @@ SaveData.buildNormalizedDataDefJSON <- function(data) {
       json[["flagDefinitions"]][[i]][["code"]] <- flags[i]
     }
   }
-
+  
   # Set data table key.
   #
   setkeyv(data, keys, verbose = FALSE)
-
-
+  
+  
   # Restore original key.
   #
   setkeyv(data, origKey, verbose = FALSE)
-
+  
   json
 }
 
 SaveData.buildNormalizedDataContentJSON <- function(data) {
-
+  
   # Save the original key of the passed data table.
   #
   origKey <- key(data)
-
+  
   # Do not consider metadata column, if they have been passed.
   #
   metadataColumnsFilter <- colnames(data) != "Metadata"
@@ -427,7 +427,7 @@ SaveData.buildNormalizedDataContentJSON <- function(data) {
   metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Group"
   metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Element"
   metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Value"
-
+  
   # Extract key column names.
   #
   filteredColumnNames <- colnames(data[, metadataColumnsFilter, with = FALSE])
@@ -439,7 +439,7 @@ SaveData.buildNormalizedDataContentJSON <- function(data) {
     stop("Unexpected data table structure detected: Value column located before any key column")
   }
   keys <- filteredColumnNames[1:index - 1]
-
+  
   # Check if flag columns are present. They are all those immediately following
   # the Value column.
   #
@@ -447,11 +447,11 @@ SaveData.buildNormalizedDataContentJSON <- function(data) {
   if(length(filteredColumnNames) > index) {
     flags <- filteredColumnNames[(index + 1):(length(filteredColumnNames))]
   }
-
+  
   # Set data table key.
   #
   setkeyv(data, keys, verbose = FALSE)
-
+  
   # Extract the set of unique keys for external loop.
   #
   uniqueKeys <- unique(data)
@@ -459,30 +459,30 @@ SaveData.buildNormalizedDataContentJSON <- function(data) {
   json <- lapply(json, function(v){as.character(unlist(v))})
   json <- json[order(as.numeric(names(json)))]
   names(json) <- NULL
-
+  
   # Restore original key.
   #
   setkeyv(data, origKey, verbose = FALSE)
-
+  
   json
 }
 
 SaveData.buildDenormalizedDataDefJSON <- function(data) {
-
+  
   # Save the original key of the passed data table.
   #
   origKey <- key(data)
-
+  
   # Do not consider metadata column, if they have been passed.
   #
   metadataColumns <- c("Metadata", "Metadata_Language", "Metadata_Group",
                        "Metadata_Element", "Metadata_Value")
   metadataColumnsFilter <- !colnames(data) %in% metadataColumns
-
+  
   # Prepare list to hold JSON data.
   #
   json <- list()
-
+  
   # Extract fixed key column names.
   #
   filteredColumnNames <- colnames(data)[metadataColumnsFilter]
@@ -494,13 +494,13 @@ SaveData.buildDenormalizedDataDefJSON <- function(data) {
     stop("Unexpected data table structure detected: Value column located before any key column")
   }
   keys <- filteredColumnNames[1:index - 1]
-
+  
   # Extract denormalized key column name.
   #
   denormalizedKey <- substr(filteredColumnNames[index], nchar("Value_") + 1,
                             regexpr("_[^_]+$", filteredColumnNames[index]) - 1)
   allKeys <- c(keys, denormalizedKey)
-
+  
   # Set up section declaring data key definition.
   #
   json[["keyDefinitions"]] <- list()
@@ -508,7 +508,7 @@ SaveData.buildDenormalizedDataDefJSON <- function(data) {
     json[["keyDefinitions"]][[i]] <- list()
     json[["keyDefinitions"]][[i]][["code"]] <- allKeys[i]
   }
-
+  
   # Check if flag columns are present. They are all those immediately following
   # the Value column.
   #
@@ -519,7 +519,7 @@ SaveData.buildDenormalizedDataDefJSON <- function(data) {
     }
     flags <- append(flags, substr(col, 1, regexpr(paste0("_", denormalizedKey), col) - 1))
   }
-
+  
   # Set up section declaring flags definition.
   #
   json[["flagDefinitions"]] <- list()
@@ -529,21 +529,21 @@ SaveData.buildDenormalizedDataDefJSON <- function(data) {
       json[["flagDefinitions"]][[i]][["code"]] <- flags[i]
     }
   }
-
+  
   # Extract all denormalized column keys.
   #
   valueColumnNames <- filteredColumnNames[which(grepl("^Value_", filteredColumnNames))]
   denormalizedKey <- substr(valueColumnNames, regexpr("_[^_]+$", valueColumnNames) + 1,
                             nchar(valueColumnNames))
-
+  
   # Set data table key.
   #
   setkeyv(data, keys, verbose = FALSE)
-
+  
   # Restore original key.
   #
   setkeyv(data, origKey, verbose = FALSE)
-
+  
   json
 }
 
@@ -563,27 +563,42 @@ SaveData.buildDenormalizedDataDefJSON <- function(data) {
 ##'
 
 normalizeData <- function(data, keys, denormalizedKey){
+  
+  nd <- data
+  blankit <- FALSE
+  
+  if(nrow(data) == 0){
+    # If the data is empty, then there's no reshape needed
+    nd <- nd[1,]
+    blankit <- TRUE
+  }
+  
   newData <- suppressWarnings(
     # This used to be a tidyr function but it kept stripping the data.table attribute
-    data.table::melt(data, id.vars=keys, variable.name="Key", value.name="Value")
-    )
+    data.table::melt(nd, id.vars=keys, variable.name="Key", value.name="Value")
+  )
   
   newData[, c("Key", denormalizedKey) := tstrsplit(Key, split = sprintf("_%s_", denormalizedKey))]
-
+  
   newData <- dcast(newData, 
-        formula = paste0(paste(c(keys, denormalizedKey), collapse="+"), "~Key"), 
-        value.var="Value")
+                   formula = paste0(paste(c(keys, denormalizedKey), collapse="+"), "~Key"), 
+                   value.var="Value")
   
   newData[, Value := as.numeric(Value)]
-  newData
+  
+  if(blankit){
+    return(newData[0,])
+  }
+  
+  return(newData)
 }
 
 SaveData.buildDenormalizedDataContentJSON <- function(data) {
-
+  
   # Save the original key of the passed data table.
   #
   origKey <- key(data)
-
+  
   # Do not consider metadata column, if they have been passed.
   #
   metadataColumnsFilter <- colnames(data) != "Metadata"
@@ -591,7 +606,7 @@ SaveData.buildDenormalizedDataContentJSON <- function(data) {
   metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Group"
   metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Element"
   metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Value"
-
+  
   # Extract fixed key column names.
   #
   filteredColumnNames <- colnames(data[, metadataColumnsFilter, with = FALSE])
@@ -603,12 +618,12 @@ SaveData.buildDenormalizedDataContentJSON <- function(data) {
     stop("Unexpected data table structure detected: Value column located before any key column")
   }
   keys <- filteredColumnNames[1:index - 1]
-
+  
   # Extract denormalized key column name.
   #
   denormalizedKey <- substr(filteredColumnNames[index], nchar("Value_") + 1, regexpr("_[^_]+$", filteredColumnNames[index]) - 1)
   allKeys <- append(keys, denormalizedKey)
-
+  
   # Check if flag columns are present. They are all those immediately following
   # the Value column.
   #
@@ -619,7 +634,7 @@ SaveData.buildDenormalizedDataContentJSON <- function(data) {
     }
     flags <- append(flags, substr(col, 1, regexpr(paste0("_", denormalizedKey), col) - 1))
   }
-
+  
   #Extract the set of unique keys
   #
   ## Note: use the unique.data.frame function, as unique.data.table removes rows
@@ -627,22 +642,22 @@ SaveData.buildDenormalizedDataContentJSON <- function(data) {
   ## values.
   uniqueKeys <- data.table(unique.data.frame(data))
   normalizedData <- normalizeData(uniqueKeys, keys = keys,
-                                 denormalizedKey = denormalizedKey)
-
+                                  denormalizedKey = denormalizedKey)
+  
   # Ensure columns are in the right order (often, flags are mixed)
   normalizedData <- normalizedData[, c(keys, denormalizedKey, "Value", flags),
                                    with = FALSE]
-
+  
   ## Now that data has been normalized, pass it to the normalized SaveData
   SaveData.buildNormalizedDataContentJSON(data = normalizedData)
 }
 
 SaveData.buildMetadataDefJSON <- function(metadata) {
-
+  
   # Save the original key of the passed data table.
   #
   origKey <- key(metadata)
-
+  
   # Extract key column names.
   #
   if(length(which(colnames(metadata) == "Metadata")) <= 0) {
@@ -653,12 +668,12 @@ SaveData.buildMetadataDefJSON <- function(metadata) {
     stop("Unexpected data table structure detected: Metadata column located before any key column")
   }
   keys <- colnames(metadata)[1:index - 1]
-
+  
   # Set data table key.
   #
   setkeyv(metadata, keys, verbose = FALSE)
-
-
+  
+  
   # Prepare key definitions element.
   #
   jsonElement <- list()
@@ -667,20 +682,20 @@ SaveData.buildMetadataDefJSON <- function(metadata) {
     jsonElement[["keyDefinitions"]][[i]] <- list()
     jsonElement[["keyDefinitions"]][[i]][["code"]] <- keys[[i]]
   }
-
+  
   # Restore original key.
   #
   setkeyv(metadata, origKey, verbose = FALSE)
-
+  
   jsonElement
 }
 
 SaveData.buildMetadataContentJSON <- function(metadata) {
-
+  
   # Save the original key of the passed data table.
   #
   origKey <- key(metadata)
-
+  
   # Extract key column names.
   #
   if(length(which(colnames(metadata) == "Metadata")) <= 0) {
@@ -691,56 +706,56 @@ SaveData.buildMetadataContentJSON <- function(metadata) {
     stop("Unexpected data table structure detected: Metadata column located before any key column")
   }
   keys <- colnames(metadata)[1:index - 1]
-
+  
   # Set data table key.
   #
   setkeyv(metadata, keys, verbose = FALSE)
-
-
+  
+  
   # Prepare list to hold JSON data.
   #
   json <- list()
-#   ###################################################
-#   # COMMENT: (JOSH) Does this code below do the same
-#   # thing as that big, ugly, nested for loop?  Should
-#   # verify same results are returned in all cases...
-#   #Reorder columns to ensure the proper ordering for the JSON object
-#   metadata <- metadata[, c(keys, "Metadata", "Metadata_Language",
-#                            "Metadata_Element", "Metadata_Value"), with = FALSE]
-#   json <- apply(metadata, 1, function(x) list(x))
-#   json <- lapply(json, function(x){
-#       out = x[[1]]
-#       names(out) = NULL
-#       out
-#   })
-
+  #   ###################################################
+  #   # COMMENT: (JOSH) Does this code below do the same
+  #   # thing as that big, ugly, nested for loop?  Should
+  #   # verify same results are returned in all cases...
+  #   #Reorder columns to ensure the proper ordering for the JSON object
+  #   metadata <- metadata[, c(keys, "Metadata", "Metadata_Language",
+  #                            "Metadata_Element", "Metadata_Value"), with = FALSE]
+  #   json <- apply(metadata, 1, function(x) list(x))
+  #   json <- lapply(json, function(x){
+  #       out = x[[1]]
+  #       names(out) = NULL
+  #       out
+  #   })
+  
   # Extract the set of unique keys for external loop.
   #
   w <- 0
   uniqueKeys <- unique(metadata)[,keys, with = FALSE]
   for(i in 1:nrow(uniqueKeys)) {
-
+    
     jsonElement <- list()
     jsonElement[["keys"]] <- as.character(uniqueKeys[i])
     jsonElement[["metadata"]] <- list()
-
+    
     slicedByKey <- metadata[uniqueKeys[i]]
     setkeyv(slicedByKey, c("Metadata_Group", "Metadata_Language", "Metadata"))
     uniqueMetadata <- unique(slicedByKey)[, c("Metadata", "Metadata_Language", "Metadata_Group"), with = FALSE]
-
+    
     for(j in 1:nrow(uniqueMetadata)) {
-
+      
       jsonElement[["metadata"]][[j]] <- list()
       jsonElement[["metadata"]][[j]][["typeCode"]] <- uniqueMetadata[j, Metadata]
       jsonElement[["metadata"]][[j]][["language"]] <- uniqueMetadata[j, Metadata_Language]
       jsonElement[["metadata"]][[j]][["elements"]] <- list()
-
+      
       metadataElements <- slicedByKey[uniqueMetadata[j]]
       for(k in 1:nrow(metadataElements)) {
         jsonElement[["metadata"]][[j]][["elements"]][[k]] <- list()
         jsonElement[["metadata"]][[j]][["elements"]][[k]][["typeCode"]] <- metadataElements[k, Metadata_Element]
         jsonElement[["metadata"]][[j]][["elements"]][[k]][["value"]] <- metadataElements[k, Metadata_Value]
-
+        
         w <- w + 1
         json[[w]] <- c(
           as.character(uniqueKeys[i]), # jsonElement[["keys"]],
@@ -751,13 +766,13 @@ SaveData.buildMetadataContentJSON <- function(metadata) {
         )
       }
     }
-
+    
     # json[[i]] <- jsonElement
   }
-
+  
   # Restore original key.
   #
   setkeyv(metadata, origKey, verbose = FALSE)
-
+  
   json
 }
