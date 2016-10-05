@@ -212,15 +212,19 @@ runStreaming <- function(url, json){
         }
       }
     )
-  conn <- try(.Call(curl:::R_curl_connection, url, "r", h, FALSE))
-  
-  ## If there's an error before the connection can be properly created, close it
-  if(inherits(conn, "try-error")){
-    cons <- showConnections(all = TRUE)
-    closableconn <- getConnection(as.numeric(row.names(cons)[cons[,"description"]  ==  url]))
-    close(closableconn)
-  }
-  
+
+      conn <- withCallingHandlers(.Call(curl:::R_curl_connection, url, "r", h, FALSE),
+                              error = function(e){
+                                cons <- showConnections(all = TRUE)
+                                closableconn <- getConnection(as.numeric(row.names(cons)[cons[,"description"]  ==  url]))
+                                close(closableconn)
+                                
+                                if(e$message == "SSL connect error"){
+                                  stop("Incorrect certificates. Either use 'SetClientFiles' or put the correct certificates in ", 
+                                       dirname(.swsenv$swsContext.clientCertificate), call. = FALSE)
+                                }
+                              })
+
   responseCode <- curl:::handle_response_data(h)$status_code
   
   if(responseCode != 200){
