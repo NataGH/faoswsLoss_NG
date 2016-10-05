@@ -60,11 +60,11 @@
 
 
 ReadDatatable <- function(table=BoundDatatable(), columns = list(), includeAll = TRUE, where=NULL, readOnly = TRUE, limit=NULL, validationOptions) {
-
-  if(missing(validationOptions)){
-    api <- "export"
+  
+  api <- if(missing(validationOptions)){
+    "export"
   } else {
-    api <- "validation/collect"
+    "validation/collect"
   }
   
   baseurl <- paste(swsContext.baseRestUrl, "api", "datatable", URLencode(table), api, sep = "/")
@@ -81,7 +81,7 @@ ReadDatatable <- function(table=BoundDatatable(), columns = list(), includeAll =
   
   columns <- lapply(columns, as.list)
   names(columns) <- NULL
-
+  
   json <- list(
     filter = list(
       colspec = colspec,
@@ -96,9 +96,9 @@ ReadDatatable <- function(table=BoundDatatable(), columns = list(), includeAll =
       validationOptions
     }
   )
-
+  
   runStreaming(url, json)
-   
+  
 }
 
 typeChange <- Vectorize(function(x){
@@ -112,7 +112,7 @@ typeChange <- Vectorize(function(x){
          decimal = "numeric",
          bool = "logical",
          timestamp = "integer64"
-         )
+  )
 })
 
 asSwitch <- function(object, class){
@@ -127,7 +127,7 @@ streamIn <- function (con, colstats, pagesize = 500, verbose = FALSE, ...) {
   if (!inherits(con, "connection")) {
     stop("Argument 'con' must be a connection.")
   }
-
+  
   count <- 0
   cb <- {
     out <- new.env()
@@ -205,15 +205,13 @@ runStreaming <- function(url, json){
                         postfields = RJSONIO::toJSON(json, digits = 30))
   }
   
-  on.exit(
-    if(exists("conn")) {
-      if(inherits(conn, "connection")){
-        if(isOpen(conn)) close(conn)
-        }
-      }
-    )
-
-      conn <- withCallingHandlers(.Call(curl:::R_curl_connection, url, "r", h, FALSE),
+  on.exit({
+    if(exists("conn") && inherits(conn, "connection") && isOpen(conn)) {
+      close(conn)
+    }
+  })
+  
+  conn <- withCallingHandlers(.Call(curl:::R_curl_connection, url, "r", h, FALSE),
                               error = function(e){
                                 cons <- showConnections(all = TRUE)
                                 closableconn <- getConnection(as.numeric(row.names(cons)[cons[,"description"]  ==  url]))
@@ -224,7 +222,7 @@ runStreaming <- function(url, json){
                                        dirname(.swsenv$swsContext.clientCertificate), call. = FALSE)
                                 }
                               })
-
+  
   responseCode <- curl:::handle_response_data(h)$status_code
   
   if(responseCode != 200){
@@ -232,7 +230,7 @@ runStreaming <- function(url, json){
     errmessage <- paste0(readLines(conn, warn = FALSE), collapse="\n")
     HandleHTTPError(responseCode, errmessage)
     
-    }
+  }
   
   #Assign in handler environment
   colstats <- jsonlite::fromJSON(readLines(conn, 1))
