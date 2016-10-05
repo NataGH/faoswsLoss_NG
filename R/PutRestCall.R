@@ -12,9 +12,10 @@
 ##'
 
 PutRestCall <- function(url, data, nullValue = NULL) {
-
-	ch <- RCurl::getCurlHandle()
-  if (Sys.info()['sysname'] == 'Darwin') {
+  
+  ch <- RCurl::getCurlHandle()
+  
+  withCallingHandlers(if (Sys.info()['sysname'] == 'Darwin') {
     response <- RCurl::httpPUT(
       url = url,
       curl = ch,
@@ -38,20 +39,24 @@ PutRestCall <- function(url, data, nullValue = NULL) {
       ssl.verifyhost = 2,
       httpheader = c(Accept = "application/json", 'Content-Type' = "application/json", Expect = ""),
       content = RJSONIO::toJSON(data, digits = 30))
+  },
+  SSL_CONNECT_ERROR = function(e){
+    stop("Incorrect certificates. Either use 'SetClientFiles' or put the correct certificates in ", 
+         dirname(.swsenv$swsContext.clientCertificate), call. = FALSE)
+  })
+  
+  # Check returned status code.
+  #
+  status <- RCurl::getCurlInfo(ch, which = "response.code")
+  if(status != 200) {
+    HandleHTTPError(status, response)
   }
-
-	# Check returned status code.
-	#
-	status <- RCurl::getCurlInfo(ch, which = "response.code")
-	if(status != 200) {
-		HandleHTTPError(status, response)
-	}
-
-	# Prevent error on blank response
-	if(response == ""){
-	  invisible("")
-	} else {
-	  RJSONIO::fromJSON(response, nullValue = nullValue)
-	}
-
+  
+  # Prevent error on blank response
+  if(response == ""){
+    invisible("")
+  } else {
+    RJSONIO::fromJSON(response, nullValue = nullValue)
+  }
+  
 }

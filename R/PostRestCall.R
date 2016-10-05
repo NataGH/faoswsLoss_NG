@@ -12,9 +12,10 @@
 ##' 
 
 PostRestCall <- function(url, data, nullValue = NULL) {
-
+  
   ch <- RCurl::getCurlHandle()
-  if (Sys.info()['sysname'] == 'Darwin') { 
+  
+  withCallingHandlers(if (Sys.info()['sysname'] == 'Darwin') { 
     response <- RCurl::getURL(
       url = url,
       curl = ch,
@@ -42,20 +43,24 @@ PostRestCall <- function(url, data, nullValue = NULL) {
       post = 1,
       postfields = RJSONIO::toJSON(data, digits = 30),
       .encoding = "UTF-8")
-  }
-
+  },
+  SSL_CONNECT_ERROR = function(e){
+    stop("Incorrect certificates. Either use 'SetClientFiles' or put the correct certificates in ", 
+         dirname(.swsenv$swsContext.clientCertificate), call. = FALSE)
+  })
+  
   # Check returned status code.
-	#
-	status <- RCurl::getCurlInfo(ch, which = "response.code")
-	if(status != 200) {
-		HandleHTTPError(status, response)
-	}
-
-	# Prevent error on blank response
-	if(response == ""){
-	  invisible("")
-	} else {
-	  RJSONIO::fromJSON(response, nullValue = nullValue)
-	}
-	
+  #
+  status <- RCurl::getCurlInfo(ch, which = "response.code")
+  if(status != 200) {
+    HandleHTTPError(status, response)
+  }
+  
+  # Prevent error on blank response
+  if(response == ""){
+    invisible("")
+  } else {
+    RJSONIO::fromJSON(response, nullValue = nullValue)
+  }
+  
 }

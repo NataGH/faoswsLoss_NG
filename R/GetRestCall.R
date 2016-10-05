@@ -10,7 +10,8 @@
 GetRestCall <- function(url, nullValue = NULL) {
 
   ch <- RCurl::getCurlHandle()
-  if (Sys.info()['sysname'] == 'Darwin') { 
+  
+  withCallingHandlers(if (Sys.info()['sysname'] == 'Darwin') { 
     response <- RCurl::getURL(
       url = url,
       curl = ch,
@@ -34,7 +35,11 @@ GetRestCall <- function(url, nullValue = NULL) {
       ssl.verifyhost = 2,
       httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"),
       .encoding = "UTF-8")
-  }
+  },
+  SSL_CONNECT_ERROR = function(e){
+    stop("Incorrect certificates. Either use 'SetClientFiles' or put the correct certificates in ", 
+         dirname(.swsenv$swsContext.clientCertificate), call. = FALSE)
+  })
 
 	# Check returned status code.
 	#
