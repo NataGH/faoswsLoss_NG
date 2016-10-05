@@ -1,3 +1,9 @@
+## BUG FIXES
+
+- `GetCodeList` correctly validates dimension argument (Fixes SWS-1486)
+- `SaveData` now handles empty pivoted data (Fixes SWS-1504)
+
+
 # CHANGES IN faosws VERSION 0.8.2
 
 ## BUG FIXES

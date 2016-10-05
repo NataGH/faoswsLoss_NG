@@ -81,6 +81,9 @@ GetCodeList.validate <- function(domain, dataset, dimension, codes) {
 	if(class(domain) != "character") {
 		stop("The passed domain argument is not a character value.")
 	}
+  if(length(domain) != 1L){
+    stop("Only one domain is allowed")
+  }
 
 	# Validate passed dataset
 	#
@@ -90,6 +93,9 @@ GetCodeList.validate <- function(domain, dataset, dimension, codes) {
 	if(class(dataset) != "character") {
 		stop("The passed dataset argument is not a character value.")
 	}
+  if(length(dataset) != 1L){
+    stop("Only one dataset is allowed")
+  }
 
 	# Validate passed dimension
 	#
@@ -99,6 +105,9 @@ GetCodeList.validate <- function(domain, dataset, dimension, codes) {
 	if(class(dimension) != "character") {
 		stop("The passed dimension argument is not a character value.")
 	}
+  if(!missing(dimension) && length(dimension) != 1L){
+    stop("Only one dimension at a time.")
+  }
 }
 
 
