@@ -27,10 +27,25 @@ If the module does not currently exist on the system, you will need to
 upload a zipped file with an xml file specifying the dataset configurations.}
 }
 \value{
-This function silently returns a list containing a DatasetKey object
-  and creates "swsContext" objects, such as \code{swsContext.datasets},
-  \code{swsContexts.token}, etc., including \code{swsContext.datasets} which
-  is identical to the object returned.
+This function silently assigns a number of objects into the global environment
+
+\itemize{
+\item \code{swsContext.baseRestUrl} - The base URL for the server you have 
+accessed
+\item \code{swsContext.computationParams} - The list of parameters provided 
+to your script when the debug token was created. These will all be 
+characters
+\item \code{swsContext.datasets} - A list of DatasetKeys. You'll only be 
+interested in the first element, i.e. \code{swsContext.datasets[[1]]}
+\item \code{swsContext.executionId} - A unique id connected with the token
+\item \code{swsContext.token} - The token itself
+\item \code{swsContext.userEmail} - The email address of the user who 
+created the token
+\item \code{swsContext.userId} - The id in the SWS of the user who created 
+the token
+\item \code{swsContext.username} - The username of the user who created the 
+token
+}
 }
 \description{
 Get Test Environment
