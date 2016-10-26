@@ -40,9 +40,9 @@
 ##' @export
 
 Dimension <- setClass("Dimension",
-    representation(
-        name = "character",
-        keys = "character"))
+                      representation(
+                        name = "character",
+                        keys = "character"))
 
 # A dimension is valid only if it has the name properly set up.
 # The list of keys is not mandatory.
@@ -69,17 +69,21 @@ setValidity("Dimension", function(object) {
 setMethod(f = "initialize",
           signature = "Dimension",
           definition=function(.Object, name, keys){
-            uniqueKeys <- unique(keys)
             
             .Object@name <- name
-            #keep only non-duplicated keys
-            .Object@keys <- uniqueKeys
+            
+            if(!missing(keys)){
+              uniqueKeys <- unique(keys)
+              
+              #keep only non-duplicated keys
+              .Object@keys <- uniqueKeys
+              
+              if(length(keys) > length(uniqueKeys)) {
+                warning(paste("Duplicate keys present in", name , "have been removed"), call. = FALSE)
+              }
+            }
             
             validObject(.Object)
-            
-            if(length(keys) > length(uniqueKeys)) {
-              warning(paste("Duplicate keys present in", name , "have been removed"), call. = FALSE)
-            }
             
             return(.Object)
           })
@@ -89,10 +93,10 @@ setMethod(f = "initialize",
 #
 setGeneric("addKey<-", function(object, value) standardGeneric("addKey<-"))
 setReplaceMethod(
-	"addKey",
-	"Dimension",	
-	function(object, value) {
-		object@keys <- c(object@keys, value)
-		object
-	}
+  "addKey",
+  "Dimension",	
+  function(object, value) {
+    object@keys <- c(object@keys, value)
+    object
+  }
 )
