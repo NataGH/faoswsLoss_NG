@@ -240,7 +240,7 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
 
 SaveData.generateUuid <- function() {
   baseuuid <- paste(sample(c(letters[1:6],0:9),30,replace=TRUE),collapse="")
-  paste(
+  paste0(
     substr(baseuuid,1,8),
     "-",
     substr(baseuuid,9,12),
@@ -252,7 +252,6 @@ SaveData.generateUuid <- function() {
     substr(baseuuid,16,18),
     "-",
     substr(baseuuid,19,30),
-    sep="",
     collapse=""
   )
 }
@@ -303,6 +302,18 @@ SaveData.validate <- function(domain, dataset, data, metadata, normalized) {
   if(!missing(metadata)) {
     if(!is.data.table(metadata)) {
       stop("The passed metadata argument is not a data table.")
+    }
+  }
+  
+  if(normalized){
+    if(!"Value" %in% names(data)){
+      stop("Normalized data must have a 'Value' column!")
+    }
+  } 
+  
+  if(!normalized){
+    if(any(grepl("^Value", names(data)))){
+      stop("Denormalized data shouldn't have a 'Value' column!")
     }
   }
 }
@@ -627,7 +638,7 @@ SaveData.buildDenormalizedDataContentJSON <- function(data) {
   #
   denormalizedKey <- substr(filteredColumnNames[index], nchar("Value_") + 1, regexpr("_[^_]+$", filteredColumnNames[index]) - 1)
   allKeys <- append(keys, denormalizedKey)
-  
+    
   # Check if flag columns are present. They are all those immediately following
   # the Value column.
   #

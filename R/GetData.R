@@ -281,14 +281,14 @@ GetData.NEW_processNormalizedResultMetadata <- function(data) {
       colnames(out) = cols
       return(out)
     } else {
-      MakeEmptyMetadata(keyNames, cols)
+      return(MakeEmptyMetadata(keyNames, cols)[])
     }
   })
   result = do.call("rbind", result)
   
   # If there is no metadata at all, the result can be length 0
   if(length(result) == 0){
-    result <- MakeEmptyMetadata(keyNames, cols)
+    result <- MakeEmptyMetadata(keyNames, cols)[]
   }
   setcolorder(result, c(keyNames, "Metadata", "Metadata_Language", "Metadata_Group", "Metadata_Value"))
 }
