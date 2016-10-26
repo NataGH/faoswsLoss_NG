@@ -10,6 +10,10 @@
 ##' they have data (as they recently became a country, or are no longer a 
 ##' country).  See ?GetCodeList.
 ##' 
+##' @note Saving a missing value removes the value of the destination record. If
+##'   you do not wish to remove values, remove NAs from your output. If you have
+##'   denormalized data, you may need to normalize it first.
+##'   
 ##' @param domain A character value specifying the domain for which the code 
 ##'   list is required.
 ##' @param dataset A character value specifying the dataset for which the code 
@@ -22,9 +26,9 @@
 ##' @param normalized Logical, indicates whether data is in a normalized or 
 ##'   denormalized format.list
 ##' @param waitMode A character string indicating how to behave with respect to 
-##'   the backend.  Should be either "wait", "forget", or "synch".  "wait"
-##'   allows R to routinely check for completion of the save, up to pullTimeout
-##'   seconds. "forget" returns control to R immediately without verifying that
+##'   the backend.  Should be either "wait", "forget", or "synch".  "wait" 
+##'   allows R to routinely check for completion of the save, up to pullTimeout 
+##'   seconds. "forget" returns control to R immediately without verifying that 
 ##'   the object has been saved (this can be dangerous if the object is accessed
 ##'   later). "synch" gives the writing process a short time period, and returns
 ##'   an error if the write fails.
@@ -36,23 +40,23 @@
 ##'   
 ##' @return A list is returned, which contains the following values (note that 
 ##'   "version" below refers to the version of the observation in the database):
-##'   \itemize{ \item inserted =  the number of rows inserted 'ex novo' (with
-##'   version=1: there wasn't any already existing observation for same
-##'   coordinates) \item appended =  the number of rows inserted in append mode
-##'   (with version=max+1: there was one or more observation/s: version number
-##'   incremented) \item ignored =   the number of rows not inserted because an
-##'   already existing observation was in place with identical attributes \item
-##'   discarded = the number of new observations not created because of non
+##'   \itemize{ \item inserted =  the number of rows inserted 'ex novo' (with 
+##'   version=1: there wasn't any already existing observation for same 
+##'   coordinates) \item appended =  the number of rows inserted in append mode 
+##'   (with version=max+1: there was one or more observation/s: version number 
+##'   incremented) \item ignored =   the number of rows not inserted because an 
+##'   already existing observation was in place with identical attributes \item 
+##'   discarded = the number of new observations not created because of non 
 ##'   blocking errors (i.e. 'warnings' which caused the row to be discarded 
-##'   without blocking other rows insertion) \item warnings =  a data.table
-##'   which can be NULL or contain 1 to 10 rows.if value of "discarded" is > 0,
+##'   without blocking other rows insertion) \item warnings =  a data.table 
+##'   which can be NULL or contain 1 to 10 rows.if value of "discarded" is > 0, 
 ##'   the data.table contains an excerpt of rows discarded (max 10 rows), any of
-##'   which with following info: \itemize{ \item row     = the positional row
+##'   which with following info: \itemize{ \item row     = the positional row 
 ##'   number in the data as sent \item reason  = a description of the discarding
 ##'   error } } If waitMode is 'forget', NULL is returned always
 ##'   
-##' @section Attempting to write invalid data: Currently, if no flags are
-##'   provided, all rows with no flags will be marked as appended and rejected.
+##' @section Attempting to write invalid data: Currently, if no flags are 
+##'   provided, all rows with no flags will be marked as appended and rejected. 
 ##'   Up to 10 warnings will be provided.
 ##'   
 ##' @details
@@ -590,7 +594,7 @@ normalizeData <- function(data, keys, denormalizedKey){
     return(newData[0,])
   }
   
-  return(newData)
+  return(newData[])
 }
 
 SaveData.buildDenormalizedDataContentJSON <- function(data) {

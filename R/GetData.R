@@ -34,6 +34,8 @@
 ##'   in the past are returned.
 ##'   
 ##' @return A data table containing the data matching the key (may be empty).
+##' 
+##' @seealso \link{Pivoting}
 ##'   
 ##' @examples
 ##' \dontrun{
@@ -72,6 +74,11 @@ GetData <- function(key, flags = TRUE, normalized = TRUE, pivoting, omitna = TRU
   
   # Validate passed arguments.
   #
+  # Names on pivoting cause failure
+  if(!missing(pivoting)){
+    pivoting <- unname(pivoting)
+  }
+  
   GetData.validate(key, flags, normalized, metadata = FALSE, pivoting)
   
   # Prepare JSON for REST call.
@@ -350,6 +357,11 @@ GetMetadata <- function(key, pivoting) {
   
   # Validate passed arguments.
   #
+  # Names on pivoting cause failure
+  if(!missing(pivoting)){
+    pivoting <- unname(pivoting)
+  }
+  
   GetData.validate(key, flags = FALSE, normalized = TRUE,
                    metadata = TRUE, pivoting)
   
