@@ -1,5 +1,8 @@
+# CHANGES IN faosws VERSION 0.8.3
+
 ## BUG FIXES
 
+- `Dimension` now allows empty keys (Fixes SWS-1454)
 - `GetCodeList` correctly validates dimension argument (Fixes SWS-1486)
 - `SaveData` now handles empty pivoted data (Fixes SWS-1504)
 
