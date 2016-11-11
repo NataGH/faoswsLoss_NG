@@ -1,3 +1,8 @@
+## BUG FIXES
+
+- `SaveData` now correctly validates denormalised data
+
+
 # CHANGES IN faosws VERSION 0.8.3
 
 ## BUG FIXES

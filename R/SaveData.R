@@ -312,7 +312,7 @@ SaveData.validate <- function(domain, dataset, data, metadata, normalized) {
   } 
   
   if(!normalized){
-    if(any(grepl("^Value", names(data)))){
+    if(any("Value" %in% names(data))){
       stop("Denormalized data shouldn't have a 'Value' column!")
     }
   }
