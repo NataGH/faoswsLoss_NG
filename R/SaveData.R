@@ -77,6 +77,8 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
   #
   SaveData.validate(domain, dataset, data, metadata, normalized)
   
+  datasetConfig <- GetDatasetConfig(domain, dataset)
+  
   uuid <- NULL
   baseUrl <- paste0(swsContext.baseRestUrl, "/r/data/")
   nRowData <- 0
@@ -90,26 +92,24 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
   dataChunksCnt <- 0
   metaChunksCnt <- 0
   
+  if(!normalized){
+    allKeys <- datasetConfig[["dimensions"]]
+    
+    dKey <- SaveData.getDenormalizedKey(allKeys, data)
+    
+    data <- normalizeData(data, setdiff(allKeys, dKey), dKey, keepNA = FALSE)
+  }
+  
   if (waitMode != "synch" & (nRowData > chunkSize | nRowMeta > chunkSize)) {
     uuid <- SaveData.generateUuid()
     if (!missing(data)) {
-      json <- NULL
-      if (normalized) {
-        json <- SaveData.buildNormalizedDataDefJSON(data)
-      } else {
-        json <- SaveData.buildDenormalizedDataDefJSON(data)
-      }
+      json <- SaveData.buildNormalizedDataDefJSON(data)
       PutRestCall(paste0(baseUrl, "stream/", swsContext.executionId, "/",
-                         uuid, "/data/def?token=", swsContext.token),
-                  json)
+                         uuid, "/data/def?token=", swsContext.token), json)
       dataChunks <- SaveData.splitIntoChunkTables(data, chunkSize)
       dataChunksCnt <- length(dataChunks)
       for (i in 1 : dataChunksCnt) {
-        if (normalized) {
-          json <- SaveData.buildNormalizedDataContentJSON(dataChunks[[i]])
-        } else {
-          json <- SaveData.buildDenormalizedDataContentJSON(dataChunks[[i]])
-        }
+        json <- SaveData.buildNormalizedDataContentJSON(dataChunks[[i]])
         PutRestCall(paste0(baseUrl, "stream/", swsContext.executionId, "/",
                            uuid, "/data/chunk/", (i - 1), "?token=", swsContext.token),
                     json)
@@ -793,4 +793,17 @@ SaveData.buildMetadataContentJSON <- function(metadata) {
   setkeyv(metadata, origKey, verbose = FALSE)
   
   json
+}
+
+SaveData.getDenormalizedKey <- function(keys, data){
+  
+  valCols <- grep("^Value_", names(data), value = TRUE)
+  dKeyPos <- vapply(keys, grepl, logical(length(valCols)),
+                    fixed = TRUE, x = keys)
+  dKeyPos <- apply(dKeyPos, 2, all)
+  if(sum(dKeyPos) != 1L){
+    stop("Unable to determine denormalisation key for data. Check if data is a valid format")
+  }
+  dKey <- keys[dKeyPos]
+
 }
