@@ -78,7 +78,8 @@ to be cleared.
 \note{
 Saving a missing value removes the value of the destination record. If
   you do not wish to remove values, remove NAs from your output. If you have
-  denormalized data, you may need to normalize it first.
+  denormalized data, it is not possible to remove values. If you wish to do
+  so, you need to normalize first.
 }
 \section{Attempting to write invalid data}{
  Currently, if no flags are 

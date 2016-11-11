@@ -1,3 +1,8 @@
+## MINOR CHANGES
+
+- Saving denormalised data no longer allows saving of missing values 
+  (Fixes SWS-1421, SWS-1527)
+
 ## BUG FIXES
 
 - `SaveData` now correctly validates denormalised data

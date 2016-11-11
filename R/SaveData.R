@@ -12,7 +12,8 @@
 ##' 
 ##' @note Saving a missing value removes the value of the destination record. If
 ##'   you do not wish to remove values, remove NAs from your output. If you have
-##'   denormalized data, you may need to normalize it first.
+##'   denormalized data, it is not possible to remove values. If you wish to do
+##'   so, you need to normalize first.
 ##'   
 ##' @param domain A character value specifying the domain for which the code 
 ##'   list is required.
@@ -92,24 +93,35 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
   dataChunksCnt <- 0
   metaChunksCnt <- 0
   
+  allKeys <- datasetConfig[["dimensions"]]
   if(!normalized){
-    allKeys <- datasetConfig[["dimensions"]]
     
     dKey <- SaveData.getDenormalizedKey(allKeys, data)
-    
     data <- normalizeData(data, setdiff(allKeys, dKey), dKey, keepNA = FALSE)
+    
+  }
+  
+  #Reorganise columns to keys, value, flags and other
+  flagCols <- datasetConfig[["flags"]]
+  otherCols <- setdiff(colnames(data), c(allKeys, "Value", flagCols))
+  goodColOrder <- c(allKeys, "Value", flagCols, otherCols)
+  
+  if(!identical(names(data), goodColOrder)) {
+    #If the order isn't the same, copy the data and reorganise them
+    data <- copy(data)
+    setcolorder(data, c(allKeys, "Value", flagCols, otherCols))
   }
   
   if (waitMode != "synch" & (nRowData > chunkSize | nRowMeta > chunkSize)) {
     uuid <- SaveData.generateUuid()
     if (!missing(data)) {
-      json <- SaveData.buildNormalizedDataDefJSON(data)
+      json <- SaveData.buildNormalizedDataDefJSON(data, datasetConfig)
       PutRestCall(paste0(baseUrl, "stream/", swsContext.executionId, "/",
                          uuid, "/data/def?token=", swsContext.token), json)
       dataChunks <- SaveData.splitIntoChunkTables(data, chunkSize)
       dataChunksCnt <- length(dataChunks)
       for (i in 1 : dataChunksCnt) {
-        json <- SaveData.buildNormalizedDataContentJSON(dataChunks[[i]])
+        json <- SaveData.buildNormalizedDataContentJSON(dataChunks[[i]], datasetConfig)
         PutRestCall(paste0(baseUrl, "stream/", swsContext.executionId, "/",
                            uuid, "/data/chunk/", (i - 1), "?token=", swsContext.token),
                     json)
@@ -138,7 +150,7 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
     out <- PutRestCall(
       paste0(baseUrl, "exec/inline/", swsContext.executionId, "/", domain, "/", dataset,
              "?token=", swsContext.token, "&normalized=true&waitMode=", waitMode),
-      SaveData.buildUniqueJSON(data, metadata, normalized)
+      SaveData.buildUniqueJSON(data, metadata, datasetConfig)
     )
     uuid <- out[['message']]
   }
@@ -333,18 +345,13 @@ SaveData.splitIntoChunkTables <- function(tbl, chunkSize) {
   chunks
 }
 
-SaveData.buildUniqueJSON <- function(data, metadata, normalized) {
+SaveData.buildUniqueJSON <- function(data, metadata, config) {
   
   json <- list()
   
   if(!missing(data)) {
-    if(normalized) {
-      json[["data"]] <- SaveData.buildNormalizedDataDefJSON(data)
-      json[["data"]][["data"]] <- SaveData.buildNormalizedDataContentJSON(data)
-    } else {
-      json[["data"]] <- SaveData.buildDenormalizedDataDefJSON(data)
-      json[["data"]][["data"]] <- SaveData.buildDenormalizedDataContentJSON(data)
-    }
+      json[["data"]] <- SaveData.buildNormalizedDataDefJSON(data, config)
+      json[["data"]][["data"]] <- SaveData.buildNormalizedDataContentJSON(data, config)
   }
   
   if(!missing(metadata)) {
@@ -385,11 +392,7 @@ SaveData.buildNormalizedDataDefJSON <- function(data, config) {
   if(length(which(filteredColumnNames == "Value")) <= 0) {
     stop("Unexpected data table structure detected: could not locate Value column.")
   }
-  index <- tail(which(filteredColumnNames == "Value"), 1)
-  if(index <= 0) {
-    stop("Unexpected data table structure detected: Value column located before any key column")
-  }
-  
+
   keys <- config[["dimensions"]]
   stopifnot(all(keys %in% filteredColumnNames))
   
@@ -424,10 +427,10 @@ SaveData.buildNormalizedDataDefJSON <- function(data, config) {
   #
   #setkeyv(data, origKey, verbose = FALSE)
   
-  json
+  return(json)
 }
 
-SaveData.buildNormalizedDataContentJSON <- function(data) {
+SaveData.buildNormalizedDataContentJSON <- function(data, config) {
   
   # Save the original key of the passed data table.
   #
@@ -435,31 +438,18 @@ SaveData.buildNormalizedDataContentJSON <- function(data) {
   
   # Do not consider metadata column, if they have been passed.
   #
-  metadataColumnsFilter <- colnames(data) != "Metadata"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Language"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Group"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Element"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Value"
-  
-  # Extract key column names.
-  #
-  filteredColumnNames <- colnames(data[, metadataColumnsFilter, with = FALSE])
+  filteredColumnNames <- setdiff(colnames(data), 
+                                 c("Metadata", "Metadata_Language", "Metadata_Group", "Metadata_Element", "Metadata_Value"))
   if(!("Value" %in% filteredColumnNames)) {
     stop("Unexpected data table structure detected: could not locate Value column.")
   }
-  index <- tail(which(filteredColumnNames == "Value"), 1)
-  if(index <= 0) {
-    stop("Unexpected data table structure detected: Value column located before any key column")
-  }
-  keys <- filteredColumnNames[1:index - 1]
+  
+  keys <- config[["dimensions"]]
   
   # Check if flag columns are present. They are all those immediately following
   # the Value column.
-  #
-  flags <- c()
-  if(length(filteredColumnNames) > index) {
-    flags <- filteredColumnNames[(index + 1):(length(filteredColumnNames))]
-  }
+  # as.character converts NULL to empty char
+  flags <- as.character(config[["flags"]])
   
   # Set data table key.
   #
@@ -477,7 +467,7 @@ SaveData.buildNormalizedDataContentJSON <- function(data) {
   #
   setkeyv(data, origKey, verbose = FALSE)
   
-  json
+  return(json)
 }
 
 ##' Normalize Data
@@ -658,7 +648,7 @@ SaveData.getDenormalizedKey <- function(keys, data){
   
   valCols <- grep("^Value_", names(data), value = TRUE)
   dKeyPos <- vapply(keys, grepl, logical(length(valCols)),
-                    fixed = TRUE, x = keys)
+                    fixed = TRUE, x = valCols)
   dKeyPos <- apply(dKeyPos, 2, all)
   if(sum(dKeyPos) != 1L){
     stop("Unable to determine denormalisation key for data. Check if data is a valid format")
