@@ -563,21 +563,24 @@ SaveData.buildDenormalizedDataDefJSON <- function(data) {
 }
 
 ##' Normalize Data
-##'
+##' 
 ##' This function takes denormalized data and casts it as normalized data.
-##'
+##' 
 ##' @param data The denormalized dataset, provided as a data.table.
-##' @param keys A character vector of column names of data which correspond
-##' to all the dimensions of the data except for the denormalized dimension.
-##' @param denormalizedKey A character value containing the name of the
-##' denormalized key.  This string is then used to determine the columns of
-##' data which correspond to values and flags and which correspond to
-##' dimensions.
-##'
+##' @param keys A character vector of column names of data which correspond to 
+##'   all the dimensions of the data except for the denormalized dimension.
+##' @param denormalizedKey A character value containing the name of the 
+##'   denormalized key.  This string is then used to determine the columns of 
+##'   data which correspond to values and flags and which correspond to 
+##'   dimensions.
+##' @param keepNA logical. If TRUE, missing values are preserved in the 
+##'   normalised format. If FALSE, all missing values are assumed to be only
+##'   implicit missing and excluded.
+##'   
 ##' @return A data.table object in normalized format.
-##'
+##'   
 
-normalizeData <- function(data, keys, denormalizedKey){
+normalizeData <- function(data, keys, denormalizedKey, keepNA = TRUE){
   
   nd <- data
   blankit <- FALSE
@@ -590,7 +593,7 @@ normalizeData <- function(data, keys, denormalizedKey){
   
   newData <- suppressWarnings(
     # This used to be a tidyr function but it kept stripping the data.table attribute
-    data.table::melt(nd, id.vars=keys, variable.name="Key", value.name="Value")
+    data.table::melt(nd, id.vars=keys, variable.name="Key", value.name="Value", na.rm = !keepNA)
   )
   
   newData[, c("Key", denormalizedKey) := tstrsplit(Key, split = sprintf("_%s_", denormalizedKey))]

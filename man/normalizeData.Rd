@@ -4,18 +4,22 @@
 \alias{normalizeData}
 \title{Normalize Data}
 \usage{
-normalizeData(data, keys, denormalizedKey)
+normalizeData(data, keys, denormalizedKey, keepNA = TRUE)
 }
 \arguments{
 \item{data}{The denormalized dataset, provided as a data.table.}
 
-\item{keys}{A character vector of column names of data which correspond
-to all the dimensions of the data except for the denormalized dimension.}
+\item{keys}{A character vector of column names of data which correspond to 
+all the dimensions of the data except for the denormalized dimension.}
 
-\item{denormalizedKey}{A character value containing the name of the
-denormalized key.  This string is then used to determine the columns of
-data which correspond to values and flags and which correspond to
+\item{denormalizedKey}{A character value containing the name of the 
+denormalized key.  This string is then used to determine the columns of 
+data which correspond to values and flags and which correspond to 
 dimensions.}
+
+\item{keepNA}{logical. If TRUE, missing values are preserved in the 
+normalised format. If FALSE, all missing values are assumed to be only
+implicit missing and excluded.}
 }
 \value{
 A data.table object in normalized format.
