@@ -333,8 +333,6 @@ SaveData.splitIntoChunkTables <- function(tbl, chunkSize) {
   chunks
 }
 
-
-
 SaveData.buildUniqueJSON <- function(data, metadata, normalized) {
   
   json <- list()
@@ -361,27 +359,29 @@ SaveData.buildUniqueJSON <- function(data, metadata, normalized) {
   json
 }
 
-SaveData.buildNormalizedDataDefJSON <- function(data) {
+SaveData.buildNormalizedDataDefJSON <- function(data, config) {
   
   # Save the original key of the passed data table.
   #
-  origKey <- key(data)
+  #origKey <- key(data)
   
   # Do not consider metadata column, if they have been passed.
   #
-  metadataColumnsFilter <- colnames(data) != "Metadata"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Language"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Group"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Element"
-  metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Value"
   
+  # metadataColumnsFilter <- !colnames(data) %in% c("Metadata", "Metadata_Language", "Metadata_Group", "Metadata_Element", "Metadata_Value")
+  # metadataColumnsFilter <- colnames(data) != "Metadata"
+  # metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Language"
+  # metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Group"
+  # metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Element"
+  # metadataColumnsFilter <- metadataColumnsFilter & colnames(data) != "Metadata_Value"
+  # 
   # Prepare list to hold JSON data.
   #
   json <- list()
   
   # Extract key column names.
   #
-  filteredColumnNames <- colnames(data[, metadataColumnsFilter, with = FALSE])
+  filteredColumnNames <- setdiff(colnames(data), c("Metadata", "Metadata_Language", "Metadata_Group", "Metadata_Element", "Metadata_Value"))
   if(length(which(filteredColumnNames == "Value")) <= 0) {
     stop("Unexpected data table structure detected: could not locate Value column.")
   }
@@ -389,42 +389,40 @@ SaveData.buildNormalizedDataDefJSON <- function(data) {
   if(index <= 0) {
     stop("Unexpected data table structure detected: Value column located before any key column")
   }
-  keys <- filteredColumnNames[1:index - 1]
+  
+  keys <- config[["dimensions"]]
+  stopifnot(all(keys %in% filteredColumnNames))
   
   # Set up section declaring data key definition.
   #
   json[["keyDefinitions"]] <- list()
-  for(i in 1:length(keys)) {
+  for(i in seq_along(keys)) {
     json[["keyDefinitions"]][[i]] <- list()
     json[["keyDefinitions"]][[i]][["code"]] <- keys[i]
   }
   
   # Check if flag columns are present. They are all those immediately following
   # the Value column.
-  #
-  flags <- c()
-  if(length(filteredColumnNames) > index) {
-    flags <- filteredColumnNames[(index + 1):(length(filteredColumnNames))]
-  }
-  
+  # as.character converts NULL to empty char
+  flags <- as.character(config[["flags"]])
+
   # Set up section declaring flags definition.
   #
   json[["flagDefinitions"]] <- list()
-  if (length(flags) > 0) {
-    for(i in 1:length(flags)) {
-      json[["flagDefinitions"]][[i]] <- list()
-      json[["flagDefinitions"]][[i]][["code"]] <- flags[i]
-    }
+  for(i in seq_along(flags)) {
+    json[["flagDefinitions"]][[i]] <- list()
+    json[["flagDefinitions"]][[i]][["code"]] <- flags[i]
   }
+  
   
   # Set data table key.
   #
-  setkeyv(data, keys, verbose = FALSE)
+  #setkeyv(data, keys, verbose = FALSE)
   
   
   # Restore original key.
   #
-  setkeyv(data, origKey, verbose = FALSE)
+  #setkeyv(data, origKey, verbose = FALSE)
   
   json
 }
