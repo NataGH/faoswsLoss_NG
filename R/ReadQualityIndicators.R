@@ -1,9 +1,25 @@
 #' Read Quality Indicators from dataset
-#'
-#' These functions allow reading and writing of quality indicators, Quality indicators are supplied as lists.
-#'
+#' 
+#' These functions allow reading and writing of quality indicators, Quality
+#' indicators are supplied as lists.
+#' 
+#' @return A list with the following structure
+#'   \itemize{
+#'     \item \code{id} Unique id of this version of indicators
+#'     \item \code{version} Version of the schema to which indicators adhere
+#'     \item \code{model} Name of the schema, in this case always 'sws-indicators'
+#'     \item \code{target} The metadata target. For our purposes, the dataset name
+#'     \item \code{content} A nested list containing the quality indicators
+#'     \item \code{createdOn} Unix timestamp of point where indicators were first 
+#'       created
+#'     \item \code{lastModifiedOn} Unix timestamp of point when indicators were 
+#'       last modified
+#'     \item \code{createdBy} User who first created indicators
+#'     \item \code{lastModifiedBy} User who last modified indicators
+#'   }
+#' 
 #' @param dataset character. Name of an SWS dataset
-#'
+#'   
 #' @export ReadQualityIndicators
 
 ReadQualityIndicators <- function(dataset){

@@ -1,14 +1,16 @@
 #' Write Quality Indicators to dataset
-#'
+#' 
 #' @param indicators list. List of indicators to modify or add.
-#' @param dataset character. Name of dataset to which to write Quality
+#' @param dataset character. Name of dataset to which to write Quality 
 #'   indicators
-#'
-#' @details The dataset may be supplied as a nested list. The list should
-#'   contain Quality Indicators that you wish to add or modify. Additions and
+#'   
+#' @details The dataset may be supplied as a nested list like the \code{content}
+#'   section received from \code\link{ReadQualityIndicators}. The list should 
+#'   contain Quality Indicators that you wish to add or modify. Additions and 
 #'   modifications occur at the top level of the list.
-#'
-#'   In order to delete a value, simply have a top-level list element named as NULL.
+#'   
+#'   In order to delete a value, simply have a top-level list element named as 
+#'   NULL.
 #'   
 #' @seealso \link{ReadQualityIndicators}
 #' @export WriteQualityIndicators

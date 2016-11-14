@@ -9,18 +9,20 @@ WriteQualityIndicators(indicators, dataset)
 \arguments{
 \item{indicators}{list. List of indicators to modify or add.}
 
-\item{dataset}{character. Name of dataset to which to write Quality
+\item{dataset}{character. Name of dataset to which to write Quality 
 indicators}
 }
 \description{
 Write Quality Indicators to dataset
 }
 \details{
-The dataset may be supplied as a nested list. The list should
-  contain Quality Indicators that you wish to add or modify. Additions and
+The dataset may be supplied as a nested list like the \code{content}
+  section received from \code\link{ReadQualityIndicators}. The list should 
+  contain Quality Indicators that you wish to add or modify. Additions and 
   modifications occur at the top level of the list.
-
-  In order to delete a value, simply have a top-level list element named as NULL.
+  
+  In order to delete a value, simply have a top-level list element named as 
+  NULL.
 }
 \seealso{
 \link{ReadQualityIndicators}
