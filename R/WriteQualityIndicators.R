@@ -9,7 +9,8 @@
 #'   modifications occur at the top level of the list.
 #'
 #'   In order to delete a value, simply have a top-level list element named as NULL.
-#'
+#'   
+#' @seealso \link{ReadQualityIndicators}
 #' @export WriteQualityIndicators
 
 WriteQualityIndicators <- function(indicators, dataset){

@@ -22,4 +22,7 @@ The dataset may be supplied as a nested list. The list should
 
   In order to delete a value, simply have a top-level list element named as NULL.
 }
+\seealso{
+\link{ReadQualityIndicators}
+}
 
