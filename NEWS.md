@@ -1,3 +1,10 @@
+# CHANGES IN faosws VERSION 0.9.0
+
+## NEW FEATURES
+
+- Added functions `ReadQualityIndicators` and `WriteQualityIndicators` to access
+  the new metadata api
+
 ## MINOR CHANGES
 
 - Saving denormalised data no longer allows saving of missing values 
