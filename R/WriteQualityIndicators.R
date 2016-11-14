@@ -14,11 +14,11 @@
 
 WriteQualityIndicators <- function(indicators, dataset){
   
-  if(!is.list(indicators)){
-    stop("indicators must be a list")
-  }
+  stopifnot(is.character(dataset), length(dataset) == 1L, is.list(indicators))
   
-  stopifnot(is.character(dataset), length(dataset) == 1L)
+  if(length(names(indicators)) != length(indicators)){
+    stop("All elements of indicators must be named")
+  }
   
   prev <- ReadQualityIndicators(dataset)
   
