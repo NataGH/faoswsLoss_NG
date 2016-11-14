@@ -10,15 +10,12 @@ ReadQualityIndicators <- function(dataset){
   
   stopifnot(is.character(dataset), length(dataset) == 1L)
   
-  url <- paste0(swsContext.baseRestUrl, "/api/metadata/instance/dataset/", dataset, "/latest?_xid=", swsContext.token)
+  url <- paste0(swsContext.baseRestUrl, "/api/metadata/instance/dataset/", dataset, "/sws-indicators/latest?_xid=", swsContext.token)
   quality_indicators <- GetRestCall(url, nullValue = NA)
+  quality_indicators[["content"]] <- as.list(quality_indicators[["content"]])
   
-  quality_indicators <- lapply(quality_indicators, function(x){
-    # Find objects that should be tables
-    x[["content"]] <- as.list(x[["content"]])
-    x[["content"]]  <- FormatIndicatorList(x[["content"]])
-    x
-  })
+  # Find objects that should be tables
+  quality_indicators[["content"]] <- FormatIndicatorList(quality_indicators[["content"]])
   
   quality_indicators
   
