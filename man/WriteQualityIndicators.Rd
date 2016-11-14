@@ -19,7 +19,7 @@ Write Quality Indicators to dataset
 The dataset may be supplied as a nested list. The list should
   contain Quality Indicators that you wish to add or modify. Additions and
   modifications occur at the top level of the list.
-  
+
   In order to delete a value, simply have a top-level list element named as NULL.
 }
 
