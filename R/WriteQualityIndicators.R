@@ -64,6 +64,7 @@ WriteQualityIndicators <- function(indicators, dataset){
   }
   
   # Return modified indicators as returned by the server
+  response <- FormatIndicatorList(response)
   as.list(response[["content"]])
   
 }
