@@ -14,6 +14,12 @@
 
 WriteQualityIndicators <- function(indicators, dataset){
   
+  if(!is.list(indicators)){
+    stop("indicators must be a list")
+  }
+  
+  stopifnot(is.character(dataset), length(dataset) == 1L)
+  
   prev <- ReadQualityIndicators(dataset)
   
   # If there is no existing metadata, create it

@@ -7,7 +7,7 @@
 ReadQualityIndicators(dataset)
 }
 \arguments{
-\item{dataset}{}
+\item{dataset}{character. Name of an SWS dataset}
 }
 \description{
 These functions allow reading and writing of quality indicators, Quality indicators are supplied as lists.

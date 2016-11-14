@@ -2,12 +2,13 @@
 #' 
 #' These functions allow reading and writing of quality indicators, Quality indicators are supplied as lists.
 #' 
-#' @param domain
-#' @param dataset
+#' @param dataset character. Name of an SWS dataset
 #' 
 #' @export ReadQualityIndicators
 
 ReadQualityIndicators <- function(dataset){
+  
+  stopifnot(is.character(dataset), length(dataset) == 1L)
   
   url <- paste0(swsContext.baseRestUrl, "/api/metadata/instance/dataset/", dataset, "/latest?_xid=", swsContext.token)
   quality_indicators <- GetRestCall(url)
