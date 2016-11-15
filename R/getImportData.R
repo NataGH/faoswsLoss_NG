@@ -5,7 +5,7 @@
 ##' @export
 
 
-getImportData = function(){
+getImportData = function(source = "sws"){
 
   
 ##################################################################################################
@@ -99,52 +99,79 @@ getImportData = function(){
   ## ## currently not working due to insufficient permissions
   ## faosws::GetDatasetConfig(domainCode = "trade",
   ##                          datasetCode = "total_trade_cpc_m49")
-  
-  ## Pivot to vectorize yield computation
-  importPivot = c(
-    ## Pivoting(code = areaVarFS, ascending = TRUE),
-    ## Pivoting(code = itemVarFS, ascending = TRUE),
-    ## Pivoting(code = yearVar, ascending = FALSE),
-    ## Pivoting(code = elementVarFS, ascending = TRUE)
-    Pivoting(code = areaVar, ascending = TRUE),
-    Pivoting(code = itemVar, ascending = TRUE),
-    Pivoting(code = yearVar, ascending = FALSE),
-    ## Pivoting(code = elementVar, ascending = TRUE)
-    Pivoting(code = "measuredElementTrade", ascending = TRUE)
-  )
-  
-  ## Query the data
-  importQuery <-
-    GetData(
-      key = importKey,
-      flags = TRUE,
-      normalized = FALSE,
-      pivoting = importPivot
+
+  if (tolower(source) == "sws") {
+    
+    ## Pivot to vectorize yield computation
+    importPivot = c(
+      ## Pivoting(code = areaVarFS, ascending = TRUE),
+      ## Pivoting(code = itemVarFS, ascending = TRUE),
+      ## Pivoting(code = yearVar, ascending = FALSE),
+      ## Pivoting(code = elementVarFS, ascending = TRUE)
+      Pivoting(code = areaVar, ascending = TRUE),
+      Pivoting(code = itemVar, ascending = TRUE),
+      Pivoting(code = yearVar, ascending = FALSE),
+      ## Pivoting(code = elementVar, ascending = TRUE)
+      Pivoting(code = "measuredElementTrade", ascending = TRUE)
     )
+    
+    ## Query the data
+    importQuery <-
+      GetData(
+        key = importKey,
+        flags = TRUE,
+        normalized = FALSE,
+        pivoting = importPivot
+      )
 
-  ## rename(measuredElement = measuredElementTrade)
-  
-  ## setnames(importQuery,
-  ##          old = names(importQuery),
-  ##          new = c("geographicAreaFS","measuredItemFCL","timePointYears",
-  ##                   "Value_measuredElement_5600","flagFaostat_measuredElementFS_5600")
-  ##          )
+    ## rename(measuredElement = measuredElementTrade)
+    
+    ## setnames(importQuery,
+    ##          old = names(importQuery),
+    ##          new = c("geographicAreaFS","measuredItemFCL","timePointYears",
+    ##                   "Value_measuredElement_5600","flagFaostat_measuredElementFS_5600")
+    ##          )
 
 
-  ## ## Convert geographicAreaM49 to geographicAreaFS
-  ## importQuery[, geographicAreaM49 := as.numeric(faoswsUtil::fs2m49(as.character(geographicAreaFS)))]
-  
-  ## ## Convert measuredItemCPC to measuredItemFCL
-  ## importQuery[, measuredItemFCL := addHeadingsFCL(measuredItemFCL)]
-  ## importQuery[, measuredItemCPC := faoswsUtil::fcl2cpc(as.character(measuredItemFCL))]
-  
-  
-  ## Convert time to numeric
-  importQuery[, timePointYears := as.numeric(timePointYears)]
-  
-  ## importQuery[, geographicAreaFS := as.numeric(geographicAreaFS)]
-  importQuery[, geographicAreaM49 := as.numeric(geographicAreaM49)]
-  
-  importQuery
+    ## ## Convert geographicAreaM49 to geographicAreaFS
+    ## importQuery[, geographicAreaM49 := as.numeric(faoswsUtil::fs2m49(as.character(geographicAreaFS)))]
+    
+    ## ## Convert measuredItemCPC to measuredItemFCL
+    ## importQuery[, measuredItemFCL := addHeadingsFCL(measuredItemFCL)]
+    ## importQuery[, measuredItemCPC := faoswsUtil::fcl2cpc(as.character(measuredItemFCL))]
+    
+    
+    ## Convert time to numeric
+    importQuery[, timePointYears := as.numeric(timePointYears)]
+    
+    ## importQuery[, geographicAreaFS := as.numeric(geographicAreaFS)]
+    importQuery[, geographicAreaM49 := as.numeric(geographicAreaM49)]
+    
+    importQuery
+    
+  } else if (tolower(source) == "faostat") {
+
+    ## importKey@dimensions[["geographicAreaM49"]]@keys
+    ## measuredItemCPC
+    ## cpc2fcl(measuredItemCPC, returnFirst = T)
+    ## geographicAreaM49
+    ## m492fs(geographicAreaM49)
+    ## ## from faoswsFood
+    ## totalTradeData <-faosws::ReadDatatable(table = "fal_2_m49")
+    ## issue with M49 831 / fal 274 Guernsey
+    ## issue with NA after conversion M49 -> fal
+    ## importKey@dimensions[["geographicAreaM49"]]@keys <-
+    ##   importKey@dimensions[["geographicAreaM49"]]@keys %>%
+    ##   .[!. %in% c("831") &
+    ##     !is.na(m492fs(importKey@dimensions[["geographicAreaM49"]]@keys))]
+    
+      faoswsFood::getTotalTradeDataFAOSTAT1(
+        geographicAreaM49 = importKey@dimensions[["geographicAreaM49"]]@keys,
+        measuredItemCPC = importKey@dimensions[["measuredItemCPC"]]@keys,
+        yearRange = importKey@dimensions[["timePointYears"]]@keys
+      )
+
+    
+  }
   
 }
