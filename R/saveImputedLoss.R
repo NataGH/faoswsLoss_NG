@@ -50,8 +50,12 @@ saveImputedLoss = function(data){
   ##          data = saveSelection,
   ##          normalized = FALSE)
 
+  saveSelectionNorm <- 
+  faosws:::normalizeData(saveSelection, keys =   c("geographicAreaM49", "measuredItemCPC", "timePointYears"), denormalizedKey = "measuredElement")
+  
+ 
   SaveData(domain = "agriculture",
            dataset = "aproduction",
-           data = saveSelection,
-           normalized = FALSE)
+           data = saveSelectionNorm,
+           normalized = TRUE)
 }

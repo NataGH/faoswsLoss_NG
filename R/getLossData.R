@@ -149,11 +149,13 @@ getLossData = function(protected = FALSE){
       .[.!="flagCombination"]
 
     ## subset to protected flags
+    ## requires dtplyr, the data table back-end for 'dplyr'
     lossQuery <-
       lossQuery[, flagCombination := paste(flagObservationStatus_measuredElement_5016, flagMethod_measuredElement_5016, sep = ";")] %>%
       merge(., protectedFlag, by = "flagCombination") %>%
-      filter(Protected == TRUE) %>%       # only keep protected values
+      filter(Protected == TRUE) %>%
       select_(.dots = col_keep)
+    
   }
 
   lossQuery

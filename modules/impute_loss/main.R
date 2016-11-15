@@ -9,6 +9,7 @@ suppressMessages({
   library(igraph)
   library(plyr)
   library(dplyr)
+  library(dtplyr)
 })
 
 library(faoswsLoss)
@@ -60,15 +61,16 @@ if(updateModel){
 
   finalModelData = 
     {
-      requiredItems <<- getRequiredItems()
+      ## requiredItems <<- getRequiredItems()
       production <<- getProductionData() # Value_measuredElement_5510
-      import <<- getImportData()         # Value_measuredElementTrade_5610
+      import <<- getImportData(source = "sws") # Value_measuredElementTrade_5610
       ## loss <<- getOfficialLossData()     # Value_measuredElement_5016
       loss <<- getLossData(protected = TRUE)     # Value_measuredElement_5016
+      openingStock <<- getOpeningStockData()     # Value_measuredElement_5113
       ## lossFoodGroup <<- getLossFoodGroup()
       assign("lossFoodGroup", getLossFoodGroup(), envir = .GlobalEnv)
     } %>%
-    mergeAllLossData(lossData = loss, production, import, lossFoodGroup) %>%
+    mergeAllLossData(lossData = loss, production, import, openingStock, lossFoodGroup) %>%
     ## temp <- mergeAllLossData(lossData = loss, production, import, lossFoodGroup) %>%
     ## returns around 13 000 obs
     subset(x = .,
@@ -86,6 +88,7 @@ if(updateModel){
                       "Value_measuredElement_5016", # loss
                       "Value_measuredElement_5510", # production
                       "Value_measuredElementTrade_5610", # import
+                      "Value_measuredElement_5113", # opening stocks
                       "foodGroupName",
                       "foodPerishableGroup")) %>%
     ## another filter: returns around 280 obs
@@ -108,6 +111,15 @@ if(updateModel){
   ## imputeLoss_finalModelData_csv_orig <- finalModelData
   ## save(imputeLoss_finalModelData_csv_orig, file = modeldata)
   ## load(modeldata)
+  ## finalModelData <- imputeLoss_finalModelData_csv_orig
+
+  ## names(finalModelData)
+  ## table(finalModelData$measuredItemCPC,
+  ##       is.na(finalModelData$Value_measuredElement_5113))
+  ## table(is.na(finalModelData$Value_measuredElement_5113))
+  ## FALSE  TRUE 
+  ##   617   902
+  ## 60% missing
   
   lossLmeModel =
     lmer(log(Value_measuredElement_5016 + 1) ~
@@ -118,6 +130,9 @@ if(updateModel){
             foodPerishableGroup/foodGroupName/measuredItemCPC/geographicAreaM49)+
            log(Value_measuredElementTrade_5610 + 1) +
            (-1 + log(Value_measuredElementTrade_5610 + 1)|
+            measuredItemCPC/geographicAreaM49) +
+           log(Value_measuredElement_5113 + 1) + # opening stocks - NA for many CPC items
+           (-1 + log(Value_measuredElement_5113 + 1)|
             measuredItemCPC/geographicAreaM49),
          data = finalModelData)
   
@@ -132,8 +147,10 @@ finalPredictData =
     if(!updateModel){
       ## requiredItems <<- getAllItemCPC()
       production <<- getProductionData()
-      import <<- getImportData()
-      lossFoodGroup <<- getLossFoodGroup()
+      import <<- getImportData(source = "sws")
+      ## lossFoodGroup <<- getLossFoodGroup()
+      assign("lossFoodGroup", getLossFoodGroup(), envir = .GlobalEnv)
+      openingStock <<- getOpeningStockData()     # Value_measuredElement_5113
       ## lossRegionClass <<- getLossRegionClass()
       ##  countryTable <<-
       ##    GetCodeList(domain = "agriculture",
@@ -147,7 +164,7 @@ finalPredictData =
     ## loss <<- getSelectedLossData()
     loss <<- getLossData(protected = FALSE)
   } %>%
-  mergeAllLossData(lossData = loss, production, import, lossFoodGroup) %>%
+  mergeAllLossData(lossData = loss, production, import, openingStock, lossFoodGroup) %>%
   subset(x = .,
          subset = ((Value_measuredElement_5510 == 0 & Value_measuredElementTrade_5610 > 0) |
                    (Value_measuredElement_5510 > 0 & Value_measuredElementTrade_5610 >= 0)),
@@ -160,6 +177,7 @@ finalPredictData =
                     "flagMethod_measuredElement_5016", # column not found
                     "Value_measuredElement_5510", # production
                     "Value_measuredElementTrade_5610", # import
+                    "Value_measuredElement_5113", # opening stocks
                     "foodGroupName",
                     "foodPerishableGroup")) %>%
   removeCarryLoss(data = ., lossVar = "Value_measuredElement_5016") %>%
@@ -191,8 +209,8 @@ finalPredictData %>%
              lossModel = lossLmeModel) %>%
   saveImputedLoss(data = .)
 ## ## write.csv(finalPredictData, file.path(file.path(drypath, "faofbs", "data", "original", "imputeLoss_finalPredictData.csv")), row.names = FALSE)
-## predictdata <- file.path(file.path(drypath, "faofbs", "data", "derived", "orig_imputeLoss_finalPredictData_csv.Rdata"))
+## predictdata_file <- file.path(drypath, "faofbs", "data", "derived", "orig_imputeLoss_finalPredictData_csv.Rdata")
 ## imputeLoss_finalPredictData_csv_orig <- finalPredictData
-## save(imputeLoss_finalPredictData_csv_orig, file = predictdata)
+## save(imputeLoss_finalPredictData_csv_orig, file = predictdata_file)
 
-
+print("Loss Module completed successfully")

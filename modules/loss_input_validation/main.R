@@ -45,7 +45,7 @@ if(CheckDebug()){
 
   ## REVISION START ##
   ## SETTINGS <- ReadSettings("sws.yml")
-  SETTINGS <- ReadSettings(file.path("modules", name, "sws.yml"))
+  SETTINGS <- ReadSettings(file.path("modules", "loss_input_validation", "sws.yml"))
   ## REVISION END ##
 
   ## If you're not on the system, your settings will overwrite any others
@@ -72,14 +72,40 @@ datasetConfig = GetDatasetConfig(domainCode = sessionKey@domain,
                                  datasetCode = sessionKey@dataset)
 
 
+completeImputationKey = faoswsUtil::getCompleteImputationKey(table = "production")
+
 ##' Obtain the complete imputation Datakey
-completeImputationKey = getCompleteImputationKey()
+
+##' Check if dimension members specified in comm_codes table are defined in data
+if (validationRange == "all") {
+  ## years <- getCompleteImputationKey(table = "production")@
+  ##   dimensions[["timePointYears"]]@keys
+  ## cat(head(years, 3), "...", tail(years, 3))
+
+  missing_measuredItemCPC <-
+    setdiff(
+      ## getCompleteImputationKey(table = "production")@dimensions[["measuredItemCPC"]]@keys,
+      completeImputationKey@dimensions[["measuredItemCPC"]]@keys,
+      faosws::GetCodeList(domain = "agriculture",
+                          dataset = "aproduction",
+                          dimension = "measuredItemCPC")[["code"]]
+    )
+
+  if (length(missing_measuredItemCPC) > 0) {
+    missing_measuredItemCPC_str <- 
+      paste(missing_measuredItemCPC)
+  }
+
+} else {
+  missing_measuredItemCPC_str <- ""
+}
 
 ##' Selected the key based on the input parameter
 selectedKey =
   switch(validationRange,
          "session" = sessionKey,
          "all" = completeImputationKey)
+
 
 
 ##' Build processing parameters

@@ -4,7 +4,7 @@
 \alias{getImportData}
 \title{Get Import Data}
 \usage{
-getImportData()
+getImportData(source = "sws")
 }
 \description{
 Function to obtain import data at primary level
