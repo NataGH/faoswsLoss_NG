@@ -28,5 +28,5 @@ test_that("GetMetadata produces data in the right format",{
                                                                                                                                                                                                                                              "measuredElement", "measuredItemCPC", "timePointYears", "Metadata", 
                                                                                                                                                                                                                                              "Metadata_Language", "Metadata_Group", "Metadata_Value"), row.names = c(NA, 
                                                                                                                                                                                                                                                                                                                      -4L), class = c("data.table", "data.frame"))
-  expect_equal(GetData.NEW_processNormalizedResultMetadata(testdata), expected_output)
+  expect_equal(GetData.processNormalizedResultMetadata(testdata), expected_output)
 })

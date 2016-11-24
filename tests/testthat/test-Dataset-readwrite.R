@@ -45,65 +45,30 @@ test_that("Test writing to other countries", {
 
 
 ###############################################################################
-# Reordering/Pivoting                                                         #
+# Processing                                                                  #
 ###############################################################################
 
-# test_that("Default save works ok", {
-#   expect_error(not({
-#     temp <- GetData(swsContext.datasets[[1]])
-#     out <<- SaveData(domain = swsContext.datasets[[1]]@domain,
-#                    dataset = swsContext.datasets[[1]]@dataset,
-#                    temp)
-#     }))
-#   
-#   expect_equal(out$ignored, 2)
-#   expect_equal(out$discarded, 0)
-# })
-
-# test_that("Denormalized save works ok", {
-#   expect_error(not({
-#     temp <- GetData(swsContext.datasets[[1]], normalized = FALSE)
-#     out <<- SaveData(domain = swsContext.datasets[[1]]@domain,
-#                  dataset = swsContext.datasets[[1]]@dataset,
-#                  temp, normalized = FALSE)}
-#     ))
-#   expect_equal(out$ignored, 2)
-#   expect_equal(out$discarded, 6)
-#   expect_equal(nrow(out$warnings), 6)
-# })
-
-
-# test_that("Denormalized/Pivoted save (first attempt) works ok", {
-#   expect_error(not({
-#     pivot = list(
-#       Pivoting(code = "geographicAreaM49"),
-#       Pivoting(code = "timePointYears"),
-#       Pivoting(code = "measuredItemCPC"),
-#       Pivoting(code = "measuredElement")
-#     )
-#     temp = GetData(swsContext.datasets[[1]], normalized = FALSE, pivoting = pivot)
-#     out <<- SaveData(domain = swsContext.datasets[[1]]@domain,
-#                    dataset = swsContext.datasets[[1]]@dataset,
-#                    temp, normalized = FALSE)
-#   }))
-#   expect_equal(out$ignored, 2)
-#   expect_equal(out$discarded, 3)
-# })
-
-
-# test_that("Denormalized/Pivoted save (second attempt) works ok", {
-#   expect_error(not({
-#     pivot = list(
-#       Pivoting(code = "geographicAreaM49"),
-#       Pivoting(code = "measuredElement"),
-#       Pivoting(code = "timePointYears"),
-#       Pivoting(code = "measuredItemCPC")
-#     )
-#     temp = GetData(swsContext.datasets[[1]], normalized = FALSE, pivoting = pivot)
-#     out <<- SaveData(domain = swsContext.datasets[[1]]@domain,
-#                    dataset = swsContext.datasets[[1]]@dataset,
-#                    temp, normalized = FALSE)
-#   }))
-#   expect_equal(out$ignored, 2)
-#   expect_equal(out$discarded, 2)
-# })
+test_that("processNormalizedResult works", {
+  input <- structure(list(keyDefinitions = list(structure(c("geographicAreaM49", 
+                     "Geographic Area", "normal"), .Names = c("code", "description", 
+                     "type")), structure(c("measuredElement", "Element", "measurementUnit"
+                     ), .Names = c("code", "description", "type")), structure(c("measuredItemCPC", 
+                     "Item", "normal"), .Names = c("code", "description", "type")), 
+                     structure(c("timePointYears", "Year", "time"), .Names = c("code", 
+                     "description", "type"))), flagDefinitions = list(structure(c("flagObservationStatus", 
+                     "Status"), .Names = c("code", "description")), structure(c("flagMethod", 
+                     "Method"), .Names = c("code", "description"))), data = list(c("4", 
+                     "5031", "02111", "2005"), list("4", "5417", "02111", "2005", 
+                     0, "M", "u"))), .Names = c("keyDefinitions", "flagDefinitions", 
+                     "data"))
+  
+  output <- structure(list(geographicAreaM49 = c("4", "4"), measuredElement = c("5031", 
+                      "5417"), measuredItemCPC = c("02111", "02111"), timePointYears = c("2005", 
+                      "2005"), Value = c(NA, 0), flagObservationStatus = c(NA, "M"), 
+                      flagMethod = c(NA, "u")), .Names = c("geographicAreaM49", 
+                      "measuredElement", "measuredItemCPC", "timePointYears", "Value", 
+                      "flagObservationStatus", "flagMethod"), row.names = c(NA, -2L
+                      ), class = c("data.table", "data.frame"))
+  
+  expect_equal(GetData.processNormalizedResult(input, flag = TRUE), output)
+})

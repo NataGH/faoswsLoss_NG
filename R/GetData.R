@@ -92,7 +92,7 @@ GetData <- function(key, flags = TRUE, normalized = TRUE, pivoting, omitna = TRU
 
   # Create result data table.
   #
-  query <- GetData.NEW_processNormalizedResult(data, flags)
+  query <- GetData.processNormalizedResult(data, flags)
   
   if(omitna){
     query <- query[!is.na(Value),]
@@ -130,7 +130,7 @@ GetData <- function(key, flags = TRUE, normalized = TRUE, pivoting, omitna = TRU
 
 ## ---------------------------------------------------------
 
-GetData.NEW_processNormalizedResult <- function(data, flags) {
+GetData.processNormalizedResult <- function(data, flags) {
   keyNames <- sapply(data$keyDefinitions, function(x) x[1])
   if(flags){
     flagNames <- sapply(data$flagDefinitions, function(x) x[1])
@@ -165,7 +165,7 @@ GetData.NEW_processNormalizedResult <- function(data, flags) {
     }
   }
   out[, Value := as.numeric(Value)]
-  out
+  return(out[])
 }
 
 denormalizeResult <- function(data, query, key){
@@ -246,7 +246,7 @@ hasEmptyList <- function(x) {
   }
 }
 
-GetData.NEW_processNormalizedResultMetadata <- function(data) {
+GetData.processNormalizedResultMetadata <- function(data) {
   keyNames <- sapply(data$keyDefinitions, function(x) x[1])
   cols <- c(keyNames, "Metadata_Language", "Metadata", "Metadata_Group", "Metadata_Value")
   
@@ -379,7 +379,7 @@ GetMetadata <- function(key, pivoting) {
   
   # Create result data table.
   #
-  query <- GetData.NEW_processNormalizedResultMetadata(data = data)
+  query <- GetData.processNormalizedResultMetadata(data = data)
   
   # normalizes result transforming columns from list of NULLs to vector of NAs
   as.data.table(
@@ -482,32 +482,6 @@ GetData.buildJSON <- function(key, flags, normalized, metadata, pivoting) {
   json
 }
 
-
-GetData.processNormalizedResult <- function(data, flags) {
-  keyNames <- sapply(data$keyDefinitions, function(x) x[1])
-  if(flags){
-    flagNames <- sapply(data$flagDefinitions, function(x) x[1])
-    if(length(flagNames) == 0){
-      flags = FALSE
-      warning("flags set to TRUE but no flags are available in this ",
-              "dataset.  Setting flags to FALSE and proceeding.")
-    }
-  }
-  rows <- lapply(data$data, function(listElement){
-    out <- data.table(Value = listElement$value)
-    out[, c(keyNames) := as.list(listElement$keys)]
-    if(flags){
-      out[, c(flagNames) := as.list(listElement$flags)]
-      ## Reorder columns
-      setcolorder(out, c(keyNames, "Value", flagNames))
-    } else {
-      ## Reorder columns
-      setcolorder(out, c(keyNames, "Value"))
-    }
-  })
-  do.call("rbind", rows)
-}
-
 ##' Clean metadata
 ##' 
 ##' This function takes a metadata object as created by a call to PostRestCall
@@ -530,22 +504,6 @@ cleanMetadata <- function(metadata){
     result[[i]][, Metadata_Group := i]
   })
   do.call("rbind", result)
-}
-
-GetData.processNormalizedResultMetadata <- function(data){
-  keyNames <- sapply(data$keyDefinitions, function(x) x[1])
-  rows <- lapply(data$data, function(listElement){
-    out <- cleanMetadata(listElement$metadata)
-    out[, c(keyNames) := as.list(listElement$keys)]
-    out[, typeDescription := NULL] # not needed
-    ## Reassign column name for consistency
-    setnames(out, c("typeCode", "value", "language"),
-             c("Metadata", "Metadata_Value", "Metadata_Language"))
-    ## Reorder columns
-    setcolorder(out, c(keyNames, "Metadata", "Metadata_Language",
-                       "Metadata_Group", "Metadata_Value"))
-  })
-  do.call("rbind", rows)
 }
 
 GetData.processDenormalizedResult <- function(data) {
