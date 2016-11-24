@@ -24,6 +24,10 @@
 
 # CHANGES IN faosws VERSION 0.8.3
 
+## NEW FEATURES
+
+- Added new function `FetchDatatableNames`
+
 ## BUG FIXES
 
 - `Dimension` now allows empty keys (Fixes SWS-1454)

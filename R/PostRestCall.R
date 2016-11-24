@@ -58,9 +58,9 @@ PostRestCall <- function(url, data, nullValue = NULL) {
   
   # Prevent error on blank response
   if(response == ""){
-    invisible("")
+    return(invisible(""))
   } else {
-    RJSONIO::fromJSON(response, nullValue = nullValue)
+    return(RJSONIO::fromJSON(response, nullValue = nullValue))
   }
   
 }
