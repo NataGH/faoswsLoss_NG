@@ -101,6 +101,8 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
     
   }
   
+  SaveData.validateFlagValues(data, flagCols)
+  
   #Reorganise columns to keys, value, flags and other
   flagCols <- datasetConfig[["flags"]]
   otherCols <- setdiff(colnames(data), c(allKeys, "Value", flagCols))
@@ -661,4 +663,15 @@ SaveData.getDenormalizedKey <- function(keys, data){
   }
   dKey <- keys[dKeyPos]
 
+}
+
+SaveData.validateFlagValues <- function(data, flagCols){
+  # Disallow writing flags without values
+  flagNoValues <- data[is.na(Value), rowSums(is.na(.SD)) > 0, .SDcols = flagCols]
+  if(length(flagNoValues) > 0){
+    stop(paste0("There are ", length(flagNoValues), " records with missing values and non-missing flags. 
+                Flags may not be present without values"))
+  }
+  
+  return(invisible(NULL))
 }

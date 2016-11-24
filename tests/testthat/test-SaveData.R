@@ -38,3 +38,22 @@ test_that("normalizeData works correctly", {
   expect_equal(normalizeData(testdata_normalizeData, "measuredItemCPC", "area"),
                expected_value_NA)
 })
+
+test_that("SaveData doesn't save missing values with flags", {
+  #SWS-1411
+  d <- data.table(k1 = letters[1:3],
+                  Value = c(1,2,3),
+                  f1 = letters[7:9])
+                  
+                  
+                  f <- "f1"
+                  expect_error(not(SaveData.validateFlagValues(d, f)))
+                  
+                  
+                  d2 <- data.table(k1 = "a",
+                                   Value = NA_character_,
+                                   f1 = "-")
+                  
+                  expect_error(SaveData.validateFlagValues(d2, f))
+                  
+})
