@@ -7,15 +7,17 @@
 GetData(key, flags = TRUE, normalized = TRUE, pivoting, omitna = TRUE)
 }
 \arguments{
-\item{key}{DatasetKey.  Often, this will be one of the list elements of
-swsContext.datasets (if running in a debug/local session, create this
-object with GetTestEnvironment).}
+\item{key}{DatasetKey.  Often, this will be one of the list elements of 
+swsContext.datasets (if running in a debug/local session, create this 
+object with GetTestEnvironment)}
 
 \item{flags}{logical, indicating if flags should be returned (TRUE) 
-otherwise not returned (FALSE).}
+otherwise not returned (FALSE)}
 
 \item{normalized}{logical. If true then data are returned in normalized 
-format, otherwise the format is denormalized.}
+format, otherwise the format is denormalized. Note that the denormalized 
+format covers all the keys provided to \code{GetData}, not just the keys
+for which there are records}
 
 \item{pivoting}{vector. Each of whose elements must be an object of type 
 Pivoting.  If omitted, no pivoting is performed on the dataset.  Using 
@@ -23,11 +25,11 @@ this argument can allow for convenient reshaping of the data prior to
 pulling it into R.  Note: if this argument is included, then all of the 
 dimensions in key must be included in this vector.  See ?Pivoting for a 
 description on creating this argument and for some examples on how to use 
-it.}
+it}
 
-\item{omitna}{logical. By default, all empty values are not returned. If
-this is set to FALSE, empty values that have been modified at some point
-in the past are returned.}
+\item{omitna}{logical. By default, all empty values are not returned. If 
+this is set to FALSE, empty values that have been modified at some point 
+in the past are returned}
 }
 \value{
 A data table containing the data matching the key (may be empty).
