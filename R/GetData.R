@@ -264,33 +264,35 @@ GetData.NEW_processNormalizedResultMetadata <- function(data) {
       }
       meta1 = lapply(listElement[[length(keyNames) + 2]], function(listElement) {
         meta2 = lapply(listElement[[4]], function(listElement) {
-          out = data.frame(list(listElement[[1]], 0, listElement[[3]]))
+          out = data.frame(list(listElement[[1]], 0, listElement[[3]]), 
+                           stringsAsFactors = FALSE)
           colnames(out) = c(cols[(length(keyNames) + 2):length(cols)])
           return(out)
         })
         lapply(1:length(meta2), function(i) {
           meta2[[i]]$Metadata_Group <<- i
         })
-        out = data.frame(list(listElement[[3]]))
-        out = merge(out, do.call(rbind, meta2))
+        out = data.frame(list(listElement[[3]]), stringsAsFactors = FALSE)
+        out = merge(out, rbindlist(meta2))
         colnames(out) = c(cols[(length(keyNames)+1):length(cols)])
         return(out)
       })
-      out = data.frame(listElement[1:length(keyNames)])
-      out = merge(out, do.call(rbind, meta1))
+      out = data.frame(listElement[1:length(keyNames)], stringsAsFactors = FALSE)
+      out = merge(out, rbindlist(meta1))
       colnames(out) = cols
       return(out)
     } else {
       return(MakeEmptyMetadata(keyNames, cols)[])
     }
   })
-  result = do.call("rbind", result)
+  result = rbindlist(result)
   
   # If there is no metadata at all, the result can be length 0
   if(length(result) == 0){
     result <- MakeEmptyMetadata(keyNames, cols)[]
   }
   setcolorder(result, c(keyNames, "Metadata", "Metadata_Language", "Metadata_Group", "Metadata_Value"))
+  return(result[])
 }
 
 ## ---------------------------------------------------------

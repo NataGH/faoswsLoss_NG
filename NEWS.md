@@ -1,3 +1,8 @@
+## BUG FIXES
+
+- `GetMetadata` now returns characters instead of factors
+
+
 # CHANGES IN faosws VERSION 0.9.0
 
 ## NEW FEATURES
