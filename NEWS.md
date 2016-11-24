@@ -1,6 +1,7 @@
 ## BUG FIXES
 
 - `GetMetadata` now returns characters instead of factors
+- `DtDimension` no longer allows missing id
 
 
 # CHANGES IN faosws VERSION 0.9.0

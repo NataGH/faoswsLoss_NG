@@ -27,15 +27,10 @@ setValidity("DtDimension", function(object) {
   
   msg <- NULL
   valid <- TRUE
-  
   #id validation
-  if (length(object@id) != 1 | is.na(object@id)) {
+  if (length(object@id) != 1 || is.na(object@id)) {
     valid <- FALSE
-    if (length(object@id) == 0 | is.na(object@id)) {
-      msg <- c(msg, "An id attribute must be specified")
-    } else {
-      msg <- c(msg, "The id attribute was not properly set (not length 1)")
-    }
+    msg <- c(msg, "The id attribute was not properly set (not length 1)")
   }
   
   #ascending validation
@@ -62,3 +57,18 @@ as.list.DtDimension <- function(x, ...){
   list(id = x@id, sort = ifelse(x@ascending, "ASCENDING", "DESCENDING"), value = x@value)
   
 }
+
+setMethod("initialize", "DtDimension", function(.Object, id, ascending, value){
+  if(missing(id) || length(id) == 0L){
+    stop("An id attribute must be specified")
+  }
+  .Object@id <- id
+  if(!missing(ascending)){
+    .Object@ascending <- ascending
+  }
+  if(!missing(value)){
+    .Object@value <- value
+  }
+  validObject(.Object)
+  return(.Object)
+})
