@@ -474,21 +474,23 @@ SaveData.buildNormalizedDataContentJSON <- function(data, config) {
 ##' 
 ##' This function takes denormalized data and casts it as normalized data.
 ##' 
-##' @param data The denormalized dataset, provided as a data.table.
+##' @param data The denormalized dataset, provided as a data.table
 ##' @param keys A character vector of column names of data which correspond to 
 ##'   all the dimensions of the data except for the denormalized dimension.
 ##' @param denormalizedKey A character value containing the name of the 
 ##'   denormalized key.  This string is then used to determine the columns of 
 ##'   data which correspond to values and flags and which correspond to 
-##'   dimensions.
+##'   dimensions
 ##' @param keepNA logical. If TRUE, missing values are preserved in the 
-##'   normalised format. If FALSE, all missing values are assumed to be only
-##'   implicit missing and excluded.
+##'   normalised format. If FALSE, all missing values are assumed to be only 
+##'   implicit missing and excluded
+##' @param returnKeyed logical. If TRUE, the resulting data.table will be
+##'   indexed by the keys provided
 ##'   
 ##' @return A data.table object in normalized format.
 ##'   
 
-normalizeData <- function(data, keys, denormalizedKey, keepNA = TRUE){
+normalizeData <- function(data, keys, denormalizedKey, keepNA = TRUE, returnKeyed = FALSE){
   
   nd <- data
   blankit <- FALSE
@@ -514,6 +516,10 @@ normalizeData <- function(data, keys, denormalizedKey, keepNA = TRUE){
   
   if(blankit){
     return(newData[0,])
+  }
+  
+  if(!returnKeyed){
+    setkey(newData, NULL)
   }
   
   return(newData[])
