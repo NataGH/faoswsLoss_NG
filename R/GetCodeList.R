@@ -131,6 +131,10 @@ GetCodeList.buildJSON <- function(codes) {
 
 GetCodeList.processResult <- function(data) {
 
+  if(length(data[["results"]]) != data[["total"]]){
+    warning("Length of results != length reported by the system. Some corruption may have occurred")
+  }
+  
 	columns <- list()
 
 	# Extract codes column.

@@ -28,7 +28,7 @@ GetCodeTree <- function(domain, dataset, dimension, roots) {
 
 	# Prepare JSON for REST call.
 	#
-	json <- GetCodeTree.buildJSON(domain, dataset, dimension, roots)
+	json <- GetCodeTree.buildJSON(roots)
 
 	# Perform REST call.
 	#
@@ -72,7 +72,7 @@ GetCodeTree.validate <- function(domain, dataset, dimension, roots) {
 }
 
 
-GetCodeTree.buildJSON <- function(domain, dataset, dimension, roots) {
+GetCodeTree.buildJSON <- function(roots) {
 	
 	# Build JSON for REST call.
 	#
@@ -101,7 +101,7 @@ GetCodeTree.recurseTree <- function(nodes, dt = NULL) {
 	for(node in nodes) {
 
 		if(node$leaf) {
-			next
+		  next
 		}
 
 		strbuf <- ""
