@@ -72,3 +72,69 @@ test_that("processNormalizedResult works", {
   
   expect_equal(GetData.processNormalizedResult(input, flag = TRUE), output)
 })
+
+test_that("denormalizeResult works", {
+  input_data <- structure(list(keyDefinitions = list(structure(c("geographicAreaM49", 
+                "Geographic Area", "normal"), .Names = c("code", "description", 
+                "type")), structure(c("measuredElement", "Element", "measurementUnit"
+                ), .Names = c("code", "description", "type")), structure(c("measuredItemCPC", 
+                "Item", "normal"), .Names = c("code", "description", "type")), 
+                structure(c("timePointYears", "Year", "time"), .Names = c("code", 
+                "description", "type"))), flagDefinitions = list(structure(c("flagObservationStatus", 
+                "Status"), .Names = c("code", "description")), structure(c("flagMethod", 
+                "Method"), .Names = c("code", "description")))), .Names = c("keyDefinitions", 
+                "flagDefinitions"))
+  input_query <- structure(list(geographicAreaM49 = c("4", "466", "466", "466", 
+                 "466"), measuredElement = c("5417", "5031", "5031", "5417", "5417"
+                 ), measuredItemCPC = c("02111", "02111", "02111", "02111", "02111"
+                 ), timePointYears = c("2005", "2007", "2005", "2007", "2005"), 
+                 Value = c(0, 5005300, 4500000, 0, 0), flagObservationStatus = c("M", 
+                 "", "E", "M", "M"), flagMethod = c("u", "-", "f", "u", "u"
+                 )), .Names = c("geographicAreaM49", "measuredElement", "measuredItemCPC", 
+                 "timePointYears", "Value", "flagObservationStatus", "flagMethod"
+                 ), class = c("data.table", "data.frame"), row.names = c(NA, -5L
+                 ))
+  input_key <- new("DatasetKey"
+                   , domain = "agriculture"
+                   , dataset = "aproduction"
+                   , dimensions = structure(list(geographicAreaM49 = new("Dimension"
+                   , name = "geographicAreaM49"
+                   , keys = c("AH01", "466", "4")), 
+                   measuredElement = new("Dimension"
+                   , name = "measuredElement"
+                   , keys = c("5141", "5031", "5417")), 
+                   measuredItemCPC = new("Dimension"
+                   , name = "measuredItemCPC"
+                   , keys = c("AH01", "02111")), 
+                   timePointYears = new("Dimension"
+                   , name = "timePointYears"
+                   , keys = c("2015", "2007", "2005", "2016")
+                   )), .Names = c("geographicAreaM49", 
+                   "measuredElement", "measuredItemCPC", "timePointYears")
+                   ), sessionId = integer(0))
+  
+  output <- structure(list(geographicAreaM49 = c("4", "466", "466"), measuredElement = c("5417", 
+                      "5031", "5417"), measuredItemCPC = c("02111", "02111", "02111"
+                      ), Value_timePointYears_2005 = c(0, 4500000, 0), flagObservationStatus_timePointYears_2005 = c("M", 
+                      "E", "M"), flagMethod_timePointYears_2005 = c("u", "f", "u"), 
+                      Value_timePointYears_2007 = c(NA, 5005300, 0), flagObservationStatus_timePointYears_2007 = c(NA, 
+                      "", "M"), flagMethod_timePointYears_2007 = c(NA, "-", "u"
+                      ), Value_timePointYears_2015 = c(NA_real_, NA_real_, NA_real_
+                      ), flagObservationStatus_timePointYears_2015 = c(NA_character_, 
+                      NA_character_, NA_character_), flagMethod_timePointYears_2015 = c(NA_character_, 
+                      NA_character_, NA_character_), Value_timePointYears_2016 = c(NA_real_, 
+                      NA_real_, NA_real_), flagObservationStatus_timePointYears_2016 = c(NA_character_, 
+                      NA_character_, NA_character_), flagMethod_timePointYears_2016 = c(NA_character_, 
+                      NA_character_, NA_character_)), .Names = c("geographicAreaM49", 
+                      "measuredElement", "measuredItemCPC", "Value_timePointYears_2005", 
+                      "flagObservationStatus_timePointYears_2005", "flagMethod_timePointYears_2005", 
+                      "Value_timePointYears_2007", "flagObservationStatus_timePointYears_2007", 
+                      "flagMethod_timePointYears_2007", "Value_timePointYears_2015", 
+                      "flagObservationStatus_timePointYears_2015", "flagMethod_timePointYears_2015", 
+                      "Value_timePointYears_2016", "flagObservationStatus_timePointYears_2016", 
+                      "flagMethod_timePointYears_2016"), sorted = c("geographicAreaM49", 
+                      "measuredElement", "measuredItemCPC"), class = c("data.table", 
+                      "data.frame"), row.names = c(NA, -3L))
+  
+  expect_equal(denormalizeResult(input_data, input_query, input_key), output)
+})
