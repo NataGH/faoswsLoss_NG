@@ -54,7 +54,7 @@ GetCodeList <- function(domain, dataset, dimension, codes) {
 
     # Prepare JSON for REST call.
     #
-    json <- GetCodeList.buildJSON(domain, dataset, dimension, codes)
+    json <- GetCodeList.buildJSON(codes)
     
     # Perform REST call.
     #
@@ -111,7 +111,7 @@ GetCodeList.validate <- function(domain, dataset, dimension, codes) {
 }
 
 
-GetCodeList.buildJSON <- function(domain, dataset, dimension, codes) {
+GetCodeList.buildJSON <- function(codes) {
 	
 	# Build JSON for REST call.
 	#
