@@ -18,7 +18,7 @@ HandleHTTPError <- function(status, response){
   if(missing(response)){
     stop(paste0("SWS could not return reason for error. HTTP status: ", status))
   } 
-  erresponse <- try(RJSONIO::fromJSON(response), silent = TRUE)
+  erresponse <- try(jsonlite::fromJSON(response), silent = TRUE)
   if(inherits(erresponse, "try-error")) stop("SWS could not return reason for error. HTTP error " , status, "\n", erresponse)
   message <- ifelse(exists("message", erresponse), paste0("\nError message: ", erresponse[["message"]]), "")
   details <- ifelse(exists("details", erresponse), paste0("\nDetails: ", erresponse[["details"]]), "")
