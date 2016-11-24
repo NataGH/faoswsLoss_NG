@@ -29,4 +29,8 @@ A list with the following structure
 These functions allow reading and writing of quality indicators, Quality
 indicators are supplied as lists.
 }
+\examples{
+\dontrun{ReadQualityIndicators("aproduction")}
+  
+}
 

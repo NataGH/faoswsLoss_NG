@@ -19,6 +19,8 @@
 #'   }
 #' 
 #' @param dataset character. Name of an SWS dataset
+#' 
+#' @examples \dontrun{ReadQualityIndicators("aproduction")}
 #'   
 #' @export ReadQualityIndicators
 

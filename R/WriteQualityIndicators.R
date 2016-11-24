@@ -5,12 +5,16 @@
 #'   indicators
 #'   
 #' @details The dataset may be supplied as a nested list like the \code{content}
-#'   section received from \code\link{ReadQualityIndicators}. The list should 
+#'   section received from \code{\link{ReadQualityIndicators}}. The list should 
 #'   contain Quality Indicators that you wish to add or modify. Additions and 
 #'   modifications occur at the top level of the list.
 #'   
 #'   In order to delete a value, simply have a top-level list element named as 
 #'   NULL.
+#'   
+#' @examples \dontrun{
+#' WriteQualityIndicators(list(a=1, b=data.frame(x=3, y="a")), "aproduction")
+#' WriteQualityIndicators(list(a=NULL, b=NULL), "aproduction")}
 #'   
 #' @seealso \link{ReadQualityIndicators}
 #' @export WriteQualityIndicators
