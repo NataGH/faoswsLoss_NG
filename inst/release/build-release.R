@@ -51,7 +51,7 @@ if(length(not_installed) > 0){
 library(devtools, lib.loc = LIB)
 check(document=FALSE)
 library(testthat, lib.loc = LIB)
-test(pkg = ".", reporter = JUnitReporter$new(file = "test-results.xml"))
+test(pkg = ".", reporter = JunitReporter$new(file = "test-results.xml"))
 #library(testthat, lib.loc = "C:/Users/campbells/Documents/R/win-library/3.2")
 #test(pkg = ".")
 
