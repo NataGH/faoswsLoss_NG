@@ -61,3 +61,11 @@ FormatIndicatorList <- function(indicatorList){
   new_indicatorList
   
 }
+
+lengths <- function(x, use.names = TRUE){
+  if(getRversion() >= "3.2.0"){
+    return(base::lengths(x, use.names))
+  } else {
+    vapply(x, length, 1L, USE.NAMES = use.names)
+  }
+}
