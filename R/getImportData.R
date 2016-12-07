@@ -170,6 +170,9 @@ getImportData = function(source = "sws"){
         measuredItemCPC = importKey@dimensions[["measuredItemCPC"]]@keys,
         yearRange = importKey@dimensions[["timePointYears"]]@keys
       )
+  
+  importQuery[, measuredElement := NULL]    
+  setnames(importQuery, "Value", "Value_measuredElement_5610")  
 
   }
   ## Convert time to numeric
