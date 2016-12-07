@@ -137,12 +137,15 @@ getLossData = function(protected = FALSE){
   lossQuery[, geographicAreaM49 := as.numeric(geographicAreaM49)]
 
 
+  ## Reading FlagValidTable specific for loss
+  flagValidTableLoss <- fread(system.file("extdata/flagValidTable.csv", package = "faoswsLoss"))
+  
   ## Taking only official data
   ## distinct(lossQuery,flagFaostat_measuredElementFS_5120)
   ## lossQuery = lossQuery[flagFaostat_measuredElementFS_5120 == "", ]
 
   if (protected) {
-    protectedFlag <- flagValidTable[flagValidTable$Protected == TRUE,] %>%
+    protectedFlag <- flagValidTableLoss[flagValidTableLoss$Protected == TRUE,] %>%
       .[, flagCombination := paste(flagObservationStatus, flagMethod, sep = ";")]
 
     col_keep <- names(lossQuery) %>%
