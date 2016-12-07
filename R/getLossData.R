@@ -93,8 +93,8 @@ getLossData = function(protected = FALSE){
   ## )
 
   ## define measured elements
-  lossKey <- getCompleteImputationKey(table = "production")
-  lossKey@dimensions[["measuredElement"]]@keys <- "5016" # "5120"
+  lossKey <- getCompleteImputationKey(table = "loss")
+  # lossKey@dimensions[["measuredElement"]]@keys <- "5016" # "5120"
   
   ## Pivot to vectorize yield computation
   lossPivot = c(
