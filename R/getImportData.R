@@ -89,7 +89,7 @@ getImportData = function(source = "sws"){
   ##   )
   ## )
   ##
-  importKey <- faoswsUtil::getCompleteImputationKey(table = "production")
+  importKey <- faoswsUtil::getCompleteImputationKey(table = "loss")
   importKey@domain <- "trade"
   importKey@dataset <- "total_trade_cpc_m49"
   names(importKey@dimensions) <-
