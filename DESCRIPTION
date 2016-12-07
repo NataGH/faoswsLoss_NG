@@ -1,11 +1,12 @@
 Package: faoswsLoss
 Type: Package
 Title: Package to perform the computation of food loss FAO food balance sheets
-Version: 0.1.4
-Date: 2016-06-17
+Version: 0.1.5
+Date: 2016-12-07
 Authors@R: c(person("Natalia", "Golini", role = c("aut", "cre"), email = "natalia.golini@fao.org"),
              person("Michael C. J.", "Kao", role = "aut", email  = "michael.kao@fao.org"),
-             person("Josh", "Browning", role = "ctb", email = "joshua.browning@fao.org"))
+             person("Josh", "Browning", role = "ctb", email = "joshua.browning@fao.org"),
+             person("Bruno Caetano", "Vidigal", role = "cre", email = "bruno.caetanovidigal@fao.org"))
 Description: This package provides all the functions to perfom computation of
     food loss for the FAO food balance sheets. The first model was developed by
     Michael Kao and then modified by Natalia Golini.
