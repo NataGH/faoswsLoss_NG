@@ -141,13 +141,13 @@ getImportData = function(source = "sws"){
     ## importQuery[, measuredItemCPC := faoswsUtil::fcl2cpc(as.character(measuredItemFCL))]
     
     
-    ## Convert time to numeric
-    importQuery[, timePointYears := as.numeric(timePointYears)]
-    
-    ## importQuery[, geographicAreaFS := as.numeric(geographicAreaFS)]
-    importQuery[, geographicAreaM49 := as.numeric(geographicAreaM49)]
-    
-    importQuery
+    # ## Convert time to numeric
+    # importQuery[, timePointYears := as.numeric(timePointYears)]
+    # 
+    # ## importQuery[, geographicAreaFS := as.numeric(geographicAreaFS)]
+    # importQuery[, geographicAreaM49 := as.numeric(geographicAreaM49)]
+    # 
+    # importQuery
     
   } else if (tolower(source) == "faostat") {
 
@@ -165,13 +165,19 @@ getImportData = function(source = "sws"){
     ##   .[!. %in% c("831") &
     ##     !is.na(m492fs(importKey@dimensions[["geographicAreaM49"]]@keys))]
     
-      faoswsFood::getTotalTradeDataFAOSTAT1(
+    importQuery = faoswsFood::getTotalTradeDataFAOSTAT1(
         geographicAreaM49 = importKey@dimensions[["geographicAreaM49"]]@keys,
         measuredItemCPC = importKey@dimensions[["measuredItemCPC"]]@keys,
         yearRange = importKey@dimensions[["timePointYears"]]@keys
       )
 
-    
   }
+  ## Convert time to numeric
+  importQuery[, timePointYears := as.numeric(timePointYears)]
+  
+  ## importQuery[, geographicAreaFS := as.numeric(geographicAreaFS)]
+  importQuery[, geographicAreaM49 := as.numeric(geographicAreaM49)]
+  
+  importQuery
   
 }
