@@ -63,7 +63,7 @@ if(updateModel){
     {
       ## requiredItems <<- getRequiredItems()
       production <<- getProductionData() # Value_measuredElement_5510
-      import <<- getImportData(source = "sws") # Value_measuredElementTrade_5610
+      import <<- getImportData(source = "faostat") # Value_measuredElementTrade_5610
       ## loss <<- getOfficialLossData()     # Value_measuredElement_5016
       loss <<- getLossData(protected = TRUE)     # Value_measuredElement_5016
       openingStock <<- getOpeningStockData()     # Value_measuredElement_5113
