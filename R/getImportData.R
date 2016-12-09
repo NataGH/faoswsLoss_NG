@@ -171,8 +171,9 @@ getImportData = function(source = "sws"){
         yearRange = importKey@dimensions[["timePointYears"]]@keys
       )
   
+  importQuery = importQuery[measuredElement == 5610]  
   importQuery[, measuredElement := NULL]    
-  setnames(importQuery, "Value", "Value_measuredElement_5610")  
+  setnames(importQuery, "Value", "Value_measuredElementTrade_5610")  
 
   }
   ## Convert time to numeric
