@@ -66,11 +66,12 @@ if(updateModel){
       import <<- getImportData(source = "faostat") # Value_measuredElementTrade_5610
       ## loss <<- getOfficialLossData()     # Value_measuredElement_5016
       loss <<- getLossData(protected = TRUE)     # Value_measuredElement_5016
-      openingStock <<- getOpeningStockData()     # Value_measuredElement_5113
+      # openingStock <<- getOpeningStockData()     # Value_measuredElement_5113
       ## lossFoodGroup <<- getLossFoodGroup()
       assign("lossFoodGroup", getLossFoodGroup(), envir = .GlobalEnv)
     } %>%
-    mergeAllLossData(lossData = loss, production, import, openingStock, lossFoodGroup) %>%
+    # mergeAllLossData(lossData = loss, production, import, openingStock, lossFoodGroup) %>%
+    mergeAllLossData(lossData = loss, production, import, lossFoodGroup) %>%
     ## temp <- mergeAllLossData(lossData = loss, production, import, lossFoodGroup) %>%
     ## returns around 13 000 obs
     subset(x = .,
@@ -88,7 +89,7 @@ if(updateModel){
                       "Value_measuredElement_5016", # loss
                       "Value_measuredElement_5510", # production
                       "Value_measuredElementTrade_5610", # import
-                      "Value_measuredElement_5113", # opening stocks
+                      # "Value_measuredElement_5113", # opening stocks
                       "foodGroupName",
                       "foodPerishableGroup")) %>%
     ## another filter: returns around 280 obs
@@ -127,13 +128,14 @@ if(updateModel){
            timePointYears +
            log(Value_measuredElement_5510 + 1) + 
            (-1 + log(Value_measuredElement_5510 + 1)|
-            foodPerishableGroup/foodGroupName/measuredItemCPC/geographicAreaM49)+
-           log(Value_measuredElementTrade_5610 + 1) +
-           (-1 + log(Value_measuredElementTrade_5610 + 1)|
-            measuredItemCPC/geographicAreaM49) +
-           log(Value_measuredElement_5113 + 1) + # opening stocks - NA for many CPC items
-           (-1 + log(Value_measuredElement_5113 + 1)|
-            measuredItemCPC/geographicAreaM49),
+            foodPerishableGroup/foodGroupName/measuredItemCPC/geographicAreaM49) #+
+           #log(Value_measuredElementTrade_5610 + 1) +
+           #(-1 + log(Value_measuredElementTrade_5610 + 1)|
+            #measuredItemCPC/geographicAreaM49) # +
+           # log(Value_measuredElement_5113 + 1) + # opening stocks - NA for many CPC items
+           # (-1 + log(Value_measuredElement_5113 + 1)|
+            # measuredItemCPC/geographicAreaM49)
+           ,
          data = finalModelData)
   
 }
@@ -147,10 +149,10 @@ finalPredictData =
     if(!updateModel){
       ## requiredItems <<- getAllItemCPC()
       production <<- getProductionData()
-      import <<- getImportData(source = "sws")
+      import <<- getImportData(source = "faostat")
       ## lossFoodGroup <<- getLossFoodGroup()
       assign("lossFoodGroup", getLossFoodGroup(), envir = .GlobalEnv)
-      openingStock <<- getOpeningStockData()     # Value_measuredElement_5113
+      # openingStock <<- getOpeningStockData()     # Value_measuredElement_5113
       ## lossRegionClass <<- getLossRegionClass()
       ##  countryTable <<-
       ##    GetCodeList(domain = "agriculture",
@@ -164,7 +166,8 @@ finalPredictData =
     ## loss <<- getSelectedLossData()
     loss <<- getLossData(protected = FALSE)
   } %>%
-  mergeAllLossData(lossData = loss, production, import, openingStock, lossFoodGroup) %>%
+  # mergeAllLossData(lossData = loss, production, import, openingStock, lossFoodGroup) %>%
+  mergeAllLossData(lossData = loss, production, import, lossFoodGroup) %>%
   subset(x = .,
          subset = ((Value_measuredElement_5510 == 0 & Value_measuredElementTrade_5610 > 0) |
                    (Value_measuredElement_5510 > 0 & Value_measuredElementTrade_5610 >= 0)),
@@ -177,7 +180,7 @@ finalPredictData =
                     "flagMethod_measuredElement_5016", # column not found
                     "Value_measuredElement_5510", # production
                     "Value_measuredElementTrade_5610", # import
-                    "Value_measuredElement_5113", # opening stocks
+                    # "Value_measuredElement_5113", # opening stocks
                     "foodGroupName",
                     "foodPerishableGroup")) %>%
   removeCarryLoss(data = ., lossVar = "Value_measuredElement_5016") %>%
