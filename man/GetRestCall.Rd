@@ -15,4 +15,5 @@ GetRestCall(url, nullValue = NULL)
 \description{
 Get Rest Call
 }
+\keyword{internal}
 

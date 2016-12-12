@@ -6,6 +6,8 @@
 ##'   
 ##' @import RJSONIO
 ##' @import RCurl
+##' 
+##' @keywords internal
 
 GetRestCall <- function(url, nullValue = NULL) {
 

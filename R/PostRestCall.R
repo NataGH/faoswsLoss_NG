@@ -10,6 +10,7 @@
 ##' 
 ##' @return The response from the server.
 ##' 
+##' @keywords internal
 
 PostRestCall <- function(url, data, nullValue = NULL) {
   
