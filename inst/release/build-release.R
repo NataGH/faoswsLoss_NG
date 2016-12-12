@@ -8,7 +8,7 @@ FAOCRAN <- arguments[3]
 # Get dependencies from description file
 deps <- paste0(read.dcf("DESCRIPTION", fields=c("Depends", "Imports", "Suggests"))[1,], collapse = "")
 #Remove R dependency
-deps <- gsub("\nR |\\(.*?\\)", "", deps)
+deps <- gsub("\nR | ?\\(.*?\\)", "", deps)
 deps <- strsplit(deps, ",?\n")[[1]]
 deps <- deps[deps != ""]
 
