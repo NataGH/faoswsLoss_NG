@@ -101,8 +101,6 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
     
   }
   
-  SaveData.validateFlagValues(data, flagCols)
-  
   #Reorganise columns to keys, value, flags and other
   flagCols <- datasetConfig[["flags"]]
   otherCols <- setdiff(colnames(data), c(allKeys, "Value", flagCols))
@@ -113,6 +111,8 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
     data <- copy(data)
     setcolorder(data, c(allKeys, "Value", flagCols, otherCols))
   }
+  
+  SaveData.validateFlagValues(data, flagCols)
   
   if (waitMode != "synch" & (nRowData > chunkSize | nRowMeta > chunkSize)) {
     uuid <- SaveData.generateUuid()
