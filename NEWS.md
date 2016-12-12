@@ -12,6 +12,7 @@
 - Fixed error reporting when PUTting data to the SWS
 - Fixed bug in `GetHistory` where it would not return data for datasets with 
   more than four keys
+- Fixed bug in `SaveData` where data with incorrect columns wouldn't be rejected
 
 
 # CHANGES IN faosws VERSION 0.9.0

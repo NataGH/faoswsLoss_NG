@@ -103,13 +103,22 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
   
   #Reorganise columns to keys, value, flags and other
   flagCols <- datasetConfig[["flags"]]
-  otherCols <- setdiff(colnames(data), c(allKeys, "Value", flagCols))
-  goodColOrder <- c(allKeys, "Value", flagCols, otherCols)
   
-  if(!identical(names(data), goodColOrder)) {
+  # If columns are missing, reject the data
+  stopifnot(all(c(allKeys, "Value", flagCols) %in% colnames(data)))
+  
+  requiredCols <- c(allKeys, "Value", flagCols)
+  otherCols <- setdiff(colnames(data), requiredCols)
+  
+  if(length(otherCols)){
+    message("The following columns were discarded: ", paste0(otherCols, collapse = ", "))
+  }
+  
+  
+  
+  if(!identical(names(data), requiredCols)) {
     #If the order isn't the same, copy the data and reorganise them
-    data <- copy(data)
-    setcolorder(data, c(allKeys, "Value", flagCols, otherCols))
+    data <- copy(data)[, mget(requiredCols)]
   }
   
   SaveData.validateFlagValues(data, flagCols)
