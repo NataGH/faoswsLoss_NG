@@ -43,14 +43,12 @@ PutRestCall <- function(url, data, nullValue = NULL) {
   SSL_CONNECT_ERROR = function(e){
     stop("Incorrect certificates. Either use 'SetClientFiles' or put the correct certificates in ", 
          dirname(.swsenv$swsContext.clientCertificate), call. = FALSE)
+  },
+  HTTPError = function(e){
+    status <- RCurl::getCurlInfo(ch, which = "response.code")
+    stop(paste0("Unable to perform REST call to SWS server\nHTTP status: ", status, 
+                "\n", e$message), call. = FALSE)
   })
-  
-  # Check returned status code.
-  #
-  status <- RCurl::getCurlInfo(ch, which = "response.code")
-  if(status != 200) {
-    HandleHTTPError(status, response)
-  }
   
   # Prevent error on blank response
   if(response == ""){

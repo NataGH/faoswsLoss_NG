@@ -7,6 +7,7 @@
 - `GetMetadata` now returns characters instead of factors
 - `DtDimension` no longer allows missing id
 - `GetHistory` now returns characters instead of factors
+- Fixed error reporting when PUTting data to the SWS
 
 
 # CHANGES IN faosws VERSION 0.9.0
