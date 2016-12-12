@@ -1,6 +1,8 @@
 ## MINOR CHANGES
 
 - Disallowed saving of missing values with non-missing flags (Fixes SWS-1411)
+- Clarified for `SaveValidation` that Severity must be between 
+  0 and 5 (inclusive)
 
 ## BUG FIXES
 

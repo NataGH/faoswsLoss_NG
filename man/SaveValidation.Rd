@@ -7,17 +7,25 @@
 SaveValidation(domain, dataset, validation)
 }
 \arguments{
-\item{domain}{A character value specifying the domain for which the code
+\item{domain}{A character value specifying the domain for which the code 
 list is required.}
 
-\item{dataset}{A character value specifying the dataset for which the code
+\item{dataset}{A character value specifying the dataset for which the code 
 list is required.}
 
-\item{validation}{A data.table object containing keys and validation data.}
+\item{validation}{A data.table object containing keys and validation data.
+The validation data should consist of two columns in the data.table:
+\itemize{
+\item Severity - an integer between 0 and 5 (inclusive) indicating how 
+grave the error is
+\item Description - a text description giving more detail about why that 
+data point is invalid. This will show up in the 'Extra details' section 
+under the Validation tab in the UI
+}}
 }
 \value{
-The data passed to this function is saved to the database, and
-nothing is explicitly returned by this function.
+The data passed to this function is saved to the database, and 
+  nothing is explicitly returned by this function.
 }
 \description{
 Save Validation

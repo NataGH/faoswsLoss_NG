@@ -1,14 +1,21 @@
 ##' Save Validation
 ##' 
-##' @param domain A character value specifying the domain for which the code
-##' list is required.
-##' @param dataset A character value specifying the dataset for which the code
-##' list is required.
+##' @param domain A character value specifying the domain for which the code 
+##'   list is required.
+##' @param dataset A character value specifying the dataset for which the code 
+##'   list is required.
 ##' @param validation A data.table object containing keys and validation data.
-##' 
-##' @return The data passed to this function is saved to the database, and
-##' nothing is explicitly returned by this function.
-##' 
+##'   The validation data should consist of two columns in the data.table:
+##'   \itemize{
+##'   \item Severity - an integer between 0 and 5 (inclusive) indicating how 
+##'   grave the error is
+##'   \item Description - a text description giving more detail about why that 
+##'   data point is invalid. This will show up in the 'Extra details' section 
+##'   under the Validation tab in the UI
+##'   }
+##' @return The data passed to this function is saved to the database, and 
+##'   nothing is explicitly returned by this function.
+##'   
 ##' @export SaveValidation
 
 SaveValidation <- function(domain, dataset, validation) {
@@ -80,6 +87,11 @@ SaveValidation.validate <- function(domain, dataset, validation) {
         warning("Based on swsContext.datasets[[1]], we don't expect the ",
                 "following columns which are in the validation dataset:\n",
                 paste(colnames(validation)[additionalColumns], collapse = "\n"))
+    
+    #Validation must be between 0 and 5
+    if(!all(validation[,Severity] %in% 0:5)){
+      stop("Severity must be an integer between 0 and 5 (inclusive)")
+    }
 }
 
 
