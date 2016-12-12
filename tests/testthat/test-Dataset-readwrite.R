@@ -7,7 +7,7 @@ if(CheckDebug()) {
 }
 
 test_that("Connecting to SWS for write tests works", {
-  expect_error(not({
+  expect_error({
     GetTestEnvironment(
       baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
       token = "c6ce2c30-dc50-444a-99de-eceaa9bb1554"
@@ -23,14 +23,14 @@ test_that("Connecting to SWS for write tests works", {
         Dimension(name = "measuredItemCPC", keys = c("02111", "21131.01")),
         Dimension(name = "timePointYears", keys = as.character(2011:2014))
       ))
-  }))
+  }, NA)
 })
 
 ###############################################################################
 # Observing behavior with incorrect years                                     #
 ###############################################################################
 test_that("Test writing to other countries", {
-  expect_error(not({
+  expect_error({
   temp = GetData(swsContext.datasets[[1]])
   toBind = copy(temp)
   toBind[, geographicAreaM49 := "232"]
@@ -40,7 +40,7 @@ test_that("Test writing to other countries", {
   SaveData(domain = swsContext.datasets[[1]]@domain,
          dataset = swsContext.datasets[[1]]@dataset,
          temp)
-  }))
+  }, NA)
 })
 
 

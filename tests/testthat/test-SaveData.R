@@ -10,9 +10,8 @@ test_that("SaveData validates correctly",{
                                     , row.names = c(NA, -1L), class = c("data.table", "data.frame")
   )
 # Test for regression where denormalised was falsely rejected
-  expect_error(not(
-    SaveData.validate("agriculture", "aproduction", testDenormalisedData, normalized = FALSE)
-    ))
+  expect_error(SaveData.validate("agriculture", "aproduction", testDenormalisedData, normalized = FALSE),
+    NA)
 })
 
 test_that("normalizeData works correctly", {
@@ -47,7 +46,7 @@ test_that("SaveData doesn't save missing values with flags", {
                   
                   
                   f <- "f1"
-                  expect_error(not(SaveData.validateFlagValues(d, f)))
+                  expect_error(SaveData.validateFlagValues(d, f), NA)
                   
                   
                   d2 <- data.table(k1 = "a",

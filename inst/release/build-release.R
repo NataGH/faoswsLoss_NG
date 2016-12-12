@@ -14,8 +14,8 @@ deps <- deps[deps != ""]
 
 # Add devtools if we're testing
   # devtools and testthat as well
-  # testthat has devtools and XML as suggests.
-  deps <- c(deps, "devtools", "testthat", "roxygen2", "XML")
+  # testthat has devtools as suggests.
+  deps <- c(deps, "devtools", "testthat", "roxygen2")
 
 
 # hardcode the fao-sws-cran repo for CRAN
