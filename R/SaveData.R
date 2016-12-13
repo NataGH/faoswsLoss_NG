@@ -238,22 +238,25 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
     } else { #wait
       outStats = out[["details"]][["STATISTICS"]]
     }
+    ## The unlists below are due to an idiosyncracy in RJSONIO's fromJSON where 
+    ## it may sometimes return a named vector instead of a list. `[[` is not the
+    ## logical option in this case.
     if (!is.null(outStats[["warnings"]])) {
       statistics <- list(
-        inserted=outStats[["statistics"]][["inserted"]],
-        appended=outStats[["statistics"]][["updated"]],
-        ignored=outStats[["statistics"]][["ignored"]],
-        discarded=outStats[["statistics"]][["discarded"]],
-        warnings=data.table(
-          row=unlist(lapply(outStats[["warnings"]], FUN = function(x) { x[["row"]] })),
-          message=unlist(lapply(outStats[["warnings"]], FUN = function(x) { x[["message"]] }))))
+        inserted  = unlist(outStats[["statistics"]]["inserted"]),
+        appended  = unlist(outStats[["statistics"]]["updated"]),
+        ignored   = unlist(outStats[["statistics"]]["ignored"]),
+        discarded = unlist(outStats[["statistics"]]["discarded"]),
+        warnings  = data.table(
+          row = unlist(lapply(outStats[["warnings"]], FUN = function(x) { x[["row"]] })),
+          message = unlist(lapply(outStats[["warnings"]], FUN = function(x) { x[["message"]] }))))
     } else {
       statistics <- list(
-        inserted=outStats[["statistics"]][["inserted"]],
-        appended=outStats[["statistics"]][["updated"]],
-        ignored=outStats[["statistics"]][["ignored"]],
-        discarded=outStats[["statistics"]][["discarded"]],
-        warnings=NULL)
+        inserted  = unlist(outStats[["statistics"]]["inserted"]),
+        appended  = unlist(outStats[["statistics"]]["updated"]),
+        ignored   = unlist(outStats[["statistics"]]["ignored"]),
+        discarded = unlist(outStats[["statistics"]]["discarded"]),
+        warnings = NULL)
     }
   }
   
