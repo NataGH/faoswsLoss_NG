@@ -12,17 +12,21 @@ deps <- gsub("\nR | ?\\(.*?\\)", "", deps)
 deps <- strsplit(deps, ",?\n")[[1]]
 deps <- deps[deps != ""]
 
+# Methods shouldn't be installed
+except <- "methods"
+
 # Add devtools if we're testing
-  # devtools and testthat as well
-  # testthat has devtools as suggests.
-  deps <- c(deps, "devtools", "testthat", "roxygen2")
+# devtools and testthat as well
+# testthat has devtools as suggests.
+deps <- c(deps, "devtools", "testthat", "roxygen2")
+deps <- setdiff(deps, except)
 
 
 # hardcode the fao-sws-cran repo for CRAN
 options(repos = c("CRAN" = FAOCRAN))
 
 # Get non-base packages
-installed <- as.data.frame(installed.packages(lib.loc=.Library))
+installed <- as.data.frame(installed.packages(lib.loc=LIB))
 
 packs <- setdiff(deps, 
                    installed[installed[,"Priority" ] %in% c("base", "recommended") , "Package"])
@@ -39,6 +43,9 @@ if(length(to_install) > 0){
   #Report results
   message(sprintf("Package(s) %s installed", paste(to_install, collapse = ", ")))
 }
+
+#Update existing packages
+update.packages(LIB, FAOCRAN, ask = FALSE)
 
 #Report results
 not_installed <- setdiff(packs, to_install)

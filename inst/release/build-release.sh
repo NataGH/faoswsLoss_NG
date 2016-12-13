@@ -1,6 +1,7 @@
 #!/bin/bash
 # exporting so it's visible to R CMD build
 export R_LIBS=$HOME/.m2/R_repository
+export R_LIBS_USER=$HOME/.m2/R_repository
 export ICUDT_DIR=$(readlink -m .)
 DIR=$(pwd)
 BASHDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
