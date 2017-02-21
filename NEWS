@@ -1,3 +1,9 @@
+## MINOR CHANGES
+
+- Removed unexported `curl` functions - this should prevent compatibility 
+  issues with future versions
+
+
 # CHANGES IN faosws VERSION 0.9.1
 
 ## MINOR CHANGES
