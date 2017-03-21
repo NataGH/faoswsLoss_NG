@@ -4,14 +4,16 @@
 #' which is not otherwise marked as invalid will be considered valid. When a
 #' changset is finalised, the whole table is considered as validated until a
 #' cell changes value.
-#'
+#' 
+#' @aliases ValidateDatatable
+#' 
 #' @param changeset \link{Changeset} object.
 #' @param violationtable data.table with the following columns:
 #' \itemize{
 #'   \item __id id columns from data
 #'   \item column character. Column name in data
 #'   \item type character. One of 'error' or 'warning'
-#'   \item severity integer from 1 to 10.
+#'   \item severity integer from 1 to 10
 #'   \item message character. Reason for invalidating
 #'   }
 #' 
@@ -19,8 +21,8 @@
 #' \dontrun{
 #' table <- "world_bank_climate_data_test"
 #' newdat <- ReadDatatable(table, validationOptions = list(incremental = FALSE))
-#' inval <- newdat[precipitation > temperature, .(id)]
-#' inval[,`:=`(col = "precipitation", type="error", gravity=9, message="precipitation is greater than temperature")]
+#' inval <- newdat[precipitation > temperature, .(`__id`)]
+#' inval[,`:=`(column = "precipitation", type = "error", severity = 9, message = "precipitation is greater than temperature")]
 #' vchangeset <- Changeset(table, type = "validation")
 #' AddViolation(vchangeset, inval)
 #' Finalise(vchangeset)
@@ -36,6 +38,8 @@ AddViolation <- function(changeset, violationtable) {
   if (get("type" , envir = changeset) != "validation") stop("Changeset is not of type 'validation'")
   
   valid_cols <- c("__id", "column", "type", "severity", "message")
+  
+  stopifnot(all(names(violationtable) %in% valid_cols))
   
   violationtable <- violationtable[, .SD, .SDcols = valid_cols]
 

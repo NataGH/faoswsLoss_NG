@@ -3,7 +3,7 @@
 #' Functions to save to Datatables on SWS.
 #'
 #' @rdname SaveDatatable
-#' @aliases SaveDatatable AddInsertions AddModifications AddDeletions
+#' @aliases SaveDatatable WriteDatatable AddInsertions AddModifications AddDeletions
 #'  
 #' @param changeset \code{\link{Changeset}} object
 #' @param data data.table. 

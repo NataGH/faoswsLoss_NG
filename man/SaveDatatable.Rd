@@ -5,6 +5,7 @@
 \alias{AddInsertions}
 \alias{AddModifications}
 \alias{SaveDatatable}
+\alias{WriteDatatable}
 \title{Save data to Datatable}
 \usage{
 AddInsertions(changeset, data)
