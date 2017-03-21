@@ -2,8 +2,8 @@
 % Please edit documentation in R/KeyDefinition.R
 \docType{class}
 \name{KeyDefinition-class}
-\alias{KeyDefinition}
 \alias{KeyDefinition-class}
+\alias{KeyDefinition}
 \title{Definition for KeyDefinition Class}
 \description{
 Definition for KeyDefinition Class

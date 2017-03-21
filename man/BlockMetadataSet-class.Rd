@@ -2,8 +2,8 @@
 % Please edit documentation in R/BlockMetadataSet.R
 \docType{class}
 \name{BlockMetadataSet-class}
-\alias{BlockMetadataSet}
 \alias{BlockMetadataSet-class}
+\alias{BlockMetadataSet}
 \title{The Block Metadata Set Class}
 \description{
 The Block Metadata Set Class

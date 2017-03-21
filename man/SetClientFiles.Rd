@@ -36,4 +36,3 @@ parameters to their default values.
 \author{
 Sebastian Campbell
 }
-

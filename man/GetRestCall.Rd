@@ -16,4 +16,3 @@ GetRestCall(url, nullValue = NULL)
 Get Rest Call
 }
 \keyword{internal}
-

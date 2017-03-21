@@ -2,8 +2,8 @@
 % Please edit documentation in R/DatasetKey.R
 \docType{class}
 \name{DatasetKey-class}
-\alias{DatasetKey}
 \alias{DatasetKey-class}
+\alias{DatasetKey}
 \title{Dataset Key Class}
 \description{
 This class provides a mechanism for pulling data from the SWS.  You must 
@@ -25,6 +25,7 @@ such as "aproduction".}
 produced by the SWS. This is for reporting only and has no effect on a 
 `\code{\link{GetData}} call.}
 }}
+
 \note{
 Many of these variables (domain, dataset, and dimensions) can be found
   by examining some of the swsContext objects which are created in a 
@@ -51,4 +52,3 @@ GetData(key = key)
 \seealso{
 \code{\link{Dimension}}, \code{\link{GetData}}
 }
-

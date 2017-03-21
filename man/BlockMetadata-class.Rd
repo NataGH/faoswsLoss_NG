@@ -2,8 +2,8 @@
 % Please edit documentation in R/BlockMetadata.R
 \docType{class}
 \name{BlockMetadata-class}
-\alias{BlockMetadata}
 \alias{BlockMetadata-class}
+\alias{BlockMetadata}
 \title{Block Metadata Class}
 \description{
 This S4 object represents a single block metadata.

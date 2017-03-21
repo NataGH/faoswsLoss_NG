@@ -2,8 +2,8 @@
 % Please edit documentation in R/MappingTableKey.R
 \docType{class}
 \name{MappingTableKey-class}
-\alias{MappingTableKey}
 \alias{MappingTableKey-class}
+\alias{MappingTableKey}
 \title{Mapping Table Key}
 \description{
 Mapping Table Key

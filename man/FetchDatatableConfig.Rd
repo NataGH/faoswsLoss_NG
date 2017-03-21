@@ -3,6 +3,7 @@
 \name{FetchDatatableConfig}
 \alias{FetchDatatableConfig}
 \alias{FetchDatatableNames}
+\alias{FetchDatatableNames}
 \title{Read Datatable metadata list}
 \usage{
 FetchDatatableConfig(tables, baseurl = swsContext.baseRestUrl)
@@ -31,4 +32,3 @@ These functions pull metadata regarding Datatables. If
   \code{FetchDatatableNames} is a simpler version of 
   \code{FetchDatatableConfig} which gives the names of all available tables
 }
-

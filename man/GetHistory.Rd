@@ -23,4 +23,3 @@ through history with the associated history metadata.
 \description{
 Get History
 }
-

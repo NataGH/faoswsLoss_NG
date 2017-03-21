@@ -31,4 +31,3 @@ A data.table object in normalized format.
 \description{
 This function takes denormalized data and casts it as normalized data.
 }
-

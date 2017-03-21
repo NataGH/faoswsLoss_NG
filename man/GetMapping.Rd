@@ -22,4 +22,3 @@ The key may make use of wildcards to widen the number of results matched.
 
 Map tables are always read-only
 }
-

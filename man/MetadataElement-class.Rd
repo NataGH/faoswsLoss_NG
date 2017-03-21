@@ -2,8 +2,8 @@
 % Please edit documentation in R/MetadataElement.R
 \docType{class}
 \name{MetadataElement-class}
-\alias{MetadataElement}
 \alias{MetadataElement-class}
+\alias{MetadataElement}
 \title{MetadataElement Class Definition}
 \description{
 MetadataElement Class Definition

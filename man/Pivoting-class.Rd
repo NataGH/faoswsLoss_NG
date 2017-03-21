@@ -2,8 +2,8 @@
 % Please edit documentation in R/Pivoting.R
 \docType{class}
 \name{Pivoting-class}
-\alias{Pivoting}
 \alias{Pivoting-class}
+\alias{Pivoting}
 \title{Pivoting Class Definition}
 \value{
 An object of class Pivoting
@@ -31,6 +31,7 @@ referred dimension (i.e. "geographicAreaM49").}
 \item{\code{ascending}}{Logical, indicates the sort direction to be applied to the
 specified dimension.}
 }}
+
 \examples{
 
 pivot1 = Pivoting(code = "geographicAreaM49", ascending = TRUE)
@@ -60,4 +61,3 @@ GetData(key, pivoting = c(pivot2, pivot3, pivot4, pivot1), normalized = F)
 }
 
 }
-

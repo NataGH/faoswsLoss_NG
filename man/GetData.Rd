@@ -86,4 +86,3 @@ GetData(key)
 \seealso{
 \link{Pivoting}
 }
-

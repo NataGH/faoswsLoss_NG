@@ -17,4 +17,3 @@ this domain will not be included in the resulting list
 \seealso{
 \code{\link{GetDatasetConfig}} \code{\link{GetDatasetNames}}
 }
-

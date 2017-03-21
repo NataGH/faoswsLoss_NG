@@ -11,4 +11,3 @@ This function gets the name of the current Datatable that the token is
 pointed toward. The internals may change at any time and it is not
 recommended to access the object directly.
 }
-
