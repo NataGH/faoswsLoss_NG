@@ -1,3 +1,8 @@
+## BUG FIXES
+
+- `PutRestCall` now returns server error message
+
+
 # CHANGES IN faosws VERSION 0.9.1
 
 ## MINOR CHANGES

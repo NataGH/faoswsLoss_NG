@@ -16,13 +16,14 @@ HandleHTTPError <- function(status, response){
     status <- "unavailable"
   }
   if(missing(response)){
-    stop(paste0("SWS could not return reason for error. HTTP status: ", status))
+    stop(paste0("SWS could not return reason for error. HTTP status: ", status, call. = FALSE))
   } 
   erresponse <- try(jsonlite::fromJSON(response), silent = TRUE)
-  if(inherits(erresponse, "try-error")) stop("SWS could not return reason for error. HTTP error " , status, "\n", erresponse)
+  if(inherits(erresponse, "try-error")) stop("SWS could not return reason for error. HTTP error ",
+                                             status, "\n", erresponse, call. = FALSE)
   message <- ifelse(exists("message", erresponse), paste0("\nError message: ", erresponse[["message"]]), "")
   details <- ifelse(exists("details", erresponse), paste0("\nDetails: ", erresponse[["details"]]), "")
   
-  stop(paste("Unable to perform REST call to SWS server. Status code was", status, message, details))
+  stop(paste("Unable to perform REST call to SWS server. Status code was", status, message, details, call. = FALSE))
   
 }

@@ -17,29 +17,33 @@ PutRestCall <- function(url, data, nullValue = NULL) {
   ch <- RCurl::getCurlHandle()
   
   withCallingHandlers(if (Sys.info()['sysname'] == 'Darwin') {
-    response <- RCurl::httpPUT(
+    response <- RCurl::getURL(
       url = url,
       curl = ch,
       verbose = FALSE,
       noproxy = .swsenv$swsContext.noProxy,
-      ssl.verifypeer = FALSE,
+      ssl.verifypeer = FALSE, 
       sslcert = path.expand(.swsenv$swsContext.clientP12),
       sslcertpasswd = .swsenv$swsContext.p12Password,
       ssl.verifyhost = 2,
-      httpheader = c(Accept = "application/json", 'Content-Type' = "application/json", Expect = ""),
-      content = RJSONIO::toJSON(data, digits = 30))
+      httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"),
+      customrequest = "PUT",
+      postfields = RJSONIO::toJSON(data, digits = 30),
+      .encoding = "UTF-8")
   } else {
-    response <- RCurl::httpPUT(
+    response <- RCurl::getURL(
       url = url,
       curl = ch,
       verbose = FALSE,
       noproxy = .swsenv$swsContext.noProxy,
-      ssl.verifypeer = FALSE,
+      ssl.verifypeer = FALSE, 
       sslcert = path.expand(.swsenv$swsContext.clientCertificate),
       sslkey = path.expand(.swsenv$swsContext.clientKey),
       ssl.verifyhost = 2,
-      httpheader = c(Accept = "application/json", 'Content-Type' = "application/json", Expect = ""),
-      content = RJSONIO::toJSON(data, digits = 30))
+      httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"),
+      customrequest = "PUT",
+      postfields = RJSONIO::toJSON(data, digits = 30),
+      .encoding = "UTF-8")
   },
   SSL_CONNECT_ERROR = function(e){
     stop("Incorrect certificates. Either use 'SetClientFiles' or put the correct certificates in ", 
@@ -50,6 +54,13 @@ PutRestCall <- function(url, data, nullValue = NULL) {
     stop(paste0("Unable to perform REST call to SWS server\nHTTP status: ", status, 
                 "\n", e$message), call. = FALSE)
   })
+  
+  # Check returned status code.
+  #
+  status <- RCurl::getCurlInfo(ch, which = "response.code")
+  if(status != 200) {
+    HandleHTTPError(status, response)
+  }
   
   # Prevent error on blank response
   if(response == ""){
