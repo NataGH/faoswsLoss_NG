@@ -1,3 +1,8 @@
+## MINOR CHANGES
+
+- Removed unexported `curl` functions - this should prevent compatibility 
+  issues with future versions
+
 ## BUG FIXES
 
 - `PutRestCall` now returns server error message

@@ -15,7 +15,7 @@ Depends:
 Imports:
     methods,
     RCurl,
-    curl,
+    curl (>= 2.0),
     RJSONIO,
     jsonlite,
     data.table,

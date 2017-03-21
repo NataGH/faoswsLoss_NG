@@ -190,7 +190,7 @@ post_json <- function(url, json){
   )
   
   conn <- try(.Call(curl:::R_curl_connection, url, "r", h, FALSE))
-  responseCode <- curl:::handle_response_data(h)$status_code
+  responseCode <- curl::handle_data(h)$status_code
   
   ## If there's an error before the connection can be properly created, close it
   if(inherits(conn, "try-error")){

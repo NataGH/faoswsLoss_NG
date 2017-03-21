@@ -223,7 +223,7 @@ runStreaming <- function(url, json){
                                 }
                               })
   
-  responseCode <- curl:::handle_response_data(h)$status_code
+  responseCode <- curl::handle_data(h)$status_code
   
   if(responseCode != 200){
     
