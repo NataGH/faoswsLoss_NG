@@ -1,3 +1,5 @@
+# CHANGES IN faosws VERSION 0.9.2
+
 ## MINOR CHANGES
 
 - Removed unexported `curl` functions - this should prevent compatibility 
