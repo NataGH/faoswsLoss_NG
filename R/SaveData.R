@@ -248,8 +248,8 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
         ignored   = unlist(outStats[["statistics"]]["ignored"]),
         discarded = unlist(outStats[["statistics"]]["discarded"]),
         warnings  = data.table(
-          row = unlist(lapply(outStats[["warnings"]], FUN = function(x) { x[["row"]] })),
-          message = unlist(lapply(outStats[["warnings"]], FUN = function(x) { x[["message"]] }))))
+          row = lapply(outStats[["warnings"]], FUN = function(x) { x[["row"]] }),
+          message = lapply(outStats[["warnings"]], FUN = function(x) { x[["message"]] })))
     } else {
       statistics <- list(
         inserted  = unlist(outStats[["statistics"]]["inserted"]),
