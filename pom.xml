@@ -5,7 +5,7 @@
 	<groupId>org.fao.sws</groupId>
 	<artifactId>sws-r-faosws</artifactId>
 	
-	<version>0.9.1</version>
+	<version>0.9.3</version>
 	
 	<packaging>pom</packaging>
 
