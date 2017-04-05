@@ -24,6 +24,6 @@ HandleHTTPError <- function(status, response){
   message <- ifelse(exists("message", erresponse), paste0("\nError message: ", erresponse[["message"]]), "")
   details <- ifelse(exists("details", erresponse), paste0("\nDetails: ", erresponse[["details"]]), "")
   
-  stop(paste("Unable to perform REST call to SWS server. Status code was", status, message, details, call. = FALSE))
+  stop(paste("Unable to perform REST call to SWS server. Status code was", status, message, details), call. = FALSE)
   
 }
