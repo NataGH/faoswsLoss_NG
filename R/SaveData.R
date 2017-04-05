@@ -41,21 +41,43 @@
 ##'   
 ##' @return A list is returned, which contains the following values (note that 
 ##'   "version" below refers to the version of the observation in the database):
-##'   \itemize{ \item inserted =  the number of rows inserted 'ex novo' (with 
+##'   \itemize{ 
+##'   \item inserted =  the number of rows inserted 'ex novo' (with 
 ##'   version=1: there wasn't any already existing observation for same 
-##'   coordinates) \item appended =  the number of rows inserted in append mode 
+##'   coordinates) 
+##'   \item appended =  the number of rows inserted in append mode 
 ##'   (with version=max+1: there was one or more observation/s: version number 
-##'   incremented) \item ignored =   the number of rows not inserted because an 
-##'   already existing observation was in place with identical attributes \item 
-##'   discarded = the number of new observations not created because of non 
+##'   incremented) 
+##'   \item ignored = the number of rows not inserted because an 
+##'   already existing observation was in place with identical attributes 
+##'   \item discarded = the number of new observations not created because of non 
 ##'   blocking errors (i.e. 'warnings' which caused the row to be discarded 
-##'   without blocking other rows insertion) \item warnings =  a data.table 
-##'   which can be NULL or contain 1 to 10 rows.if value of "discarded" is > 0, 
+##'   without blocking other rows insertion) 
+##'   \item warnings =  a data.table  which can be NULL or contain 1 to 10 rows.if value of "discarded" is > 0, 
 ##'   the data.table contains an excerpt of rows discarded (max 10 rows), any of
-##'   which with following info: \itemize{ \item row     = the positional row 
-##'   number in the data as sent \item reason  = a description of the discarding
-##'   error } } If waitMode is 'forget', NULL is returned always
-##'   
+##'   which with following info: 
+##'   \itemize{ 
+##'   \item row = the positional row 
+##'   number in the data as sent 
+##'   \item reason = a description of the discarding
+##'   error
+##'   } 
+##'   }
+##'   If waitMode is 'forget', NULL is returned always
+##' 
+##' @section Metadata: Metadata can be optionally specified. If it is, the
+##'   following fields are mandatory:
+##'   \itemize{ 
+##'   \item All the keys required to identify a value 
+##'   \item Metadata - Metadata category 
+##'   \item Metadata_Element - Metadata subcategory 
+##'   \item Metadata_Language - Two letter lowercase code for language in which the
+##'   metadata is in
+##'   \item Metadata_Group - Metadata can be clustered together in groups
+##'   expressed as an integer starting at 1
+##'   \item Metadata_Value - The actual value of the metadata
+##'   }
+##' 
 ##' @section Attempting to write invalid data: Currently, if no flags are 
 ##'   provided, all rows with no flags will be marked as appended and rejected. 
 ##'   Up to 10 warnings will be provided.

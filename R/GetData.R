@@ -309,25 +309,38 @@ GetData.processNormalizedResultMetadata <- function(data) {
 
 ##' Get Metadata
 ##' 
-##' This function provides an interface between an R session and the database.
-##' Note that swsContext files must exist in your session, so you should run
+##' This function provides an interface between an R session and the database. 
+##' Note that swsContext files must exist in your session, so you should run 
 ##' GetTestEnvironment before calling this function.
 ##' 
-##' If the pivoting vector is present, the dimensions are extracted in the
+##' If the pivoting vector is present, the dimensions are extracted in the 
 ##' specified order and applying the requested sort direction.
 ##' 
-##' @param key An object of class DatasetKey.  Often, this will be one of the
-##' list elements of swsContext.datasets (if running in a debug/local session,
-##' create this object with GetTestEnvironment).
-##' @param pivoting A vector, each of whose elements must be an object of type
-##' Pivoting.  If omitted, no pivoting is performed on the dataset.  Using this
-##' argument can allow for convenient reshaping of the data prior to pulling it
-##' into R.  Note: if this argument is included, then all of the dimensions in
-##' key must be included in this vector.  See ?Pivoting for a description on
-##' creating this argument and for some examples on how to use it.
-##' 
-##' @return A data table containing the metadata matching the key (may be empty).
-##' 
+##' @param key An object of class DatasetKey.  Often, this will be one of the 
+##'   list elements of swsContext.datasets (if running in a debug/local session,
+##'   create this object with GetTestEnvironment).
+##' @param pivoting A vector, each of whose elements must be an object of type 
+##'   Pivoting.  If omitted, no pivoting is performed on the dataset.  Using 
+##'   this argument can allow for convenient reshaping of the data prior to 
+##'   pulling it into R.  Note: if this argument is included, then all of the 
+##'   dimensions in key must be included in this vector.  See ?Pivoting for a 
+##'   description on creating this argument and for some examples on how to use 
+##'   it.
+##'   
+##' @return A data table containing the metadata matching the key (may be 
+##'   empty). Metadata will contain the following fields:
+##'   
+##'   \itemize{ 
+##'   \item All the keys required to identify a value 
+##'   \item Metadata - Metadata category 
+##'   \item Metadata_Element - Metadata subcategory 
+##'   \item Metadata_Language - Two letter lowercase code for language in which the
+##'   metadata is in
+##'   \item Metadata_Group - Metadata can be clustered together in groups
+##'   expressed as an integer starting at 1
+##'   \item Metadata_Value - The actual value of the metadata
+##'   }
+##'   
 ##' @examples
 ##' \dontrun{
 ##' # swsContext files are necessary for GetData to run (token may need to be updated)
