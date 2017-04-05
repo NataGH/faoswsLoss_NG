@@ -213,7 +213,7 @@ GetHistory.processNormalizedResult <- function(data) {
   if(nrow(result) == 0){
     result <- as.data.table(setNames(replicate(length(cols),logical()), cols))
   }
-  setcolorder(result, c(keyNames, "Version", "StartDate", "EndDate", "Metadata", "Metadata_Language", "Metadata_Group", "Metadata_Element", "Metadata_Value", "Value", flagNames))
+  setcolorder(result, c(keyNames, "Version", "StartDate", "EndDate", "Metadata", "Metadata_Element", "Metadata_Language", "Metadata_Group", "Metadata_Value", "Value", flagNames))
   
   return(result[])
 }
