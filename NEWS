@@ -1,3 +1,8 @@
+## BUG FIXES
+
+- `GetMetadata` now uses the same terms for Metadata as `SaveData`
+
+
 # CHANGES IN faosws VERSION 0.9.2
 
 ## MINOR CHANGES

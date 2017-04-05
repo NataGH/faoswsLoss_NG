@@ -250,8 +250,9 @@ hasEmptyList <- function(x) {
 
 GetData.processNormalizedResultMetadata <- function(data) {
   keyNames <- sapply(data$keyDefinitions, function(x) x[1])
-  cols <- c(keyNames, "Metadata_Language", "Metadata", "Metadata_Group", "Metadata_Value")
-  
+  # Define metadata columns
+  cols <- c(keyNames, "Metadata_Language", "Metadata", "Metadata_Element", "Metadata_Group", "Metadata_Value")
+  #Prepare for possibility that there is no metadata and a blank template has to be created
   MakeEmptyMetadata <- function(k, ct){
     coltypes <- c(rep("character", length(k)), "character", "character", "integer", "character")
     do.call(data.table, setNames(lapply(coltypes, new), ct))
@@ -264,16 +265,19 @@ GetData.processNormalizedResultMetadata <- function(data) {
         stop("The SWS server has provided corrupted metadata. 
              Please contact the engineering team and file an issue.")
       }
+      
+      #keyNames + 2 skips over the Value column to get to the metadata
       meta1 = lapply(listElement[[length(keyNames) + 2]], function(listElement) {
         meta2 = lapply(listElement[[4]], function(listElement) {
-          out = data.frame(list(listElement[[1]], 0, listElement[[3]]), 
+          out = data.frame(list("GENERAL", listElement[[1]], 0, listElement[[3]]), 
                            stringsAsFactors = FALSE)
           colnames(out) = c(cols[(length(keyNames) + 2):length(cols)])
           return(out)
         })
-        lapply(1:length(meta2), function(i) {
-          meta2[[i]]$Metadata_Group <<- i
-        })
+        for(i in seq_along(meta2)){
+          meta2[[i]]$Metadata_Group <- i
+          meta2[[i]]$Metadata <- listElement[[1]]
+        }
         out = data.frame(list(listElement[[3]]), stringsAsFactors = FALSE)
         out = merge(out, rbindlist(meta2))
         colnames(out) = c(cols[(length(keyNames)+1):length(cols)])
@@ -293,7 +297,7 @@ GetData.processNormalizedResultMetadata <- function(data) {
   if(length(result) == 0){
     result <- MakeEmptyMetadata(keyNames, cols)[]
   }
-  setcolorder(result, c(keyNames, "Metadata", "Metadata_Language", "Metadata_Group", "Metadata_Value"))
+  setcolorder(result, c(keyNames, "Metadata", "Metadata_Element", "Metadata_Language", "Metadata_Group", "Metadata_Value"))
   return(result[])
 }
 
