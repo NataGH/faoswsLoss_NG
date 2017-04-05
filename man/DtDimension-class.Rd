@@ -2,8 +2,8 @@
 % Please edit documentation in R/DtDimension.R
 \docType{class}
 \name{DtDimension-class}
-\alias{DtDimension-class}
 \alias{DtDimension}
+\alias{DtDimension-class}
 \title{DtDimension class}
 \description{
 This class is for specifying Datatable columns
@@ -20,8 +20,8 @@ descending (FALSE) order?}
 complex filtering can be placed in the where clause of
 \code{\link{ReadDatatable}}}
 }}
-
 \examples{
 mapply(new, id=letters[1:3], value=1:3, MoreArgs = list(Class="DtDimension"))
 
 }
+

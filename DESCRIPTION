@@ -68,4 +68,4 @@ Suggests:
     testthat (>= 1.0.2.9000),
     R.rsp
 VignetteBuilder: R.rsp
-RoxygenNote: 6.0.1
+RoxygenNote: 5.0.1

@@ -38,3 +38,4 @@ and resulting query is incorrect, SQL error details are pasted and
 execution blocked; if HTTPS connection fails (e.g. a runtime error on the
 server), HTTP status != 200 is pasted and execution blocked.
 }
+

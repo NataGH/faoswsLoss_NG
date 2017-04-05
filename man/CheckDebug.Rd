@@ -16,3 +16,4 @@ script is running there.
 This function thus returns TRUE when not on the server and FALSE when on the
 server.
 }
+

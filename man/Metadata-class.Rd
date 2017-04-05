@@ -2,8 +2,8 @@
 % Please edit documentation in R/Metadata.R
 \docType{class}
 \name{Metadata-class}
-\alias{Metadata-class}
 \alias{Metadata}
+\alias{Metadata-class}
 \title{Metadata Class Definition}
 \description{
 This object represents the metadata associated to the block of data

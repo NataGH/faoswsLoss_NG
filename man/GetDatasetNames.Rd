@@ -20,3 +20,4 @@ included in the resulting list
 \seealso{
 \code{\link{GetDatasetConfig}} \code{\link{GetDomainNames}}
 }
+

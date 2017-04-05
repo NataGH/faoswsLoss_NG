@@ -2,8 +2,8 @@
 % Please edit documentation in R/faosws-package.R
 \docType{package}
 \name{faosws-package}
-\alias{faosws-package}
 \alias{faosws}
+\alias{faosws-package}
 \title{Tools providing access to the FAO Statistical Working System}
 \description{
 This package allows access to the FAO SWS via its API when the appropriate 
@@ -32,7 +32,7 @@ When using this package to write scripts, follow these guidelines:
    \item Avoid deprecated functions like \code{GetTableData}
 }
 }
-
 \author{
 Engineering Ingegneria Informatica
 }
+

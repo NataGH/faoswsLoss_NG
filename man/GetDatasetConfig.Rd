@@ -22,3 +22,4 @@ included in the resulting list
 \seealso{
 \code{\link{GetDatasetNames}} \code{\link{GetDomainNames}}
 }
+

@@ -76,7 +76,6 @@ with all the other credentials under a \code{macos} folder. It needs to be
 installed in the KeyChain (e.g. by double- clicking on the file). The
 password is 'changeme'.
 }
-
 \examples{
 \dontrun{
 
@@ -90,3 +89,4 @@ if (CheckDebug()) {
 }
   
 }
+

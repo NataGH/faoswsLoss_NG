@@ -33,3 +33,4 @@ WriteQualityIndicators(list(a=NULL, b=NULL), "aproduction")}
 \seealso{
 \link{ReadQualityIndicators}
 }
+

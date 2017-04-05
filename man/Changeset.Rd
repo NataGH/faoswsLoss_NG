@@ -2,10 +2,9 @@
 % Please edit documentation in R/Changeset.R
 \name{Changeset}
 \alias{Changeset}
+\alias{ExtractValidationIDs}
 \alias{Finalise}
 \alias{Finalize}
-\alias{Finalize}
-\alias{ExtractValidationIDs}
 \title{Define changeset object}
 \usage{
 Changeset(table, type = "write")
@@ -47,3 +46,4 @@ allow any rows already sent to be revalidated. The function
 ch <- Changeset("world_bank_climate_data_test")
 }
 }
+

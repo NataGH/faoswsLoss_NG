@@ -2,8 +2,8 @@
 % Please edit documentation in R/Dimension.R
 \docType{class}
 \name{Dimension-class}
-\alias{Dimension-class}
 \alias{Dimension}
+\alias{Dimension-class}
 \title{Dimension Class}
 \value{
 An object of class Dimension.  This is used to pass onto the 
@@ -32,7 +32,6 @@ http://hqlqasws1.hq.un.fao.org:8080/dataset_configuration.html.}
 \item{\code{keys}}{The key codes specifying what values should be pulled for the 
 dimension.}
 }}
-
 \examples{
 \dontrun{
 dim1 = Dimension(name = "geographicAreaM49", keys = c("12", "24", "204"))
@@ -50,3 +49,4 @@ GetData(key = key)
 \seealso{
 \code{\link{DatasetKey}}, \code{\link{GetData}}
 }
+
