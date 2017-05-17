@@ -1,6 +1,7 @@
 ## BUG FIXES
 
 - Fixed read bug in `GetMetadata`
+- Fixed duplication of Metadata (fixed SWS-1731)
 
 
 # CHANGES in faosws VERSION 0.9.3

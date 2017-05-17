@@ -185,7 +185,7 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
       for (i in 1 : metaChunksCnt) {
         PutRestCall(paste0(baseUrl, "stream/", swsContext.executionId, "/",
                            uuid, "/meta/chunk/", (i - 1), "?token=", swsContext.token),
-                    SaveData.buildMetadataContentJSON(metaChunks[[i]]))
+                    SaveData.buildMetadataContentJSON(metaChunks[[i]]), datasetConfig[["dimensions"]])
       }
     }
     out <- PutRestCall(
@@ -408,7 +408,7 @@ SaveData.buildUniqueJSON <- function(data, metadata, config) {
   if(!missing(metadata)) {
     json[["metadata"]] <- list()
     json[["metadata"]][[1]] <- SaveData.buildMetadataDefJSON(metadata)
-    jsonMetacont <- SaveData.buildMetadataContentJSON(metadata)
+    jsonMetacont <- SaveData.buildMetadataContentJSON(metadata, config[["dimensions"]])
     for (i in 1:length(jsonMetacont)) {
       json[["metadata"]][[i+1]] <- jsonMetacont[[i]]
     }
@@ -623,89 +623,19 @@ SaveData.buildMetadataDefJSON <- function(metadata) {
   jsonElement
 }
 
-SaveData.buildMetadataContentJSON <- function(metadata) {
+SaveData.buildMetadataContentJSON <- function(metadata, dimensions) {
   
-  # Save the original key of the passed data table.
-  #
-  origKey <- key(metadata)
+  keys <- dimensions
   
-  # Extract key column names.
-  #
-  if(length(which(colnames(metadata) == "Metadata")) <= 0) {
-    stop("Unexpected data table structure detected: could not locate Metadata column.")
-  }
-  index <- tail(which(colnames(metadata) == "Metadata"), 1)
-  if(index <= 0) {
-    stop("Unexpected data table structure detected: Metadata column located before any key column")
-  }
-  keys <- colnames(metadata)[1:index - 1]
-  
-  # Set data table key.
-  #
-  setkeyv(metadata, keys, verbose = FALSE)
-  
-  
-  # Prepare list to hold JSON data.
-  #
-  json <- list()
-  #   ###################################################
-  #   # COMMENT: (JOSH) Does this code below do the same
-  #   # thing as that big, ugly, nested for loop?  Should
-  #   # verify same results are returned in all cases...
-  #   #Reorder columns to ensure the proper ordering for the JSON object
-  #   metadata <- metadata[, c(keys, "Metadata", "Metadata_Language",
-  #                            "Metadata_Element", "Metadata_Value"), with = FALSE]
-  #   json <- apply(metadata, 1, function(x) list(x))
-  #   json <- lapply(json, function(x){
-  #       out = x[[1]]
-  #       names(out) = NULL
-  #       out
-  #   })
-  
-  # Extract the set of unique keys for external loop.
-  #
-  w <- 0
-  uniqueKeys <- unique(metadata)[,keys, with = FALSE]
-  for(i in 1:nrow(uniqueKeys)) {
-    
-    jsonElement <- list()
-    jsonElement[["keys"]] <- as.character(uniqueKeys[i])
-    jsonElement[["metadata"]] <- list()
-    
-    slicedByKey <- metadata[uniqueKeys[i]]
-    setkeyv(slicedByKey, c("Metadata_Group", "Metadata_Language", "Metadata"))
-    uniqueMetadata <- unique(slicedByKey)[, c("Metadata", "Metadata_Language", "Metadata_Group"), with = FALSE]
-    
-    for(j in 1:nrow(uniqueMetadata)) {
-      
-      jsonElement[["metadata"]][[j]] <- list()
-      jsonElement[["metadata"]][[j]][["typeCode"]] <- uniqueMetadata[j, Metadata]
-      jsonElement[["metadata"]][[j]][["language"]] <- uniqueMetadata[j, Metadata_Language]
-      jsonElement[["metadata"]][[j]][["elements"]] <- list()
-      
-      metadataElements <- slicedByKey[uniqueMetadata[j]]
-      for(k in 1:nrow(metadataElements)) {
-        jsonElement[["metadata"]][[j]][["elements"]][[k]] <- list()
-        jsonElement[["metadata"]][[j]][["elements"]][[k]][["typeCode"]] <- metadataElements[k, Metadata_Element]
-        jsonElement[["metadata"]][[j]][["elements"]][[k]][["value"]] <- metadataElements[k, Metadata_Value]
-        
-        w <- w + 1
-        json[[w]] <- c(
-          as.character(uniqueKeys[i]), # jsonElement[["keys"]],
-          uniqueMetadata[j, Metadata], # jsonElement[["metadata"]][[j]][["typeCode"]],
-          uniqueMetadata[j, Metadata_Language], # jsonElement[["metadata"]][[j]][["language"]],
-          metadataElements[k, Metadata_Element], # jsonElement[["metadata"]][[j]][["elements"]][[k]][["typeCode"]],
-          metadataElements[k, Metadata_Value] # jsonElement[["metadata"]][[j]][["elements"]][[k]][["value"]]
-        )
-      }
-    }
-    
-    # json[[i]] <- jsonElement
-  }
-  
-  # Restore original key.
-  #
-  setkeyv(metadata, origKey, verbose = FALSE)
+  metadata <- metadata[, c(keys, "Metadata", "Metadata_Language",
+                           "Metadata_Element", "Metadata_Value"), with = FALSE]
+
+  json <- apply(metadata, 1, function(x) list(x))
+  json <- lapply(json, function(x){
+    out = x[[1]]
+    names(out) = NULL
+    out
+  })
   
   json
 }
