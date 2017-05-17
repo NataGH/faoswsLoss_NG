@@ -88,6 +88,21 @@
 ##' not to accidentally include NAs in your data if you do not wish those values
 ##' to be cleared.
 ##' 
+##' @examples 
+##' \dontrun{
+##' d <- GetData(swsContext.datasets[[1]])
+##' config <- GetDatasetConfig(swsContext.datasets[[1]]@domain, swsContext.datasets[[1]]@dataset)
+##' metad <- d[, mget(config$dimensions)]
+##' 
+##' metad[, `:=`(Metadata = "GENERAL",
+##'              Metadata_Element = "COMMENT",
+##'              Metadata_Language = "en",
+##'              Metadata_Group = "1",
+##'              Metadata_Value = "Test")]
+##' 
+##' SaveData(config$domain, config$dataset, d, metadata = metad)
+##' }
+##' 
 ##' @export SaveData
 
 SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMode = "wait", waitTimeout = 600, chunkSize = 50000) {

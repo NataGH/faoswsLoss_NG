@@ -110,4 +110,20 @@ Saving a missing value removes the value of the destination record. If
   provided, all rows with no flags will be marked as appended and rejected. 
   Up to 10 warnings will be provided.
 }
+\examples{
+\dontrun{
+d <- GetData(swsContext.datasets[[1]])
+config <- GetDatasetConfig(swsContext.datasets[[1]]@domain, swsContext.datasets[[1]]@dataset)
+metad <- d[, mget(config$dimensions)]
+
+metad[, `:=`(Metadata = "GENERAL",
+             Metadata_Element = "COMMENT",
+             Metadata_Language = "en",
+             Metadata_Group = "1",
+             Metadata_Value = "Test")]
+
+SaveData(config$domain, config$dataset, d, metadata = metad)
+}
+
+}
 
