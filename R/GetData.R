@@ -111,7 +111,7 @@ GetData <- function(key, flags = TRUE, normalized = TRUE, pivoting, omitna = TRU
     setcolorder(query, colOrder)
   }
   if(!normalized){
-    query <- denormalizeResult(data, query, key)
+    query <- denormalizeData(data, query, key)
   }
 
   # normalizes result transforming columns from list of NULLs to vector of NAs
@@ -170,7 +170,7 @@ GetData.processNormalizedResult <- function(data, flags) {
   return(out[])
 }
 
-denormalizeResult <- function(data, query, key){
+denormalizeData <- function(data, query, key){
   # If flags is FALSE, data$flagDefinitions will be NULL and so flagNames will
   # be an empty list
   noData = nrow(query) == 0 # Need this logical for later flow structure.
