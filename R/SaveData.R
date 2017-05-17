@@ -179,7 +179,7 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
       PutRestCall(
         paste0(baseUrl, "stream/", swsContext.executionId, "/",
                uuid, "/meta/def?token=", swsContext.token),
-        SaveData.buildMetadataDefJSON(metadata))
+        SaveData.buildMetadataDefJSON(metadata, datasetConfig[["dimensions"]]))
       metaChunks = SaveData.splitIntoChunkTables(metadata, chunkSize)
       metaChunksCnt <- length(metaChunks)
       for (i in 1 : metaChunksCnt) {
@@ -407,7 +407,7 @@ SaveData.buildUniqueJSON <- function(data, metadata, config) {
   
   if(!missing(metadata)) {
     json[["metadata"]] <- list()
-    json[["metadata"]][[1]] <- SaveData.buildMetadataDefJSON(metadata)
+    json[["metadata"]][[1]] <- SaveData.buildMetadataDefJSON(metadata, config[["dimensions"]])
     jsonMetacont <- SaveData.buildMetadataContentJSON(metadata, config[["dimensions"]])
     for (i in 1:length(jsonMetacont)) {
       json[["metadata"]][[i+1]] <- jsonMetacont[[i]]
@@ -585,27 +585,7 @@ normalizeData <- function(data, keys, denormalizedKey, keepNA = TRUE, returnKeye
   return(newData[])
 }
 
-SaveData.buildMetadataDefJSON <- function(metadata) {
-  
-  # Save the original key of the passed data table.
-  #
-  origKey <- key(metadata)
-  
-  # Extract key column names.
-  #
-  if(length(which(colnames(metadata) == "Metadata")) <= 0) {
-    stop("Unexpected data table structure detected: could not locate Metadata column.")
-  }
-  index <- tail(which(colnames(metadata) == "Metadata"), 1)
-  if(index <= 0) {
-    stop("Unexpected data table structure detected: Metadata column located before any key column")
-  }
-  keys <- colnames(metadata)[1:index - 1]
-  
-  # Set data table key.
-  #
-  setkeyv(metadata, keys, verbose = FALSE)
-  
+SaveData.buildMetadataDefJSON <- function(metadata, keys) {
   
   # Prepare key definitions element.
   #
@@ -615,10 +595,6 @@ SaveData.buildMetadataDefJSON <- function(metadata) {
     jsonElement[["keyDefinitions"]][[i]] <- list()
     jsonElement[["keyDefinitions"]][[i]][["code"]] <- keys[[i]]
   }
-  
-  # Restore original key.
-  #
-  setkeyv(metadata, origKey, verbose = FALSE)
   
   jsonElement
 }
