@@ -1,3 +1,5 @@
+# CHANGES in faosws VERSION 0.9.4
+
 ## BUG FIXES
 
 - Fixed read bug in `GetMetadata`
