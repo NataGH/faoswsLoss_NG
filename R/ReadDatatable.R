@@ -211,7 +211,7 @@ runStreaming <- function(url, json){
     }
   })
   
-  conn <- withCallingHandlers(.Call(curl:::R_curl_connection, url, "r", h, FALSE),
+  conn <- withCallingHandlers(curl(url = url, open = "rf", handle = h),
                               error = function(e){
                                 cons <- showConnections(all = TRUE)
                                 closableconn <- getConnection(as.numeric(row.names(cons)[cons[,"description"]  ==  url]))
