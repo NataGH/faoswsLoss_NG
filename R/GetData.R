@@ -251,10 +251,10 @@ hasEmptyList <- function(x) {
 GetData.processNormalizedResultMetadata <- function(data) {
   keyNames <- sapply(data$keyDefinitions, function(x) x[1])
   # Define metadata columns
-  cols <- c(keyNames, "Metadata_Language", "Metadata", "Metadata_Element", "Metadata_Group", "Metadata_Value")
+  cols <- c(keyNames, "Metadata", "Metadata_Element", "Metadata_Language", "Metadata_Group", "Metadata_Value")
   #Prepare for possibility that there is no metadata and a blank template has to be created
   MakeEmptyMetadata <- function(k, ct){
-    coltypes <- c(rep("character", length(k)), "character", "character", "integer", "character")
+    coltypes <- c(rep("character", length(k)), "character", "character", "character", "integer", "character")
     do.call(data.table, setNames(lapply(coltypes, new), ct))
   }
   result = lapply(data$data, function(listElement) {
@@ -268,19 +268,26 @@ GetData.processNormalizedResultMetadata <- function(data) {
       
       #keyNames + 2 skips over the Value column to get to the metadata
       meta1 = lapply(listElement[[length(keyNames) + 2]], function(listElement) {
+        Meta <- listElement[[1]]
+        languageElement <- listElement[[3]]
         meta2 = lapply(listElement[[4]], function(listElement) {
-          out = data.frame(list("GENERAL", listElement[[1]], 0, listElement[[3]]), 
+          metaElement <- listElement[[1]]
+          metaGroup <- 0L
+          metaValue <- listElement[[3]]
+          out = data.frame(list(metaElement, metaGroup, metaValue), 
                            stringsAsFactors = FALSE)
-          colnames(out) = c(cols[(length(keyNames) + 2):length(cols)])
+          colnames(out) = c("Metadata_Element", "Metadata_Group", "Metadata_Value")
           return(out)
         })
+        # Each value should be assigned a unique group
         for(i in seq_along(meta2)){
           meta2[[i]]$Metadata_Group <- i
-          meta2[[i]]$Metadata <- listElement[[1]]
         }
-        out = data.frame(list(listElement[[3]]), stringsAsFactors = FALSE)
+        out = data.frame(list(Meta, languageElement), stringsAsFactors = FALSE)
         out = merge(out, rbindlist(meta2))
-        colnames(out) = c(cols[(length(keyNames)+1):length(cols)])
+        setnames(out, c("Metadata", "Metadata_Language", "Metadata_Element",
+                        "Metadata_Group", "Metadata_Value"))
+        setcolorder(out, c(cols[(length(keyNames)+1):length(cols)]))
         return(out)
       })
       out = data.frame(listElement[1:length(keyNames)], stringsAsFactors = FALSE)
@@ -291,13 +298,13 @@ GetData.processNormalizedResultMetadata <- function(data) {
       return(MakeEmptyMetadata(keyNames, cols)[])
     }
   })
-  result = rbindlist(result)
+  result = rbindlist(result, use.names = TRUE)
   
   # If there is no metadata at all, the result can be length 0
   if(length(result) == 0){
     result <- MakeEmptyMetadata(keyNames, cols)[]
   }
-  setcolorder(result, c(keyNames, "Metadata", "Metadata_Element", "Metadata_Language", "Metadata_Group", "Metadata_Value"))
+  setcolorder(result, cols)
   return(result[])
 }
 
