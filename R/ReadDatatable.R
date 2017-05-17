@@ -123,6 +123,49 @@ asSwitch <- function(object, class){
   }
 }
 
+makeCurlConnection <- function(handle, url, json){
+  
+  curl::handle_setheaders(handle, "Accept" = "application/json, application/jsonl",
+                          "Content-Type" = "application/json",
+                          "Accept-Encoding" = "gzip, deflate")
+  
+  if (Sys.info()['sysname'] == 'Darwin') {
+    curl::handle_setopt(handle, customrequest="POST",
+                        verbose = FALSE,
+                        noproxy = .swsenv$swsContext.noProxy,
+                        ssl_verifypeer = FALSE, 
+                        sslcert = path.expand(.swsenv$swsContext.clientP12),
+                        keypasswd = .swsenv$swsContext.p12Password,
+                        ssl_verifyhost = 2,
+                        post = 1,
+                        postfields = RJSONIO::toJSON(json, digits = 30))
+  } else {
+    curl::handle_setopt(handle, customrequest="POST",
+                        verbose = FALSE,
+                        noproxy = .swsenv$swsContext.noProxy,
+                        ssl_verifypeer = FALSE, 
+                        sslcert = path.expand(.swsenv$swsContext.clientCertificate),
+                        sslkey = path.expand(.swsenv$swsContext.clientKey),
+                        ssl_verifyhost = 2,
+                        post = 1,
+                        postfields = RJSONIO::toJSON(json, digits = 30))
+  }
+  
+  conn <- withCallingHandlers(curl(url = url, open = "rf", handle = handle),
+                              error = function(e){
+                                cons <- showConnections(all = TRUE)
+                                closableconn <- getConnection(as.numeric(row.names(cons)[cons[,"description"]  ==  url]))
+                                close(closableconn)
+                                
+                                if(e$message == "SSL connect error"){
+                                  stop("Incorrect certificates. Either use 'SetClientFiles' or put the correct certificates in ", 
+                                       dirname(.swsenv$swsContext.clientCertificate), call. = FALSE)
+                                }
+                              })
+  
+  conn
+}
+
 streamIn <- function (con, colstats, pagesize = 500, verbose = FALSE, ...) {
   if (!inherits(con, "connection")) {
     stop("Argument 'con' must be a connection.")
@@ -179,31 +222,6 @@ streamIn <- function (con, colstats, pagesize = 500, verbose = FALSE, ...) {
 runStreaming <- function(url, json){
   
   h <- curl::new_handle()
-  curl::handle_setheaders(h, "Accept" = "application/json, application/jsonl",
-                          "Content-Type" = "application/json",
-                          "Accept-Encoding" = "gzip, deflate")
-  
-  if (Sys.info()['sysname'] == 'Darwin') {
-    curl::handle_setopt(h, customrequest="POST",
-                        verbose = FALSE,
-                        noproxy = .swsenv$swsContext.noProxy,
-                        ssl_verifypeer = FALSE, 
-                        sslcert = path.expand(.swsenv$swsContext.clientP12),
-                        keypasswd = .swsenv$swsContext.p12Password,
-                        ssl_verifyhost = 2,
-                        post = 1,
-                        postfields = RJSONIO::toJSON(json, digits = 30))
-  } else {
-    curl::handle_setopt(h, customrequest="POST",
-                        verbose = FALSE,
-                        noproxy = .swsenv$swsContext.noProxy,
-                        ssl_verifypeer = FALSE, 
-                        sslcert = path.expand(.swsenv$swsContext.clientCertificate),
-                        sslkey = path.expand(.swsenv$swsContext.clientKey),
-                        ssl_verifyhost = 2,
-                        post = 1,
-                        postfields = RJSONIO::toJSON(json, digits = 30))
-  }
   
   on.exit({
     if(exists("conn") && inherits(conn, "connection") && isOpen(conn)) {
@@ -211,18 +229,7 @@ runStreaming <- function(url, json){
     }
   })
   
-  conn <- withCallingHandlers(curl(url = url, open = "rf", handle = h),
-                              error = function(e){
-                                cons <- showConnections(all = TRUE)
-                                closableconn <- getConnection(as.numeric(row.names(cons)[cons[,"description"]  ==  url]))
-                                close(closableconn)
-                                
-                                if(e$message == "SSL connect error"){
-                                  stop("Incorrect certificates. Either use 'SetClientFiles' or put the correct certificates in ", 
-                                       dirname(.swsenv$swsContext.clientCertificate), call. = FALSE)
-                                }
-                              })
-  
+  conn <- makeCurlConnection(h, url, json)
   responseCode <- curl::handle_data(h)$status_code
   
   if(responseCode != 200){
