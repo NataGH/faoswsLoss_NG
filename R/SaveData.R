@@ -528,13 +528,22 @@ SaveData.buildNormalizedDataContentJSON <- function(data, config) {
 
 normalizeData <- function(data, keys, denormalizedKey, keepNA = TRUE, returnKeyed = FALSE){
   
-  nd <- data
+  nd <- copy(data)
   blankit <- FALSE
   
   if(nrow(data) == 0){
     # If the data is empty, then there's no reshape needed
     nd <- nd[1,]
     blankit <- TRUE
+  }
+  
+  # Code to fix a bug in data.table 1.9.6 - the bug has been fixed from 1.10.4 at the latest
+  # Columns containing only NA would lead to malformed factors
+  if(!keepNA){
+    emptycols <- Filter(function(x) all(is.na(nd[,get(x)])), names(nd))
+    if(length(emptycols)){
+      nd[, (emptycols) := NULL]
+    }
   }
   
   newData <- suppressWarnings(
