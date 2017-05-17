@@ -73,7 +73,7 @@ test_that("processNormalizedResult works", {
   expect_equal(GetData.processNormalizedResult(input, flag = TRUE), output)
 })
 
-test_that("denormalizeResult works", {
+test_that("denormalizeData works", {
   input_data <- structure(list(keyDefinitions = list(structure(c("geographicAreaM49", 
                 "Geographic Area", "normal"), .Names = c("code", "description", 
                 "type")), structure(c("measuredElement", "Element", "measurementUnit"
@@ -136,5 +136,5 @@ test_that("denormalizeResult works", {
                       "measuredElement", "measuredItemCPC"), class = c("data.table", 
                       "data.frame"), row.names = c(NA, -3L))
   
-  expect_equal(denormalizeResult(input_data, input_query, input_key), output)
+  expect_equal(denormalizeData(input_data, input_query, input_key), output)
 })
