@@ -123,14 +123,16 @@ asSwitch <- function(object, class){
   }
 }
 
-makeCurlConnection <- function(handle, url, json){
+makeCurlConnection <- function(handle, url, json, headerlist){
   
-  curl::handle_setheaders(handle, "Accept" = "application/json, application/jsonl",
-                          "Content-Type" = "application/json",
-                          "Accept-Encoding" = "gzip, deflate")
+  curl::handle_setheaders(handle, .list = headerlist)
+  
+  if(missing(headerlist)){
+    stop("Header list must be supplied")
+  }
   
   if (Sys.info()['sysname'] == 'Darwin') {
-    curl::handle_setopt(handle, customrequest="POST",
+    curl::handle_setopt(handle, customrequest = "POST",
                         verbose = FALSE,
                         noproxy = .swsenv$swsContext.noProxy,
                         ssl_verifypeer = FALSE, 
@@ -138,7 +140,7 @@ makeCurlConnection <- function(handle, url, json){
                         keypasswd = .swsenv$swsContext.p12Password,
                         ssl_verifyhost = 2,
                         post = 1,
-                        postfields = RJSONIO::toJSON(json, digits = 30))
+                        postfields = json, digits = 30)
   } else {
     curl::handle_setopt(handle, customrequest="POST",
                         verbose = FALSE,
@@ -148,7 +150,7 @@ makeCurlConnection <- function(handle, url, json){
                         sslkey = path.expand(.swsenv$swsContext.clientKey),
                         ssl_verifyhost = 2,
                         post = 1,
-                        postfields = RJSONIO::toJSON(json, digits = 30))
+                        postfields = json)
   }
   
   conn <- withCallingHandlers(curl(url = url, open = "rf", handle = handle),
@@ -223,13 +225,17 @@ runStreaming <- function(url, json){
   
   h <- curl::new_handle()
   
+  headerlist <-  list("Accept" = "application/json, application/jsonl",
+                          "Content-Type" = "application/json",
+                          "Accept-Encoding" = "gzip, deflate")
+  
   on.exit({
     if(exists("conn") && inherits(conn, "connection") && isOpen(conn)) {
       close(conn)
     }
   })
   
-  conn <- makeCurlConnection(h, url, json)
+  conn <- makeCurlConnection(h, url, json = RJSONIO::toJSON(json, digits = 30), headerlist)
   responseCode <- curl::handle_data(h)$status_code
   
   if(responseCode != 200){
