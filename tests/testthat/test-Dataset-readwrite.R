@@ -84,16 +84,16 @@ test_that("denormalizeData works", {
                 "Status"), .Names = c("code", "description")), structure(c("flagMethod", 
                 "Method"), .Names = c("code", "description")))), .Names = c("keyDefinitions", 
                 "flagDefinitions"))
-  input_query <- structure(list(geographicAreaM49 = c("4", "466", "466", "466", 
-                 "466"), measuredElement = c("5417", "5031", "5031", "5417", "5417"
-                 ), measuredItemCPC = c("02111", "02111", "02111", "02111", "02111"
-                 ), timePointYears = c("2005", "2007", "2005", "2007", "2005"), 
-                 Value = c(0, 5005300, 4500000, 0, 0), flagObservationStatus = c("M", 
-                 "", "E", "M", "M"), flagMethod = c("u", "-", "f", "u", "u"
-                 )), .Names = c("geographicAreaM49", "measuredElement", "measuredItemCPC", 
-                 "timePointYears", "Value", "flagObservationStatus", "flagMethod"
-                 ), class = c("data.table", "data.frame"), row.names = c(NA, -5L
-                 ))
+
+  input_query <- data.table::data.table(geographicAreaM49 = c("4", "466", "466", "466", "466"), 
+             measuredElement = c("5417", "5031", "5031", "5417", "5417"), 
+             measuredItemCPC = c("02111", "02111", "02111", "02111", "02111"), 
+             timePointYears = c("2005", "2007", "2005", "2007", "2005"), 
+             Value = c(0, 5005300, 4500000, 0, 0), 
+             flagObservationStatus = c("M", "", "E", "M", "M"), 
+             flagMethod = c("u", "-", "f", "u", "u")
+             )
+  
   input_key <- new("DatasetKey"
                    , domain = "agriculture"
                    , dataset = "aproduction"
