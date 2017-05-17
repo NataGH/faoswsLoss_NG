@@ -73,8 +73,6 @@
 ##'   \item Metadata_Element - Metadata subcategory 
 ##'   \item Metadata_Language - Two letter lowercase code for language in which the
 ##'   metadata is in
-##'   \item Metadata_Group - Metadata can be clustered together in groups
-##'   expressed as an integer starting at 1
 ##'   \item Metadata_Value - The actual value of the metadata
 ##'   }
 ##' 
