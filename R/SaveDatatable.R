@@ -151,53 +151,19 @@ send_jsonlines <- function(changeset){
 post_json <- function(url, json){
   
   h <- curl::new_handle()
-  curl::handle_setheaders(h, "Accept" = "application/json",
-                          "Content-Type" = "application/jsonl",
-                          "Accept-Encoding" = "gzip, deflate")
   
-  if (Sys.info()['sysname'] == 'Darwin') {
-    
-    curl::handle_setopt(h, customrequest="POST",
-                        verbose = FALSE,
-                        noproxy = .swsenv$swsContext.noProxy,
-                        ssl_verifypeer = FALSE, 
-                        sslcert = path.expand(.swsenv$swsContext.clientP12),
-                        keypasswd = .swsenv$swsContext.p12Password,
-                        ssl_verifyhost = 2,
-                        post = 1,
-                        postfields = json)
-  } else {
-    
-    curl::handle_setopt(h, customrequest="POST",
-                        verbose = FALSE,
-                        noproxy = .swsenv$swsContext.noProxy,
-                        ssl_verifypeer = FALSE, 
-                        sslcert = path.expand(.swsenv$swsContext.clientCertificate),
-                        sslkey = path.expand(.swsenv$swsContext.clientKey),
-                        ssl_verifyhost = 2,
-                        post = 1,
-                        postfields = json)
-  }
+  headerlist <- list("Accept" = "application/json",
+                     "Content-Type" = "application/jsonl",
+                     "Accept-Encoding" = "gzip, deflate")
   
-  
-  
-  on.exit(
-    if(exists("conn")) {
-      if(inherits(conn, "connection")){
-        if(isOpen(conn)) close(conn)
-      }
+  on.exit({
+    if(exists("conn") && inherits(conn, "connection") && isOpen(conn)) {
+      close(conn)
     }
-  )
+  })
   
-  conn <- try(.Call(curl:::R_curl_connection, url, "r", h, FALSE))
+  conn <- makeCurlConnection(h, url, json, headerlist)
   responseCode <- curl::handle_data(h)$status_code
-  
-  ## If there's an error before the connection can be properly created, close it
-  if(inherits(conn, "try-error")){
-    cons <- showConnections(all = TRUE)
-    closableconn <- getConnection(as.numeric(row.names(cons)[cons[,"description"]  ==  url]))
-    close(closableconn)
-  }
   
   if(!(responseCode >= 200 && responseCode < 300)){
     errmessage <- paste0(readLines(conn, warn = FALSE, encoding = "UTF-8"), collapse="\n")
