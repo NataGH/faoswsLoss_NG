@@ -485,6 +485,11 @@ SaveData.buildNormalizedDataContentJSON <- function(data, config) {
   #
   origKey <- key(data)
   
+  # Restore original key.
+  #
+  on.exit(setkeyv(data, origKey, verbose = FALSE), add = TRUE)
+  
+  
   # Do not consider metadata column, if they have been passed.
   #
   filteredColumnNames <- setdiff(colnames(data), 
@@ -506,15 +511,11 @@ SaveData.buildNormalizedDataContentJSON <- function(data, config) {
   
   # Extract the set of unique keys for external loop.
   #
-  uniqueKeys <- unique(data)
-  json <- split(uniqueKeys, rownames(uniqueKeys))
-  json <- lapply(json, function(v){as.character(unlist(v))})
+  uniqueKeys <- unique(copy(data))
+  uniqueKeys[, Value := as.character(Value)]
+  json <- split(as.matrix(uniqueKeys), seq_len(nrow(uniqueKeys)))
   json <- json[order(as.numeric(names(json)))]
   names(json) <- NULL
-  
-  # Restore original key.
-  #
-  setkeyv(data, origKey, verbose = FALSE)
   
   return(json)
 }
