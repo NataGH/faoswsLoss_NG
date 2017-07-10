@@ -189,7 +189,8 @@ denormalizeData <- function(data, query, key){
                                         query[[denormalizedKey]]]
   toMerge = data.table(missingKeys)
   setnames(toMerge, denormalizedKey)
-  query = query[, merge(.SD, toMerge, all = TRUE), by = mget(normalizedKeys)]
+  query = query[, merge(.SD, toMerge, all = TRUE, by = unname(denormalizedKey)), 
+                by = mget(normalizedKeys)]
   
   castFormula <- paste0(paste(normalizedKeys, collapse = "+"),
                         "~", keyNames[length(keyNames)])
