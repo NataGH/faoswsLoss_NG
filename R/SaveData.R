@@ -406,7 +406,7 @@ SaveData.buildUniqueJSON <- function(data, metadata, config) {
       json[["data"]][["data"]] <- SaveData.buildNormalizedDataContentJSON(data, config)
   }
   
-  if(!missing(metadata)) {
+  if(!missing(metadata) && nrow(metadata) > 0L) {
     json[["metadata"]] <- list()
     json[["metadata"]][[1]] <- SaveData.buildMetadataDefJSON(metadata, config[["dimensions"]])
     jsonMetacont <- SaveData.buildMetadataContentJSON(metadata, config[["dimensions"]])
