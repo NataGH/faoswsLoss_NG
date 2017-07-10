@@ -32,6 +32,7 @@ query. it can be:
 A data.table object containing the queried dataset.
 }
 \description{
+\bold{This function has been deprecated - please use \code{\link{ReadDatatable}}.}
 Invokes a SWS RESTful POST to perform a query on a specific schema/table,
 returning the list of records matched, or NULL if none.  If the SQL request
 and resulting query is incorrect, SQL error details are pasted and
