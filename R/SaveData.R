@@ -140,7 +140,10 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
   flagCols <- datasetConfig[["flags"]]
   
   # If columns are missing, reject the data
-  stopifnot(all(c(allKeys, "Value", flagCols) %in% colnames(data)))
+  if(!all(c(allKeys, "Value", flagCols) %in% colnames(data))){
+    stop("The supplied data is missing the following keys: ", 
+         paste0(setdiff(c(allKeys, "Value", flagCols), colnames(data)), collapse = ", "))
+  }
   
   requiredCols <- c(allKeys, "Value", flagCols)
   otherCols <- setdiff(colnames(data), requiredCols)
