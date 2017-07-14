@@ -633,8 +633,8 @@ SaveData.getDenormalizedKey <- function(keys, data){
 
 SaveData.validateFlagValues <- function(data, flagCols){
   # Disallow writing flags without values
-  flagNoValues <- data[is.na(Value), rowSums(is.na(.SD)) > 0, .SDcols = flagCols]
-  if(length(flagNoValues) > 0){
+  flagNoValues <- data[is.na(Value), rowSums(!is.na(.SD)) > 0, .SDcols = flagCols]
+  if(sum(flagNoValues) > 0){
     stop(paste0("There are ", length(flagNoValues), " records with missing values and non-missing flags. 
                 Flags may not be present without values"))
   }

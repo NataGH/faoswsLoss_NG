@@ -56,3 +56,8 @@ test_that("SaveData doesn't save missing values with flags", {
                   expect_error(SaveData.validateFlagValues(d2, f))
                   
 })
+
+test_that("Missing values and flags are accepted while missing values and present flags are rejected", {
+  d <- data.table(x="a", Value = NA_real_, flag1 = NA_character_, flag2 = NA_character_)
+  expect_error(SaveData.validateFlagValues(d, c("flag1", "flag2")), NA)
+})
