@@ -43,7 +43,13 @@ NULL
 # Populates it with default variables
 SetClientFiles()
 
-# Add params for changeset
-assign("changeset",  
-       list(pagesize = 5000),
-       envir = .swsenv)
+# Set options
+## Add params for changeset
+.onLoad <- function(libname, pkgname){
+  
+  opts <- c("faosws.changeset.pagesize" = "5000L")
+  
+  for (i in setdiff(names(opts),names(options()))) {
+    eval(parse(text=paste("options(",i,"=",opts[i],")",sep="")))
+  }
+}

@@ -41,7 +41,8 @@ Changeset <- function(table, type = "write"){
     assign("validation_ids", integer(0), envir = changeset)
   }
   
-  pagesize <- ExtractSWSVariable("changeset", .swsenv)$pagesize
+  pagesize <- getOption("faosws.changeset.pagesize")
+  stopifnot(!is.null(pagesize))
   
   assign("jsonlines", character(0), envir = changeset)
   assign("pagesize", pagesize, envir = changeset)
