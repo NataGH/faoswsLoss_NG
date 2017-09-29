@@ -1,15 +1,15 @@
 Package: faosws
 Type: Package
 Title: API providing access to the FAO Statistical Working System
-Version: 0.9.6
+Version: 0.9.7
 Date: 2017-07-14
 Authors@R: c(
     person("Engineering Ingegneria Informatica", role="aut"),
     person("Sebastian", "Campbell", email="Sebastian.Campbell@fao.org", role="cre"),
     person("Joshua", "Browning", email="Joshua.Browning@fao.org", role="ctb"))
 Description: API providing access to the FAO Statistical Working System.
-License: @FAO 2013
-BugReports: https://jira.fao.org/ciok/browse/SWS-1132
+License: @FAO 2017
+BugReports: https://sdlc.fao.org/jira/
 Depends:
     R (>= 3.0)
 Imports:

@@ -1,3 +1,9 @@
+# CHANGES in faosws VERSION 0.9.7
+
+## MINOR CHANGES
+
+- New method of changing pagesize using options
+
 ## BUG FIXES
 
 - Fixed bug where large metadata (large than chunkSize) would fail
