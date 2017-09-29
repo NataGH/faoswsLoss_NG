@@ -117,7 +117,6 @@ metad <- d[, mget(config$dimensions)]
 metad[, `:=`(Metadata = "GENERAL",
              Metadata_Element = "COMMENT",
              Metadata_Language = "en",
-             Metadata_Group = "1",
              Metadata_Value = "Test")]
 
 SaveData(config$domain, config$dataset, d, metadata = metad)
