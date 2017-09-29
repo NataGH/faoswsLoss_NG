@@ -1,3 +1,8 @@
+## BUG FIXES
+
+- Fixed bug where large metadata (large than chunkSize) would fail
+
+
 # CHANGES in faosws VERSION 0.9.6
 
 ## BUG FIXES

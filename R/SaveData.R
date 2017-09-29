@@ -185,7 +185,7 @@ SaveData <- function(domain, dataset, data, metadata, normalized = TRUE, waitMod
       for (i in 1 : metaChunksCnt) {
         PutRestCall(paste0(baseUrl, "stream/", swsContext.executionId, "/",
                            uuid, "/meta/chunk/", (i - 1), "?token=", swsContext.token),
-                    SaveData.buildMetadataContentJSON(metaChunks[[i]]), datasetConfig[["dimensions"]])
+                    SaveData.buildMetadataContentJSON(metaChunks[[i]], datasetConfig[["dimensions"]]))
       }
     }
     out <- PutRestCall(
