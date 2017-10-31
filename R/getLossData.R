@@ -138,7 +138,7 @@ getLossData = function(protected = FALSE){
 
 
   ## Reading FlagValidTable specific for loss
-  flagValidTableLoss <- fread(system.file("extdata/flagValidTable.csv", package = "faoswsLoss"))
+  flagValidTableLoss <- fread(system.file("flagValidTable.csv", package = "faoswsLoss", verbose=TRUE))
   
   ## Taking only official data
   ## distinct(lossQuery,flagFaostat_measuredElementFS_5120)
