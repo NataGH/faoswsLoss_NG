@@ -1,0 +1,248 @@
+M49Code,ISO2Code,ISOCode,CountryName,M49Code,SDG Regions,M49Code,M49 Level-1 Region,M49Code,M49 Level-2 Region,,M49Code,MDGRegions,M49Code,LDCs,M49Code,LLDCs-SIDS
+4,AF,AFG,Afghanistan,62,Central Asia (M49) and Southern Asia (MDG=M49),142,Asia (M49),34,Southern Asia (MDG=M49),,34,Southern Asia (MDG=M49),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+248,AX,ALA,Åland Islands,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+8,AL,ALB,Albania,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,,
+12,DZ,DZA,Algeria,747,Western Asia (M49) and Northern Africa (M49),15,Northern Africa (M49),15,Northern Africa (M49),,746,Northern Africa (MDG),,,,
+16,AS,ASM,American Samoa,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),61,Polynesia (M49),,543,Oceania (MDG),,,722,Small island developing States (SIDS)
+20,AD,AND,Andorra,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,,
+24,AO,AGO,Angola,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),17,Middle Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+660,AI,AIA,Anguilla,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+28,AG,ATG,Antigua and Barbuda,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+32,AR,ARG,Argentina,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),5,South America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+51,AM,ARM,Armenia,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,135,Caucasus and Central Asia (MDG),,,432,Landlocked developing countries (LLDCs)
+533,AW,ABW,Aruba,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+36,AU,AUS,Australia,53,Australia and New Zealand (M49),9,Oceania (M49),53,Australia and New Zealand (M49),,514,Developed regions (MDG),,,,
+40,AT,AUT,Austria,513,Northern America (M49) and Europe (M49),150,Europe (M49),155,Western Europe (M49),,514,Developed regions (MDG),,,,
+31,AZ,AZE,Azerbaijan,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,135,Caucasus and Central Asia (MDG),,,432,Landlocked developing countries (LLDCs)
+44,BS,BHS,Bahamas,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+48,BH,BHR,Bahrain,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,485,Western Asia (MDG),,,,
+50,BD,BGD,Bangladesh,62,Central Asia (M49) and Southern Asia (MDG=M49),142,Asia (M49),34,Southern Asia (MDG=M49),,34,Southern Asia (MDG=M49),199,Least Developed Countries (LDCs),,
+52,BB,BRB,Barbados,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+112,BY,BLR,Belarus,513,Northern America (M49) and Europe (M49),150,Europe (M49),151,Eastern Europe (M49),,514,Developed regions (MDG),,,,
+56,BE,BEL,Belgium,513,Northern America (M49) and Europe (M49),150,Europe (M49),155,Western Europe (M49),,514,Developed regions (MDG),,,,
+84,BZ,BLZ,Belize,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),13,Central America (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+204,BJ,BEN,Benin,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+60,BM,BMU,Bermuda,513,Northern America (M49) and Europe (M49),21,Northern America (M49),21,Northern America (M49),,514,Developed regions (MDG),,,,
+64,BT,BTN,Bhutan,62,Central Asia (M49) and Southern Asia (MDG=M49),142,Asia (M49),34,Southern Asia (MDG=M49),,34,Southern Asia (MDG=M49),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+68,BO,BOL,Bolivia (Plurinational State of),419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),5,South America (M49),,419,Latin America and the Caribbean (MDG=M49),,,432,Landlocked developing countries (LLDCs)
+535,AN,BES,"Bonaire, Sint Eustatius and Saba",419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+70,BA,BIH,Bosnia and Herzegovina,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,,
+72,BW,BWA,Botswana,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),18,Southern Africa (M49),,738,Sub-Saharan Africa (MDG),,,432,Landlocked developing countries (LLDCs)
+76,BR,BRA,Brazil,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),5,South America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+86,IO,IOT,British Indian Ocean Territory,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),,,,
+92,VG,VGB,British Virgin Islands,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+96,BN,BRN,Brunei Darussalam,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),35,South-eastern Asia (MDG=M49),,35,South-eastern Asia (MDG=M49),,,,
+100,BG,BGR,Bulgaria,513,Northern America (M49) and Europe (M49),150,Europe (M49),151,Eastern Europe (M49),,514,Developed regions (MDG),,,,
+854,BF,BFA,Burkina Faso,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+108,BI,BDI,Burundi,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+132,CV,CPV,Cabo Verde,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),,,722,Small island developing States (SIDS)
+116,KH,KHM,Cambodia,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),35,South-eastern Asia (MDG=M49),,35,South-eastern Asia (MDG=M49),199,Least Developed Countries (LDCs),,
+120,CM,CMR,Cameroon,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),17,Middle Africa (M49),,738,Sub-Saharan Africa (MDG),,,,
+124,CA,CAN,Canada,513,Northern America (M49) and Europe (M49),21,Northern America (M49),21,Northern America (M49),,514,Developed regions (MDG),,,,
+136,KY,CYM,Cayman Islands,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+140,CF,CAF,Central African Republic,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),17,Middle Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+148,TD,TCD,Chad,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),17,Middle Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+830,0,<NA>,Channel Islands,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+152,CL,CHL,Chile,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),5,South America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+156,CN,CHN,China,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),30,Eastern Asia (M49),,518,Eastern Asia (MDG),,,,
+344,HK,HKG,"China, Hong Kong Special Administrative Region",753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),30,Eastern Asia (M49),,518,Eastern Asia (MDG),,,,
+446,MO,MAC,"China, Macao Special Administrative Region",753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),30,Eastern Asia (M49),,518,Eastern Asia (MDG),,,,
+162,CX,CXR,Christmas Island,53,Australia and New Zealand (M49),9,Oceania (M49),53,Australia and New Zealand (M49),,514,Developed regions (MDG),,,,
+166,CC,CCK,Cocos (Keeling) Islands,53,Australia and New Zealand (M49),9,Oceania (M49),53,Australia and New Zealand (M49),,514,Developed regions (MDG),,,,
+170,CO,COL,Colombia,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),5,South America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+174,KM,COM,Comoros,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),722,Small island developing States (SIDS)
+178,CG,COG,Congo,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),17,Middle Africa (M49),,738,Sub-Saharan Africa (MDG),,,,
+184,CK,COK,Cook Islands,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),61,Polynesia (M49),,543,Oceania (MDG),,,722,Small island developing States (SIDS)
+188,CR,CRI,Costa Rica,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),13,Central America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+384,CI,CIV,Côte d'Ivoire,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),,,,
+191,HR,HRV,Croatia,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,,
+192,CU,CUB,Cuba,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+531,AN,CUW,Curaçao,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+196,CY,CYP,Cyprus,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,514,Developed regions (MDG),,,,
+203,CZ,CZE,Czechia,513,Northern America (M49) and Europe (M49),150,Europe (M49),151,Eastern Europe (M49),,514,Developed regions (MDG),,,,
+408,KP,PRK,Democratic People's Republic of Korea,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),30,Eastern Asia (M49),,518,Eastern Asia (MDG),,,,
+180,CD,COD,Democratic Republic of the Congo,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),17,Middle Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+208,DK,DNK,Denmark,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+262,DJ,DJI,Djibouti,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+212,DM,DMA,Dominica,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+214,DO,DOM,Dominican Republic,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+218,EC,ECU,Ecuador,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),5,South America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+818,EG,EGY,Egypt,747,Western Asia (M49) and Northern Africa (M49),15,Northern Africa (M49),15,Northern Africa (M49),,746,Northern Africa (MDG),,,,
+222,SV,SLV,El Salvador,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),13,Central America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+226,GQ,GNQ,Equatorial Guinea,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),17,Middle Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+232,ER,ERI,Eritrea,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+233,EE,EST,Estonia,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+231,ET,ETH,Ethiopia,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+238,FK,FLK,Falkland Islands (Malvinas),419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),5,South America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+234,FO,FRO,Faroe Islands,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+242,FJ,FJI,Fiji,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),54,Melanesia (M49),,543,Oceania (MDG),,,722,Small island developing States (SIDS)
+246,FI,FIN,Finland,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+250,FR,FRA,France,513,Northern America (M49) and Europe (M49),150,Europe (M49),155,Western Europe (M49),,514,Developed regions (MDG),,,,
+254,GF,GUF,French Guiana,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),5,South America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+258,PF,PYF,French Polynesia,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),61,Polynesia (M49),,543,Oceania (MDG),,,722,Small island developing States (SIDS)
+260,TF,ATF,French Southern and Antarctic Territories,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),,,,
+266,GA,GAB,Gabon,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),17,Middle Africa (M49),,738,Sub-Saharan Africa (MDG),,,,
+270,GM,GMB,Gambia,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+268,GE,GEO,Georgia,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,135,Caucasus and Central Asia (MDG),,,,
+276,DE,DEU,Germany,513,Northern America (M49) and Europe (M49),150,Europe (M49),155,Western Europe (M49),,514,Developed regions (MDG),,,,
+288,GH,GHA,Ghana,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),,,,
+292,GI,GIB,Gibraltar,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,,
+300,GR,GRC,Greece,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,,
+304,GL,GRL,Greenland,513,Northern America (M49) and Europe (M49),21,Northern America (M49),21,Northern America (M49),,514,Developed regions (MDG),,,,
+308,GD,GRD,Grenada,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+312,GP,GLP,Guadeloupe,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+316,GU,GUM,Guam,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),57,Micronesia (M49),,543,Oceania (MDG),,,722,Small island developing States (SIDS)
+320,GT,GTM,Guatemala,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),13,Central America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+831,GG,GGY,Guernsey,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+324,GN,GIN,Guinea,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+624,GW,GNB,Guinea-Bissau,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),722,Small island developing States (SIDS)
+328,GY,GUY,Guyana,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),5,South America (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+332,HT,HTI,Haiti,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),199,Least Developed Countries (LDCs),722,Small island developing States (SIDS)
+334,HM,HMD,Heard Island and McDonald Islands,53,Australia and New Zealand (M49),9,Oceania (M49),53,Australia and New Zealand (M49),,514,Developed regions (MDG),,,,
+336,VA,VAT,Holy See,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,,
+340,HN,HND,Honduras,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),13,Central America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+348,HU,HUN,Hungary,513,Northern America (M49) and Europe (M49),150,Europe (M49),151,Eastern Europe (M49),,514,Developed regions (MDG),,,,
+352,IS,ISL,Iceland,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+356,IN,IND,India,62,Central Asia (M49) and Southern Asia (MDG=M49),142,Asia (M49),34,Southern Asia (MDG=M49),,34,Southern Asia (MDG=M49),,,,
+360,ID,IDN,Indonesia,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),35,South-eastern Asia (MDG=M49),,35,South-eastern Asia (MDG=M49),,,,
+364,IR,IRN,Iran (Islamic Republic of),62,Central Asia (M49) and Southern Asia (MDG=M49),142,Asia (M49),34,Southern Asia (MDG=M49),,34,Southern Asia (MDG=M49),,,,
+368,IQ,IRQ,Iraq,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,485,Western Asia (MDG),,,,
+372,IE,IRL,Ireland,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+833,IM,IMN,Isle of Man,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+376,IL,ISR,Israel,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,514,Developed regions (MDG),,,,
+380,IT,ITA,Italy,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,,
+388,JM,JAM,Jamaica,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+392,JP,JPN,Japan,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),30,Eastern Asia (M49),,514,Developed regions (MDG),,,,
+832,JE,JEY,Jersey,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+400,JO,JOR,Jordan,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,485,Western Asia (MDG),,,,
+398,KZ,KAZ,Kazakhstan,62,Central Asia (M49) and Southern Asia (MDG=M49),142,Asia (M49),143,Central Asia (M49),,135,Caucasus and Central Asia (MDG),,,432,Landlocked developing countries (LLDCs)
+404,KE,KEN,Kenya,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),,,,
+296,KI,KIR,Kiribati,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),57,Micronesia (M49),,543,Oceania (MDG),199,Least Developed Countries (LDCs),722,Small island developing States (SIDS)
+414,KW,KWT,Kuwait,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,485,Western Asia (MDG),,,,
+417,KG,KGZ,Kyrgyzstan,62,Central Asia (M49) and Southern Asia (MDG=M49),142,Asia (M49),143,Central Asia (M49),,135,Caucasus and Central Asia (MDG),,,432,Landlocked developing countries (LLDCs)
+418,LA,LAO,Lao People's Democratic Republic,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),35,South-eastern Asia (MDG=M49),,35,South-eastern Asia (MDG=M49),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+428,LV,LVA,Latvia,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+422,LB,LBN,Lebanon,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,485,Western Asia (MDG),,,,
+426,LS,LSO,Lesotho,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),18,Southern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+430,LR,LBR,Liberia,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+434,LY,LBY,Libya,747,Western Asia (M49) and Northern Africa (M49),15,Northern Africa (M49),15,Northern Africa (M49),,746,Northern Africa (MDG),,,,
+438,LI,LIE,Liechtenstein,513,Northern America (M49) and Europe (M49),150,Europe (M49),155,Western Europe (M49),,514,Developed regions (MDG),,,,
+440,LT,LTU,Lithuania,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+442,LU,LUX,Luxembourg,513,Northern America (M49) and Europe (M49),150,Europe (M49),155,Western Europe (M49),,514,Developed regions (MDG),,,,
+450,MG,MDG,Madagascar,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+454,MW,MWI,Malawi,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+458,MY,MYS,Malaysia,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),35,South-eastern Asia (MDG=M49),,35,South-eastern Asia (MDG=M49),,,,
+462,MV,MDV,Maldives,62,Central Asia (M49) and Southern Asia (MDG=M49),142,Asia (M49),34,Southern Asia (MDG=M49),,34,Southern Asia (MDG=M49),,,722,Small island developing States (SIDS)
+466,ML,MLI,Mali,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+470,MT,MLT,Malta,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,,
+584,MH,MHL,Marshall Islands,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),57,Micronesia (M49),,543,Oceania (MDG),,,722,Small island developing States (SIDS)
+474,MQ,MTQ,Martinique,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+478,MR,MRT,Mauritania,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+480,MU,MUS,Mauritius,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),,,722,Small island developing States (SIDS)
+175,YT,MYT,Mayotte,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),,,,
+484,MX,MEX,Mexico,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),13,Central America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+583,FM,FSM,Micronesia (Federated States of),543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),57,Micronesia (M49),,543,Oceania (MDG),,,722,Small island developing States (SIDS)
+492,MC,MCO,Monaco,513,Northern America (M49) and Europe (M49),150,Europe (M49),155,Western Europe (M49),,514,Developed regions (MDG),,,,
+496,MN,MNG,Mongolia,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),30,Eastern Asia (M49),,518,Eastern Asia (MDG),,,432,Landlocked developing countries (LLDCs)
+499,ME,MNE,Montenegro,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,,
+500,MS,MSR,Montserrat,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+504,MA,MAR,Morocco,747,Western Asia (M49) and Northern Africa (M49),15,Northern Africa (M49),15,Northern Africa (M49),,746,Northern Africa (MDG),,,,
+508,MZ,MOZ,Mozambique,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+104,MM,MMR,Myanmar,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),35,South-eastern Asia (MDG=M49),,35,South-eastern Asia (MDG=M49),199,Least Developed Countries (LDCs),,
+516,NA,NAM,Namibia,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),18,Southern Africa (M49),,738,Sub-Saharan Africa (MDG),,,,
+520,NR,NRU,Nauru,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),57,Micronesia (M49),,543,Oceania (MDG),,,722,Small island developing States (SIDS)
+524,NP,NPL,Nepal,62,Central Asia (M49) and Southern Asia (MDG=M49),142,Asia (M49),34,Southern Asia (MDG=M49),,34,Southern Asia (MDG=M49),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+528,NL,NLD,Netherlands,513,Northern America (M49) and Europe (M49),150,Europe (M49),155,Western Europe (M49),,514,Developed regions (MDG),,,,
+540,NC,NCL,New Caledonia,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),54,Melanesia (M49),,543,Oceania (MDG),,,722,Small island developing States (SIDS)
+554,NZ,NZL,New Zealand,53,Australia and New Zealand (M49),9,Oceania (M49),53,Australia and New Zealand (M49),,514,Developed regions (MDG),,,,
+558,NI,NIC,Nicaragua,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),13,Central America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+562,NE,NER,Niger,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+566,NG,NGA,Nigeria,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),,,,
+570,NU,NIU,Niue,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),61,Polynesia (M49),,543,Oceania (MDG),,,722,Small island developing States (SIDS)
+574,NF,NFK,Norfolk Island,53,Australia and New Zealand (M49),9,Oceania (M49),53,Australia and New Zealand (M49),,514,Developed regions (MDG),,,,
+580,MP,MNP,Northern Mariana Islands,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),57,Micronesia (M49),,543,Oceania (MDG),,,722,Small island developing States (SIDS)
+578,NO,NOR,Norway,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+512,OM,OMN,Oman,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,485,Western Asia (MDG),,,,
+586,PK,PAK,Pakistan,62,Central Asia (M49) and Southern Asia (MDG=M49),142,Asia (M49),34,Southern Asia (MDG=M49),,34,Southern Asia (MDG=M49),,,,
+585,PW,PLW,Palau,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),57,Micronesia (M49),,543,Oceania (MDG),,,722,Small island developing States (SIDS)
+591,PA,PAN,Panama,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),13,Central America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+598,PG,PNG,Papua New Guinea,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),54,Melanesia (M49),,543,Oceania (MDG),,,722,Small island developing States (SIDS)
+600,PY,PRY,Paraguay,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),5,South America (M49),,419,Latin America and the Caribbean (MDG=M49),,,432,Landlocked developing countries (LLDCs)
+604,PE,PER,Peru,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),5,South America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+608,PH,PHL,Philippines,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),35,South-eastern Asia (MDG=M49),,35,South-eastern Asia (MDG=M49),,,,
+612,PN,PCN,Pitcairn,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),61,Polynesia (M49),,543,Oceania (MDG),,,,
+616,PL,POL,Poland,513,Northern America (M49) and Europe (M49),150,Europe (M49),151,Eastern Europe (M49),,514,Developed regions (MDG),,,,
+620,PT,PRT,Portugal,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,,
+630,PR,PRI,Puerto Rico,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+634,QA,QAT,Qatar,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,485,Western Asia (MDG),,,,
+410,KR,KOR,Republic of Korea,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),30,Eastern Asia (M49),,518,Eastern Asia (MDG),,,,
+498,MD,MDA,Republic of Moldova,513,Northern America (M49) and Europe (M49),150,Europe (M49),151,Eastern Europe (M49),,514,Developed regions (MDG),,,432,Landlocked developing countries (LLDCs)
+638,RE,REU,Réunion,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),,,,
+642,RO,ROU,Romania,513,Northern America (M49) and Europe (M49),150,Europe (M49),151,Eastern Europe (M49),,514,Developed regions (MDG),,,,
+643,RU,RUS,Russian Federation,513,Northern America (M49) and Europe (M49),150,Europe (M49),151,Eastern Europe (M49),,514,Developed regions (MDG),,,,
+646,RW,RWA,Rwanda,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+652,BL,BLM,Saint Barthélemy,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+654,SH,SHN,Saint Helena,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),,,,
+659,KN,KNA,Saint Kitts and Nevis,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+662,LC,LCA,Saint Lucia,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+663,MF,MAF,Saint Martin (French Part),419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+666,PM,SPM,Saint Pierre and Miquelon,513,Northern America (M49) and Europe (M49),21,Northern America (M49),21,Northern America (M49),,514,Developed regions (MDG),,,,
+670,VC,VCT,Saint Vincent and the Grenadines,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+882,WS,WSM,Samoa,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),61,Polynesia (M49),,543,Oceania (MDG),,,722,Small island developing States (SIDS)
+674,SM,SMR,San Marino,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,,
+678,ST,STP,Sao Tome and Principe,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),17,Middle Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),722,Small island developing States (SIDS)
+682,SA,SAU,Saudi Arabia,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,485,Western Asia (MDG),,,,
+686,SN,SEN,Senegal,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+688,RS,SRB,Serbia,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,,
+690,SC,SYC,Seychelles,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),,,722,Small island developing States (SIDS)
+694,SL,SLE,Sierra Leone,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+702,SG,SGP,Singapore,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),35,South-eastern Asia (MDG=M49),,35,South-eastern Asia (MDG=M49),,,722,Small island developing States (SIDS)
+534,AN,SXM,Sint Maarten (Dutch part),419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+703,SK,SVK,Slovakia,513,Northern America (M49) and Europe (M49),150,Europe (M49),151,Eastern Europe (M49),,514,Developed regions (MDG),,,,
+705,SI,SVN,Slovenia,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,,
+90,SB,SLB,Solomon Islands,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),54,Melanesia (M49),,543,Oceania (MDG),199,Least Developed Countries (LDCs),722,Small island developing States (SIDS)
+706,SO,SOM,Somalia,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+710,ZA,ZAF,South Africa,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),18,Southern Africa (M49),,738,Sub-Saharan Africa (MDG),,,,
+239,GS,SGS,South Georgia and the South Sandwich Islands,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),5,South America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+728,SS,SSD,South Sudan,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+724,ES,ESP,Spain,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,,
+144,LK,LKA,Sri Lanka,62,Central Asia (M49) and Southern Asia (MDG=M49),142,Asia (M49),34,Southern Asia (MDG=M49),,34,Southern Asia (MDG=M49),,,,
+275,PS,PSE,State of Palestine,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,485,Western Asia (MDG),,,,
+729,SD,SDN,Sudan,747,Western Asia (M49) and Northern Africa (M49),15,Northern Africa (M49),15,Northern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+740,SR,SUR,Suriname,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),5,South America (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+744,SJ,SJM,Svalbard and Jan Mayen Islands,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+748,SZ,SWZ,Swaziland,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),18,Southern Africa (M49),,738,Sub-Saharan Africa (MDG),,,432,Landlocked developing countries (LLDCs)
+752,SE,SWE,Sweden,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+756,CH,CHE,Switzerland,513,Northern America (M49) and Europe (M49),150,Europe (M49),155,Western Europe (M49),,514,Developed regions (MDG),,,,
+760,SY,SYR,Syrian Arab Republic,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,485,Western Asia (MDG),,,,
+762,TJ,TJK,Tajikistan,62,Central Asia (M49) and Southern Asia (MDG=M49),142,Asia (M49),143,Central Asia (M49),,135,Caucasus and Central Asia (MDG),,,432,Landlocked developing countries (LLDCs)
+764,TH,THA,Thailand,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),35,South-eastern Asia (MDG=M49),,35,South-eastern Asia (MDG=M49),,,,
+807,MK,MKD,The former Yugoslav Republic of Macedonia,513,Northern America (M49) and Europe (M49),150,Europe (M49),39,Southern Europe (M49),,514,Developed regions (MDG),,,432,Landlocked developing countries (LLDCs)
+626,TL,TLS,Timor-Leste,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),35,South-eastern Asia (MDG=M49),,35,South-eastern Asia (MDG=M49),199,Least Developed Countries (LDCs),722,Small island developing States (SIDS)
+768,TG,TGO,Togo,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),11,Western Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+772,TK,TKL,Tokelau,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),61,Polynesia (M49),,543,Oceania (MDG),,,,
+776,TO,TON,Tonga,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),61,Polynesia (M49),,543,Oceania (MDG),,,722,Small island developing States (SIDS)
+780,TT,TTO,Trinidad and Tobago,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+788,TN,TUN,Tunisia,747,Western Asia (M49) and Northern Africa (M49),15,Northern Africa (M49),15,Northern Africa (M49),,746,Northern Africa (MDG),,,,
+792,TR,TUR,Turkey,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,485,Western Asia (MDG),,,,
+795,TM,TKM,Turkmenistan,62,Central Asia (M49) and Southern Asia (MDG=M49),142,Asia (M49),143,Central Asia (M49),,135,Caucasus and Central Asia (MDG),,,432,Landlocked developing countries (LLDCs)
+796,TC,TCA,Turks and Caicos Islands,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+798,TV,TUV,Tuvalu,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),61,Polynesia (M49),,543,Oceania (MDG),199,Least Developed Countries (LDCs),722,Small island developing States (SIDS)
+800,UG,UGA,Uganda,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+804,UA,UKR,Ukraine,513,Northern America (M49) and Europe (M49),150,Europe (M49),151,Eastern Europe (M49),,514,Developed regions (MDG),,,,
+784,AE,ARE,United Arab Emirates,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,485,Western Asia (MDG),,,,
+826,GB,GBR,United Kingdom of Great Britain and Northern Ireland,513,Northern America (M49) and Europe (M49),150,Europe (M49),154,Northern Europe (M49),,514,Developed regions (MDG),,,,
+834,TZ,TZA,United Republic of Tanzania,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),,
+581,UM,UMI,United States minor outlying islands,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),57,Micronesia (M49),,543,Oceania (MDG),,,,
+840,US,USA,United States of America,513,Northern America (M49) and Europe (M49),21,Northern America (M49),21,Northern America (M49),,514,Developed regions (MDG),,,,
+850,VI,VIR,United States Virgin Islands,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),29,Caribbean (M49),,419,Latin America and the Caribbean (MDG=M49),,,722,Small island developing States (SIDS)
+858,UY,URY,Uruguay,419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),5,South America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+860,UZ,UZB,Uzbekistan,62,Central Asia (M49) and Southern Asia (MDG=M49),142,Asia (M49),143,Central Asia (M49),,135,Caucasus and Central Asia (MDG),,,432,Landlocked developing countries (LLDCs)
+548,VU,VUT,Vanuatu,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),54,Melanesia (M49),,543,Oceania (MDG),199,Least Developed Countries (LDCs),722,Small island developing States (SIDS)
+862,VE,VEN,Venezuela (Bolivarian Republic of),419,Latin America and the Caribbean (MDG=M49),419,Latin America and the Caribbean (MDG=M49),5,South America (M49),,419,Latin America and the Caribbean (MDG=M49),,,,
+704,VN,VNM,Viet Nam,753,Eastern Asia (M49) and South-eastern Asia (MDG=M49),142,Asia (M49),35,South-eastern Asia (MDG=M49),,35,South-eastern Asia (MDG=M49),,,,
+876,WF,WLF,Wallis and Futuna Islands,543,Oceania (M49) excluding Australia and New Zealand (M49),9,Oceania (M49),61,Polynesia (M49),,543,Oceania (MDG),,,,
+732,EH,ESH,Western Sahara,747,Western Asia (M49) and Northern Africa (M49),15,Northern Africa (M49),15,Northern Africa (M49),,746,Northern Africa (MDG),,,,
+887,YE,YEM,Yemen,747,Western Asia (M49) and Northern Africa (M49),142,Asia (M49),145,Western Asia (M49),,485,Western Asia (MDG),199,Least Developed Countries (LDCs),,
+894,ZM,ZMB,Zambia,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),199,Least Developed Countries (LDCs),432,Landlocked developing countries (LLDCs)
+716,ZW,ZWE,Zimbabwe,202,Sub-Saharan Africa (M49),202,Sub-Saharan Africa (M49),14,Eastern Africa (M49),,738,Sub-Saharan Africa (MDG),,,432,Landlocked developing countries (LLDCs)

@@ -1,0 +1,98 @@
+Domain Code,Domain,Country Code,Country,Element Code,Element,Item Code,Item,Year Code,Year,Unit,Value,Flag,Flag Description
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2805,Rice (Milled Equivalent),2013,2013,kcal/capita/day,541,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2511,Wheat and products,2013,2013,kcal/capita/day,527,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2542,Sugar (Raw Equivalent),2013,2013,kcal/capita/day,200,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2514,Maize and products,2013,2013,kcal/capita/day,147,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2848,Milk - Excluding Butter,2013,2013,kcal/capita/day,138,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2733,Pigmeat,2013,2013,kcal/capita/day,124,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2571,Soyabean Oil,2013,2013,kcal/capita/day,82,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2605,"Vegetables, Other",2013,2013,kcal/capita/day,74,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2531,Potatoes and products,2013,2013,kcal/capita/day,64,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2734,Poultry Meat,2013,2013,kcal/capita/day,59,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2577,Palm Oil,2013,2013,kcal/capita/day,52,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2731,Bovine Meat,2013,2013,kcal/capita/day,40,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2532,Cassava and products,2013,2013,kcal/capita/day,37,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2549,"Pulses, Other and products",2013,2013,kcal/capita/day,37,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2744,Eggs,2013,2013,kcal/capita/day,36,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2573,Sunflowerseed Oil,2013,2013,kcal/capita/day,35,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2574,Rape and Mustard Oil,2013,2013,kcal/capita/day,34,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2656,Beer,2013,2013,kcal/capita/day,33,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2625,"Fruits, Other",2013,2013,kcal/capita/day,31,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2740,"Butter, Ghee",2013,2013,kcal/capita/day,30,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2737,"Fats, Animals, Raw",2013,2013,kcal/capita/day,29,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2518,Sorghum and products,2013,2013,kcal/capita/day,28,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2517,Millet and products,2013,2013,kcal/capita/day,27,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2556,Groundnuts (Shelled Eq),2013,2013,kcal/capita/day,25,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2543,"Sweeteners, Other",2013,2013,kcal/capita/day,24,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2658,"Beverages, Alcoholic",2013,2013,kcal/capita/day,24,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2546,Beans,2013,2013,kcal/capita/day,23,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2533,Sweet potatoes,2013,2013,kcal/capita/day,22,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2615,Bananas,2013,2013,kcal/capita/day,21,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2551,Nuts and products,2013,2013,kcal/capita/day,16,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2555,Soyabeans,2013,2013,kcal/capita/day,14,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2535,Yams,2013,2013,kcal/capita/day,13,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2572,Groundnut Oil,2013,2013,kcal/capita/day,13,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2575,Cottonseed Oil,2013,2013,kcal/capita/day,13,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2761,Freshwater Fish,2013,2013,kcal/capita/day,13,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2560,Coconuts - Incl Copra,2013,2013,kcal/capita/day,12,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2617,Apples and products,2013,2013,kcal/capita/day,12,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2601,Tomatoes and products,2013,2013,kcal/capita/day,11,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2602,Onions,2013,2013,kcal/capita/day,11,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2732,Mutton & Goat Meat,2013,2013,kcal/capita/day,11,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2580,Olive Oil,2013,2013,kcal/capita/day,10,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2541,Sugar non-centrifugal,2013,2013,kcal/capita/day,9,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2611,"Oranges, Mandarines",2013,2013,kcal/capita/day,9,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2547,Peas,2013,2013,kcal/capita/day,8,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2582,Maize Germ Oil,2013,2013,kcal/capita/day,8,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2616,Plantains,2013,2013,kcal/capita/day,8,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2763,Pelagic Fish,2013,2013,kcal/capita/day,8,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2513,Barley and products,2013,2013,kcal/capita/day,7,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2576,Palmkernel Oil,2013,2013,kcal/capita/day,7,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2578,Coconut Oil,2013,2013,kcal/capita/day,7,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2620,Grapes and products (excl wine),2013,2013,kcal/capita/day,7,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2645,"Spices, Other",2013,2013,kcal/capita/day,7,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2736,"Offals, Edible",2013,2013,kcal/capita/day,7,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2515,Rye and products,2013,2013,kcal/capita/day,6,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2520,"Cereals, Other",2013,2013,kcal/capita/day,6,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2534,"Roots, Other",2013,2013,kcal/capita/day,6,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2586,"Oilcrops Oil, Other",2013,2013,kcal/capita/day,6,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2655,Wine,2013,2013,kcal/capita/day,6,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2762,Demersal Fish,2013,2013,kcal/capita/day,6,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2633,Cocoa Beans and products,2013,2013,kcal/capita/day,5,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2657,"Beverages, Fermented",2013,2013,kcal/capita/day,5,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2536,Sugar cane,2013,2013,kcal/capita/day,4,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2619,Dates,2013,2013,kcal/capita/day,4,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2641,Pimento,2013,2013,kcal/capita/day,4,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2516,Oats,2013,2013,kcal/capita/day,3,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2561,Sesame seed,2013,2013,kcal/capita/day,3,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2581,Ricebran Oil,2013,2013,kcal/capita/day,3,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2618,Pineapples and products,2013,2013,kcal/capita/day,3,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2735,"Meat, Other",2013,2013,kcal/capita/day,3,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2745,Honey,2013,2013,kcal/capita/day,2,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2558,Rape and Mustardseed,2013,2013,kcal/capita/day,2,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2579,Sesameseed Oil,2013,2013,kcal/capita/day,2,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2743,Cream,2013,2013,kcal/capita/day,2,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2764,"Marine Fish, Other",2013,2013,kcal/capita/day,2,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2765,Crustaceans,2013,2013,kcal/capita/day,2,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2775,Aquatic Plants,2013,2013,kcal/capita/day,2,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2557,Sunflower seed,2013,2013,kcal/capita/day,1,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2563,Olives (including preserved),2013,2013,kcal/capita/day,1,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2570,"Oilcrops, Other",2013,2013,kcal/capita/day,1,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2612,"Lemons, Limes and products",2013,2013,kcal/capita/day,1,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2613,Grapefruit and products,2013,2013,kcal/capita/day,1,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2614,"Citrus, Other",2013,2013,kcal/capita/day,1,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2630,Coffee and products,2013,2013,kcal/capita/day,1,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2635,Tea (including mate),2013,2013,kcal/capita/day,1,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2766,Cephalopods,2013,2013,kcal/capita/day,1,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2767,"Molluscs, Other",2013,2013,kcal/capita/day,1,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2680,Infant food,2013,2013,kcal/capita/day,1,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2899,Miscellaneous,2013,2013,kcal/capita/day,1,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2537,Sugar beet,2013,2013,kcal/capita/day,0,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2559,Cottonseed,2013,2013,kcal/capita/day,0,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2562,Palm kernels,2013,2013,kcal/capita/day,0,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2640,Pepper,2013,2013,kcal/capita/day,0,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2642,Cloves,2013,2013,kcal/capita/day,0,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2781,"Fish, Body Oil",2013,2013,kcal/capita/day,0,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2782,"Fish, Liver Oil",2013,2013,kcal/capita/day,0,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2768,"Meat, Aquatic Mammals",2013,2013,kcal/capita/day,0,Fc,Calculated data
+FBS,Food Balance Sheets,5000,World,664,Food supply (kcal/capita/day),2769,"Aquatic Animals, Others",2013,2013,kcal/capita/day,0,Fc,Calculated data

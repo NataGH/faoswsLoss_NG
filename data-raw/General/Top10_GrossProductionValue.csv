@@ -1,0 +1,188 @@
+Domain Code,Domain,Area Code,Area,Element Code,Element,Item Code,Item,Year Code,Year,Unit,Value,Flag,Flag Description
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),27,"Rice, paddy",2005,2005,1000 Int. $,176746456.6,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),882,"Milk, whole fresh cow",2005,2005,1000 Int. $,169587725.5,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),944,"Meat indigenous, cattle",2005,2005,1000 Int. $,160143548.2,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1055,"Meat indigenous, pig",2005,2005,1000 Int. $,146832924.5,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),56,Maize,2005,2005,1000 Int. $,101101074.3,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1094,"Meat indigenous, chicken",2005,2005,1000 Int. $,100076775.9,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),15,Wheat,2005,2005,1000 Int. $,99427005.12,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),236,Soybeans,2005,2005,1000 Int. $,58852266.17,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),116,Potatoes,2005,2005,1000 Int. $,55138936.6,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),388,Tomatoes,2005,2005,1000 Int. $,47789902.75,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1062,"Eggs, hen, in shell",2005,2005,1000 Int. $,46971409.35,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),463,"Vegetables, fresh nes",2005,2005,1000 Int. $,43941489.17,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),156,Sugar cane,2005,2005,1000 Int. $,43209885.52,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),560,Grapes,2005,2005,1000 Int. $,38529397.54,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),767,Cotton lint,2005,2005,1000 Int. $,34991266.99,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),951,"Milk, whole fresh buffalo",2005,2005,1000 Int. $,31422108.91,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),515,Apples,2005,2005,1000 Int. $,26382331.17,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),486,Bananas,2005,2005,1000 Int. $,23339131.7,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1012,"Meat indigenous, sheep",2005,2005,1000 Int. $,22243657.03,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),125,Cassava,2005,2005,1000 Int. $,21577222.36,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),571,"Mangoes, mangosteens, guavas",2005,2005,1000 Int. $,18955739.53,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),242,"Groundnuts, with shell",2005,2005,1000 Int. $,17403977.57,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),44,Barley,2005,2005,1000 Int. $,16500364.42,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),329,Cottonseed,2005,2005,1000 Int. $,14433877.85,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),257,"Oil, palm",2005,2005,1000 Int. $,14038529.35,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),270,Rapeseed,2005,2005,1000 Int. $,13945958.67,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),403,"Onions, dry",2005,2005,1000 Int. $,13796229,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1091,"Eggs, other bird, in shell",2005,2005,1000 Int. $,13114253.15,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),260,Olives,2005,2005,1000 Int. $,12789250.81,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),137,Yams,2005,2005,1000 Int. $,12539932.19,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),490,Oranges,2005,2005,1000 Int. $,12207693.03,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),401,"Chillies and peppers, green",2005,2005,1000 Int. $,11889924.24,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),176,"Beans, dry",2005,2005,1000 Int. $,11409365.98,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1032,"Meat indigenous, goat",2005,2005,1000 Int. $,11106886.03,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),157,Sugar beet,2005,2005,1000 Int. $,10929749.53,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),826,"Tobacco, unmanufactured",2005,2005,1000 Int. $,10749295.82,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),836,"Rubber, natural",2005,2005,1000 Int. $,10638260.62,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),372,Lettuce and chicory,2005,2005,1000 Int. $,10513228.26,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),567,Watermelons,2005,2005,1000 Int. $,10401512.22,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),358,Cabbages and other brassicas,2005,2005,1000 Int. $,9951928.603,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),534,Peaches and nectarines,2005,2005,1000 Int. $,9696122.207,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),122,Sweet potatoes,2005,2005,1000 Int. $,9656606.462,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),449,Mushrooms and truffles,2005,2005,1000 Int. $,9561748.993,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),619,"Fruit, fresh nes",2005,2005,1000 Int. $,9254133.686,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),397,Cucumbers and gherkins,2005,2005,1000 Int. $,9213115.813,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),83,Sorghum,2005,2005,1000 Int. $,9162694.871,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),267,Sunflower seed,2005,2005,1000 Int. $,8456819.47,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),972,"Meat indigenous, buffalo",2005,2005,1000 Int. $,8024631.984,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),656,"Coffee, green",2005,2005,1000 Int. $,8005829.616,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),521,Pears,2005,2005,1000 Int. $,7935430.982,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),406,Garlic,2005,2005,1000 Int. $,7932920.445,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),544,Strawberries,2005,2005,1000 Int. $,7779056.705,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),603,"Fruit, tropical fresh nes",2005,2005,1000 Int. $,7203665.028,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),426,Carrots and turnips,2005,2005,1000 Int. $,6890770.041,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),399,Eggplants (aubergines),2005,2005,1000 Int. $,6858191.176,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1087,"Meat indigenous, turkey",2005,2005,1000 Int. $,6729005.512,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),249,Coconuts,2005,2005,1000 Int. $,6352521.279,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),489,Plantains and others,2005,2005,1000 Int. $,6305244.857,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),367,Asparagus,2005,2005,1000 Int. $,6103662.285,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),536,Plums and sloes,2005,2005,1000 Int. $,5949924.671,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),495,"Tangerines, mandarins, clementines, satsumas",2005,2005,1000 Int. $,5929671.423,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),79,Millet,2005,2005,1000 Int. $,5624962.84,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),221,"Almonds, with shell",2005,2005,1000 Int. $,5499800.898,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),414,"Beans, green",2005,2005,1000 Int. $,5491004.082,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1070,"Meat indigenous, duck",2005,2005,1000 Int. $,5482641.242,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),574,Pineapples,2005,2005,1000 Int. $,5068119.341,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1020,"Milk, whole fresh goat",2005,2005,1000 Int. $,5006450.314,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),568,"Melons, other (inc.cantaloupes)",2005,2005,1000 Int. $,4945812.966,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),497,Lemons and limes,2005,2005,1000 Int. $,4889142.775,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),417,"Peas, green",2005,2005,1000 Int. $,4393471.553,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),987,"Wool, greasy",2005,2005,1000 Int. $,4227591.329,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),661,"Cocoa, beans",2005,2005,1000 Int. $,4199688.636,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),393,Cauliflowers and broccoli,2005,2005,1000 Int. $,4187777.373,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),191,Chick peas,2005,2005,1000 Int. $,4088019.985,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),446,"Maize, green",2005,2005,1000 Int. $,4039933.893,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),667,Tea,2005,2005,1000 Int. $,3916044.616,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1163,"Meat, game",2005,2005,1000 Int. $,3809591.527,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),394,"Pumpkins, squash and gourds",2005,2005,1000 Int. $,3676488.492,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),982,"Milk, whole fresh sheep",2005,2005,1000 Int. $,3613945.374,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),430,Okra,2005,2005,1000 Int. $,3583731.965,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1182,"Honey, natural",2005,2005,1000 Int. $,3480991.533,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1077,"Meat indigenous, geese",2005,2005,1000 Int. $,3387876.959,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),577,Dates,2005,2005,1000 Int. $,3343326.791,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),373,Spinach,2005,2005,1000 Int. $,3325498.729,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),512,"Fruit, citrus nes",2005,2005,1000 Int. $,3238448.613,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),689,"Chillies and peppers, dry",2005,2005,1000 Int. $,3107846.778,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),711,"Anise, badian, fennel, coriander",2005,2005,1000 Int. $,3027150.349,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),217,"Cashew nuts, with shell",2005,2005,1000 Int. $,2801161.901,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),222,"Walnuts, with shell",2005,2005,1000 Int. $,2759702.542,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1144,"Meat indigenous, rabbit",2005,2005,1000 Int. $,2728500.026,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),75,Oats,2005,2005,1000 Int. $,2706475.084,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),136,Taro (cocoyam),2005,2005,1000 Int. $,2437675.667,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),572,Avocados,2005,2005,1000 Int. $,2374407.933,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),531,Cherries,2005,2005,1000 Int. $,2353689.979,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),256,Palm kernels,2005,2005,1000 Int. $,2349971.316,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),289,Sesame seed,2005,2005,1000 Int. $,2341310.251,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),600,Papayas,2005,2005,1000 Int. $,2278614.751,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),187,"Peas, dry",2005,2005,1000 Int. $,2156087.646,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),423,String beans,2005,2005,1000 Int. $,1980543.387,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),526,Apricots,2005,2005,1000 Int. $,1952725.912,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),592,Kiwi fruit,2005,2005,1000 Int. $,1858825.696,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),97,Triticale,2005,2005,1000 Int. $,1832748.042,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),407,"Leeks, other alliaceous vegetables",2005,2005,1000 Int. $,1810113.352,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),197,Pigeon peas,2005,2005,1000 Int. $,1786112.972,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),211,"Pulses, nes",2005,2005,1000 Int. $,1742346.973,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),591,Cashewapple,2005,2005,1000 Int. $,1738125.656,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),71,Rye,2005,2005,1000 Int. $,1699423.434,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),223,Pistachios,2005,2005,1000 Int. $,1698811.527,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),226,Areca nuts,2005,2005,1000 Int. $,1671532.911,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),201,Lentils,2005,2005,1000 Int. $,1649854.529,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),195,"Cow peas, dry",2005,2005,1000 Int. $,1591786.086,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),181,"Broad beans, horse beans, dry",2005,2005,1000 Int. $,1573932.932,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1185,"Silk-worm cocoons, reelable",2005,2005,1000 Int. $,1557611.925,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),558,Berries nes,2005,2005,1000 Int. $,1515919.765,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),149,"Roots and tubers, nes",2005,2005,1000 Int. $,1461594.615,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1166,"Meat, nes",2005,2005,1000 Int. $,1329584.887,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),234,"Nuts, nes",2005,2005,1000 Int. $,1317667.634,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),225,"Hazelnuts, with shell",2005,2005,1000 Int. $,1216400.281,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1120,"Meat indigenous, horse",2005,2005,1000 Int. $,1196042.581,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),108,"Cereals, nes",2005,2005,1000 Int. $,1098602.914,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),587,Persimmons,2005,2005,1000 Int. $,1069222.918,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),220,Chestnut,2005,2005,1000 Int. $,1063435.493,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),723,"Spices, nes",2005,2005,1000 Int. $,1034506.11,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),507,Grapefruit (inc. pomelos),2005,2005,1000 Int. $,1025316.515,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),547,Raspberries,2005,2005,1000 Int. $,1005513.493,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),687,Pepper (piper spp.),2005,2005,1000 Int. $,929565.6346,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),720,Ginger,2005,2005,1000 Int. $,926516.643,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),366,Artichokes,2005,2005,1000 Int. $,925045.6916,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),333,Linseed,2005,2005,1000 Int. $,836026.8109,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),780,Jute,2005,2005,1000 Int. $,782994.8663,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),402,"Onions, shallots, green",2005,2005,1000 Int. $,769448.0331,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),103,"Grain, mixed",2005,2005,1000 Int. $,764247.429,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),459,Chicory roots,2005,2005,1000 Int. $,752372.2453,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),339,Oilseeds nes,2005,2005,1000 Int. $,736445.8686,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),530,"Cherries, sour",2005,2005,1000 Int. $,704602.0492,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1137,"Meat indigenous, camel",2005,2005,1000 Int. $,704338.882,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),550,Currants,2005,2005,1000 Int. $,682442.3788,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),552,Blueberries,2005,2005,1000 Int. $,666935.4873,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),569,Figs,2005,2005,1000 Int. $,662091.3012,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1130,"Milk, whole fresh camel",2005,2005,1000 Int. $,612732.6562,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),265,Castor oil seed,2005,2005,1000 Int. $,584648.4701,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1183,Beeswax,2005,2005,1000 Int. $,568564.6288,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),420,"Vegetables, leguminous nes",2005,2005,1000 Int. $,511943.3739,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),773,Flax fibre and tow,2005,2005,1000 Int. $,477590.5083,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),89,Buckwheat,2005,2005,1000 Int. $,452564.7339,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),677,Hops,2005,2005,1000 Int. $,404261.651,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),541,"Fruit, stone nes",2005,2005,1000 Int. $,392813.617,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),554,Cranberries,2005,2005,1000 Int. $,308264.8209,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),299,Melonseed,2005,2005,1000 Int. $,307940.0471,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),210,Lupins,2005,2005,1000 Int. $,286768.7405,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),549,Gooseberries,2005,2005,1000 Int. $,255854.3175,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),693,Cinnamon (canella),2005,2005,1000 Int. $,244468.1275,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),135,Yautia (cocoyam),2005,2005,1000 Int. $,237754.9021,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),698,Cloves,2005,2005,1000 Int. $,232860.3238,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),292,Mustard seed,2005,2005,1000 Int. $,231920.1696,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),789,Sisal,2005,2005,1000 Int. $,201686.9496,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),205,Vetches,2005,2005,1000 Int. $,190560.4672,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),523,Quinces,2005,2005,1000 Int. $,185906.7752,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),280,Safflower seed,2005,2005,1000 Int. $,185353.6947,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),788,Ramie,2005,2005,1000 Int. $,166971.1165,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),702,"Nutmeg, mace and cardamoms",2005,2005,1000 Int. $,166962.9302,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),782,"Bastfibres, other",2005,2005,1000 Int. $,163520.3913,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),94,Fonio,2005,2005,1000 Int. $,144815.7964,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),821,Fibre crops nes,2005,2005,1000 Int. $,142374.1444,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),224,Kola nuts,2005,2005,1000 Int. $,133819.8054,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),692,Vanilla,2005,2005,1000 Int. $,124520.0085,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1122,"Meat indigenous, ass",2005,2005,1000 Int. $,105101.7017,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),671,Maté,2005,2005,1000 Int. $,100645.8364,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),263,Karite nuts (sheanuts),2005,2005,1000 Int. $,94501.26485,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),101,Canary seed,2005,2005,1000 Int. $,80828.55031,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),216,"Brazil nuts, with shell",2005,2005,1000 Int. $,79306.43508,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),809,Manila fibre (abaca),2005,2005,1000 Int. $,77802.27785,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),296,Poppy seed,2005,2005,1000 Int. $,61277.93243,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),275,Tung nuts,2005,2005,1000 Int. $,59201.22898,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1084,"Meat indigenous, bird nes",2005,2005,1000 Int. $,55294.20833,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),461,Carobs,2005,2005,1000 Int. $,37727.58513,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),92,Quinoa,2005,2005,1000 Int. $,37709.64443,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1161,"Meat indigenous, other camelids",2005,2005,1000 Int. $,33441.36899,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1124,"Meat indigenous, mule",2005,2005,1000 Int. $,32158.84288,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),161,"Sugar crops, nes",2005,2005,1000 Int. $,27095.2191,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),800,Agave fibres nes,2005,2005,1000 Int. $,25433.56209,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),203,Bambara beans,2005,2005,1000 Int. $,19215.6389,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),777,Hemp tow waste,2005,2005,1000 Int. $,18245.06368,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),1154,"Meat indigenous, rodents",2005,2005,1000 Int. $,14530.24492,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),754,"Pyrethrum, dried",2005,2005,1000 Int. $,11341.20935,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),542,"Fruit, pome nes",2005,2005,1000 Int. $,10405.6044,*,Unofficial figure
+QV,Value of Agricultural Production,5000,World,152,Gross Production Value (constant 2004-2006 1000 I$),839,"Gums, natural",2005,2005,1000 Int. $,8507.84466,*,Unofficial figure

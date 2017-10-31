@@ -1,0 +1,243 @@
+Domain Code,Domain,AreaCode,AreaName,ElementCode,ElementName,ItemCode,ItemName,Year,Value,Flag,FlagD
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),15,Wheat,2005,157.78,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),27,"Rice, paddy",2005,278.66,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),44,Barley,2005,118.98,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),56,Maize (corn),2005,141.66,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),71,Rye,2005,112.07,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),75,Oats,2005,114.21,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),79,Millet,2005,181.45,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),83,Sorghum,2005,153.8,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),89,Buckwheat,2005,217.07,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),92,Quinoa,2005,645.24,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),94,Fonio,2005,391.05,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),97,Triticale,2005,137.09,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),101,Canary seed,2005,272.68,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),103,"Grain, mixed",2005,154.44,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),108,"Cereals, nes",2005,261.68,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),116,Potatoes,2005,168.78,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),122,Sweet potatoes,2005,75.53,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),125,Cassava,2005,104.46,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),135,Yautia (cocoyam),2005,487,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),136,Taro (cocoyam),2005,212.09,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),137,Yams,2005,255.04,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),149,"Roots and tubers, nes",2005,171.01,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),156,Sugar cane,2005,32.84,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),157,Sugar beet,2005,43.01,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),161,"Sugar crops, nes",2005,29.49,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),176,"Beans, dry",2005,601.39,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),181,"Broad beans, horse beans, dry",2005,355.45,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),187,"Peas, dry",2005,190.88,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),191,Chick peas,2005,484.07,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),195,"Cow peas, dry",2005,335.78,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),197,Pigeon peas,2005,534.23,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),201,Lentils,2005,408.36,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),203,Bambara beans,2005,196.82,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),205,Vetches,2005,176.12,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),210,Lupins,2005,173.57,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),211,"Pulses, nes",2005,555.83,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),216,"Brazil nuts, with shell",2005,896.84,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),217,"Cashew nuts, with shell",2005,875.31,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),220,Chestnut,2005,777.68,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),221,"Almonds, with shell",2005,2950.97,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),222,"Walnuts, with shell",2005,1552.63,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),223,Pistachios,2005,3284.14,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),224,Kola nuts,2005,599.41,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),225,"Hazelnuts, with shell",2005,1602.91,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),226,Areca nuts,2005,1747.31,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),234,"Nuts, nes",2005,1833.28,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),236,Soybeans,2005,274.29,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),242,"Groundnuts, with shell",2005,451.14,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),243,"Groundnuts, shelled",2005,302.27,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),249,Coconuts,2005,110.57,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),251,Copra,2005,340.04,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),254,"Oil, palm fruit",2005,42.95,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),256,Palm kernels,2005,258.12,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),257,"Oil, palm",2005,435.06,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),260,Olives,2005,800.7,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),261,"Oil, olive, virgin",2005,2838.97,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),263,Karite nuts (sheanuts),2005,136.38,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),265,Castor oil seed,2005,390.25,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),267,Sunflower seed,2005,275.21,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),270,Rapeseed,2005,278.94,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),275,Tung nuts,2005,137.72,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),280,Safflower seed,2005,315.18,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),289,Sesame seed,2005,676.93,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),292,Mustard seed,2005,410.22,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),296,Poppy seed,2005,811.89,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),299,Melonseed,2005,430.05,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),306,Vegetable tallow,2005,125.18,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),307,"Oil, stillingia",2005,135.72,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),310,Kapok fruit,2005,53.28,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),311,Kapokseed in shell,2005,82.23,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),328,Seed cotton,2005,671.59,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),329,Cottonseed,2005,330.04,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),333,Linseed,2005,303.21,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),339,Oilseeds nes,2005,311.52,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),358,Cabbages and other brassicas,2005,149.64,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),366,Artichokes,2005,720.39,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),367,Asparagus,2005,910.16,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),372,Lettuce and chicory,2005,467.51,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),373,Spinach,2005,234.19,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),378,Cassava leaves,2005,106.33,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),388,Tomatoes,2005,369.56,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),393,Cauliflowers and broccoli,2005,239.57,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),394,"Pumpkins, squash and gourds",2005,175.34,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),397,Cucumbers and gherkins,2005,198.55,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),399,Eggplants (aubergines),2005,213.8,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),401,"Chillies and peppers, green",2005,470.76,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),402,"Onions, shallots, green",2005,204.06,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),403,"Onions, dry",2005,210.03,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),406,Garlic,2005,526.34,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),407,"Leeks, other alliaceous vegetables",2005,894.73,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),414,"Beans, green",2005,355.56,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),417,"Peas, green",2005,330.95,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),420,"Vegetables, leguminous nes",2005,343.79,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),423,String beans,2005,953.54,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),426,Carrots and turnips,2005,249.5,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),430,Okra,2005,639.49,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),446,"Maize, green",2005,413.82,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),449,Mushrooms and truffles,2005,1804.26,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),459,Chicory roots,2005,776.81,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),461,Carobs,2005,210.33,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),463,"Vegetables, fresh nes",2005,188.44,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),486,Bananas,2005,281.63,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),489,Plantains,2005,206.46,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),490,Oranges,2005,193.26,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),495,"Tangerines, mandarins, clementines, satsumas",2005,247.02,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),497,Lemons and limes,2005,396.48,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),507,Grapefruit (inc. pomelos),2005,224.84,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),512,"Fruit, citrus nes",2005,452.05,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),515,Apples,2005,422.91,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),521,Pears,2005,408.83,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),523,Quinces,2005,394.82,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),526,Apricots,2005,552.11,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),530,"Cherries, sour",2005,610.62,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),531,Cherries,2005,1271.27,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),534,Peaches and nectarines,2005,544.41,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),536,Plums and sloes,2005,596.77,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),541,"Fruit, stone nes",2005,799.56,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),542,"Fruit, pome nes",2005,217.24,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),544,Strawberries,2005,1357.28,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),547,Raspberries,2005,1935,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),549,Gooseberries,2005,1407.69,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),550,Currants,2005,894.97,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),552,Blueberries,2005,2531.49,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),554,Cranberries,2005,829.38,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),558,Berries nes,2005,1742.28,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),560,Grapes,2005,571.62,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),561,Raisins,2005,340.54,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),564,Wine,2005,387.22,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),567,Watermelons,2005,113.92,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),568,"Melons, other (inc.cantaloupes)",2005,184.09,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),569,Figs,2005,597,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),571,"Mangoes, mangosteens, guavas",2005,599.17,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),572,Avocados,2005,692.96,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),574,Pineapples,2005,285.05,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),577,Dates,2005,510.7,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),587,Persimmons,2005,322.57,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),591,Cashewapple,2005,943.66,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),592,Kiwi fruit,2005,815.69,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),600,Papayas,2005,283.81,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),603,"Fruit, tropical fresh nes",2005,408.67,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),619,"Fruit, fresh nes",2005,349.03,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),636,"Forage and silage, maize",2005,40.19,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),637,"Forage and silage, sorghum",2005,30.58,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),638,"Forage and silage, rye grass",2005,23.32,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),640,"Forage and silage, clover",2005,43.19,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),641,"Forage and silage, alfalfa",2005,74.92,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),656,"Coffee, green",2005,1074.36,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),661,"Cocoa, beans",2005,1038.49,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),667,Tea,2005,1063.48,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),671,Mat?,2005,130.89,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),674,Tea nes,2005,1597.07,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),677,Hops,2005,3401.65,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),687,Pepper (piper spp.),2005,2084.3,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),689,"Chillies and peppers, dry",2005,1095.43,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),692,Vanilla,2005,16601.33,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),693,Cinnamon (canella),2005,1392.09,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),698,Cloves,2005,2216.58,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),702,"Nutmeg, mace and cardamoms",2005,2082.25,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),711,"Anise, badian, fennel, coriander",2005,5527.22,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),720,Ginger,2005,677.23,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),723,"Spices, nes",2005,695.16,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),737,"Oil, citronella",2005,2876.01,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),754,"Pyrethrum, dried",2005,951.84,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),767,Cotton lint,2005,1429.2,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),773,Flax fibre and tow,2005,471.61,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),777,Hemp tow waste,2005,227.53,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),778,Kapok fibre,2005,217.71,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),780,Jute,2005,283.21,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),782,"Bastfibres, other",2005,479.96,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),788,Ramie,2005,594.45,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),789,Sisal,2005,592.68,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),800,Agave fibres nes,2005,489.62,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),809,Manila fibre (abaca),2005,738.81,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),821,Fibre crops nes,2005,498.73,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),826,"Tobacco, unmanufactured",2005,1592.76,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),836,"Rubber, natural",2005,1143.84,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),837,Rubber natural dry,2005,1748.68,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),839,"Gums, natural",2005,336.21,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),867,"Meat, cattle",2005,2714.17,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),882,"Milk, whole fresh cow",2005,312.06,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),944,"Meat indigenous, cattle",2005,2701.38,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),945,"Meat live weight, cattle",2005,1404.71,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),947,"Meat, buffalo",2005,2701.34,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),951,"Milk, whole fresh buffalo",2005,398.87,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),972,"Meat indigenous, buffalo",2005,2691.74,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),973,"Meat live weight, buffalo",2005,1345.87,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),977,"Meat, sheep",2005,2736.63,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),982,"Milk, whole fresh sheep",2005,389.41,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),987,"Wool, greasy",2005,1913.12,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1012,"Meat indigenous, sheep",2005,2722.8,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1013,"Meat live weight, sheep",2005,1361.4,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1017,"Meat, goat",2005,2393.33,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1020,"Milk, whole fresh goat",2005,335.58,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1032,"Meat indigenous, goat",2005,2396.09,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1033,"Meat live weight, goat",2005,1198.04,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1035,"Meat, pig",2005,1536.99,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1055,"Meat indigenous, pig",2005,1537.24,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1056,"Meat live weight, pig",2005,1168.3,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1058,"Meat, chicken",2005,1425.71,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1062,"Eggs, hen, in shell",2005,829.39,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1069,"Meat, duck",2005,1646.56,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1070,"Meat indigenous, duck",2005,1647.57,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1071,"Meat live weight, duck",2005,1285.1,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1073,"Meat, goose and guinea fowl",2005,1642.73,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1077,"Meat indigenous, geese",2005,1642.32,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1078,"Meat live weight, goose",2005,1281.01,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1080,"Meat, turkey",2005,1313.75,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1084,"Meat indigenous, bird nes",2005,2930.57,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1085,"Meat live weight, poultry, other",2005,2285.85,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1087,"Meat indigenous, turkey",2005,1306.94,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1088,"Meat live weight, turkey",2005,1019.41,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1089,"Meat, bird nes",2005,2931.3,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1091,"Eggs, other bird, in shell",2005,2884.22,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1094,"Meat indigenous, chicken",2005,1424.41,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1095,"Meat live weight, chicken",2005,1111.04,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1097,"Meat, horse",2005,1559.23,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1108,"Meat, ass",2005,549.89,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1111,"Meat, mule",2005,527.97,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1120,"Meat indigenous, horse",2005,1557.65,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1121,"Meat live weight, horse",2005,778.82,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1122,"Meat indigenous, ass",2005,550.44,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1123,"Meat live weight, ass",2005,275.22,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1124,"Meat indigenous, mule",2005,527.91,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1125,"Meat live weight, mule",2005,263.95,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1127,"Meat, camel",2005,2317.98,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1130,"Milk, whole fresh camel",2005,340.97,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1137,"Meat indigenous, camel",2005,2095.75,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1138,"Meat live weight, camel",2005,985,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1141,"Meat, rabbit",2005,1854.7,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1144,"Meat indigenous, rabbit",2005,1857.96,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1145,"Meat live weight, rabbit",2005,1412.05,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1151,"Meat, other rodents",2005,818.65,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1154,"Meat indigenous, rodents",2005,818.66,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1155,"Meat live weight, rodents",2005,622.18,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1158,"Meat, other camelids",2005,2137.82,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1161,"Meat indigenous, other camelids",2005,2137.82,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1162,"Meat live weight, camelids, other",2005,1004.78,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1163,"Meat, game",2005,2175.87,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1166,"Meat, nes",2005,1321.56,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1182,"Honey, natural",2005,2509.43,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1183,Beeswax,2005,9363.79,Fc,Calculated data
+PX,Producer Prices - Supplementary,0,dummy,5533,Producer Price (Int $/tonne),1185,"Silk-worm cocoons, reelable",2005,3148.98,Fc,Calculated data
