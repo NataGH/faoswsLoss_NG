@@ -10,6 +10,7 @@
 #install.packages('faosws')
 #install_github(repo = "SWS-Methodology/faoswsFlag")
 #install_github(repo = "SWS-Methodology/faoswsUtil")
+#install.packages("faoswsLoss", repo = "http://hqlprsws1.hq.un.fao.org/fao-sws-cran/") 
 
 library(jsonlite)
 library(XML)
@@ -112,13 +113,12 @@ flagMethodPrefix = "flagMethod_"
 
 ##### Load Data ######
 ## These two tables are constantly needing to be merged - country groups and food groups
-CountryGroup <- read.csv(paste(githubsite, 'General/a2017regionalgroupings_SDG_02Feb2017.csv', sep=''))
+CountryGroup <- as.data.table(read.csv(paste(githubsite, 'General/a2017regionalgroupings_SDG_02Feb2017.csv', sep='')))
 CountryGroup$CountryName <- tolower(CountryGroup$CountryName)
 
 FAOCrops <- read.csv(paste(githubsite, 'General/Cpc.csv', sep='')) ## All Crops in the CPC system
 load(paste(githubsite, 'General/fbsTree.RData',sep=""))
-
-
+names(fbsTree) <- c("fbsID4","measuredItemCPC", "fbsID1","fbsID2","fbsID3")
 
 #### SWS Data #####
 ## There are two datasets from the SWS,which is loading the protected data for the Loss Training data
@@ -126,9 +126,8 @@ load(paste(githubsite, 'General/fbsTree.RData',sep=""))
 
 load(paste(githubsite, 'General/finalModelData.RData',sep=""))# Protected data from the SWS 
 lossData <- finalModelData
-#lossData = nameData("agriculture", "aproduction", lossData)
+
 lossData[, percent := Value_measuredElement_5016/(Value_measuredElement_5510)]
-#lossData[geographicAreaM49 == 840 & measuredItemCPC_description == "Bananas"]
 
 lossData[, timePointYears := as.numeric(timePointYears)]
 lossData[order(-timePointYears, geographicAreaM49, measuredItemCPC), ]
@@ -157,38 +156,16 @@ SWS__data <- SWS__data[,c("ISOCode","Year","Country","measuredItemCPC","Crop","L
 ### SWS - set 2 ###
 
 
-ProdQtySWS <- GetData(swsContext.datasets[[1]])
-ProdQtySWS$geographicAreaM49 <- as.integer(ProdQtySWS$geographicAreaM49)
-CountryGroup$M49Code2 <- as.integer(CountryGroup$M49Code)
 
-
-ProdQtySWS <- merge(ProdQtySWS, CountryGroup[, c('M49Code2', 'ISOCode', 'SDG.Regions', 'M49.Level.2.Region')], by.x = c('geographicAreaM49'),
-                    by.y = c('M49Code2'), all.x = TRUE, all.y = FALSE)
-
-ProdQtySWS  <- merge(ProdQtySWS, fbsTree, by.x = c('measuredItemCPC'),
-                     by.y = c('measuredItemCPC'), all.x = TRUE, all.y = FALSE)
-
-GetTestEnvironment(
-  baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
-  token = token2
-)  
-
-lossSWS <- GetData(swsContext.datasets[[1]])
-lossSWS$geographicAreaM49 <- as.integer(lossSWS$geographicAreaM49)
-
-lossSWS <- merge(lossSWS, CountryGroup[, c('M49Code2', 'ISOCode', 'SDG.Regions', 'M49.Level.2.Region')], by.x = c('geographicAreaM49'),
-                 by.y = c('M49Code2'), all.x = TRUE, all.y = FALSE)
-
-lossSWS  <- merge(lossSWS, fbsTree, by.x = c('measuredItemCPC'),
-                  by.y = c('measuredItemCPC'), all.x = TRUE, all.y = FALSE)
 
 ### Creates the needed dataset
 if(updateModel){
   finalModelData = 
   {
     ## requiredItems <<- getRequiredItems()
-    production <<- getProductionData() # Value_measuredElement_5510
-    lossProtected <<- getLossData(protected = TRUE)     # Value_measuredElement_5016
+    production <- getProductionData() # Value_measuredElement_5510
+    lossProtected <- getLossData(protected = TRUE)     # Value_measuredElement_5016
+    lossData <-  merge( production,lossProtected,  by.x = c(areaVar,yearVar,itemVar),  by.y = c('M49Code'), all.x= TRUE)
   
     # creating time series:
     timeSeriesData <- as.data.table(expand.grid(timePointYears = sort(unique(loss$timePointYears)),

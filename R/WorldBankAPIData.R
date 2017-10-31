@@ -3,7 +3,7 @@
 #' @author Alicia English
 #' 
 
-VariablesAdd <- function(LossFactorSet2){
+WorldBankAPIData <- function(LossPercentages){
   # Adds the factors for estimation to the loss factors, these are factors that are included from the literature
   # As well as other factors that are considered proxies for losses. 
   
@@ -13,9 +13,9 @@ VariablesAdd <- function(LossFactorSet2){
   # Returns: 
   #   BaseVar
   
-  WB1_M <-LossFactorSet2
+  WB1_M <-LossPercentages
   
-  #WB1_M <-LossFactorSet2
+  #WB1_M <-LossPercentages
   ###### Api based data merge#######
   url <- 'http://api.worldbank.org/countries/'
   setwd(paste(dirmain,'\\variables\\general\\',sep="")) 
