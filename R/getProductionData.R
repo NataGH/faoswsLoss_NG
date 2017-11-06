@@ -29,7 +29,7 @@ getProductionData = function(){
 
   ## create keys for data retrieval
   productionKey <- faoswsUtil::getCompleteImputationKey(table = "production")
-  productionKey@dimensions$measuredElement@keys <- "5510" 
+  productionKey@dimensions$measuredElement@keys <- "5510"
 
   ## Pivot to vectorize yield computation
   productionPivot = c(

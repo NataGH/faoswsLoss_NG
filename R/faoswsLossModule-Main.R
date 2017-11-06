@@ -12,7 +12,7 @@
 #install_github(repo = "SWS-Methodology/faoswsUtil")
 #install.packages("faoswsLoss", repo = "http://hqlprsws1.hq.un.fao.org/fao-sws-cran/") 
 
-library(jsonlite)
+
 library(XML)
 library(httr)
 library(stats4)
@@ -53,7 +53,7 @@ suppressMessages({
 
 
 
-##########################################################
+##################### For deletion #####################################
 ## For Local 
 ## SWS Connection
 githubsite <- '~/SWSLossModule/raw-data/'
@@ -71,9 +71,27 @@ GetTestEnvironment(
   token = token
 )  
 
+############# Computation Parameters #####################################
+## Options for the user - See full documentation for the User Oriented Work Flow 
+updateModel <- 1
+#For the model - using more than the SWS loss % for the 
+SubNationalEstimates <- 1
 
+# selecting data collection methods for aggregating the subnational estimates 
+DataCollectionTags_all <- c("SWS","APHLIS","Rapid Assessment","Expert Opinion",
+  "Laboratory Trials","Field Trial","Survey","Declarative","Crop-Cutting","Case study")
+DataCollectionTags_represent <- c("Expert Opinion","Survey","Declarative")
+ExternalDataOpt <- DataCollectionTags_all
 
+# For aggregating the subnational using the markov function
+MarkovOpt <- "aveatFSP"  # "model"
 
+## Year should be a paramameter selected.
+## selectedYear = as.character(1961:2015)
+selectedYear = as.character(1991:2015)
+selectedModelYear = as.character(1961:2015)
+
+HierarchicalCluster <- "foodGroupName" # "isocode", "SDG.Regions"
   
 ##########################################################
 
@@ -98,10 +116,7 @@ if(CheckDebug()){
 
 }
 
-## Year should be a paramameter selected.
-## selectedYear = as.character(1961:2015)
-selectedYear = as.character(1991:2015)
-selectedModelYear = as.character(1961:2015)
+
 
 areaVar = "geographicAreaM49"
 yearVar = "timePointYears"
@@ -111,147 +126,98 @@ valuePrefix = "Value_"
 flagObsPrefix = "flagObservationStatus_"
 flagMethodPrefix = "flagMethod_"
 
+keys =c(areaVar,yearVar,itemVar)
+
 ##### Load Data ######
 ## These two tables are constantly needing to be merged - country groups and food groups
-CountryGroup <- as.data.table(read.csv(paste(githubsite, 'General/a2017regionalgroupings_SDG_02Feb2017.csv', sep='')))
-CountryGroup$CountryName <- tolower(CountryGroup$CountryName)
+#CountryGroup <- as.data.table(read.csv(paste(githubsite, 'General/a2017regionalgroupings_SDG_02Feb2017.csv', sep='')))
+CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+CountryGroup$Country <- tolower(CountryGroup$countryname)
+CountryGroup[,"geographicAreaM49":=CountryGroup$m49code]
 
-FAOCrops <- read.csv(paste(githubsite, 'General/Cpc.csv', sep='')) ## All Crops in the CPC system
+
+#FAOCrops <- as.data.table(read.csv(paste(githubsite, 'General/Cpc.csv', sep=''))) ## All Crops in the CPC system
+FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
+FAOCrops[, "Crop" := FAOCrops$description]
+FAOCrops[, "measuredItemCPC" := addHeadingsCPC(FAOCrops$cpc)]
+
+#####FAO SWS Datasets#####
 load(paste(githubsite, 'General/fbsTree.RData',sep=""))
+#fbsTree <- ReadDatatable("fbsTree") &&
 names(fbsTree) <- c("fbsID4","measuredItemCPC", "fbsID1","fbsID2","fbsID3")
 
-#### SWS Data #####
-## There are two datasets from the SWS,which is loading the protected data for the Loss Training data
-## and the second is used for the Index 
+#####  Runs the model and collects the needed data  #####
 
-load(paste(githubsite, 'General/finalModelData.RData',sep=""))# Protected data from the SWS 
-lossData <- finalModelData
-
-lossData[, percent := Value_measuredElement_5016/(Value_measuredElement_5510)]
-
-lossData[, timePointYears := as.numeric(timePointYears)]
-lossData[order(-timePointYears, geographicAreaM49, measuredItemCPC), ]
-FAOCrops$cpc <- addHeadingsCPC(FAOCrops$cpc) 
-
-lossData$geographicAreaM49 <- as.factor(lossData$geographicAreaM49)
-CountryGroup$M49Code <- as.factor(CountryGroup$M49Code)
-lossData <- merge(lossData,CountryGroup[,c('ISOCode','M49Code','CountryName')],  by.x = c('geographicAreaM49'),  by.y = c('M49Code'), all.x= TRUE)
-SWS__data <- lossData 
-SWS__data$ISOCode <- lossData$ISOCode
-SWS__data$Year <- lossData$timePointYears
-SWS__data$Country <- lossData$CountryName
-SWS__data$measuredItemCPC <- lossData$measuredItemCPC
-
-SWS__data$Loss_Per_clean  <- (SWS__data$Value_measuredElement_5016/SWS__data$Value_measuredElement_5510)*100
-SWS__data$FSC_Location  <- "SWS"
-SWS__data$ID <-  paste(SWS__data$ISOCode,SWS__data$measuredItemCPC,SWS__data$Year,sep = ";")
-SWS__data$M49Code <- lossData$geographicAreaM49
-
-SWS__data <- merge(SWS__data, unique(FAOCrops[,c('cpc', 'description')]),  by.x = c('measuredItemCPC'),
-                   by.y = c('cpc'), all.x = TRUE)
-SWS__data$Crop <-SWS__data$description
-
-SWS__data <- SWS__data[,c("ISOCode","Year","Country","measuredItemCPC","Crop","Loss_Per_clean","FSC_Location","ID","M49Code")]
-
-### SWS - set 2 ###
-
-
-
-
-### Creates the needed dataset
 if(updateModel){
   finalModelData = 
   {
     ## requiredItems <<- getRequiredItems()
     production <- getProductionData() # Value_measuredElement_5510
     lossProtected <- getLossData(protected = TRUE)     # Value_measuredElement_5016
-    lossData <-  merge( production,lossProtected,  by.x = c(areaVar,yearVar,itemVar),  by.y = c('M49Code'), all.x= TRUE)
-  
+    #Data for the model
+    lossData <-  merge(production,lossProtected,  by.x = keys,  by.y = keys, all.y= TRUE)
+    lossData[, Loss_Per_clean := 100*(Value_measuredElement_5016/Value_measuredElement_5510)]
+    lossData[, FSC_Location := "SWS"]
+    lossData <- lossData %>% filter(!Loss_Per_clean > 100)
+    
     # creating time series:
-    timeSeriesData <- as.data.table(expand.grid(timePointYears = sort(unique(loss$timePointYears)),
-                                                geographicAreaM49 = as.numeric(unique(loss$geographicAreaM49)),
-                                                measuredItemCPC = as.character(unique(loss$measuredItemCPC))))
+    timeSeriesData <- as.data.table(expand.grid(timePointYears = sort(unique(lossData$timePointYears)),
+                                                geographicAreaM49 = as.numeric(unique(lossData$geographicAreaM49)),
+                                                measuredItemCPC = as.character(unique(lossData$measuredItemCPC))))
     
-    # tirar dados que sao oficiais
-    keys = c("geographicAreaM49", "measuredItemCPC", "timePointYears")
-    timeSeriesDataToBeImputed <- merge(timeSeriesData, lossProtected, by = keys, all.x = T)
+    # Take the Data to be imputed
+    timeSeriesDataToBeImputed <- merge(timeSeriesData, lossData, by = keys, all.x = T)
     timeSeriesDataToBeImputed <- timeSeriesDataToBeImputed[is.na(Value_measuredElement_5016)]
-    
-    # openingStock <<- getOpeningStockData()     # Value_measuredElement_5113
-    ## lossFoodGroup <<- getLossFoodGroup()
-    assign("lossFoodGroup", getLossFoodGroup(), envir = .GlobalEnv)
+    timeSeriesDataToBeImputed[, Loss_Per_clean := 0]
+  
   }  %>%
-    mergeAllLossData(lossData = lossProtected, production, lossFoodGroup) %>%
-    subset(x = .,
-           ## only use observations where:
-           ## a) production is zero and imports are positive
-           ## b) production is positive and imports are zero or positive
-           ## returns around 700 obs
-           subset = ((Value_measuredElement_5510 == 0 &
-                        Value_measuredElementTrade_5610 > 0) |
-                       (Value_measuredElement_5510 > 0 &
-                          Value_measuredElementTrade_5610 >= 0)),
-           select = c("geographicAreaM49", 
-                      "measuredItemCPC", 
-                      "timePointYears",
-                      "Value_measuredElement_5016", # loss
-                      "Value_measuredElement_5510", # production
-                      "foodGroupName",
-                      )) %>%
-    ## another filter: returns around 280 obs
-    removeCarryLoss(data = ., lossVar = "Value_measuredElement_5016") %>%
+   
     ## Convert variables to factor
     .[, `:=`(c("geographicAreaM49",
-               "measuredItemCPC", 
-               "foodGroupName", 
-               "foodPerishableGroup"),
+               "measuredItemCPC"),
              lapply(c("geographicAreaM49",
-                      "measuredItemCPC", 
-                      "foodGroupName"),
+                      "measuredItemCPC"),
                     FUN = function(x) as.factor(.SD[[x]])
              )
     )
     ]
   
+  lossData <- join(lossData,CountryGroup[,c("isocode","geographicAreaM49", "Country")],  by = c("geographicAreaM49"),type= 'left', match='all')
+  lossData <- join(lossData,FAOCrops[,c("measuredItemCPC","Crop")],  by = c("measuredItemCPC"),type= 'left', match='all')
+  lossData <- lossData[,c("geographicAreaM49","isocode","timePointYears","Country","measuredItemCPC","Crop","Loss_Per_clean","FSC_Location")]
   
-  ########### Loss Factor Data and Country Designation   ################### 
+  ########### Loss Factor Data and Aggregation ################### 
   ## This section imports the data of the loss factors and then merges it with the country designations for the SDG 
+  if(SubNationalEstimates){
+       # brings in the current file of converstion factors 
+       #ConvFactor1 <- read.csv(paste(githubsite, 'General/FLW_LossPercFactors.csv', sep=''))
+       ConvFactor1 <- ReadDatatable('flw_lossperfactors')
+       ConvFactor1  <- join(ConvFactor1,CountryGroup[,c('isocode',"geographicAreaM49")],  by = c('isocode'),type= 'left', match='all')
+       ConvFactor1  <- ConvFactor1 %>% filter(tag_datacollection %in%  ExternalDataOpt)
+       
+       ## Runs the Markov Model to standardize estimates 
+       markov <- FSC_Markov(ConvFactor1,MarkovOpt)
+       markov <- markov[na.omit(markov$loss_per_clean),]
+       names(markov) <- c("geographicAreaM49","isocode","timePointYears","Country","measuredItemCPC","Crop","Loss_Per_clean","FSC_Location")
   
-  # brings in the current file of converstion factors collected, Makes the country lower case for eas of merging later.  
-  ConvFactor1 <- read.csv(paste(githubsite, 'General/FLW_LossPercFactors.csv', sep=''))
+    FullSet <- rbind(markov,lossData)
+  }else{FullSet <- lossData}
+    
   
-  # Runs the Markov Model to standardize estimates 
-  markov <- FSC_Markov(ConvFactor1[ConvFactor1$Reference != "SWS",],"aveatFSP")
-  markov2 <- join(markov,CountryGroup[,c('ISOCode','M49Code')],  by = c('ISOCode'),type= 'left', match='all')
-  markov2 <- markov2[na.omit(markov2$M49Code),]
-  
-  
-  
-  dim(markov)
-  mean(na.omit(markov$Loss_Per_clean))
-  names(markov2)
-  
-  FullSet <- rbind(markov2,  SWS__data)
-  # Create the set that needs to have predictions
-  LossFactorSet2 <- PredictiveSet(FullSet,"SWS")
-  
+  ########### Variables for the module  ###################   
   # Adds the variables to the dataset from the APIs
   print("If you need to update the World Bank data tables, uncomment the line below ")
   #VariablesAdd(FullSet)
   
-  
-  # since there was discussion on production or production +imports
-  #LossFactor_train_SWSProdOnly # With production only 
-  #LossFactor_train <- LossFactor_train_SWSProdOnly 
-  
+  # Adds the explanatory Varaibles 
   Data_Use_train <- VariablesAdd2(FullSet)
-  
+  lagyr <- c("lag1yr","lag2yr","lag3yr")
   Data_Use_train[,lag1yr := NULL ]
   Data_Use_train[,lag2yr := NULL ]
   Data_Use_train[,lag3yr := NULL ]
   
   print("number of unique country and crop combinations: ")
-  print(length(unique(interaction(Data_Use_train$ISOCode, Data_Use_train$measuredItemCPC,sep = ";"))))
+  print(length(unique(interaction(Data_Use_train$isocode, Data_Use_train$measuredItemCPC,sep = ";"))))
   
   #LossFactor_Predict <-VariablesAdd(LossFactorSet2)
   Data_Use_Predict <- VariablesAdd2(LossFactorSet2)
@@ -260,7 +226,7 @@ if(updateModel){
   Data_Use_Predict[,lag3yr := NULL ]
   
   print("number of unique country and crop combinations: ")
-  print(length(unique(interaction(Data_Use_Predict$ISOCode, Data_Use_Predict$measuredItemCPC,sep = ";"))))
+  print(length(unique(interaction(Data_Use_Predict$isocode, Data_Use_Predict$measuredItemCPC,sep = ";"))))
 
   data_act <- as.data.frame(Data_Use_train[Data_Use_train$SDG.Regions.x == "Latin America and the Caribbean (MDG=M49)",])
   datacrop <-  as.data.frame(Data_Use_train)
@@ -269,7 +235,7 @@ if(updateModel){
   
   ####### Model Estimation ############
   
-  KeepVar <- c("ID",'Country','ISOCode','M49Code',"Crop",'Year','SDG_Regions',"measuredItemCPC",'Loss_Per_clean',
+  KeepVar <- c("ID",'Country','isocode','M49Code',"Crop",'Year','SDG_Regions',"measuredItemCPC",'Loss_Per_clean',
                'FSC_Location',flag)
   
   DataPred <- LossModel(Data= Data_Use_train,DataPred=finalModelData,flag = "foodGroupName")
