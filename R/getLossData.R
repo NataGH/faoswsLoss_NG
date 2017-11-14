@@ -6,7 +6,8 @@
 #' @export getLossData
 
 getLossData = function(protected = FALSE){
-  
+  install.packages("faoswsFlags")
+  library(faoswsFlag)
 
   ## ################################################################################################
   ##   Code to get Import data from the Old System 
@@ -138,7 +139,8 @@ getLossData = function(protected = FALSE){
 
 
   ## Reading FlagValidTable specific for loss
-  flagValidTableLoss <- read_csv("~/faoswsLoss/data-raw/flagValidTable.csv")
+  #flagValidTableLoss <- read_csv("~/faoswsLoss/data-raw/flagValidTable.csv")
+  flagValidTableLoss <- flagValidTable 
 
   ## Taking only official data
   ## distinct(lossQuery,flagFaostat_measuredElementFS_5120)
