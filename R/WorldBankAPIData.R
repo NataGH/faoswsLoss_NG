@@ -24,10 +24,10 @@ WorldBankAPIData <- function(LossPercentages){
   country1 <- merge(WB1_M, countryWB, by.x = c('ISOCode'), by.y = c('ISO.alpha3_Code'), all.x = TRUE, all.y = FALSE, allow.cartesian=TRUE)
   
   DataSource <- '/indicators/'
-  indicators <- read.csv('WB_indicators_Metadata.csv')
+  WB_indicators_Metadata<- read.csv('WB_indicators_Metadata.csv')
   
   frmt <- '?format=json'
-  for (j in 1:length(indicators[, 1])){
+  for (j in 1:length(WB_indicators_Metadata[, 1])){
     WBdf <- data.frame(country = character(), indicator = character(), date = integer(), value = double())  
     factor1 <- 0
     for (i in(2:length(unique(WB1_M$ISOCode)))){
@@ -36,8 +36,8 @@ WorldBankAPIData <- function(LossPercentages){
       date_max <- max(yr, na.rm = T)
       date <- paste('?date = ', date_min, ':', date_max, sep = "")
       # data access on the worldbank api
-      if(GET(paste(url, unique(country1$Code)[i], DataSource, indicators[j, 1], date, sep = ""),path="/")$status != 200){
-        WorldBank1 <- tryCatch(xmlParse(paste(url, unique(country1$Code)[i], DataSource, indicators[j, 1], date, sep = "")), error=function(cond) cond = next)
+      if(GET(paste(url, unique(country1$Code)[i], DataSource, WB_indicators_Metadata[j, 1], date, sep = ""),path="/")$status != 200){
+        WorldBank1 <- tryCatch(xmlParse(paste(url, unique(country1$Code)[i], DataSource, WB_indicators_Metadata[j, 1], date, sep = "")), error=function(cond) cond = next)
       }else{next}
       WorldBank1 <- xmlToDataFrame(WorldBank1)
       if(length(WorldBank1)<2){
@@ -49,10 +49,10 @@ WorldBankAPIData <- function(LossPercentages){
       print(i)
       
     }
-    colnames( WBdf)[length( WBdf)-1] <-indicators[, 1][j]
+    colnames( WBdf)[length( WBdf)-1] <-WB_indicators_Metadata[, 1][j]
     colnames( WBdf)[2] <- "Country"
     colnames( WBdf)[3] <- "Year"
-    write.csv(WBdf, paste(dirmain,'\\variables\\byCtryYear\\',indicators[, 1][j],'_WB_CI.csv',sep=""),row.names=FALSE)
+    write.csv(WBdf, paste(dirmain,'\\variables\\byCtryYear\\',WB_indicators_Metadata[, 1][j],'_WB_CI.csv',sep=""),row.names=FALSE)
     
     # WBdf$date <- as.numeric(levels(WBdf$date ))[WBdf$date ]
     # WB1_M <- merge(WB1_M[c('Country','ISOCode','M49Code', 'Year'),], WBdf, by.x = c('Country', 'Year'), by.y = c('country', 'date'), all.x = TRUE, all.y = FALSE)
@@ -94,41 +94,50 @@ WorldBankAPIData <- function(LossPercentages){
   #WB1_M <-LossPercentages
   ###### Api based data merge#######
   url <- 'http://api.worldbank.org/countries/'
-  setwd(paste(dirmain,'\\variables\\general\\',sep="")) 
+  setwd(paste(dirmain,'\\variables\\general\\',sep=""))
+  country1  <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+  country1 $countryname <- tolower(CountryGroup$countryname)
+  
   countryWB <- read.csv('WB_UN_CoutryCodes.csv')
   countryWB$Country <- tolower(countryWB$Country) 
   country1 <- merge(WB1_M, countryWB, by.x = c('ISOCode'), by.y = c('ISO.alpha3_Code'), all.x = TRUE, all.y = FALSE, allow.cartesian=TRUE)
   
   DataSource <- '/indicators/'
-  indicators <- read.csv('WB_indicators_Metadata.csv')
+  WB_indicators_Metadata<- read.csv('WB_indicators_Metadata.csv')
   
   frmt <- '?format=json'
-  for (j in 1:length(indicators[, 1])){
-    WBdf <- data.frame(country = character(), indicator = character(), date = integer(), value = double())  
+  for (j in 1:nrow(WB_indicators_Metadata)){
+    keepCol = c("country","isocode", "indicator", "date", "value")
+    WBdf <- data.frame(country = character(),isocode = character(), indicator = character(), date = integer(), value = double())  
     factor1 <- 0
-    for (i in(2:length(unique(WB1_M$ISOCode)))){
+    for (i in(1:length(unique(CountryGroup$isocode)))){
       yr <- unique(WB1_M$Year)
-      date_min <- min(yr, na.rm = T)
-      date_max <- max(yr, na.rm = T)
+      date_min <- 1961
+      date_max <- 2017
       date <- paste('?date = ', date_min, ':', date_max, sep = "")
       # data access on the worldbank api
-      if(GET(paste(url, unique(country1$Code)[i], DataSource, indicators[j, 1], date, sep = ""),path="/")$status != 200){
-        WorldBank1 <- tryCatch(xmlParse(paste(url, unique(country1$Code)[i], DataSource, indicators[j, 1], date, sep = "")), error=function(cond) cond = next)
+      if(GET(paste(url, unique(country1$Code)[i], DataSource,  WB_indicators_Metadata[j, 1], date, sep = ""),path="/")$status != 200){
+        WorldBank1 <- tryCatch(xmlParse(paste(url, tolower(unique(CountryGroup$iso2code))[i], DataSource,  WB_indicators_Metadata[j, 1], date, sep = "")), error=function(cond) cond = next)
       }else{next}
       WorldBank1 <- xmlToDataFrame(WorldBank1)
+      
       if(length(WorldBank1)<2){
         next
       }
+      WorldBank1 <- as.data.table(WorldBank1)
+      WorldBank1[,isocode := unique(country1$isocode)[i]]
       # lower country names to match easier
       WorldBank1$country <- tolower(WorldBank1$country)
+      WorldBank1<-WorldBank1[,keepCol,with=FALSE]
       WBdf <- rbind(WorldBank1, WBdf)
       print(i)
       
     }
-    colnames( WBdf)[length( WBdf)-1] <-indicators[, 1][j]
-    colnames( WBdf)[2] <- "Country"
-    colnames( WBdf)[3] <- "Year"
-    write.csv(WBdf, paste(dirmain,'\\variables\\byCtryYear\\',indicators[, 1][j],'_WB_CI.csv',sep=""),row.names=FALSE)
+    names(WBdf)[names(WBdf) == "indicator"] <- as.character(WB_indicators_Metadata[j, 1])
+    colnames( WBdf)[3] <- "timePointYears"
+    WBdf <- merge( WBdf , CountryGroup[,c("geographicAreaM49", "isocode")], by.x = c('isocode'),
+                          by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
+    write.csv(WBdf, paste(githubsite, 'byCtryYear/',WB_indicators_Metadata[j, 1],'_WB_CI.csv',sep=""),row.names=FALSE)
     
     # WBdf$date <- as.numeric(levels(WBdf$date ))[WBdf$date ]
     # WB1_M <- merge(WB1_M[c('Country','ISOCode','M49Code', 'Year'),], WBdf, by.x = c('Country', 'Year'), by.y = c('country', 'date'), all.x = TRUE, all.y = FALSE)

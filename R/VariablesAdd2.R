@@ -3,8 +3,8 @@
 #' @author Alicia English
 #' 
 
-VariablesAdd2 <- function(DataUseInt){  
-  setwd(paste(githubsite, 'General/',sep="")) 
+VariablesAdd2 <- function(DataUseInt,keys){  
+  #setwd(paste(githubsite, 'General/',sep="")) 
   
   #######################################
   ####Import by .Rdata ####
@@ -14,6 +14,8 @@ VariablesAdd2 <- function(DataUseInt){
   #CountryGroup <- as.data.table(read.csv(paste(githubsite, 'General/a2017regionalgroupings_SDG_02Feb2017.csv', sep='')))
   CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
   CountryGroup$CountryName <- tolower(CountryGroup$CountryName)
+  names(CountryGroup)[names(  CountryGroup) == 'm49code'] <- "geographicAreaM49"
+
   DataUseInt <- merge(DataUseInt , CountryGroup[, c('isocode', 'sdg_regions')], by.x = c('isocode'),
                       by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
   DataUseInt[,Year:= timePointYears]
@@ -23,34 +25,43 @@ VariablesAdd2 <- function(DataUseInt){
 
   
   ######## Weather Data  ################ 
-  ConvFactor_cal <- unique(DataUseInt[, c('isocode', "timePointYears")])
+  ConvFactor_cal <- unique(DataUseInt[, c("geographicAreaM49", "timePointYears")])
+  ConvFactor_cal2 <- unique(DataUseInt[,keys ,with=FALSE])
+
   #Temperature <-  as.data.table(read.csv(paste(githubsite, 'General/Temp_climate.csv', sep='')))
   Temperature <-  ReadDatatable("temp_climate_month_ctry")
-  Temperature <- subset(Temperature, select = c(year, isocode, temperature_c, month))
-  names(Temperature) <- c("timePointYears",'isocode',"Temperature.C","Month")
-  Temperature <- merge(Temperature, ConvFactor_cal, by.x = c('isocode', 'timePointYears'), by.y = c('isocode', 'timePointYears'), all.x = FALSE, all.y = TRUE)
+  names(Temperature)[names(Temperature) == 'year'] <- "timePointYears"
+  Temperature <- merge( Temperature , CountryGroup[,c("geographicAreaM49", "isocode")], by.x = c('isocode'),
+                      by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
+  Temperature <-Temperature %>% filter(geographicAreaM49 %in%  ConvFactor_cal$geographicAreaM49  & timePointYears %in%  ConvFactor_cal$timePointYears)
   
-  Precipitation <- as.data.table(read.csv(paste(githubsite, 'General/Rain_climate.csv', sep='')))
-  Precipitation <- subset(Precipitation, select = c(Rainfall.mm, Year, Month, Country))
-  names(Precipitation) <- c("Rainfall.mm","timePointYears","Month",'isocode')
-  Precipitation <- merge(Precipitation, ConvFactor_cal, by.x = c('isocode', 'timePointYears'), by.y = c('isocode', 'timePointYears'), all.x = FALSE, all.y = TRUE)
+   
+  #Precipitation <- as.data.table(read.csv(paste(githubsite, 'General/Rain_climate.csv', sep='')))
+  Precipitation <- ReadDatatable("rain_climate_month_ctry")
+  names(Precipitation)[names(Precipitation) == 'year'] <- "timePointYears"
+  Precipitation <- merge(Precipitation, CountryGroup[,c("geographicAreaM49", "isocode")], by.x = c('isocode'),
+                        by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
+  Precipitation <-Precipitation %>% filter(geographicAreaM49 %in%  ConvFactor_cal$geographicAreaM49  & timePointYears %in%  ConvFactor_cal$timePointYears)
   
-  CropCalendar <- as.data.table(read.csv(paste(githubsite, 'General/AllCropCalendar.csv', sep='')))
-  CropCalendar <- CropCalendar[, c("Country", "Crop", "Harvesting_month_onset", "Harvesting_month_end")]
-  CropCalendar$Country <- tolower(CropCalendar$Country)
-  CountryGroup$CountryName <- tolower(CountryGroup$CountryName)
-  CropCalendar$Crop <- tolower(CropCalendar$Crop)
+  #CropCalendar <- as.data.table(read.csv(paste(githubsite, 'General/AllCropCalendar.csv', sep='')))
+  CropCalendar <- ReadDatatable("crop_calendar_nov17")
+  CropCalendar <- merge(CropCalendar, CountryGroup[,c("geographicAreaM49", "isocode")], by.x = c('isocode'),
+                         by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
   
-  CropCalendar1 <- merge(CropCalendar, CountryGroup[, c('CountryName', 'isocode')], by.x = c('Country'), by.y = c('CountryName'), all.x = TRUE, all.y = FALSE)
-  AggCropCalendar <- aggregate(Harvesting_month_end~ ISOCode+Crop, data = CropCalendar1, min)
+  CropCalendar <- CropCalendar[, c("geographicAreaM49","measureditemcpc","crop", "harvesting_month_onset", "harvesting_month_end")]
+  CropCalendar$measuredItemCPC <- addHeadingsCPC(CropCalendar$measureditemcpc) 
+  CropCalendar$crop <- tolower(CropCalendar$crop)
   
-  CropCalendar2 <- merge(AggCropCalendar, ConvFactor_cal, by.x = c('isocode'), by.y = c('isocode'), all.x = FALSE, all.y = TRUE)
-
-  Temperature2 <- merge(CropCalendar2, Temperature, by.x = c('isocode', 'Harvesting_month_end', 'timePointYears'), by.y = c('isocode', 'Month', 'timePointYears'), all.x = TRUE, all.y = FALSE)
-  Precipitation2 <- merge(CropCalendar2, Precipitation, by.x = c('isocode', 'Harvesting_month_end', 'timePointYears'), by.y = c('isocode', 'Month', 'timePointYears'), all.x = TRUE, all.y = FALSE)
+  AggCropCalendar <- aggregate(harvesting_month_end ~ geographicAreaM49+measuredItemCPC, data = CropCalendar, min)
+  AggCropCalendar <-join(ConvFactor_cal2,AggCropCalendar, by= c('geographicAreaM49','measuredItemCPC'),type= 'left', match='all')
+  names(AggCropCalendar)[names(AggCropCalendar) == 'harvesting_month_end'] <- 'month'
   
-  DataUseInt <- merge(DataUseInt, Temperature2, by.x = c('isocode', 'timePointYears', 'Crop'), by.y = c('isocode', 'timePointYears', 'Crop'), all.x = TRUE, all.y = FALSE)  ### FInal Data set @@
-  DataUseInt <- merge(DataUseInt, Precipitation2, by.x = c('isocode', 'timePointYears', 'Crop'), by.y = c('isocode', 'timePointYears', 'Crop'), all.x = TRUE, all.y = FALSE)  ### FInal Data set @@
+ 
+  Temperature2 <- join(AggCropCalendar, Temperature, by= c('geographicAreaM49','timePointYears', 'month'),type= 'left', match='all')
+  Precipitation2 <- join(AggCropCalendar, Precipitation , by= c('geographicAreaM49','timePointYears', 'month'),type= 'left', match='all')
+  
+  DataUseInt <- join(DataUseInt, Temperature2, by = keys,type= 'left', match='all')  ### FInal Data set @@
+  DataUseInt <- join(DataUseInt, Precipitation2,by = keys,type= 'left', match='all')  ### FInal Data set @@
   
   ####Import By Spreadsheet###############
   setwd(paste(dirmain,'\\variables\\byYear\\',sep=""))  
