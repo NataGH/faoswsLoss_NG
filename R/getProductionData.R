@@ -30,7 +30,14 @@ getProductionData = function(){
   ## create keys for data retrieval
   productionKey <- faoswsUtil::getCompleteImputationKey(table = "production")
   productionKey@dimensions$measuredElement@keys <- "5510"
-
+  
+ # cpcList <- GetCodeList("agriculture", "aproduction", "measuredItemCPC")[, code]
+  #productionKey@dimensions$measuredItemCPC@keys <- cpcList
+  
+  #foodCPC <- ReadDatatable("food_classification")
+  #foodCPC <- unique(foodCPC[type %in% c("Food Estimate", "Food Residual"), measured_item_cpc])
+  #productionKey@dimensions$measuredItemCPC@keys <-  foodCPC
+  
   ## Pivot to vectorize yield computation
   productionPivot = c(
     Pivoting(code = areaVar, ascending = TRUE),

@@ -94,8 +94,21 @@ getLossData = function(protected = FALSE){
   ## )
 
   ## define measured elements
-  lossKey <- getCompleteImputationKey(table = "loss")
-  # lossKey@dimensions[["measuredElement"]]@keys <- "5016" # "5120"
+  lossKey = DatasetKey(
+    domain = "agriculture",
+    dataset = "aproduction",
+    dimensions = list(
+      Dimension(name = "geographicAreaM49",
+                keys = GetCodeList(domain = "agriculture",
+                                   dataset = "aproduction",
+                                   dimension = "geographicAreaM49")[type == "country", code]),
+      Dimension(name = "measuredElement", keys = c("5016")), #"5126"
+      Dimension(name = "timePointYears", keys = as.character(1990:2015)),
+      Dimension(name = "measuredItemCPC",
+                keys = GetCodeList(domain = "agriculture",
+                                   dataset = "aproduction",
+                                   dimension = "measuredItemCPC")[, code]))
+  )
   
   ## Pivot to vectorize yield computation
   lossPivot = c(
@@ -108,15 +121,18 @@ getLossData = function(protected = FALSE){
     Pivoting(code = yearVar, ascending = FALSE),
     Pivoting(code = elementVar, ascending = TRUE)
   )
+  lossQuery = GetData(
+    lossKey,
+    flags = T)
 
   ## Query the data
-  lossQuery = GetData(
-    key = lossKey,
-    flags = TRUE,
-    normalized = FALSE,
-    pivoting = lossPivot
-  )
-  
+  # lossQuery = GetData(
+  #   key = lossKey,
+  #   flags = TRUE,
+  #   normalized = FALSE,
+  #   pivoting = lossPivot
+  # )
+  # 
   ## setnames(lossQuery,
   ##          old = names(lossQuery),
   ##          new = c("geographicAreaFS","measuredItemFCL","timePointYears",
@@ -142,6 +158,7 @@ getLossData = function(protected = FALSE){
   #flagValidTableLoss <- read_csv("~/faoswsLoss/data-raw/flagValidTable.csv")
   flagValidTableLoss <- as.data.table(flagValidTable)
 
+
   ## Taking only official data
   ## distinct(lossQuery,flagFaostat_measuredElementFS_5120)
   ## lossQuery = lossQuery[flagFaostat_measuredElementFS_5120 == "", ]
@@ -156,11 +173,9 @@ getLossData = function(protected = FALSE){
     ## subset to protected flags
     ## requires dtplyr, the data table back-end for 'dplyr'
     lossQuery <-
-      lossQuery[, flagCombination := paste(flagObservationStatus_measuredElement_5016, flagMethod_measuredElement_5016, sep = ";")] %>%
+      lossQuery[, flagCombination := paste(flagObservationStatus, flagMethod, sep = ";")] %>%
       merge(., protectedFlag, by = "flagCombination") %>%
-      filter(Protected == TRUE) %>%
-      select_(.dots = col_keep)
-    
+      filter(Protected == TRUE) 
   }
 
   lossQuery

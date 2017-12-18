@@ -20,6 +20,7 @@ library(plm)
 library(gtools)
 library(ggplot2)
 library(data.table)
+library(plyr)
 library(dplyr)
 library(dtplyr)
 library(rpart)
@@ -56,32 +57,37 @@ suppressMessages({
 ##################### For deletion #####################################
 ## For Local 
 ## SWS Connection
-githubsite <- '~/SWSLossModule/raw-data/'
-dirmain <- 'T:\\Team_working_folder\\A\\GFLI\\2_Estimation-Methods\\SWS_LossModule'
+
+githubsite <- '~/faoswsLoss/data-raw/'
+dirmain <-  '~/faoswsLoss'
 SetClientFiles(dir = "C:\\Users\\ENGLISHA\\Documents\\certificates\\qa")
 files = dir("~/Github/faoswsLoss/R",
             full.names = TRUE) 
 
 token = "84fdac88-f975-4f81-95a1-7dd3cbfdedc5" #Production 2004-06
 token2 = '72832c23-6650-4454-ac7e-a2d1d926353a' #Loss Data
-
+token3 = "7e6e7a9d-6d53-4561-94b3-3cb683df4bb4" # saved Loss data
+token4 = "cc85a5d5-3f5f-49fc-a024-1a6a793a02db" # saved Loss % data
 
 GetTestEnvironment(
   baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
-  token = token
+  token = token4
 )  
 
 ############# Computation Parameters #####################################
 ## Options for the user - See full documentation for the User Oriented Work Flow 
 updateModel <- 1
+ExistModel <- 0 
+LocalRun <- FALSE
+
 #For the model - using more than the SWS loss % for the 
 SubNationalEstimates <- 1
 
 # selecting data collection methods for aggregating the subnational estimates 
 DataCollectionTags_all <- c("SWS","APHLIS","Rapid Assessment","Expert Opinion",
   "Laboratory Trials","Field Trial","Survey","Declarative","Crop-Cutting","Case study")
-DataCollectionTags_represent <- c("Expert Opinion","Survey","Declarative")
-ExternalDataOpt <- DataCollectionTags_all
+DataCollectionTags_represent <- c("SWS","APHLIS","Expert Opinion","Survey","Declarative")
+ExternalDataOpt <- DataCollectionTags_represent
 
 # For aggregating the subnational using the markov function
 MarkovOpt <- "aveatFSP"  # "model"
@@ -91,8 +97,9 @@ MarkovOpt <- "aveatFSP"  # "model"
 selectedYear = as.character(1991:2015)
 selectedModelYear = as.character(1961:2015)
 
-HierarchicalCluster <- "foodGroupName" # "isocode", "SDG.Regions"
-  
+HierarchicalCluster <- "foodgroupname" # "isocode", "SDG.Regions"
+VaribleSelection <- "RandomForest_geo"
+graphLoss <- 1
 ##########################################################
 
 
@@ -127,24 +134,31 @@ flagObsPrefix = "flagObservationStatus_"
 flagMethodPrefix = "flagMethod_"
 
 keys =c(areaVar,yearVar,itemVar)
+keys_lower =tolower(keys)
+keys2 =c(areaVar,itemVar)
 
 ##### Load Data ######
 ## These two tables are constantly needing to be merged - country groups and food groups
-#CountryGroup <- as.data.table(read.csv(paste(githubsite, 'General/a2017regionalgroupings_SDG_02Feb2017.csv', sep='')))
+if(LocalRun ){
+  CountryGroup <- as.data.table(read.csv(paste(githubsite, 'General/a2017regionalgroupings_SDG_02Feb2017.csv', sep='')))
+  FAOCrops <- as.data.table(read.csv(paste(githubsite, 'General/Cpc.csv', sep=''))) ## All Crops in the CPC system
+  ConvFactor1 <- as.data.table(read.csv(paste(githubsite, 'General/FLW_LossPercFactors.csv', sep='')))
+  names(CountryGroup) <- tolower(names(CountryGroup))
+  names(FAOCrops) <- tolower(names(FAOCrops))
+  names(ConvFactor1) <- tolower(names(ConvFactor1))
+  ConvFactor1[,loss_per_clean := as.numeric(levels(loss_per_clean))[loss_per_clean]]
+  }else{
+
 CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
-CountryGroup$Country <- tolower(CountryGroup$countryname)
-CountryGroup[,"geographicAreaM49":=CountryGroup$m49code]
-
-
-#FAOCrops <- as.data.table(read.csv(paste(githubsite, 'General/Cpc.csv', sep=''))) ## All Crops in the CPC system
 FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
-FAOCrops[, "Crop" := FAOCrops$description]
-FAOCrops[, "measuredItemCPC" := addHeadingsCPC(FAOCrops$cpc)]
+ConvFactor1 <- ReadDatatable('flw_lossperfactors')
+  }
 
-#####FAO SWS Datasets#####
-load(paste(githubsite, 'General/fbsTree.RData',sep=""))
-#fbsTree <- ReadDatatable("fbsTree") &&
-names(fbsTree) <- c("fbsID4","measuredItemCPC", "fbsID1","fbsID2","fbsID3")
+CountryGroup$country <- tolower(CountryGroup$countryname)
+CountryGroup[,"geographicaream49":=CountryGroup$m49code]
+
+FAOCrops[, "crop" := FAOCrops$description]
+FAOCrops[, "measureditemcpc" := addHeadingsCPC(FAOCrops$cpc)]
 
 #####  Runs the model and collects the needed data  #####
 
@@ -153,93 +167,134 @@ if(updateModel){
   {
     ## requiredItems <<- getRequiredItems()
     production <- getProductionData() # Value_measuredElement_5510
+    #lossDataAll <-getLossData() 
     lossProtected <- getLossData(protected = TRUE)     # Value_measuredElement_5016
+    names(lossProtected)[ names(lossProtected) == "Value"] <-  "value_measuredelement_5016"
+    names(lossProtected)[ names(lossProtected) == "measuredItemSuaFbs"] <-  "measureditemcpc"
+    names(lossProtected) <- tolower(names(lossProtected))
+    names(production) <- tolower(names(production ))
+    production$geographicaream49 <- as.character(production$geographicaream49)
+    lossProtected$geographicaream49 <- as.character(lossProtected$geographicaream49)
     #Data for the model
-    lossData <-  merge(production,lossProtected,  by.x = keys,  by.y = keys, all.y= TRUE)
-    lossData[, Loss_Per_clean := 100*(Value_measuredElement_5016/Value_measuredElement_5510)]
-    lossData[, FSC_Location := "SWS"]
-    lossData <- lossData %>% filter(!Loss_Per_clean > 100)
+    lossData <-  merge(production,lossProtected,  by.x = keys_lower,  by.y = keys_lower, all.y= TRUE)
+    lossData[, loss_per_clean := 100*(value_measuredelement_5016/value_measuredelement_5510)]
+    lossData[, fsc_location := "SWS"]
+    lossData <- lossData %>% filter(!loss_per_clean > 100)
+    names(lossData) <- tolower(names(lossData))
+    lossData <- join(lossData,CountryGroup[,c("isocode","geographicaream49", "country")],  by = c("geographicaream49"),type= 'left', match='all')
+    lossData <- join(lossData,FAOCrops[,c("measureditemcpc","crop")],  by = c("measureditemcpc"),type= 'left', match='all')
+    
+ #   diffm49 <- unique(production$geographicaream49)[!unique(production$geographicaream49) %in% unique(lossData$geographicaream49)]
     
     # creating time series:
-    timeSeriesData <- as.data.table(expand.grid(timePointYears = sort(unique(lossData$timePointYears)),
-                                                geographicAreaM49 = as.numeric(unique(lossData$geographicAreaM49)),
-                                                measuredItemCPC = as.character(unique(lossData$measuredItemCPC))))
+    timeSeriesData <- as.data.table(expand.grid(timepointyears = sort(unique(lossData$timepointyears)),
+                                                geographicaream49 = as.numeric(unique(production$geographicaream49)),
+                                                measureditemcpc = as.character(unique(production$measureditemcpc))))
     
     # Take the Data to be imputed
-    timeSeriesDataToBeImputed <- merge(timeSeriesData, lossData, by = keys, all.x = T)
-    timeSeriesDataToBeImputed <- timeSeriesDataToBeImputed[is.na(Value_measuredElement_5016)]
-    timeSeriesDataToBeImputed[, Loss_Per_clean := 0]
-  
-  }  %>%
-   
-    ## Convert variables to factor
-    .[, `:=`(c("geographicAreaM49",
-               "measuredItemCPC"),
-             lapply(c("geographicAreaM49",
-                      "measuredItemCPC"),
-                    FUN = function(x) as.factor(.SD[[x]])
-             )
-    )
-    ]
-  
-  lossData <- join(lossData,CountryGroup[,c("isocode","geographicAreaM49", "Country")],  by = c("geographicAreaM49"),type= 'left', match='all')
-  lossData <- join(lossData,FAOCrops[,c("measuredItemCPC","Crop")],  by = c("measuredItemCPC"),type= 'left', match='all')
-  lossData <- lossData[,c("geographicAreaM49","isocode","timePointYears","Country","measuredItemCPC","Crop","Loss_Per_clean","FSC_Location")]
+    timeSeriesDataToBeImputed <- join(timeSeriesData, lossData, by = keys_lower, type= 'left', match='all')
+    timeSeriesDataToBeImputed[, loss_per_clean := 0]
+    timeSeriesDataToBeImputed[, value_measuredelement_5016 := 0]
+    timeSeriesDataToBeImputed[,flagcombination:="0"]
+    
+    
+    setnames(timeSeriesDataToBeImputed, old =  c("timepointyears","geographicaream49","measureditemcpc","isocode","country","crop","loss_per_clean","fsc_location","flagobservationstatus.y","flagmethod.y","value_measuredelement_5016","flagcombination"),
+             new =  c("timepointyears","geographicaream49","measureditemcpc","isocode","country","crop","loss_per_clean","fsc_location","flagobservationstatus","flagmethod","value_measuredelement_5016","flagcombination") )
+    
+    timeSeriesDataToBeImputed <- subset(timeSeriesDataToBeImputed,
+                                        select = c(keys_lower,"value_measuredelement_5016", "flagcombination","flagobservationstatus","flagmethod","loss_per_clean")
+                                  )
+
+    names(timeSeriesDataToBeImputed) <-tolower(names(timeSeriesDataToBeImputed))
+
+    
+    lossData <- subset(lossData, 
+                       select = c(keys_lower,"isocode","country","crop","loss_per_clean","fsc_location","flagobservationstatus.y", "flagmethod.y"))
+    
+    
+  } 
+ 
   
   ########### Loss Factor Data and Aggregation ################### 
   ## This section imports the data of the loss factors and then merges it with the country designations for the SDG 
   if(SubNationalEstimates){
        # brings in the current file of converstion factors 
-       #ConvFactor1 <- read.csv(paste(githubsite, 'General/FLW_LossPercFactors.csv', sep=''))
-       ConvFactor1 <- ReadDatatable('flw_lossperfactors')
-       ConvFactor1  <- join(ConvFactor1,CountryGroup[,c('isocode',"geographicAreaM49")],  by = c('isocode'),type= 'left', match='all')
+
+       ConvFactor1  <- join(ConvFactor1,CountryGroup[,c('isocode',"geographicaream49")],  by = c('isocode'),type= 'left', match='all')
        ConvFactor1  <- ConvFactor1 %>% filter(tag_datacollection %in%  ExternalDataOpt)
+       ConvFactor1$measureditemcpc <- addHeadingsCPC(ConvFactor1$measureditemcpc)
+       names(ConvFactor1)[names(ConvFactor1)=='year'] <-'timepointyears'
        
        ## Runs the Markov Model to standardize estimates 
        markov <- FSC_Markov(ConvFactor1,MarkovOpt)
-       markov <- markov[na.omit(markov$loss_per_clean),]
-       names(markov) <- c("geographicAreaM49","isocode","timePointYears","Country","measuredItemCPC","Crop","Loss_Per_clean","FSC_Location")
-  
-    FullSet <- rbind(markov,lossData)
+       
+       FullSet <- rbind(markov,lossData, fill=T)
   }else{FullSet <- lossData}
-    
+  #write.table(FullSet,paste(githubsite, 'General/FullSet.csv', sep=''),sep=',' )
+  ### Save the intermediate aggregation table  to the sws
+    names(FullSet) <- tolower(names(FullSet))
+    ## Delete
+    table = "aggregate_loss_table"
+    changeset <- Changeset(table)
+    newdat <- ReadDatatable(table, readOnly = FALSE)
+    AddDeletions(changeset, newdat)
+    Finalise(changeset)
+    ## Add
+    AddInsertions(changeset,  FullSet[,c("geographicaream49","timepointyears","measureditemcpc","isocode","country","crop","loss_per_clean","fsc_location"),])
+    Finalise(changeset)
+  
   
   ########### Variables for the module  ###################   
-  # Adds the variables to the dataset from the APIs
-  print("If you need to update the World Bank data tables, uncomment the line below ")
-  #VariablesAdd(FullSet)
-  
-  # Adds the explanatory Varaibles 
-  Data_Use_train <- VariablesAdd2(FullSet)
-  lagyr <- c("lag1yr","lag2yr","lag3yr")
-  Data_Use_train[,lag1yr := NULL ]
-  Data_Use_train[,lag2yr := NULL ]
-  Data_Use_train[,lag3yr := NULL ]
-  
-  print("number of unique country and crop combinations: ")
-  print(length(unique(interaction(Data_Use_train$isocode, Data_Use_train$measuredItemCPC,sep = ";"))))
-  
-  #LossFactor_Predict <-VariablesAdd(LossFactorSet2)
-  Data_Use_Predict <- VariablesAdd2(LossFactorSet2)
-  Data_Use_Predict[,lag1yr := NULL ]
-  Data_Use_Predict[,lag2yr := NULL ]
-  Data_Use_Predict[,lag3yr := NULL ]
-  
-  print("number of unique country and crop combinations: ")
-  print(length(unique(interaction(Data_Use_Predict$isocode, Data_Use_Predict$measuredItemCPC,sep = ";"))))
+  # Adds the explanatory Varaibles,
+  Predvar <- c()
+  Data_Use_train <- VariablesAdd1(FullSet,keys_lower,Predvar)
 
-  data_act <- as.data.frame(Data_Use_train[Data_Use_train$SDG.Regions.x == "Latin America and the Caribbean (MDG=M49)",])
-  datacrop <-  as.data.frame(Data_Use_train)
-  colnames(Data_Use_train) <- gsub("[[:punct:]]","_",colnames(Data_Use_train)) 
-
-  
   ####### Model Estimation ############
   
-  KeepVar <- c("ID",'Country','isocode','M49Code',"Crop",'Year','SDG_Regions',"measuredItemCPC",'Loss_Per_clean',
-               'FSC_Location',flag)
+  #KeepVar <- c(keys,'isocode','SDG_Regions',"measuredItemCPC",
+  #             'FSC_Location',HierarchicalCluster)
   
-  DataPred <- LossModel(Data= Data_Use_train,DataPred=finalModelData,flag = "foodGroupName")
-  
-  
-  
+  timeSeriesDataToBeImputed <- LossModel(Data= Data_Use_train,timeSeriesDataToBeImputed,lossData, HierarchicalCluster,keys_lower)
+                                            
+ 
 }  
+if(ExistModel){
+
+  }
+
+if(graphLoss){
+  
+dlpath <- file.path(dirmain,'plots')
+pdffile <- file.path(dlpath, paste("Commodities_",as.character(Sys.Date()),".pdf", sep=""))
+lossProtected <- getLossData(protected = TRUE)     # Value_measuredElement_5016
+lossProtected <- DataPred %>% filter(loss_per_clean >0)
+names(lossProtected) <- tolower(names(lossProtected))
+pdf(file = pdffile, height = 11, width = 16)
+
+
+for(j in 1:length(unique(lossProtected[,tolower(itemVar),with=F]))){
+  for(i in 1:length(unique(lossProtected$areaVar))){
+    ctry = unique(lossProtected$areaVar)[i]
+    crp = unique(lossProtected$itemVar)[j]
+    lossProtected[,flagplot:=0,with=T]
+    lossProtected [itemVar ==  crp & areaVar == ctry,flagplot:=1,with=T]
+    
+    tmp <- lossProtected %>% filter(flagplot ==1)
+    if(dim(tmp)[1] > 3){
+      p = ggplot() + 
+        geom_point(data= lossProtected[itemVar ==  crp,,], aes(x = timepointyears, y = value_measuredelement_5126, color = flagobservationstatus_measuredelement_5016 ))+
+        geom_line(data= tmp[flagplot == 1  & areaVar ==ctry ,,], aes(x = timepointyears, y =value_measuredelement_5126, color = flagobservationstatus_measuredelement_5016 ), size =2)+
+        xlab('timePointYears') + ylab('Loss (%)') +
+        theme(axis.text.x = element_text(angle = 45, vjust = .5)) +
+        theme(axis.text=element_text(size=12, face="bold"),
+              axis.title=element_text(size=12,face="bold")) +
+        scale_y_continuous(labels = percent)+
+        scale_x_continuous(limits = c(2000, 2014), breaks = seq(2000, 2014, 2)) +
+        ggtitle(paste(unique(tmp[flagplot == 1 ,,]$foodgroupname),unique(tmp[flagplot == 1 ,,]$itemVar), sep = ", "))
+      print(p)
+    }else{next}    
+    
+  }}
+
+dev.off()
+}
