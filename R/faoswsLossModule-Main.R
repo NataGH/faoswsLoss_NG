@@ -74,7 +74,7 @@ GetTestEnvironment(
 
 ############# Computation Parameters #####################################
 ## Options for the user - See full documentation for the User Oriented Work Flow 
-updateModel <- 1
+updateModel <- TRUE
 LocalRun <- FALSE
 
 #For the model - using more than the SWS loss % for the 
@@ -258,7 +258,7 @@ if(updateModel){
                                             
  
 }  
-if(ExistModel){
+if(!updateModel){
 
   }
 

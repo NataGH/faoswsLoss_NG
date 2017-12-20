@@ -333,13 +333,8 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,HierarchicalCluster,keys_lo
 
     SavResult <- list(cluster=name,formula=formula,coeffnames = paste(unlist(names(coefficients(mod2))), collapse = "##"),mean_intercept=mean(ercomp(mod2)$theta),coeff =paste(unlist(coefficients(mod2)), collapse = "##"),
                      coeffsig=paste(unlist(coeffSig), collapse = "##"), coeffindex=paste(unlist(coeffindex), collapse = "##"), coeffDV= paste(unlist(coeffDV), collapse = "##") )
-    if(vi == 1){
-      ResultsTab = SavResult
-    }else{
-      ResultsTab = c(ResultsTab,SavResult)
-      
-    }
-    lossmodelruns = as.data.table(ResultsTab)
+
+    lossmodelruns = as.data.table(SavResult)
 
     lossmodelruns[,daterun := date() ]
     lossmodelruns[,modelversion := modelversion ]
