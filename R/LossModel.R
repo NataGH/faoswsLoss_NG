@@ -4,7 +4,7 @@
 #' 
 #' 
 
-LossModel <- function(Data,timeSeriesDataToBeImputed,lossData,HierarchicalCluster,keys_lower){
+LossModel <- function(Data,timeSeriesDataToBeImputed,HierarchicalCluster,keys_lower){
   # Description:
   # The model operates in 3 parts, 
   #  1) sets the clusters for estimating for countries without data. 
@@ -25,9 +25,12 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,lossData,HierarchicalCluste
 
   datasetN <- names(timeSeriesDataToBeImputed)
   #### Protected Data ###
-  timeSeriesDataToBeImputed[(flagobservationstatus>0 | flagmethod >0),  flagcombination := paste(flagobservationstatus,flagmethod, sep=";"),]
-  timeSeriesDataToBeImputed[(flagobservationstatus>0 | flagmethod >0),  Protected := TRUE,]
+  flagValidTableLoss <- as.data.table(flagValidTable)
+  protectedFlag <- flagValidTableLoss[flagValidTableLoss$Protected == TRUE,] %>%
+    .[, flagCombination := paste(flagObservationStatus, flagMethod, sep = ";")]
+  timeSeriesDataToBeImputed[,flagcombination :=  paste(flagobservationstatus, flagmethod, sep = ";")] 
   
+  timeSeriesDataToBeImputed[flagcombination %in% protectedFlag$flagCombination,Protected := TRUE,]
   
   ##### PART 1 - Data trasnformations and Clusters ####
   # The HierarchicalClusters set up the clusters for the analysis - as several HierarchicalClusters were tested
@@ -299,6 +302,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,lossData,HierarchicalCluste
       datapred[,flagobservationstatus := 'I',] 
       datapred[,flagmethod:= 'e',]
       datapred[,flagcombination := 'I;e',]
+      datapred[,protected := FALSE,]
      
     }
     
@@ -324,7 +328,15 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,lossData,HierarchicalCluste
     
     # Write the different models to json format
     ##### Save model parameters
-    
+
+    SavResult <- list(cluster=name,formula=formula,coeffnames = names(coefficients(mod2)),mean_intercept=mean(ercomp(mod2)$theta),coeff =coefficients(mod2),
+                      coeffsig=coeffSig, coeffindex=coeffindex, coeffDV= coeffDV )
+    if(vi == 1){
+      ResultsTab = SavResult
+    }else{
+      ResultsTab = c(ResultsTab,SavResult)
+      
+    }
 
     # table = "loss_model_runs"
     # changeset <- Changeset(table)

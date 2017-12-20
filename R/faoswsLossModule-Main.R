@@ -64,10 +64,8 @@ SetClientFiles(dir = "C:\\Users\\ENGLISHA\\Documents\\certificates\\qa")
 files = dir("~/Github/faoswsLoss/R",
             full.names = TRUE) 
 
-token = "84fdac88-f975-4f81-95a1-7dd3cbfdedc5" #Production 2004-06
-token2 = '72832c23-6650-4454-ac7e-a2d1d926353a' #Loss Data
-token3 = "7e6e7a9d-6d53-4561-94b3-3cb683df4bb4" # saved Loss data
-token4 = "cc85a5d5-3f5f-49fc-a024-1a6a793a02db" # saved Loss % data
+
+token4 = "4ebe38a7-495e-4c62-bcc4-b6193a394eec" # saved Loss % data
 
 GetTestEnvironment(
   baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
@@ -77,7 +75,6 @@ GetTestEnvironment(
 ############# Computation Parameters #####################################
 ## Options for the user - See full documentation for the User Oriented Work Flow 
 updateModel <- 1
-ExistModel <- 0 
 LocalRun <- FALSE
 
 #For the model - using more than the SWS loss % for the 
@@ -167,6 +164,7 @@ if(updateModel){
   {
     ## requiredItems <<- getRequiredItems()
     production <- getProductionData() # Value_measuredElement_5510
+    
     #lossDataAll <-getLossData() 
     lossProtected <- getLossData(protected = TRUE)     # Value_measuredElement_5016
     names(lossProtected)[ names(lossProtected) == "Value"] <-  "value_measuredelement_5016"
@@ -181,25 +179,27 @@ if(updateModel){
     lossData[, fsc_location := "SWS"]
     lossData <- lossData %>% filter(!loss_per_clean > 100)
     names(lossData) <- tolower(names(lossData))
-    lossData <- join(lossData,CountryGroup[,c("isocode","geographicaream49", "country")],  by = c("geographicaream49"),type= 'left', match='all')
-    lossData <- join(lossData,FAOCrops[,c("measureditemcpc","crop")],  by = c("measureditemcpc"),type= 'left', match='all')
-    
- #   diffm49 <- unique(production$geographicaream49)[!unique(production$geographicaream49) %in% unique(lossData$geographicaream49)]
+    lossData <- merge(lossData,CountryGroup[,c("isocode","geographicaream49", "country")],  by = c("geographicaream49"), all.x = TRUE, all.y = FALSE)
+    #lossData <- merge(lossData,FAOCrops[,c("measureditemcpc","crop")],  by = c("measureditemcpc"), all.x = TRUE, all.y = FALSE)
+    lossData <- lossData %>% filter(loss_per_clean < 50)
+    #highLosses <- lossData %>% filter(loss_per_clean > 50)
+    #date = "_18Dec17"
+    #write.table(highLosses,paste(githubsite, 'General/highLosses',date, '.csv', sep=''),sep=',' )
     
     # creating time series:
-    timeSeriesData <- as.data.table(expand.grid(timepointyears = sort(unique(lossData$timepointyears)),
-                                                geographicaream49 = as.numeric(unique(production$geographicaream49)),
+    timeSeriesData <- as.data.table(expand.grid(timepointyears = sort(unique(production$timepointyears)),
+                                                geographicaream49 = as.character(unique(production$geographicaream49)),
                                                 measureditemcpc = as.character(unique(production$measureditemcpc))))
     
     # Take the Data to be imputed
-    timeSeriesDataToBeImputed <- join(timeSeriesData, lossData, by = keys_lower, type= 'left', match='all')
-    timeSeriesDataToBeImputed[, loss_per_clean := 0]
-    timeSeriesDataToBeImputed[, value_measuredelement_5016 := 0]
+    timeSeriesDataToBeImputed <- merge(timeSeriesData, lossData,  by.x = (keys_lower), by.y = (keys_lower), all.x = TRUE, all.y = FALSE)
+    timeSeriesDataToBeImputed[is.na(loss_per_clean), loss_per_clean := 0]
+    timeSeriesDataToBeImputed$value_measuredelement_5016 = 0
     timeSeriesDataToBeImputed[,flagcombination:="0"]
     
     
-    setnames(timeSeriesDataToBeImputed, old =  c("timepointyears","geographicaream49","measureditemcpc","isocode","country","crop","loss_per_clean","fsc_location","flagobservationstatus.y","flagmethod.y","value_measuredelement_5016","flagcombination"),
-             new =  c("timepointyears","geographicaream49","measureditemcpc","isocode","country","crop","loss_per_clean","fsc_location","flagobservationstatus","flagmethod","value_measuredelement_5016","flagcombination") )
+    setnames(timeSeriesDataToBeImputed, old =  c("timepointyears","geographicaream49","measureditemcpc","isocode","country","loss_per_clean","fsc_location","flagobservationstatus.y","flagmethod.y","value_measuredelement_5016","flagcombination"),
+             new =  c("timepointyears","geographicaream49","measureditemcpc","isocode","country","loss_per_clean","fsc_location","flagobservationstatus","flagmethod","value_measuredelement_5016","flagcombination") )
     
     timeSeriesDataToBeImputed <- subset(timeSeriesDataToBeImputed,
                                         select = c(keys_lower,"value_measuredelement_5016", "flagcombination","flagobservationstatus","flagmethod","loss_per_clean")
@@ -209,7 +209,7 @@ if(updateModel){
 
     
     lossData <- subset(lossData, 
-                       select = c(keys_lower,"isocode","country","crop","loss_per_clean","fsc_location","flagobservationstatus.y", "flagmethod.y"))
+                       select = c(keys_lower,"isocode","country","loss_per_clean","fsc_location","flagobservationstatus.y", "flagmethod.y"))
     
     
   } 
@@ -254,7 +254,7 @@ if(updateModel){
   #KeepVar <- c(keys,'isocode','SDG_Regions',"measuredItemCPC",
   #             'FSC_Location',HierarchicalCluster)
   
-  timeSeriesDataToBeImputed <- LossModel(Data= Data_Use_train,timeSeriesDataToBeImputed,lossData, HierarchicalCluster,keys_lower)
+  timeSeriesDataToBeImputed <- LossModel(Data= Data_Use_train,timeSeriesDataToBeImputed, HierarchicalCluster,keys_lower)
                                             
  
 }  

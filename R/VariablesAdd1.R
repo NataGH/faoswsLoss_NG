@@ -331,6 +331,32 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2){
     names(DataUseInt) <- c(names(DataUseInt)[1:a], paste(names(ConvFactor_cal)[!names(ConvFactor_cal) %in% c("geographicaream49",'lag3yr')],'lag3yr', sep='_'))
     DataUseInt <- DataUseInt %>% subset(., select=which(!duplicated(names(.)))) 
     }
+    if(dropExtra == FALSE){
+  
+      DataUseInt <- DataUseInt %>% subset(., select=which(!duplicated(names(.)))) 
+      DataUseInt <- join(DataUseInt, ConvFactor_cal, by = c("geographicaream49", "timepointyears"),type= 'left', match="first")
+      DataUseInt <- DataUseInt %>% subset(., select=which(!duplicated(names(.)))) 
+      
+      a <- dim(DataUseInt)[2]
+      names(ConvFactor_cal)[ names(ConvFactor_cal) == "timepointyears" ] <- 'lag1yr'
+      DataUseInt  <-  join(DataUseInt,  ConvFactor_cal, by= c("geographicaream49", 'lag1yr'),type= 'left', match="first")
+      names(DataUseInt) <- c(names(DataUseInt)[1:a], paste(names(ConvFactor_cal)[!names(ConvFactor_cal) %in% c("geographicaream49",'lag1yr')],'lag1yr', sep='_'))
+      DataUseInt <- DataUseInt %>% subset(., select=which(!duplicated(names(.)))) 
+      
+      a <- dim(DataUseInt)[2]
+      names(ConvFactor_cal)[ names(ConvFactor_cal) == 'lag1yr'] <- 'lag2yr'
+      DataUseInt  <- join(DataUseInt,  ConvFactor_cal, by = c("geographicaream49", 'lag2yr'),type= 'left', match="first")
+      names(DataUseInt) <- c(names(DataUseInt)[1:a], paste(names(ConvFactor_cal)[!names(ConvFactor_cal) %in% c("geographicaream49",'lag2yr')],'lag2yr', sep='_'))
+      DataUseInt <- DataUseInt %>% subset(., select=which(!duplicated(names(.)))) 
+      
+      a <- dim(DataUseInt)[2]
+      names(ConvFactor_cal)[ names(ConvFactor_cal) == 'lag2yr'] <- 'lag3yr'
+      DataUseInt  <- join(DataUseInt, ConvFactor_cal, by = c("geographicaream49", 'lag3yr'),type= 'left', match="first")
+      names(DataUseInt) <- c(names(DataUseInt)[1:a], paste(names(ConvFactor_cal)[!names(ConvFactor_cal) %in% c("geographicaream49",'lag3yr')],'lag3yr', sep='_'))
+      DataUseInt <- DataUseInt %>% subset(., select=which(!duplicated(names(.)))) 
+    }
+    
+    
     names(DataUseInt) <- gsub("[[:punct:]]","_",names(DataUseInt))
     
     
