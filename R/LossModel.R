@@ -22,6 +22,8 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,HierarchicalCluster,keys_lo
   minobs <- 4
   minctry <- 2
   names(Data) <- tolower(names(Data))
+  modelversion <- "0.1.0"
+  
 
   datasetN <- names(timeSeriesDataToBeImputed)
   #### Protected Data ###
@@ -329,28 +331,29 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,HierarchicalCluster,keys_lo
     # Write the different models to json format
     ##### Save model parameters
 
-    SavResult <- list(cluster=name,formula=formula,coeffnames = names(coefficients(mod2)),mean_intercept=mean(ercomp(mod2)$theta),coeff =coefficients(mod2),
-                      coeffsig=coeffSig, coeffindex=coeffindex, coeffDV= coeffDV )
+    SavResult <- list(cluster=name,formula=formula,coeffnames = paste(unlist(names(coefficients(mod2))), collapse = "##"),mean_intercept=mean(ercomp(mod2)$theta),coeff =paste(unlist(coefficients(mod2)), collapse = "##"),
+                     coeffsig=paste(unlist(coeffSig), collapse = "##"), coeffindex=paste(unlist(coeffindex), collapse = "##"), coeffDV= paste(unlist(coeffDV), collapse = "##") )
     if(vi == 1){
       ResultsTab = SavResult
     }else{
       ResultsTab = c(ResultsTab,SavResult)
       
     }
+    lossmodelruns = as.data.table(ResultsTab)
 
-    # table = "loss_model_runs"
-    # changeset <- Changeset(table)
-    # newdat <- ReadDatatable(table, readOnly = FALSE)
-    # newdat2 <- newdat[0,]
-    # Finalise(changeset)
-    # ## Add
-    # newdat2[1,] <- c(name, formula,coefficients(mod2),'today')
-    # 
-    # AddInsertions(changeset,  FullSet)
-    # Finalise(changeset)
-    # 
-    # (version =name, modelForm = formula,coeff = as.data.frame(coefficients(mod2)), Resultdata = datapred)
+    lossmodelruns[,daterun := date() ]
+    lossmodelruns[,modelversion := modelversion ]
+    setcolorder(lossmodelruns, c("daterun","modelversion",names(SavResult)))
+    names(lossmodelruns) <- tolower(names(lossmodelruns) )
     
+     table = "lossmodelruns"
+     changeset <- Changeset(table)
+     newdat <- ReadDatatable(table, readOnly = FALSE)
+     newdat2 <- newdat[0,]
+     Finalise(changeset)
+     AddInsertions(changeset,  lossmodelruns)
+     Finalise(changeset)
+     
     
     
   }

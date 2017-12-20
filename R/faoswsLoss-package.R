@@ -6,7 +6,7 @@
 #' @name faoswsLoss-package
 #' @aliases faoswsLoss
 #' 
-#' @author Natalia Golini, Michael C. J. Kao
+#' @author Alicia English
 #' 
 #' @import data.table
 #' 

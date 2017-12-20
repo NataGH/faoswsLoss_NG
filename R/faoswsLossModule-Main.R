@@ -254,7 +254,7 @@ if(updateModel){
   #KeepVar <- c(keys,'isocode','SDG_Regions',"measuredItemCPC",
   #             'FSC_Location',HierarchicalCluster)
   
-  timeSeriesDataToBeImputed <- LossModel(Data= Data_Use_train,timeSeriesDataToBeImputed, HierarchicalCluster,keys_lower)
+  timeSeriesDataToBeImputed2 <- LossModel(Data= Data_Use_train,timeSeriesDataToBeImputed, HierarchicalCluster,keys_lower)
                                             
  
 }  
