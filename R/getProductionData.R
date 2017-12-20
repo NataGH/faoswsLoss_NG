@@ -5,7 +5,7 @@
 ##' @export
 
 
-getProductionData = function(){
+getProductionData = function(areaVar,itemVar,yearVar,elementVar){
   
   ## allCountries =
   ##   GetCodeList(domain = "agriculture",

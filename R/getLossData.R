@@ -5,7 +5,7 @@
 #'
 #' @export getLossData
 
-getLossData = function(protected = FALSE){
+getLossData = function(areaVar,itemVar,yearVar,elementVar,protected = FALSE){
   #install.packages("faoswsFlags")
   library(faoswsFlag)
 

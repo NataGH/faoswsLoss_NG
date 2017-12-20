@@ -58,19 +58,19 @@ suppressMessages({
 ## For Local 
 ## SWS Connection
 
-githubsite <- '~/faoswsLoss/data-raw/'
-dirmain <-  '~/faoswsLoss'
-SetClientFiles(dir = "C:\\Users\\ENGLISHA\\Documents\\certificates\\qa")
-files = dir("~/Github/faoswsLoss/R",
-            full.names = TRUE) 
+#githubsite <- '~/faoswsLoss/data-raw/'
+#dirmain <-  '~/faoswsLossa'
+#SetClientFiles(dir = "C:\\Users\\ENGLISHA\\Documents\\certificates\\qa")
+#files = dir("~/Github/faoswsLoss/R",
+#            full.names = TRUE) 
 
 
-token4 = "4ebe38a7-495e-4c62-bcc4-b6193a394eec" # saved Loss % data
+#token4 = "4ebe38a7-495e-4c62-bcc4-b6193a394eec" # saved Loss % data
 
-GetTestEnvironment(
-  baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
-  token = token4
-)  
+#GetTestEnvironment(
+#  baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
+#  token = token4
+#)  
 
 ############# Computation Parameters #####################################
 ## Options for the user - See full documentation for the User Oriented Work Flow 
@@ -101,24 +101,23 @@ graphLoss <- 1
 
 
 if(CheckDebug()){
+  message("Not on server, so setting up environment...")
+  USER <- if_else(.Platform$OS.type == "unix",
+                    Sys.getenv('USER'),
+                    Sys.getenv('USERNAME'))
 
-  ## ?devtools::install_github
-  ## devtools::install_github("SWS-Methodology/faoswsModules", ref = "fbb838f8f7d0d53446af18d96ad7300c5d0ac1c6")
+
   library(faoswsModules)
-  settings <- ReadSettings(file = file.path("modules", "impute_loss", "sws.yml"))
-  SetClientFiles(dir = settings[["certdir"]])
+  settings <- ReadSettings(file = file.path(paste(dirmain,"sws.yml", sep='/')))
+  #SetClientFiles(settings[["certdir"]])
+
   GetTestEnvironment(
     baseUrl = settings[["server"]],
     token = settings[["token"]]
   )
-  ## test connection
-  ## map = faosws::ReadDatatable(table = "fcl_2_cpc")
-  ## sessionKey = swsContext.datasets[[1]]
-  ## faoswsModules::CopyKey()
-  ## faoswsModules::CopyKey(swsContext.datasets[[1]])
-  ## swsContext.computationParams # empty list
 
 }
+
 
 
 
@@ -159,14 +158,14 @@ FAOCrops[, "measureditemcpc" := addHeadingsCPC(FAOCrops$cpc)]
 
 #####  Runs the model and collects the needed data  #####
 
-if(updateModel){
+if(updateModel==1){
   finalModelData = 
   {
     ## requiredItems <<- getRequiredItems()
-    production <- getProductionData() # Value_measuredElement_5510
+    production <- getProductionData(areaVar,itemVar,yearVar,elementVar) # Value_measuredElement_5510
     
     #lossDataAll <-getLossData() 
-    lossProtected <- getLossData(protected = TRUE)     # Value_measuredElement_5016
+    lossProtected <- getLossData(areaVar,itemVar,yearVar,elementVar,protected = TRUE)     # Value_measuredElement_5016
     names(lossProtected)[ names(lossProtected) == "Value"] <-  "value_measuredelement_5016"
     names(lossProtected)[ names(lossProtected) == "measuredItemSuaFbs"] <-  "measureditemcpc"
     names(lossProtected) <- tolower(names(lossProtected))
@@ -258,7 +257,7 @@ if(updateModel){
                                             
  
 }  
-if(!updateModel){
+if(updateModel ==0){
 
   }
 
