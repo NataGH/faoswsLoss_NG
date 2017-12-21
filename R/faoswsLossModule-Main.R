@@ -58,19 +58,19 @@ suppressMessages({
 ## For Local 
 ## SWS Connection
 
-#githubsite <- '~/faoswsLoss/data-raw/'
-#dirmain <-  '~/faoswsLossa'
-#SetClientFiles(dir = "C:\\Users\\ENGLISHA\\Documents\\certificates\\qa")
-#files = dir("~/Github/faoswsLoss/R",
-#            full.names = TRUE) 
+githubsite <- '~/faoswsLoss/data-raw/'
+dirmain <-  '~/faoswsLossa'
+SetClientFiles(dir = "C:\\Users\\ENGLISHA\\Documents\\certificates\\qa")
+files = dir("~/Github/faoswsLoss/R",
+           full.names = TRUE)
 
 
-#token4 = "4ebe38a7-495e-4c62-bcc4-b6193a394eec" # saved Loss % data
+token4 = "a2fb06e2-1606-43ce-9b48-5eedfbd5b0a2" # saved Loss % data
 
-#GetTestEnvironment(
-#  baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
-#  token = token4
-#)  
+GetTestEnvironment(
+  baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
+  token = token4
+)
 
 ############# Computation Parameters #####################################
 ## Options for the user - See full documentation for the User Oriented Work Flow 
@@ -100,23 +100,23 @@ graphLoss <- 1
 ##########################################################
 
 
-if(CheckDebug()){
-  message("Not on server, so setting up environment...")
-  USER <- if_else(.Platform$OS.type == "unix",
-                    Sys.getenv('USER'),
-                    Sys.getenv('USERNAME'))
-
-
-  library(faoswsModules)
-  settings <- ReadSettings(file = file.path(paste(dirmain,"sws.yml", sep='/')))
-  #SetClientFiles(settings[["certdir"]])
-
-  GetTestEnvironment(
-    baseUrl = settings[["server"]],
-    token = settings[["token"]]
-  )
-
-}
+# if(CheckDebug()){
+#   message("Not on server, so setting up environment...")
+#   USER <- if_else(.Platform$OS.type == "unix",
+#                     Sys.getenv('USER'),
+#                     Sys.getenv('USERNAME'))
+# 
+# 
+#   library(faoswsModules)
+#   settings <- ReadSettings(file = file.path(paste(dirmain,"sws.yml", sep='/')))
+#   #SetClientFiles(settings[["certdir"]])
+# 
+#   GetTestEnvironment(
+#     baseUrl = settings[["server"]],
+#     token = settings[["token"]]
+#   )
+# 
+# }
 
 
 
@@ -258,15 +258,16 @@ if(updateModel==1){
  
 }  
 if(updateModel ==0){
-
+  modelRuns <- ReadDatatable("lossmodelruns")
+  
   }
 
 if(graphLoss){
   
 dlpath <- file.path(dirmain,'plots')
 pdffile <- file.path(dlpath, paste("Commodities_",as.character(Sys.Date()),".pdf", sep=""))
-lossProtected <- getLossData(protected = TRUE)     # Value_measuredElement_5016
-lossProtected <- DataPred %>% filter(loss_per_clean >0)
+lossProtected <- getLossData(areaVar,itemVar,yearVar,elementVar,protected = TRUE)     # Value_measuredElement_5016
+lossProtected <- lossProtected %>% filter(loss_per_clean >0)
 names(lossProtected) <- tolower(names(lossProtected))
 pdf(file = pdffile, height = 11, width = 16)
 

@@ -33,6 +33,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,HierarchicalCluster,keys_lo
   timeSeriesDataToBeImputed[,flagcombination :=  paste(flagobservationstatus, flagmethod, sep = ";")] 
   
   timeSeriesDataToBeImputed[flagcombination %in% protectedFlag$flagCombination,Protected := TRUE,]
+  timeSeriesDataToBeImputed[Protected == TRUE,loss_per_clean:= loss_per_clean/100]
   
   ##### PART 1 - Data trasnformations and Clusters ####
   # The HierarchicalClusters set up the clusters for the analysis - as several HierarchicalClusters were tested
