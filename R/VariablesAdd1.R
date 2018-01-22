@@ -18,7 +18,9 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2){
     dropExtra = FALSE
     
   }
-  
+  DataUseInt$geographicaream49 <- as.integer(DataUseInt$geographicaream49)
+  DataUseInt$measureditemcpc <- as.character(DataUseInt$measureditemcpc)
+  DataUseInt$timepointyears <- as.integer(DataUseInt$timepointyears)
   
   names(DataUseInt) <-tolower(names(DataUseInt))
   if(LocalRun){
@@ -47,7 +49,7 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2){
   
   CountryGroup[,"geographicaream49":=CountryGroup$m49code]
   CountryGroup$geographicaream49 <- as.integer(CountryGroup$geographicaream49)
-  DataUseInt$geographicaream49 <- as.integer(DataUseInt$geographicaream49)
+
   names(CountryGroup) <- gsub("[[:punct:]]","_",names(CountryGroup))
   
   DataUseInt <- merge(DataUseInt , CountryGroup[, c('geographicaream49', 'isocode')], by.x = c("geographicaream49"),
@@ -167,26 +169,13 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2){
       DataUseInt <- DataUseInt[,keepForPred, with=FALSE]
     }
 
-    drops = c('Area.Code',
+    drops = c('Area_Code',
               'Domain',  
-              'Domain.lag1yr',
-              'Domain.lag2yr',
-              'Domain.lag3yr',
               'Element',
-              'Element.Code', 
-              'Flag.Description',
-              'Flag.lag1yr',
-              'Flag.lag2yr',
-              'Flag.lag3yr',
-              'ISOCode.lag1yr',
-              'ISOCode.lag2yr',
-              'ISOCode.lag3yr',
-              'ISOCode.y',
-              'Item.Code',
-              'Item',
-              'Unit.lag1yr',
-              'Unit.lag2yr',
-              'Unit.lag3yr',
+              'Flag',
+              'ISOCode',
+              'item_code',
+              'Unit',
               'description',
               'descriptoin'
               
@@ -363,10 +352,17 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2){
     lagyr <- c("lag1yr","lag2yr","lag3yr","lag1yr_lag1yr","lag2yr_lag2yr","lag3yr_lag3yr")
     DataUseInt[,(lagyr) := NULL ]
     
+    DataUseInt$geographicaream49 <- as.character(DataUseInt$geographicaream49)
     #if(dropExtra){
    #   keepForPred <- names(DataUseInt)[names(DataUseInt) %in% Predvar]
    #   DataUseInt <-DataUseInt[,keepForPred, with=FALSE]
    # }
+    # Drop the remaining descriptive var
+    drops <-tolower(drops)
     names(DataUseInt) <- tolower(names(DataUseInt))
+    for(i in drops ){
+      tt <- names(DataUseInt)[grep(paste(i,"+",sep=""),names(DataUseInt))]
+      DataUseInt[,c(tt):=NULL]
+    }
   return(DataUseInt)  
 }  

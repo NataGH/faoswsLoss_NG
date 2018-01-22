@@ -18,20 +18,15 @@ MultiExp<- function(X, degree,depVar){
   
   keep     <- list()
   descript <- list()
-  Y <- X[,depVar]
-  X <- X[,!colnames(X) %in% c(depVar)]
+  Y <- X[,depVar,with=F]
+  X <- X[,!colnames(X) %in% c(depVar),with=F]
   
   # sort through the input data and take out the factors
-  for (jj in 1:dim(X)[2]){
-    if((is.factor(X[, jj]) == FALSE) &(typeof(X[, jj])!= 'character')){
-      keep <- c(keep, colnames(X)[jj])
-    }else{
-      descript<- c(descript, colnames(X)[jj])
-    }
-  }
+  numsX <- sapply(X, is.numeric)
+  explanatory <- names(numsX)[numsX == TRUE]
   
-  NonNumer <- X[, unlist(descript)]
-  Numerical <- X[, unlist(keep)]
+  NonNumer <- X[, !names(X) %in% explanatory,with=F]
+  Numerical <- X[, explanatory,with=F]
   # computes the single and higher interaction of variables  
   n <- dim(Numerical)[1]
   m <- dim(Numerical)[2] 
@@ -41,7 +36,7 @@ MultiExp<- function(X, degree,depVar){
   for (j in 1:degree){
     if(j == 1){
       for (mm in 1:m){
-        new <-Numerical[, mm]*(Numerical[, mm:m])
+        new <-Numerical[1:n,names(Numerical)[mm],with=F]*Numerical[1:n,names(Numerical)[mm],with=F]
         if(mm!= m){
           colnames(new) <- paste(colnames(Numerical)[mm], colnames(Numerical)[mm:m], sep = ".")
         }

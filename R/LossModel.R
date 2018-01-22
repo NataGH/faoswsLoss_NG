@@ -4,7 +4,7 @@
 #' 
 #' 
 
-LossModel <- function(Data,timeSeriesDataToBeImputed,HierarchicalCluster,keys_lower){
+LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalCluster,keys_lower){
   # Description:
   # The model operates in 3 parts, 
   #  1) sets the clusters for estimating for countries without data. 
@@ -18,14 +18,19 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,HierarchicalCluster,keys_lo
   #     of the loss percentages by country, with data aggregated in the Markov model and with explanatory variables added. 
   #	DataPred: is the data that needs estimates predicted (finalPredictData)
   #	HierarchicalCluster: is for the group/cluster ("foodgroupname" was the best preformer)
+  CB <- function(dataIn){
+    r = exp(dataIn)/(1+exp(dataIn)) 
+    return(r)}
+  
+  modelversion <- "0.1.0"
   
   minobs <- 4
   minctry <- 2
+  NumImportVarUse <- 8
   names(Data) <- tolower(names(Data))
-  modelversion <- "0.1.0"
-  
 
   datasetN <- names(timeSeriesDataToBeImputed)
+
   #### Protected Data ###
   flagValidTableLoss <- as.data.table(flagValidTable)
   protectedFlag <- flagValidTableLoss[flagValidTableLoss$Protected == TRUE,] %>%
@@ -54,18 +59,21 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,HierarchicalCluster,keys_lo
   }
   
   # Prepares the data for the analysis
+  Data <- Data %>% filter(loss_per_clean < 40) # Excludes outliers over 50%
+  
   Data[,loss_per_clean := loss_per_clean/100 ]
   Data[loss_per_clean == 0,loss_per_clean := 0.0001,]
   Data[loss_per_clean == 1,loss_per_clean :=  0.9999,] 
-  Data[,losstransf := log(loss_per_clean/(1-loss_per_clean)) ]
+  Data[,losstransf := log(loss_per_clean/(1-loss_per_clean))]
   names(Data) <- gsub("[[:punct:]]","_",names(Data)) 
+  depVar <- "losstransf" 
  
   Data$geographicaream49 <- as.character(Data$geographicaream49)
   
   IdentVar <- c(keys_lower,"isocode","country","sdg_region")
   newcol  <- names(sapply(Data, is.numeric))[!(names(sapply(Data, is.numeric)) %in% IdentVar)]
 
-  drops2 <- c("lag1yr","lag2yr", "lag3yr", "month","month_x","month_y","harvesting_month_onset")
+  drops2 <- c("lag1yr","lag2yr", "lag3yr", "month","month_x","month_y","harvesting_month_onset","area_code_y")
   drops1  <- c("loss_per_clean", IdentVar)
   Data <- Data[,names(Data)[!names(Data) %in% drops2],with=FALSE]
 
@@ -74,207 +82,205 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,HierarchicalCluster,keys_lo
   names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
   
   timeSeriesDataToBeImputedGroups <- join(timeSeriesDataToBeImputed, fbsTree, by = c("measureditemcpc"),type= 'left', match='all')
+  
+  fbsTree[foodgroupname %in% c(2905), GFLI_Basket :='Cereals',]
+  fbsTree[foodgroupname %in% c(2911), GFLI_Basket :='Pulses',]
+  fbsTree[foodgroupname %in% c(2919,2918), GFLI_Basket :='Fruits & Vegetables',]
+  fbsTree[foodgroupname %in% c(2907,2913), GFLI_Basket :='Roots, Tubers & Oil-Bearing Crops',]
+  fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), GFLI_Basket :='Other',]
+  fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), GFLI_Basket :='Animals Products & Fish and fish products',] # |foodGroupName == "PRODUCTS FROM FISH",
+  #unique(timeSeriesDataToBeImputedGroups $foodgroupname)[!is.na(unique(timeSeriesDataToBeImputedGroups $foodgroupname))])
   ##### PART 2 - Random Forest ####
-  for (vi in 1:length(unique(timeSeriesDataToBeImputedGroups $foodgroupname)[!is.na(unique(timeSeriesDataToBeImputedGroups $foodgroupname))])){
+  for (vi in 1:length(na.omit(unique(fbsTree$GFLI_Basket)))){
+    #length(unique(timeSeriesDataToBeImputedGroups $foodgroupname)[!is.na(unique(timeSeriesDataToBeImputedGroups $foodgroupname))])){
     print(vi)
     
     # for each subgroup in the cluster the model is created - with new varaibles selected
-    name = unique(timeSeriesDataToBeImputedGroups$foodgroupname)[!is.na(unique(timeSeriesDataToBeImputedGroups$foodgroupname))][vi]
+    #name = unique(timeSeriesDataToBeImputedGroups$foodgroupname)[!is.na(unique(timeSeriesDataToBeImputedGroups$foodgroupname))][vi]
+    name = unique(fbsTree[GFLI_Basket ==na.omit(unique(fbsTree$GFLI_Basket))[vi],foodgroupname])
     print(name)
     modrun <- 0
     # filter the dataset to the
-    data1 <- Data %>% filter(Data[,HierarchicalCluster,with=FALSE]== name)
-    
-    idx_country <- unique(as.character(data1$geographicaream49))[(table(as.character(data1$geographicaream49))>=2) == T]
-    #data1 <- data1[,names(data1) %in%  c(newcol,index1, DV) ,with=FALSE] #'Year'
-    data1 <- data1 %>% filter(!(is.na(geographicaream49) | (geographicaream49== "")))
+    data1 <- Data %>% filter(foodgroupname %in% name)
+ 
+    CPCs <- unique(data1$measureditemcpc)
+    #Makes the columsn numeric and 
     nums1 <- sapply(data1, is.numeric)
-    nums1[names(nums1) == tolower(keys_lower)] <- TRUE
-    #nums1[names(nums1) == "sdg_regions"]<- TRUE
-    explanatory <- names(nums1)[nums1 == TRUE]
-    data1 <-  data1[ , explanatory ,with=FALSE]
-    ###
-    
-    # Section determines which variables are the most useful by country
-    Use_varibles <- list() 
-    AllVar <- list() 
-    Use_varibles <- colnames(data1)
-    Use_varibles <- Use_varibles[!(Use_varibles %in% drops2)] 
-    AllVar <- AllVar[!(AllVar %in% drops2)] 
-    
-    NumImportVarUse = 8
-    ## For countries that havRe less than the min observations to estimate the equation, they get grouped by region
-    data_mix <- data1[1,] 
-    data_mix[1, geographicaream49:= "999"]
-    check <- 0
-    
-    for(ctry in unique(data1$geographicaream49)){
-      data_section <- data1 %>% filter(geographicaream49 == ctry)
-      if(nrow(data_section) <minobs){
-        data_mix <- rbind(data_mix,data_section)
-        next
-      }
-      check <- nrow(data_section)
-      #print(nrow(data_section))
-      nums2 <- sapply(data_section , is.numeric)
-      explanatory2 <- names(nums2)[nums2 == TRUE]
-      nonZero <- names(na.omit(colSums(data_section[,explanatory2,with=FALSE]))>0)
-      data_section <- data_section[,nonZero,with=FALSE]
-      V <- sort(table(unlist(AllVar)),decreasing = TRUE)
-      v2 <-names(V[0:(NumImportVarUse -length(Use_varibles))])
+    dropCV <- list()
+    stop = length(colnames(data1))
+    ii = 1
+    while(ii){
+      nam = colnames(data1)[ii]
+      if(is.na(nam)){break}
+      if(sapply(data1[,nam,with=F],class)== "numeric"){ 
+        corrV  <- cor(data1[,nam,with=F],data1[,colnames(data1) %in% names(nums1[nums1==T]) ,with=F],use="pairwise.complete.obs")
+        corrV2 <- colnames(corrV)[corrV >.85]
+        corrV2  <- corrV2[!corrV2 %in% c(keys_lower,nam)]
+        dropCV <- c(dropCV,na.omit(corrV2))
+        if(length(unique(na.omit(corrV2))) >0){
+          data1[,c(na.omit(unique(corrV2))):= NULL]
+          nums1 <- sapply(data1, is.numeric)
+        }}
+      ii =ii +1
       
-      #print(ctry)
-      if(nrow(data_section)>= minobs){
-        # Runs the Random Forest Algorithm to find the most important variables in the dataset
-        #Deletes columns that might have nulls in the column
-        idxcol <- apply(apply(data_section,2,is.na),2,sum) == dim(data_section)[1]
-        cols <- c(colnames(data_section)[colnames(data_section) %in% newcol[!newcol  %in% idxcol]])
-        fit <- rpart(losstransf ~ ., data = data_section[, unique(cols), with=FALSE],control=rpart.control(minsplit=30, cp=0.1))
-        ImportVar <- names(fit$variable.importance)
-        check <- check +nrow(data_section)
-        if(!is.null(ImportVar)){
-          # gets rid of variables that are highly correlated in the important variables 
-          Data[,sapply(Data, is.numeric) ==TRUE, with=FALSE]
-          dropd <- unique(ImportVar[rowSums(((cor(data_section[, colnames(data_section) %in% unique(c(ImportVar)), with=FALSE],use="pairwise.complete.obs")>.85) & (cor(data_section[, colnames(data_section) %in% unique(c(ImportVar)), with=FALSE],use="pairwise.complete.obs") < 1))*1) >0])
-          dropd <- dropd[2:length(dropd)]
-          ImportVar  <- ImportVar[!(ImportVar) %in% dropd]
-          Use_varibles2 <- c(Use_varibles, v2[!v2 %in% dropd & !v2 %in% Use_varibles])
-        }
-        if(is.null(ImportVar)){
-          ImportVar  <- index1
-          Use_varibles2 <- c(Use_varibles)
-        }
-        Use_varibles <- intersect(ImportVar,Use_varibles) 
-        AllVar <- c(AllVar,ImportVar) 
-      }
-      V <- sort(table(unlist(AllVar)),decreasing = TRUE)
-      V <-V[!names(V) %in% drops1]
-      v2 <-names(V[0:(NumImportVarUse -length(Use_varibles))])
-      Use_varibles2 <- c(Use_varibles2[!is.na(Use_varibles2)],v2 )
-    }
-    if(length(na.omit(Use_varibles2)) < NumImportVarUse){ 
-      data_section <- data1 
-      if(nrow(data_section) <minobs){
-        data_mix <- rbind(data_mix,data_section)
-        next
-      }
-      nums2 <- sapply(data_section , is.numeric)
-      explanatory2 <- names(nums2)[nums2 == TRUE]
-      nonZero <- names(na.omit(colSums(data_section[,explanatory2,with=FALSE]))>0)
-      data_section <- data_section[,nonZero,with=FALSE]
-      V <- sort(table(unlist(AllVar)),decreasing = TRUE)
-      v2 <-names(V[0:(NumImportVarUse -length(Use_varibles))])
-      
-      #print(ctry)
-      if(nrow(data_section)>= minobs){
-        # Runs the Random Forest Algorithm to find the most important variables in the dataset
-        #Deletes columns that might have nulls in the column
-        idxcol <- apply(apply(data_section,2,is.na),2,sum) == dim(data_section)[1]
-        cols <- c(colnames(data_section)[colnames(data_section) %in% newcol[!newcol  %in% idxcol]])
-        fit <- rpart(losstransf ~ ., data = data_section[, unique(cols), with=FALSE],control=rpart.control(minsplit=30, cp=0.1))
-        ImportVar <- names(fit$variable.importance)
-        check <- check +nrow(data_section)
-        if(!is.null(ImportVar)){
-          # gets rid of variables that are highly correlated in the important variables 
-          Data[,sapply(Data, is.numeric) ==TRUE, with=FALSE]
-          dropd <- unique(ImportVar[rowSums(((cor(data_section[, colnames(data_section) %in% unique(c(ImportVar)), with=FALSE],use="pairwise.complete.obs")>.85) & (cor(data_section[, colnames(data_section) %in% unique(c(ImportVar)), with=FALSE],use="pairwise.complete.obs") < 1))*1) >0])
-          dropd <- dropd[2:length(dropd)]
-          ImportVar  <- ImportVar[!(ImportVar) %in% dropd]
-          Use_varibles2 <- c(Use_varibles, v2[!v2 %in% dropd & !v2 %in% Use_varibles])
-        }
-        if(is.null(ImportVar)){
-          ImportVar  <- index1
-          Use_varibles2 <- c(Use_varibles)
-        }
-        Use_varibles <- intersect(ImportVar,Use_varibles) 
-        AllVar <- c(AllVar,ImportVar) 
-      }
-      V <- sort(table(unlist(AllVar)),decreasing = TRUE)
-      V <-V[!names(V) %in% drops1]
-      v2 <-names(V[0:(NumImportVarUse -length(Use_varibles))])
-      Use_varibles2 <- c(Use_varibles2[!is.na(Use_varibles2)],v2 )
-    }
-    
-    Use_varibles2 <- unique(na.omit(Use_varibles2[!(Use_varibles2 %in% drops2)]))
-    Use_varibles2 <- unique(na.omit(Use_varibles2[!(Use_varibles2 %in% drops1)]))
-    if(length(Use_varibles2) == 0){
-      print("Not enough correlation with the explanatory variables")
-      next
-    }
-
-    ###################
-    Predvar<- unique(na.omit(c(HierarchicalCluster, keys_lower,"loss_per_clean",Use_varibles2[1:NumImportVarUse],"Protected")))
-    DataPred <- VariablesAdd1(timeSeriesDataToBeImputed,keys_lower,Predvar)
-    names(DataPred) <- tolower(names(DataPred))
-    names(DataPred) <- gsub("[[:punct:]]","_",names(DataPred)) 
-    #DataPred$geographicaream49 <- as.character(DataPred$geographicaream49)
-  
-    ################################  
-    #Trims the variables to the the ones going to be used in the model  - included from the random forests
-    datapred <- DataPred %>% filter(foodgroupname == name)
-    datapred <- datapred[, unique(na.omit(c(HierarchicalCluster, keys_lower,"loss_per_clean",Use_varibles2[1:NumImportVarUse]))),with=FALSE] #, "Year"
-    datapred <- datapred[,colSums(is.na(datapred))<nrow(datapred),with=FALSE]
-
-    datamod <- data1[,  names(data1)[names(data1) %in% unique(na.omit(c(index1,"losstransf",Use_varibles2[1:NumImportVarUse], DV,"timepointyears")))], with=FALSE] 
-   
-
-    if(HierarchicalCluster != "geographicaream49"){datamod <- datamod %>% filter("geographicaream49" !="")}
-    datamod <-  na.omit(datamod)
-    #datapred <-  na.omit(datapred)<>
-    UseV <- unique(Use_varibles2[1:NumImportVarUse])
-    if(dim(datamod)[1] < minobs | length(unique(datamod$geographicaream49)) < minctry){
-      sprintf('Not enough Observations to model %s',name)
-      next
-    }
-    #Check for variation in columns
-    usevartest <- unique(c(UseV[!is.na(UseV)],keys_lower))
-    usevartest <- usevartest[!colSums(var(datamod[,usevartest ,with=F])) ==0]
-    if(length(usevartest) <length(unique(c(UseV[!is.na(UseV)],keys_lower)))){
-      UseVari <- usevartest
-      datamod<- datamod[,c(UseVari,"losstransf"),with=FALSE]
-    }else{UseVari <-unique(c(UseV[!is.na(UseV)],keys_lower)) }
-    #
-    ##### PART 3 - Heirarchical model ####
-    if((length(index1)!=0) & (length(unique(c(UseV[!is.na(UseV)],index1,DV))) > 2)){
-      ## Model 
-      formula <- paste("losstransf ~ ", paste(unique(UseVari), collapse= "+")) #
-      mod2 <- plm(as.formula(formula), data = datamod, index= c(index1), model =modelstr)
-      #,warning=function(w) print("Not enough observations")) 
-      if(length(mod2) == 1 ){next}
-      modrun <- 1
-
-     }else{datamod2 <- datamod[,!rowSums(as.data.table(var(datamod))) == 0,with=FALSE]
-       mod2 = lm(losstransf ~ ., data = datamod2)
-       modrun <- 1
      }
 
     
-    ##################################    
+    nums1[tolower(keys_lower)] <- TRUE
+    nums1[names(nums1) == "sdg_regions"]<- TRUE
+    explanatory <- names(nums1)[nums1 == TRUE]
+    data1 <-  data1[ , explanatory ,with=FALSE]
+    
+    #data1 <- data1 %>% filter(timepointyears >1990) # there is a data incongruity with the SWS at yr 1988/89
+    datamod <- data1[,!names(data1) %in% unique(c("loss_per_clean")),with=F]
+    #datamodEXP <-MultiExp(datamod,2,"losstransf")
+    
+    
+    ###### Variable Selection ####
+    ## CLuster wide Variable selection ##
+    fit <- rpart(losstransf ~ ., data =  data1[,!names(data1) %in% unique(c(keys_lower, drops1)),with=F] ,control=rpart.control(minsplit=30, cp=0.001))
+    ImportVar <- names(fit$variable.importance)[1:NumImportVarUse]
+    
+    UseVari <- unique(c(keys_lower,depVar,ImportVar))
+    datamod <- datamod[,UseVari,with=F]
+    
+    # # Add a time lag
+    # library(tseries)
+    # lag = 3
+    # s <- adf.test(datamod$losstransf, k=lag)
+    # datamod <- dataLag(datamod,indexVar= keys_lower,var="losstransf",timeVar="timepointyears",lag,LType='fullset')
+
+    ###################
+    Predvar<- unique(na.omit(c(HierarchicalCluster, keys_lower,"loss_per_clean",UseVari ,"Protected")))
+    DataPred <-  timeSeriesDataToBeImputed %>% filter(measureditemcpc %in% CPCs)
+    DataPred <- VariablesAdd1(DataPred,keys_lower,Predvar)
+    names(DataPred) <- tolower(names(DataPred))
+    names(DataPred) <- gsub("[[:punct:]]","_",names(DataPred)) 
+
+    datapred <- DataPred
+    for(ir in 1:length(ImportVar)){
+      datapred[,ImportVar[ir]] <- na.approx(datapred[,ImportVar[ir],with=F])
+      help("na.approx")
+      #  mapply(impute,datapred[,ImportVar[ir],with=F], MoreArgs =c(mean))
+    }
+
+    ##### PART 3 - Full Specified Heirarchical model ####
+    # The choice of model is based on the assumption that countries are inherehently different in their loss structure.
+    # Given that the panel data is unbalanced, the model has been specified and tested  for different specifications
+    # With the challenge that losses may have a linear trend, but be increasing (decreasing) at decreasing rates
+
+    ## Model 
+    formula <- paste(paste(depVar," ~",sep=""),paste(keys_lower,sep="+", collapse= " + "),'+',paste(unique(UseVari[!UseVari %in% c(depVar,keys_lower)]), collapse= " + ")) #
+    formula4 <- paste(paste(depVar," ~",sep=""), paste(keys_lower,sep="+", collapse= " + "), collapse= " + ")
+    
+    #paste("factor(", keys_lower[3], ")",sep="", collapse= " + "),'+',
+    mod2_rlm <- lm(as.formula(formula), data = datamod)
+    mod2_rand <- plm(as.formula(formula), data = datamod , index=c("measureditemcpc"), model ="random")
+    mod2_red  <- plm(as.formula(formula4), data = datamod , index=c("measureditemcpc"), model ="random")
+   
+    CB(mod2_rlm$coefficients[1] + mod2_rlm$coefficients[names(mod2_rlm$coefficients)=="timepointyears"]*2008)
+    CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)
+    CB(mod2_red$coefficients[1]+ mod2_red$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)
+    
+    modelspec = 'random'
+    # GIven the unbalanced aspects of the panels, for some cases it creates heteroskedastic errors which skew the data beyond the max/min of reasonable estimates
+    # In these cases the data is averaged over cpc (which provided better explanatory power than over country) by year and then re-selected the variables and 
+    # re-estimate the series
+    if(CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)>
+      max(Data[measureditemcpc %in% CPCs, loss_per_clean]) | CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)< .01 | name %in% "2911"){
+      tma2 <- data1[,!names(data1) %in% unique(c("loss_per_clean")),with=F]
+      tma2 <- tma2[,!names(tma2) %in% c('geographicaream49',"m49CPC"),with=F]
+      tma2 <- tma2[, lapply(.SD, mean), by = c("timepointyears", "measureditemcpc")]
+      fitTMA <- rpart(losstransf ~ ., data = tma2[,!names(  tma2) %in% unique(c(keys_lower, drops1)),with=F] ,control=rpart.control(minsplit=30, cp=0.001))
+      ImportVarTMA <- names(fitTMA$variable.importance)[1:NumImportVarUse]
+      
+      UseVariTMA <- na.omit(unique(c(keys_lower[2:3],depVar,ImportVarTMA)))
+      datamodTMA <- tma2[,UseVariTMA,with=F]
+      #### Exclude NaN
+      datamodTMA <-datamodTMA[complete.cases(datamodTMA), ]
+      formulaTMA <- paste(paste(depVar," ~",sep=""), paste(keys_lower[2:3], collapse= " + "),'+',paste(unique(UseVariTMA[!UseVariTMA %in% c(depVar,keys_lower)]), collapse= " + ")) #
+      mod2_rand <- plm(as.formula(formulaTMA), data = datamodTMA%>% filter(timepointyears>1990) , index=c("measureditemcpc"), model ="random")
+      modelspec = 'randomAveraged'
+    }
+    
+    
+    mod2 <- mod2_rand
+    summary(mod2)
+    mod2res = resid(mod2)
+    mod2res <-  as.data.frame(cbind(datamod[,keys_lower,with=F], mod2res))
+    coeffSig <- summary(mod2)$coeff[,4][summary(mod2)$coeff[,4] <.1]
+    modrun =1
+    
+    # ############ Alternative models & tests ######################
+    # #### Part 3 and 3/4 - Specification tests
+    # ## Alternative models
+    # 
+    # formula <- paste("losstransf ~ ", paste(unique(UseVari), collapse= "+")) 
+    # mod2_fixed <- plm(as.formula(formula), data = datamod, index=  c(index1), model ="within")
+    # mod2_pooling <- plm(as.formula(formula), data = datamod, index=  c(index1), model ="pooling")
+    # 
+    # mod2_rand <- plm(as.formula(formula), data = datamod, index= c('measureditemcpc'), model ="random")
+    # #mod2_lin = lm(as.formula(formula), data = datamod)
+    # ## Model
+    # formula_res  <- paste("losstransf ~ ", paste(unique(keys_lower), collapse= "+")) #
+    # mod2_resR <- plm(as.formula(formula_res), data = datamod, index= c(index1), model ="random")
+    # mod2_resF <- plm(as.formula(formula_res), data = datamod, index= c(index1), model ="pooling")
+    # mod2_lnres  = lm(as.formula(formula_res), data = datamod)
+    # 
+    # ## Testing the impact of the groupings
+    # n <- dim(summary(mod2_rand)$coeff)[1]
+    # K <- dim(summary(mod2_fixed)$coeff)[1] - n
+    # N <- dim(datamod)[1]
+    # F_Test <- ((summary(mod2_rand)$r.squared - summary(mod2_fixed)$r.squared)/(n-1))/((1-summary(mod2_rand)$r.squared)/(n*N-n-K))
+    # print(pf(F_Test,(n-1),(n*N-n-K)))
+    # 
+    # #Hausman (if p is less than 0.05 use the fixed)
+    # phtest(mod2_fixed,mod2_rand)
+    # Tests for random or fixed
+    # plmtest(mod2_pooling, type=c("bp")) # Tests for random or ols
+    # 
+    # pcdtest(mod2_fixed, test = c("lm")) # Cross sectional
+    # pcdtest(mod2_fixed, test = c("cd")) # Cross sectional
+    # 
+
+    # ################################################################
+    
+    ####################### Residuals #########################################
+    OnlySigCoeff =T
+
+    
     #DV <- names(fixef(mod2))
     if(index1 == "measureditemcpc"){PD_V2 <- unique(unlist(c(datapred[,index1,with=FALSE])))} 
     if(index1 == "geographicaream49"){PD_V2 <- levels(unlist(c(datapred[,index1,with=FALSE])))}
     if(modelstr == "within"){  
     # For each of the items in the index
-    coeffN <- unique(c(Use_varibles2))
+    coeffN <- unique(c( UseVari[!UseVari %in% c(keys_lower,depVar)]))
     for(ind1 in 1:length(unique(DV))){
           datapred[ which(datapred[,index1,with=FALSE] ==  names(fixef(mod2)[ind1]) & datapred[,DV,with=FALSE] ==  gsub(DV,"", names(coefficients(mod2)))[ind2]) ,]$losstransf =
             fixef(mod2)[ind1] +coefficients(mod2)[names(coefficients(mod2))[ind2]]+
             rowSums(data.frame(mapply(`*`,coefficients(mod2)[names(coefficients(mod2)) %in% coeffN],  datapred[ which(datapred[,index1,with=FALSE] ==  names(fixef(mod2)[ind1]) & datapred[,DV,with=FALSE] ==  gsub(DV,"", names(coefficients(mod2)))[ind2]),coeffN,with=FALSE]))) 
         }
       }
-    if(modelstr == "random"){  
+    if(modelstr == "random" |modelstr == "pooling"){  
         # COmbines the coefficients to create an estimate for every column in the group
-        coeffN <- c(Use_varibles2[!(Use_varibles2 %in% index1 | Use_varibles2 %in% DV | Use_varibles2 %in%  "loss_per_clean")])
+        coeffN <- c(UseVari[!UseVari %in% c(index1,DV,depVar)])
         coeffN <- na.omit(coeffN) 
-        length(unique(unlist(c(datamod[,index1,with=FALSE]))))
-        coeffSig <- summary(mod2)$coeff[,4] <.1
-        coeffSig <- names(coeffSig)[names(coeffSig) %in% Use_varibles2]
         
-        coeffindex <-  grep(index1,names(coefficients(mod2)), perl=TRUE, value=TRUE)
-        coeffDV <- grep(DV,names(coefficients(mod2)), perl=TRUE, value=TRUE)
+        if(OnlySigCoeff){
+          coeffSig <- summary(mod2)$coeff[,4][summary(mod2)$coeff[,4] <.1]
+          coeffSig <- names(coeffSig)[names(coeffSig) %in%  UseVari]
+          Inters <- names(summary(mod2)$coeff[,4][summary(mod2)$coeff[,4] <.1])
+        }else{
+          coeffSig <- coeffN
+          Inters <- names(coefficients(mod2))
+        }
+        
+        coeffindex <-  grep(index1,Inters, perl=TRUE, value=TRUE)
+        coeffDV <-     grep(DV,Inters, perl=TRUE, value=TRUE)
         
         datapred[,countydummy :=0]
         datapred[,cropdummy :=0]
+        datapred[,intercept :=0]
         
         for(ind1 in 1:length(unique(gsub(index1,"", coeffindex)))){
           datapred[geographicaream49 == gsub(index1,"", coeffindex)[ind1],countydummy := as.numeric(coefficients(mod2)[coeffindex[ind1]]),]
@@ -283,12 +289,14 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,HierarchicalCluster,keys_lo
           datapred[measureditemcpc == gsub(DV,"", coeffDV)[ind2],cropdummy:= as.numeric(coefficients(mod2)[coeffDV[ind2]]),]
           
         }
+        datapred[(cropdummy == 0) & (countydummy ==0),intercept:=coefficients(mod2)[1]]
+          
         if(length(coeffN) >0){
-          # Applies the weights of the estimation across the entire cluster sets, using the demeaned coefficient as the intercept  (coefficients(mod2)[1]  coefficients(mod2)[1]
-          datapred[,losstransf := mean(ercomp(mod2)$theta) +
-                     rowSums(mapply(`*`,coefficients(mod2)[names(coefficients(mod2)) %in% coeffSig],datapred[ ,names(coefficients(mod2)[names(coefficients(mod2)) %in% coeffSig]), with=FALSE]), na.rm=TRUE)+
-                     countydummy+cropdummy,] 
-        }else{ datapred[,losstransf := coefficients(mod2)[1] + countydummy+cropdummy,]}
+          # Applies the weights of the estimation across the entire cluster sets, using the demeaned coefficient as the intercept  (coefficients(mod2)[1]  
+          datapred[,losstransf := 
+                     rowSums(mapply(`*`,coefficients(mod2)[names(coefficients(mod2)) %in% coeffSig],datapred[ ,coeffSig,with=F]), na.rm=TRUE)+
+                     countydummy+cropdummy+intercept,] 
+        }else{ datapred[,losstransf := coefficients(mod2)[1] + countydummy+cropdummy+intercept,]}
       }
  
     if(modrun ==1){
@@ -299,14 +307,20 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,HierarchicalCluster,keys_lo
       production$geographicaream49 <-as.character(production$geographicaream49)
       datapred$geographicaream49 <-as.character(datapred$geographicaream49)
       
-      datapred[datapred$losstransf !=0, loss_per_clean := exp(datapred$losstransf[datapred$losstransf !=0])/(1+exp(datapred$losstransf[datapred$losstransf !=0])),]
+      datapred[datapred$losstransf !=0, loss_per_clean := exp(datapred$losstransf)/(1+exp(datapred$losstransf)),]
+      #datapred[datapred$losstransf !=0, loss_per_clean := datapred$losstransf[datapred$losstransf !=0]]
       datapred[,value_measuredelement_5126 := loss_per_clean,]
       datapred[,value_measuredelement_5016 := 0,]
       datapred[,flagobservationstatus := 'I',] 
       datapred[,flagmethod:= 'e',]
       datapred[,flagcombination := 'I;e',]
       datapred[,protected := FALSE,]
-     
+      medianLoss <- median(datapred$value_measuredelement_5126, na.rm=TRUE)
+      medianLossRaw <- median(unlist(Data[measureditemcpc %in% CPCs,"loss_per_clean"]))
+      print(paste('average loss:',medianLoss*100, "%"))
+      print(paste('average loss Raw:',medianLossRaw*100, "%"))
+      print(paste('Number of countries:',length(unique(datamod$geographicaream49))))
+      print(paste('Number of comodities:',length(unique(datamod$measureditemcpc))))
     }
     
     timeSeriesDataToBeImputed$geographicaream49 <- as.character(timeSeriesDataToBeImputed$geographicaream49)
@@ -325,11 +339,13 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,HierarchicalCluster,keys_lo
     timeSeriesDataToBeImputed[is.na(Protected) & loss_per_cleana >0,flagcombination := paste(flagobservationstatus,flagmethod, sep=";"),]
     timeSeriesDataToBeImputed[,(nameadd):= NULL,]
    
-    medianLoss <- median(datapred$value_measuredelement_5126, na.rm=TRUE)
-    print(paste('average loss:',medianLoss*100, "%"))
+  
+    
+    if(graphLoss){
+      GraphLosses(timeSeriesDataToBeImputed,Data_Use_train,mod2res)
+    }
     
     
-    # Write the different models to json format
     ##### Save model parameters
 
     SavResult <- list(cluster=name,formula=formula,coeffnames = paste(unlist(names(coefficients(mod2))), collapse = "##"),mean_intercept=mean(ercomp(mod2)$theta),coeff =paste(unlist(coefficients(mod2)), collapse = "##"),
@@ -361,8 +377,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,HierarchicalCluster,keys_lo
   timeSeriesDataToBeImputed <- timeSeriesDataToBeImputed %>% filter(!is.na(value_measuredelement_5016))
   datasetN[datasetN=="loss_per_clean"] <- "value_measuredelement_5126"
   
-  
-  
+
   ### For the SWS ####
   timeSeriesDataToBeImputed_5016 <- timeSeriesDataToBeImputed[,c(keys_lower,"value_measuredelement_5016","flagobservationstatus", "flagmethod") ,with=F] 
   
@@ -389,15 +404,16 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,HierarchicalCluster,keys_lo
   
   timeSeriesDataToBeImputed_5126 <- timeSeriesDataToBeImputed_5126 %>% filter(!is.na(flagMethod))
 
-  ## Save to the SWS
-   stats = SaveData(domain = "lossWaste",
-                 dataset = "loss",
-                 data = timeSeriesDataToBeImputed_5016
-                )
-   stats = SaveData(domain = "lossWaste",
-                       dataset = "loss",
-                        data = timeSeriesDataToBeImputed_5126
-       )
+  # Save to the SWS
+  stats = SaveData(domain = "lossWaste",
+                dataset = "loss",
+                data = timeSeriesDataToBeImputed_5016
+               )
+
+  stats = SaveData(domain = "lossWaste",
+                      dataset = "loss",
+                       data = timeSeriesDataToBeImputed_5126
+      )
 
     
       

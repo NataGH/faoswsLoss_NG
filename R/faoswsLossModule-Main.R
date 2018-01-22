@@ -29,7 +29,10 @@ library(scales)
 library(reshape)
 library(devtools)
 library(jsonlite)
+library(lmtest)
 library(readr)
+library(Hmisc)
+
 
 library(magrittr) 
 remove.packages(pkgs, lib, version)
@@ -65,7 +68,7 @@ files = dir("~/Github/faoswsLoss/R",
            full.names = TRUE)
 
 
-token4 = "a2fb06e2-1606-43ce-9b48-5eedfbd5b0a2" # saved Loss % data
+token4 = "613475f8-c5c0-4dc7-a738-92e616072a56" # saved Loss % data
 
 GetTestEnvironment(
   baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
@@ -96,7 +99,7 @@ selectedModelYear = as.character(1961:2015)
 
 HierarchicalCluster <- "foodgroupname" # "isocode", "SDG.Regions"
 VaribleSelection <- "RandomForest_geo"
-graphLoss <- 1
+graphLoss <- 0
 ##########################################################
 
 
@@ -180,8 +183,7 @@ if(updateModel==1){
     names(lossData) <- tolower(names(lossData))
     lossData <- merge(lossData,CountryGroup[,c("isocode","geographicaream49", "country")],  by = c("geographicaream49"), all.x = TRUE, all.y = FALSE)
     #lossData <- merge(lossData,FAOCrops[,c("measureditemcpc","crop")],  by = c("measureditemcpc"), all.x = TRUE, all.y = FALSE)
-    lossData <- lossData %>% filter(loss_per_clean < 50)
-    #highLosses <- lossData %>% filter(loss_per_clean > 50)
+    
     #date = "_18Dec17"
     #write.table(highLosses,paste(githubsite, 'General/highLosses',date, '.csv', sep=''),sep=',' )
     
@@ -226,23 +228,37 @@ if(updateModel==1){
        
        ## Runs the Markov Model to standardize estimates 
        markov <- FSC_Markov(ConvFactor1,MarkovOpt)
-       
        FullSet <- rbind(markov,lossData, fill=T)
-  }else{FullSet <- lossData}
+       FullSet[,index :=rownames(FullSet)]
+      
+       duplicates <- FullSet %>%
+         group_by(geographicaream49,timepointyears,measureditemcpc) %>%
+         summarise(total.count=n())
+       duplicates <- duplicates %>% filter(total.count>1)
+       drop <- FullSet %>% filter(geographicaream49 %in% duplicates$geographicaream49 & timepointyears %in% duplicates$timepointyears
+                          & measureditemcpc  %in% duplicates$measureditemcpc & fsc_location != "SWS")
+       
+       FullSet <- FullSet %>% filter(!index %in% drop$index)
+       FullSet[,index :=NULL]
+       }else{FullSet <- lossData}
+  
+ 
+  
   #write.table(FullSet,paste(githubsite, 'General/FullSet.csv', sep=''),sep=',' )
   ### Save the intermediate aggregation table  to the sws
-    names(FullSet) <- tolower(names(FullSet))
-    ## Delete
-    table = "aggregate_loss_table"
-    changeset <- Changeset(table)
-    newdat <- ReadDatatable(table, readOnly = FALSE)
-    AddDeletions(changeset, newdat)
-    Finalise(changeset)
-    ## Add
-    AddInsertions(changeset,  FullSet[,c("geographicaream49","timepointyears","measureditemcpc","isocode","country","crop","loss_per_clean","fsc_location"),])
-    Finalise(changeset)
-  
-  
+  #<>
+  names(FullSet) <- tolower(names(FullSet))
+  ## Delete
+  table = "aggregate_loss_table"
+  changeset <- Changeset(table)
+  newdat <- ReadDatatable(table, readOnly = FALSE)
+  AddDeletions(changeset, newdat)
+  Finalise(changeset)
+  ## Add
+  AddInsertions(changeset,  FullSet[,c("geographicaream49","timepointyears","measureditemcpc","isocode","country","crop","loss_per_clean","fsc_location"),])
+  Finalise(changeset)
+
+  FullSet <- FullSet %>% filter(loss_per_clean <40)
   ########### Variables for the module  ###################   
   # Adds the explanatory Varaibles,
   Predvar <- c()
@@ -253,7 +269,7 @@ if(updateModel==1){
   #KeepVar <- c(keys,'isocode','SDG_Regions',"measuredItemCPC",
   #             'FSC_Location',HierarchicalCluster)
   
-  timeSeriesDataToBeImputed2 <- LossModel(Data= Data_Use_train,timeSeriesDataToBeImputed, HierarchicalCluster,keys_lower)
+  timeSeriesDataToBeImputed2 <- LossModel(Data= Data_Use_train,timeSeriesDataToBeImputed, production,HierarchicalCluster,keys_lower)
                                             
  
 }  
