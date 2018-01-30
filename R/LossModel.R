@@ -245,7 +245,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
 
     # ################################################################
     
-    ####################### Residuals #########################################
+    ####################### Results #########################################
     OnlySigCoeff =T
 
     
@@ -296,7 +296,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
           datapred[,losstransf := 
                      rowSums(mapply(`*`,coefficients(mod2)[names(coefficients(mod2)) %in% coeffSig],datapred[ ,coeffSig,with=F]), na.rm=TRUE)+
                      countydummy+cropdummy+intercept,] 
-        }else{ datapred[,losstransf := coefficients(mod2)[1] + countydummy+cropdummy+intercept,]}
+        }else{ datapred[,losstransf := countydummy+cropdummy+intercept,]}
       }
  
     if(modrun ==1){
@@ -349,7 +349,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     ##### Save model parameters
 
     SavResult <- list(cluster=name,formula=formula,coeffnames = paste(unlist(names(coefficients(mod2))), collapse = "##"),mean_intercept=mean(ercomp(mod2)$theta),coeff =paste(unlist(coefficients(mod2)), collapse = "##"),
-                     coeffsig=paste(unlist(coeffSig), collapse = "##"), coeffindex=paste(unlist(coeffindex), collapse = "##"), coeffDV= paste(unlist(coeffDV), collapse = "##") )
+                     coeffsig=paste(unlist(coeffSig), collapse = "##"), coeffindex=paste(unlist(coeffindex), collapse = "##"), coeffdv= paste(unlist(coeffDV), collapse = "##") )
 
     lossmodelruns = as.data.table(SavResult)
 
@@ -358,19 +358,16 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     setcolorder(lossmodelruns, c("daterun","modelversion",names(SavResult)))
     names(lossmodelruns) <- tolower(names(lossmodelruns) )
     
-     table = "lossmodelruns"
-     changeset <- Changeset(table)
-     newdat <- ReadDatatable(table, readOnly = FALSE)
-     newdat2 <- newdat[0,]
-     Finalise(changeset)
-     AddInsertions(changeset,  lossmodelruns)
-     Finalise(changeset)
-     
-    
-    
+    table = "lossmodelruns"
+    changeset <- Changeset(table)
+    newdat <- ReadDatatable(table, readOnly = FALSE)
+    newdat2 <- newdat[0,]
+    Finalise(changeset)
+    AddInsertions(changeset,  lossmodelruns)
+    Finalise(changeset)
   }
   
-  
+  # Multiplies loss percentages by production
   timeSeriesDataToBeImputed <- merge(timeSeriesDataToBeImputed,production, by.x = (keys_lower), by.y = (keys_lower), all.x = TRUE, all.y = FALSE)
   timeSeriesDataToBeImputed[,value_measuredelement_5126 := loss_per_clean,]
   timeSeriesDataToBeImputed[,value_measuredelement_5016 := value_measuredelement_5126*value_measuredelement_5510,]
@@ -378,7 +375,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   datasetN[datasetN=="loss_per_clean"] <- "value_measuredelement_5126"
   
 
-  ### For the SWS ####
+  ### Splits the data tables for the SWS ####
   timeSeriesDataToBeImputed_5016 <- timeSeriesDataToBeImputed[,c(keys_lower,"value_measuredelement_5016","flagobservationstatus", "flagmethod") ,with=F] 
   
   timeSeriesDataToBeImputed_5016[, measuredElement := "5016"]

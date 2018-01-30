@@ -86,6 +86,8 @@
 # fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), GFLI_Basket :='Animals Products & Fish and fish products',] # |fo
 # #----
 # Crops <- merge(fbsTree,FAOCrops, by=("measureditemcpc"), all.x =T)
+# dataRaw <-merge(dataRaw, fbsTree, by=("measureditemcpc"), all.x =T)
+# dataRaw <-merge(dataRaw, CountryGroup, by=("geographicaream49"), all.x =T)
 # #-------------------------------------------------------
 
 ui <- fluidPage(theme = shinytheme("lumen"),
@@ -157,19 +159,19 @@ server <- function(input, output, session) {
       updateSelectInput(session, "Country", choices=ctry_choices)
     }
   })
-  
+    #
   dataR <- reactive({dataRaw %>% filter((timepointyears %in% seq(input$Year[1],input$Year[2], by=1)) &
                                             (measureditemcpc %in% 
-                                             if(input$CommodityGroup == 'All'){unlist(fbsTree[,"measureditemcpc",with=F])}
-                                             else if(input$CommodityGroup != 'All'){unlist(fbsTree[GFLI_Basket == input$CommodityGroup,"measureditemcpc",with=F])}
-                                             else if(!(is.null(input$itemcpc) & input$itemcpc == 'All')){unlist(fbsTree[measureditemcpc ==input$itemcpc,"measureditemcpc",with=F])}
-                                             else{unlist(fbsTree[GFLI_Basket == input$CommodityGroup,"measureditemcpc",with=F])}
+                                             if(input$CommodityGroup == 'All'){unlist(unique(dataRaw[,"measureditemcpc",with=F]))}
+                                             else if(input$itemcpc == 'All'){unlist(unique(dataRaw[GFLI_Basket == input$CommodityGroup,"measureditemcpc",with=F]))}
+                                             else if(!(is.null(input$itemcpc))){unlist(unique(dataRaw[measureditemcpc %in% unique(FAOCrops[crop == input$itemcpc,"measureditemcpc"]),"measureditemcpc",with=F]))}
+                                             else{unlist(unique(dataRaw[GFLI_Basket == input$CommodityGroup,"measureditemcpc",with=F]))}
                                              ) &
                                           (geographicaream49 %in% 
-                                             if(input$SDG_Reg == 'All'){unlist(CountryGroup[,"geographicaream49",with=F])}
-                                             else if(input$Country == 'All'){unlist(CountryGroup[sdg_regions == input$SDG_Reg,"geographicaream49",with=F])}
-                                             else if(!is.null(input$Country)){unlist(CountryGroup[countryname == input$Country,"geographicaream49",with=F])}
-                                             else{unlist(CountryGroup[sdg_regions == input$SDG_Reg,"geographicaream49",with=F])})
+                                             if(input$SDG_Reg == 'All'){unlist(dataRaw[,"geographicaream49",with=F])}
+                                             else if(input$Country == 'All'){unlist(dataRaw[sdg_regions == input$SDG_Reg,"geographicaream49",with=F])}
+                                             else if(!is.null(input$Country)){unlist(dataRaw[countryname == input$Country,"geographicaream49",with=F])}
+                                             else{unlist(dataRaw[sdg_regions == input$SDG_Reg,"geographicaream49",with=F])})
                                         )
     })
 
@@ -189,18 +191,21 @@ server <- function(input, output, session) {
       xlab('timePointYears') + ylab('Loss (%)') +
       theme(axis.text.x = element_text(angle = 45, vjust = .5)) +
       theme(axis.text=element_text(size=12, face="bold"),
-            axis.title=element_text(size=12,face="bold")) 
+            axis.title=element_text(size=12,face="bold"))+
+      scale_x_continuous(limits = c(input$Year[1],input$Year[2]), breaks = seq(input$Year[1],input$Year[2], 2))
       #scale_y_continuous(labels = percent)
     
     
   })
   
-  output$stats <- renderPrint({
+  output$statsC <- renderPrint({
     title= ("The average for the commodity for all countries")
     ddply(dataR(),~timepointyears,summarise,
+          N_Country = length(unique(geographicaream49)),
+          N_Crops = length(unique(measureditemcpc)),
           mean=round(mean(loss_per_clean/100),3),
-          min=round(min(loss_per_clean/100),3),
-          max=round(max(loss_per_clean/100),3),
+          min= min(loss_per_clean/100),
+          max= max(loss_per_clean/100),
           sd=round(sd(loss_per_clean/100),3))
   })
 

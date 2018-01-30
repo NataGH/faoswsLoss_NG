@@ -159,16 +159,26 @@ CountryGroup[,"geographicaream49":=CountryGroup$m49code]
 FAOCrops[, "crop" := FAOCrops$description]
 FAOCrops[, "measureditemcpc" := addHeadingsCPC(FAOCrops$cpc)]
 
-#####  Runs the model and collects the needed data  #####
 
-if(updateModel==1){
-  finalModelData = 
+fbsTree <- ReadDatatable("fbs_tree")
+names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
+names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
+fbsTree[foodgroupname %in% c(2905), GFLI_Basket :='Cereals',]
+fbsTree[foodgroupname %in% c(2911), GFLI_Basket :='Pulses',]
+fbsTree[foodgroupname %in% c(2919,2918), GFLI_Basket :='Fruits & Vegetables',]
+fbsTree[foodgroupname %in% c(2907,2913), GFLI_Basket :='Roots, Tubers & Oil-Bearing Crops',]
+fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), GFLI_Basket :='Other',]
+fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), GFLI_Basket :='Animals Products & Fish and fish products',] # |foodGroupName == "PRODUCTS FROM FISH",
+
+
+#####  Runs the model and collects the needed data  #####
+finalModelData = 
   {
     ## requiredItems <<- getRequiredItems()
     production <- getProductionData(areaVar,itemVar,yearVar,elementVar) # Value_measuredElement_5510
     
     #lossDataAll <-getLossData() 
-    lossProtected <- getLossData(areaVar,itemVar,yearVar,elementVar,protected = TRUE)     # Value_measuredElement_5016
+    lossProtected <- getLossData(areaVar,itemVar,yearVar,elementVar,selectedYear,protected = TRUE)     # Value_measuredElement_5016
     names(lossProtected)[ names(lossProtected) == "Value"] <-  "value_measuredelement_5016"
     names(lossProtected)[ names(lossProtected) == "measuredItemSuaFbs"] <-  "measureditemcpc"
     names(lossProtected) <- tolower(names(lossProtected))
@@ -184,7 +194,6 @@ if(updateModel==1){
     lossData <- merge(lossData,CountryGroup[,c("isocode","geographicaream49", "country")],  by = c("geographicaream49"), all.x = TRUE, all.y = FALSE)
     #lossData <- merge(lossData,FAOCrops[,c("measureditemcpc","crop")],  by = c("measureditemcpc"), all.x = TRUE, all.y = FALSE)
     
-    #date = "_18Dec17"
     #write.table(highLosses,paste(githubsite, 'General/highLosses',date, '.csv', sep=''),sep=',' )
     
     # creating time series:
@@ -213,9 +222,9 @@ if(updateModel==1){
                        select = c(keys_lower,"isocode","country","loss_per_clean","fsc_location","flagobservationstatus.y", "flagmethod.y"))
     
     
-  } 
+} 
  
-  
+if(updateModel==1){  
   ########### Loss Factor Data and Aggregation ################### 
   ## This section imports the data of the loss factors and then merges it with the country designations for the SDG 
   if(SubNationalEstimates){
@@ -274,9 +283,158 @@ if(updateModel==1){
  
 }  
 if(updateModel ==0){
+  ###Computation parameters##
+  LastRun <- TRUE
+  Cluster2Update <- na.omit(unique(fbsTree$GFLI_Basket))
+
+  ## Read DataTables of the existing model runs 
   modelRuns <- ReadDatatable("lossmodelruns")
   
-  }
+  Cluster2Update <- na.omit(unique(fbsTree$GFLI_Basket))[1]
+  name <-unique(fbsTree[GFLI_Basket %in% Cluster2Update,foodgroupname])
+  CPCs <-unique(fbsTree[GFLI_Basket %in% Cluster2Update,measureditemcpc])
+    
+  modelRuns2 <- modelRuns[(cluster %in% name) ,]
+  modelRuns2 <- modelRuns2[(daterun == max(modelRuns2$daterun)),]
+
+  formula  <- modelRuns2$formula 
+  coeffSig <- unlist(strsplit(modelRuns2$coeffsig, "##"))
+  Inters <- unlist(strsplit(modelRuns2$coeffnames, "##"))
+  coeff <- unlist(strsplit(modelRuns2$coeff, "##"))
+  modeEst <- as.data.table(cbind(Inters, coeff))
+  coeffindex <- unlist(strsplit(modelRuns2$coeffindex, "##"))
+  coeffDV <- unlist(strsplit(modelRuns2$coeffdv, "##"))
+  
+
+  # Data prep
+  #### Protected Data ###
+  datasetN <- names(timeSeriesDataToBeImputed)
+  flagValidTableLoss <- as.data.table(flagValidTable)
+  protectedFlag <- flagValidTableLoss[flagValidTableLoss$Protected == TRUE,] %>%
+    .[, flagCombination := paste(flagObservationStatus, flagMethod, sep = ";")]
+  timeSeriesDataToBeImputed[,flagcombination :=  paste(flagobservationstatus, flagmethod, sep = ";")] 
+  
+  timeSeriesDataToBeImputed[flagcombination %in% protectedFlag$flagCombination,Protected := TRUE,]
+  timeSeriesDataToBeImputed[Protected == TRUE,loss_per_clean:= loss_per_clean/100]
+  
+  timeSeriesDataToBeImputedGroups <- join(timeSeriesDataToBeImputed, fbsTree, by = c("measureditemcpc"),type= 'left', match='all')
+  
+  #Including only the years that need to be updated
+  timeSeriesDataToBeImputed <- timeSeriesDataToBeImputed[timepointyears %in% selectedYear,]
+  
+  DataPred <-  timeSeriesDataToBeImputed %>% filter(measureditemcpc %in% CPCs)
+  DataPred <- VariablesAdd1(DataPred,keys_lower, coeffSig)
+  names(DataPred) <- tolower(names(DataPred))
+  names(DataPred) <- gsub("[[:punct:]]","_",names(DataPred)) 
+  datapred <- DataPred
+  ####################### Results #########################################
+  OnlySigCoeff =T
+  # COmbines the coefficients to create an estimate for every column in the group
+  coeffN <- na.omit(coeffN) 
+  
+  coeffindex <-  grep(keys_lower[1],Inters, perl=TRUE, value=TRUE)
+  coeffDV <-     grep(keys_lower[3],Inters, perl=TRUE, value=TRUE)
+    
+  datapred[,countydummy :=0]
+  datapred[,cropdummy :=0]
+  datapred[,intercept :=0]
+    
+  for(ind1 in 1:length(unique(gsub(keys_lower[1],"", coeffindex)))){
+      datapred[geographicaream49 == gsub(keys_lower[1],"", coeffindex)[ind1],countydummy := as.numeric(modeEst[Inters %in% coeffindex[ind1],coeff]),]
+    }
+  for(ind2 in 1:length(unique(gsub(keys_lower[3],"", coeffDV)))){ 
+      datapred[measureditemcpc == gsub(keys_lower[3],"", coeffDV)[ind2],cropdummy:= as.numeric(modeEst[Inters %in% coeffDV[ind2],coeff]),]
+      
+    }
+  datapred[(cropdummy == 0) & (countydummy ==0),intercept:=as.numeric(modeEst[Inters %in% "(Intercept)",coeff])]
+    
+  if(length(coeffN) >0){
+      # Applies the weights of the estimation across the entire cluster sets, using the demeaned coefficient as the intercept  (coefficients(mod2)[1]  
+      datapred[,losstransf := 
+                 rowSums(mapply(`*`,as.numeric(modeEst[Inters %in% coeffSig,coeff]),datapred[ ,coeffSig,with=F]), na.rm=TRUE)+
+                 countydummy+cropdummy+intercept,] 
+  }else{ datapred[,losstransf :=  countydummy+cropdummy+intercept,]}
+  
+  #Covert 
+  names(datapred) <- tolower(names(datapred))
+  names(production) <- tolower(names(production))
+  production$geographicaream49 <-as.character(production$geographicaream49)
+  datapred$geographicaream49 <-as.character(datapred$geographicaream49)
+    
+  datapred[datapred$losstransf !=0, loss_per_clean := exp(datapred$losstransf)/(1+exp(datapred$losstransf)),]
+  #datapred[datapred$losstransf !=0, loss_per_clean := datapred$losstransf[datapred$losstransf !=0]]
+  datapred[,value_measuredelement_5126 := loss_per_clean,]
+  datapred[,value_measuredelement_5016 := 0,]
+  datapred[,flagobservationstatus := 'I',] 
+  datapred[,flagmethod:= 'e',]
+  datapred[,flagcombination := 'I;e',]
+  datapred[,protected := FALSE,]
+  medianLoss <- median(datapred$value_measuredelement_5126, na.rm=TRUE)
+  print(paste('average loss:',medianLoss*100, "%"))
+ 
+  
+  timeSeriesDataToBeImputed$geographicaream49 <- as.character(timeSeriesDataToBeImputed$geographicaream49)
+  
+  int1 <-datapred[,tolower(datasetN), with=F]
+  nameadd <- paste(names(int1)[!names(int1) %in% keys_lower],'a',sep="")
+  names(int1)[!names(int1) %in% keys_lower] <- paste(names(int1)[!names(int1) %in% keys_lower],'a',sep="")
+  
+  timeSeriesDataToBeImputed <-  merge(timeSeriesDataToBeImputed, int1, by=keys_lower, all.x= TRUE)
+  timeSeriesDataToBeImputed %>% filter(is.na(Protected))
+  
+  timeSeriesDataToBeImputed[is.na(Protected) & value_measuredelement_5016a>=0,flagcombination:= flagcombinationa,]
+  timeSeriesDataToBeImputed[is.na(Protected) & value_measuredelement_5016a>=0,loss_per_clean:= loss_per_cleana,]
+  timeSeriesDataToBeImputed[is.na(Protected) & loss_per_cleana >0,flagobservationstatus := 'I',] 
+  timeSeriesDataToBeImputed[is.na(Protected) & loss_per_cleana >0,flagmethod:= 'e',]
+  timeSeriesDataToBeImputed[is.na(Protected) & loss_per_cleana >0,flagcombination := paste(flagobservationstatus,flagmethod, sep=";"),]
+  timeSeriesDataToBeImputed[,(nameadd):= NULL,]
+  
+  # Multiplies loss percentages by production
+  timeSeriesDataToBeImputed <- merge(timeSeriesDataToBeImputed,production, by.x = (keys_lower), by.y = (keys_lower), all.x = TRUE, all.y = FALSE)
+  timeSeriesDataToBeImputed[,value_measuredelement_5126 := loss_per_clean,]
+  timeSeriesDataToBeImputed[,value_measuredelement_5016 := value_measuredelement_5126*value_measuredelement_5510,]
+  timeSeriesDataToBeImputed <- timeSeriesDataToBeImputed %>% filter(!is.na(value_measuredelement_5016))
+  datasetN[datasetN=="loss_per_clean"] <- "value_measuredelement_5126"
+  
+  
+  ### Splits the data tables for the SWS ####
+  timeSeriesDataToBeImputed_5016 <- timeSeriesDataToBeImputed[,c(keys_lower,"value_measuredelement_5016","flagobservationstatus", "flagmethod") ,with=F] 
+  
+  timeSeriesDataToBeImputed_5016[, measuredElement := "5016"]
+  setnames(timeSeriesDataToBeImputed_5016, old =  c("geographicaream49", "timepointyears","measureditemcpc" , "value_measuredelement_5016", "flagobservationstatus", "flagmethod","measuredElement" ),
+           new =  c("geographicAreaM49", "timePointYears", "measuredItemSuaFbs"  ,"Value", "flagObservationStatus", "flagMethod","measuredElementSuaFbs") )
+  
+  
+  setcolorder(timeSeriesDataToBeImputed_5016, 
+              c("geographicAreaM49", "measuredElementSuaFbs" ,"measuredItemSuaFbs" ,"timePointYears", "Value", "flagObservationStatus", "flagMethod") )
+  
+  timeSeriesDataToBeImputed_5016 <- timeSeriesDataToBeImputed_5016 %>% filter(!is.na(flagMethod))
+  
+  ##---------------------
+  timeSeriesDataToBeImputed_5126 <- timeSeriesDataToBeImputed[,c(keys_lower,"value_measuredelement_5126","flagobservationstatus", "flagmethod") ,with=F] 
+  
+  timeSeriesDataToBeImputed_5126[, measuredElement := "5126"]
+  setnames(timeSeriesDataToBeImputed_5126, old =  c("geographicaream49", "timepointyears","measureditemcpc" , "value_measuredelement_5126", "flagobservationstatus", "flagmethod","measuredElement" ),
+           new =  c("geographicAreaM49","timePointYears", "measuredItemSuaFbs"  , "Value", "flagObservationStatus", "flagMethod","measuredElementSuaFbs") )
+  
+  
+  setcolorder(timeSeriesDataToBeImputed_5126, 
+              c("geographicAreaM49", "measuredElementSuaFbs" ,"measuredItemSuaFbs" ,"timePointYears", "Value", "flagObservationStatus", "flagMethod") )
+  
+  timeSeriesDataToBeImputed_5126 <- timeSeriesDataToBeImputed_5126 %>% filter(!is.na(flagMethod))
+  
+  # Save to the SWS
+  stats = SaveData(domain = "lossWaste",
+                   dataset = "loss",
+                   data = timeSeriesDataToBeImputed_5016
+  )
+  
+  stats = SaveData(domain = "lossWaste",
+                   dataset = "loss",
+                   data = timeSeriesDataToBeImputed_5126
+  )
+  
+}
 
 if(graphLoss){
   
