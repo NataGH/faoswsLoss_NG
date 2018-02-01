@@ -5,7 +5,7 @@
 #'
 #' @export getLossData
 
-getLossData = function(areaVar,itemVar,yearVar,elementVar,selectedYear,protected = FALSE){
+getLossData = function(areaVar,itemVar,yearVar,elementVar,selectedYear, protected = FALSE){
   #install.packages("faoswsFlags")
   library(faoswsFlag)
 
@@ -102,7 +102,7 @@ getLossData = function(areaVar,itemVar,yearVar,elementVar,selectedYear,protected
                 keys = GetCodeList(domain = "agriculture",
                                    dataset = "aproduction",
                                    dimension = "geographicAreaM49")[type == "country", code]),
-      Dimension(name = "measuredElement", keys = c("5016")), #"5126"
+      Dimension(name = "measuredElement", keys = c("5016")), 
       Dimension(name = "timePointYears", keys = as.character(1990:max(selectedYear))),
       Dimension(name = "measuredItemCPC",
                 keys = GetCodeList(domain = "agriculture",
