@@ -57,23 +57,7 @@ suppressMessages({
 
 
 
-##################### For deletion #####################################
-## For Local 
-## SWS Connection
 
-githubsite <- '~/faoswsLoss/data-raw/'
-dirmain <-  '~/faoswsLossa'
-SetClientFiles(dir = "C:\\Users\\ENGLISHA\\Documents\\certificates\\qa")
-files = dir("~/Github/faoswsLoss/R",
-           full.names = TRUE)
-
-
-token4 = "613475f8-c5c0-4dc7-a738-92e616072a56" # saved Loss % data
-
-GetTestEnvironment(
-  baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
-  token = token4
-)
 
 ############# Computation Parameters #####################################
 ## Options for the user - See full documentation for the User Oriented Work Flow 
@@ -103,23 +87,23 @@ graphLoss <- 0
 ##########################################################
 
 
-# if(CheckDebug()){
-#   message("Not on server, so setting up environment...")
-#   USER <- if_else(.Platform$OS.type == "unix",
-#                     Sys.getenv('USER'),
-#                     Sys.getenv('USERNAME'))
-# 
-# 
-#   library(faoswsModules)
-#   settings <- ReadSettings(file = file.path(paste(dirmain,"sws.yml", sep='/')))
-#   #SetClientFiles(settings[["certdir"]])
-# 
-#   GetTestEnvironment(
-#     baseUrl = settings[["server"]],
-#     token = settings[["token"]]
-#   )
-# 
-# }
+if(CheckDebug()){
+  message("Not on server, so setting up environment...")
+  USER <- if_else(.Platform$OS.type == "unix",
+                    Sys.getenv('USER'),
+                    Sys.getenv('USERNAME'))
+
+
+  library(faoswsModules)
+  settings <- ReadSettings(file = file.path(paste(dirmain,"sws.yml", sep='/')))
+  #SetClientFiles(settings[["certdir"]])
+
+  GetTestEnvironment(
+    baseUrl = settings[["server"]],
+    token = settings[["token"]]
+  )
+
+}
 
 
 

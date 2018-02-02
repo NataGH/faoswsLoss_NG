@@ -80,6 +80,7 @@ FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
 #----
 CountryGroup$country <- tolower(CountryGroup$countryname)
 CountryGroup[,"geographicaream49":=CountryGroup$m49code]
+
 names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
 names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
 FAOCrops[, "crop" := FAOCrops$description]
@@ -228,7 +229,7 @@ server <- function(input, output, session) {
 
   output$plotgraph  <- renderPlot({
     ggplot(dataMI(), aes(x = timepointyears, y = value, color = measureditemcpc)) + 
-      facet_wrap(~ geographicaream49)+
+      facet_wrap(~ country)+
       geom_point() +
       geom_line()+
       xlab('timePointYears') + ylab('Loss (%)') +
