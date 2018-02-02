@@ -2,13 +2,11 @@
 #'
 #' Function to obtain official food loss data at primary level
 #' @param protected Logical only return observations with protected flag combination 
-#'
+#' @import faoswsFlag faosws
 #' @export getLossData
 
 getLossData = function(areaVar,itemVar,yearVar,elementVar,selectedYear, protected = FALSE){
   #install.packages("faoswsFlags")
-  library(faoswsFlag)
-
   ## ################################################################################################
   ##   Code to get Import data from the Old System 
   ## ################################################################################################
