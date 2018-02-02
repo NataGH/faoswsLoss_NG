@@ -402,14 +402,14 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   timeSeriesDataToBeImputed_5126 <- timeSeriesDataToBeImputed_5126 %>% filter(!is.na(flagMethod))
 
   # Save to the SWS
-  stats = SaveData(domain = "lossWaste",
-                dataset = "loss",
-                data = timeSeriesDataToBeImputed_5016
+  stats = SaveData(domain = "lossWaste",
+                dataset="loss",
+                data = timeSeriesDataToBeImputed_5016
                )
 
-  stats = SaveData(domain = "lossWaste",
-                      dataset = "loss",
-                       data = timeSeriesDataToBeImputed_5126
+  stats = SaveData(domain = "lossWaste",
+                      dataset="loss",
+                       data=timeSeriesDataToBeImputed_5126
       )
 
     
