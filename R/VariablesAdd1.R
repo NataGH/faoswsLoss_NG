@@ -1,7 +1,7 @@
 #' Part of the FAO Loss Module
 #' 
 #' @author Alicia English
-#' 
+#' @export
 
 VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2){  
   # Description:
@@ -204,12 +204,12 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2){
                               'gc_tax_ypkg_rv_zs',
                               'gc_tax_ypkg_zs',
                               'ny_adj_nnty_cd',
-                              #'ny_adj_nnty_kd',
+                              ## 'ny_adj_nnty_kd',
                               'ny_adj_nnty_kd_zg',
                               'ny_adj_nnty_pc_cd',
                               'ny_adj_nnty_pc_kd',
                               'ny_adj_nnty_pc_kd_zg',
-                              #'ny_gdy_totl_kn',
+                              ## 'ny_gdy_totl_kn',
                               'ny_gsr_nfcy_cd',
                               'ny_gsr_nfcy_cn',
                               'ny_gsr_nfcy_kn',

@@ -1,6 +1,7 @@
 #' Part of the FAO Loss Module
 #' 
 #' @author Alicia English
+#' @export
 
 addHeadingsCPC <- function(measuredItemCPC){ 
   # Adds the appropriate number of zeros to the CPC code  

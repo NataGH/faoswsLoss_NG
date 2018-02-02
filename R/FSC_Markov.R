@@ -1,7 +1,8 @@
 #' Part of the FAO Loss Module
 #' 
 #' @author Alicia English
-options(warn=-1)
+#' @export
+#options(warn=-1)
 FSC_Markov <- function(RawData,opt){
   # Collapses the supply chain into singular observations at the country level
   # Args:

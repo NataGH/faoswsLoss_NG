@@ -2,13 +2,12 @@
 % Please edit documentation in R/faoswsLoss-package.R
 \docType{package}
 \name{faoswsLoss-package}
-\alias{faoswsLoss}
 \alias{faoswsLoss-package}
+\alias{faoswsLoss}
 \title{faoswsLoss package}
 \description{
 A package which calculates loss
 }
 \author{
-Natalia Golini, Michael C. J. Kao
+Alicia English
 }
-

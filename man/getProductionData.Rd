@@ -4,9 +4,8 @@
 \alias{getProductionData}
 \title{Get Production Data}
 \usage{
-getProductionData()
+getProductionData(areaVar, itemVar, yearVar, elementVar)
 }
 \description{
 Function to obtain production data at primary level
 }
-
