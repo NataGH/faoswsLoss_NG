@@ -11,6 +11,7 @@
 #install_github(repo = "SWS-Methodology/faoswsFlag")
 #install_github(repo = "SWS-Methodology/faoswsUtil")
 #install.packages("faoswsLoss", repo = "http://hqlprsws1.hq.un.fao.org/fao-sws-cran/") 
+#install.packages("faoswsModules", repos = "http://hqlprsws1.hq.un.fao.org/fao-sws-cran/")
 
 
 library(XML)
