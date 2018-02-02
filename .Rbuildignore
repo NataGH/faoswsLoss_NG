@@ -5,4 +5,11 @@ R/ojdbc14.jar
 .Rhistory
 ^.*\.Rproj$
 ^\.Rproj\.user$
-module/
+modules/
+data/
+data-raw/
+SDG12_3/
+shiny/
+sws\.yml.*
+.*\.docx$
+.*\.log$

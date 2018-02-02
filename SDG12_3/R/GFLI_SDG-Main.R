@@ -77,7 +77,7 @@ GetTestEnvironment(
 #     token = settings[["token"]]
 #   )
 #   
-#}
+}
 
 ######### Options ############
 selectedYear = as.character(1991:2015)
