@@ -14,22 +14,19 @@
 #install.packages("faoswsModules", repos = "http://hqlprsws1.hq.un.fao.org/fao-sws-cran/")
 
 
-library(XML)
-library(httr)
+
+
 library(stats4)
 library(plm)
-library(gtools)
 library(ggplot2)
 library(data.table)
 library(plyr)
 library(dplyr)
 library(dtplyr)
 library(rpart)
-library(gridExtra)
 library(scales)
 library(reshape)
-library(devtools)
-library(jsonlite)
+#library(devtools)
 library(lmtest)
 library(readr)
 library(Hmisc)

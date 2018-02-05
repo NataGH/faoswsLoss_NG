@@ -158,12 +158,21 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     names(DataPred) <- gsub("[[:punct:]]","_",names(DataPred)) 
 
     datapred <- DataPred
+    
+    # To impute data for the predictive set for missing observations in the explanatory data
     for(ir in 1:length(ImportVar)){
-      datapred[,ImportVar[ir]] <- na.approx(datapred[,ImportVar[ir],with=F])
-      help("na.approx")
-      #  mapply(impute,datapred[,ImportVar[ir],with=F], MoreArgs =c(mean))
+     for( j in unique(datapred$geographicaream49)){
+      #datapred[geographicaream49 == j,ImportVar[ir],with=F] <- with(datapred[geographicaream49 ==j,], impute(datapred[[ImportVar[ir]]], mean))
+      #datapred[,ImportVar[ir]] <- na.approx(datapred[,ImportVar[ir],with=F], na.rm = T)
+      if(is.integer(datapred[[ImportVar[ir]]])){
+        datapred[geographicaream49 == j & is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- as.integer(sum(datapred[geographicaream49 == j,ImportVar[ir],with=F], na.rm=TRUE)/dim(na.omit(datapred[geographicaream49 == j,ImportVar[ir],with=F]))[1])
+      }
+      else{datapred[geographicaream49 == j & is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- sum(datapred[geographicaream49 == j,ImportVar[ir],with=F], na.rm=TRUE)/dim(na.omit(datapred[geographicaream49 == j,ImportVar[ir],with=F]))[1]}
+     } 
+     if(is.integer(datapred[[ImportVar[ir]]])){
+       datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- as.integer(sum(datapred[[ImportVar[ir]]], na.rm=TRUE)/dim(datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir],with=F])[1])
+     }else{datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <-(sum(datapred[[ImportVar[ir]]], na.rm=TRUE)/dim(datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir],with=F])[1])}
     }
-
     ##### PART 3 - Full Specified Heirarchical model ####
     # The choice of model is based on the assumption that countries are inherehently different in their loss structure.
     # Given that the panel data is unbalanced, the model has been specified and tested  for different specifications
@@ -207,7 +216,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     mod2 <- mod2_rand
     summary(mod2)
     mod2res = resid(mod2)
-    mod2res <-  as.data.frame(cbind(datamod[,keys_lower,with=F], mod2res))
+    mod2res <-  as.data.table(mod2res)
     coeffSig <- summary(mod2)$coeff[,4][summary(mod2)$coeff[,4] <.1]
     modrun =1
     
@@ -289,8 +298,8 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
           datapred[measureditemcpc == gsub(DV,"", coeffDV)[ind2],cropdummy:= as.numeric(coefficients(mod2)[coeffDV[ind2]]),]
           
         }
-        datapred[(cropdummy == 0) & (countydummy ==0),intercept:=coefficients(mod2)[1]]
-          
+        datapred[,intercept:=coefficients(mod2)[1]]
+        #(cropdummy == 0) & (countydummy ==0)
         if(length(coeffN) >0){
           # Applies the weights of the estimation across the entire cluster sets, using the demeaned coefficient as the intercept  (coefficients(mod2)[1]  
           datapred[,losstransf := 

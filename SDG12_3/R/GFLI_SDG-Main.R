@@ -53,7 +53,7 @@ files = dir("~/Github/faoswsLoss/R",
             full.names = TRUE) 
 
 
-token3 = "60dc0b01-a91d-4d28-a2ab-654a8a43d3f1"
+token3 = "ec71e788-c7fa-44bc-a732-278d84f071fd"
 
 
 GetTestEnvironment(
