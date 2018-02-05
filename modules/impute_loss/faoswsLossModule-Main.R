@@ -56,11 +56,11 @@ suppressMessages({
 
 ############# Computation Parameters #####################################
 ## Options for the user - See full documentation for the User Oriented Work Flow 
-updateModel <- TRUE
+updatemodel <- TRUE
 LocalRun <- FALSE
 
 #For the model - using more than the SWS loss % for the 
-SubNationalEstimates <- 1
+subnationalestimates <- TRUE
 
 # selecting data collection methods for aggregating the subnational estimates 
 DataCollectionTags_all <- c("SWS","APHLIS","Rapid Assessment","Expert Opinion",
@@ -203,10 +203,10 @@ finalModelData =
     
 } 
  
-if(updateModel==1){  
+if(updatemodel==1){  
   ########### Loss Factor Data and Aggregation ################### 
   ## This section imports the data of the loss factors and then merges it with the country designations for the SDG 
-  if(SubNationalEstimates){
+  if(subnationalestimates){
        # brings in the current file of converstion factors 
 
        ConvFactor1  <- join(ConvFactor1,CountryGroup[,c('isocode',"geographicaream49")],  by = c('isocode'),type= 'left', match='all')
@@ -261,7 +261,7 @@ if(updateModel==1){
                                             
  
 }  
-if(updateModel ==0){
+if(updatemodel ==0){
   ###Computation parameters##
   LastRun <- TRUE
   Cluster2Update <- na.omit(unique(fbsTree$GFLI_Basket))
