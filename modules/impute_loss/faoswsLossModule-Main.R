@@ -219,7 +219,7 @@ if(updatemodel==1){
        FullSet[,index :=rownames(FullSet)]
       
        duplicates <- FullSet %>%
-         group_by(geographicaream49,timepointyears,measureditemcpc) %>%
+         dplyr::group_by(geographicaream49,timepointyears,measureditemcpc) %>%
          summarise(total.count=n())
        duplicates <- duplicates %>% filter(total.count>1)
        drop <- FullSet %>% filter(geographicaream49 %in% duplicates$geographicaream49 & timepointyears %in% duplicates$timepointyears

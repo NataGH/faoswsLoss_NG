@@ -1,6 +1,6 @@
 #' Part of the FAO Loss Module
 #' 
-#' @author Alicia English Marco Migone
+#' @author Alicia English 
 #' 
 #' 
 #' 
@@ -41,26 +41,23 @@ suppressMessages({
 })
 
 
-#render("1-example.Rmd")
-
-#################### For deletion #####################################
-# For Local
-# SWS Connection
-
-githubsite <- '~/faoswsLoss/data-raw/'
-dirmain <-  '~/faoswsLossa'
-SetClientFiles(dir = "C:\\Users\\ENGLISHA\\Documents\\certificates\\qa")
-files = dir("~/Github/faoswsLoss/R",
-            full.names = TRUE)
-
-
-token4 = "9b7a17f1-03e9-48c7-871c-115d8f20c4a3" # saved Loss % data
-
-GetTestEnvironment(
-  baseUrl = "https://hqlqasws1.hq.un.fao.org:8181/sws",
-  token = token4
-)
-
+if(CheckDebug()){
+  message("Not on server, so setting up environment...")
+  USER <- if_else(.Platform$OS.type == "unix",
+                  Sys.getenv('USER'),
+                  Sys.getenv('USERNAME'))
+  
+  
+  library(faoswsModules)
+  settings <- ReadSettings(file = file.path(paste(dirmain,"sws.yml", sep='/')))
+  #SetClientFiles(settings[["certdir"]])
+  
+  GetTestEnvironment(
+    baseUrl = settings[["server"]],
+    token = settings[["token"]]
+  )
+  
+}
 
 
 areaVar = "geographicAreaM49"
