@@ -118,13 +118,18 @@ fbsTree[foodgroupname %in% c(2907,2913), gfli_basket :='Roots, Tubers & Oil-Bear
 fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), gfli_basket :='Other',]
 fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), gfli_basket :='Animals Products & Fish and fish products',] # |foodGroupName == "PRODUCTS FROM FISH",
 
-######################################
-############ Index #############
+
+ProdQtySWS <- subset(production,
+                     select = c(keys_lower,"value_measuredelement_5510")) %>% filter(timepointyears >= BaseYear[1] & timepointyears <= BaseYear[2])
+
+Base_Prod <- ProdQtySWS[,qty_avey1y2 := mean(value_measuredelement_5510),by = c("geographicaream49",'measureditemcpc')]
+Base_Prod <- unique(Base_Prod[,c("geographicaream49",'measureditemcpc','qty_avey1y2'),with=F])
+
+#### Weights ####
 if(weights == "intl_prices"){
   intPrice2005 <-  ReadDatatable("int_$_prices_2005")
   
   pvail <- unique(intPrice2005$itemcode)
-  
   
   intPrice2005Selected <-
     intPrice2005 %>%
@@ -137,37 +142,98 @@ if(weights == "intl_prices"){
   intPrice2005Selected$measureditemfcl <- addHeadingsFCL(intPrice2005Selected$itemcode)
   intPrice2005Selected$measureditemcpc <- fcl2cpc(intPrice2005Selected$measureditemfcl,version = "2.1")
   intPrice2005Selected$itemname <- tolower(intPrice2005Selected$itemname)
+  Weights <- intPrice2005Selected[, c("itemname","measureditemcpc","intprice")]
   
   #distinct(intPrice2005Selected,measuredItemCPC)
 }
 
-
-######################################################################################################################################
-# Index calculation
-
-ProdQtySWS <- subset(production,
-                     select = c(keys_lower,"value_measuredelement_5510")) %>% filter(timepointyears >= BaseYear[1] & timepointyears <= BaseYear[2])
-
-aveP <- ProdQtySWS[,qty_avey1y2 := mean(value_measuredelement_5510),by = c("geographicaream49",'measureditemcpc')]
-aveP <- unique(aveP[,c("geographicaream49",'measureditemcpc','qty_avey1y2'),with=F])
-
-aveP$measureditemcpc <- lapply(aveP$measureditemcpc, as.character)
-aveP$measureditemcpc<- addHeadingsCPC(aveP$measureditemcpc)
-
-FLIData <-  merge(aveP,intPrice2005Selected, by.x = c('measureditemcpc'), by.y = c('measureditemcpc'),all.x = F, all.y = F)
+## Production multiplied by the weighting scheme
+FLIData <-  merge(Base_Prod,Weights, by.x = c('measureditemcpc'), by.y = c('measureditemcpc'),all.x = F, all.y = F)
 FLIData[, p0q0 := qty_avey1y2*intprice,]
-FLIData <- join(FLIData ,fbsTree , by = c('measureditemcpc'),type= 'left', match='all')
 
-FLIData <- join(FLIData,CountryGroup, by = c('geographicaream49'),type= 'left', match='all')
+## Loss percentages multiplied by the quantity weighted (for the numerator), Includes all commodities
+DataForIndex <- join(Losses[,c(keys_lower,"value_measuredelement_5126"),with=F] , FLIData, by =c("measureditemcpc","geographicaream49"),type= 'left', match='all')
+DataForIndex$l0ptqt =0
+DataForIndex[,l0ptqt:=value_measuredelement_5126*p0q0,with=T]
 
+DataForIndex <- join(DataForIndex ,fbsTree , by = c('measureditemcpc'),type= 'left', match='all')
+DataForIndex <- join(DataForIndex,CountryGroup, by = c('geographicaream49'),type= 'left', match='all')
 
-if(gfli_calc){
-  GlobalfoodLoss <- GFLI_SDG_fun(selectedYear,BaseYear,keys_lower,"WORLD",weights,basketn,FLIData)
-  FoodLossIndex <- GFLI_SDG_fun(selectedYear,BaseYear,keys_lower,aggregation,weights,basketn,FLIData)
+#### Basket ####
+if(basketn == "top2perhead_byCtry"){
+  Top10perctry <- DataForIndex %>%
+    filter(timepointyears == as.numeric(BaseYear[2])-1) %>%
+    arrange(geographicaream49, -p0q0) 
+  
+  basket <- Top10perctry[ ,head(.SD, 2), by= c('geographicaream49','gfli_basket')]
+  basket <- basket %>% filter(!is.na(gfli_basket))
+  basketKeys <- c('geographicaream49', "measureditemcpc")
+  ComBasketN  <- 'Production Value- Top 10 by country'
+  basket[,basketname := ComBasketN]
+  basket[,protected := FALSE] 
 }
 
+if(basketn == "top2perhead_Globatop10"){
+  Top10Global<-   DataForIndex %>%
+    filter(timepointyears == as.numeric(BaseYear[2])-1) %>%
+    group_by(measureditemcpc,gfli_basket) %>%
+    dplyr:: summarise(All_p0q0 = sum(p0q0, na.rm = TRUE)) %>%
+    arrange(-All_p0q0)
+  
+  ItemsBasket <- Top10Global[ ,head(.SD, 2), by= c('gfli_basket')]
+  basket <-   DataForIndex %>% filter(measureditemcpc %in%  unlist(ItemsBasket[!is.na(gfli_basket),measureditemcpc]))
+  basketKeys <- ( "measureditemcpc")
+  ComBasketN  <- 'Production Value- Top 10 by World'
+  basket[,basketname := ComBasketN]
+  basket[,protected := FALSE] 
+}
+# if(basketn == "calories"){
+#   Globalkcal1 <- ReadDatatable("top10_foodsupplykcal")
+#   #Globalkcal1 <- Globalkcal1  %>%
+#   #  filter(timepointyears == as.numeric(BaseYear[2])-1)
+#   
+#   Globalkcal1$item_code <- as.character(Globalkcal1$item_code)
+#   Globalkcal1 <- merge(Globalkcal1,fbsTree,by.x= c('item_code'), by.y = c("id4"), type ='left',match='all')
+#   Globalkcal1 <- Globalkcal1[order(-Globalkcal1$value),]
+#   
+#   ItemsBasket <- unique(Globalkcal1[ ,head(.SD, 2), by= c('gfli_basket')]$measureditemcpc)
+#   basket <-   DataForIndex %>% filter(measureditemcpc %in%  ItemsBasket)
+#   basketKeys <- ("measureditemcpc")
+#   ComBasketN  <- 'Caloric Value- Top 10 by World'
+#   basket[,basketname := ComBasketN]
+#   basket[,protected := FALSE] 
+#   
+# } 
+
+basket <- basket[,c("geographicaream49", "gfli_basket","measureditemcpc","itemname","qty_avey1y2","intprice","p0q0","basketname","protected")]
+
+### Save the Basket Selection to the sws ####
+if(savesws){
+  #write.table(basket ,'Commodbasket.csv', sep=",", row.names=FALSE)
+  names(basket) <- tolower(names(basket))
+  ## Delete
+  table = "sdg123_commoditybasket"
+  changeset <- Changeset(table)
+  newdat <- ReadDatatable(table, readOnly = FALSE)
+  AddDeletions(changeset, newdat)
+  Finalise(changeset)
+  ## Add
+  AddInsertions(changeset,  basket[,c("geographicaream49", "gfli_basket","measureditemcpc","itemname","qty_avey1y2","intprice","p0q0","basketname","protected")])
+  Finalise(changeset)
+}
+
+
+
+#### Calculations ####
+if(gfli_calc){
+ 
+  GlobalfoodLoss <- GFLI_SDG_fun(BaseYear,keys_lower,"WORLD",basket,basketKeys,DataForIndex)
+  FoodLossIndex <- GFLI_SDG_fun(BaseYear,keys_lower,aggregation,basket,basketKeys,DataForIndex)
+}
+
+#### Comparison Between Years ####
 if(gfli_compare){
-  FLI<- GFLI_SDG_fun(selectedYear,BaseYear,keys_lower,aggregation,weights,basketn,FLIData) 
+  FLI<- GFLI_SDG_fun(BaseYear,keys_lower,aggregation,basket,basketKeys,DataForIndex) 
   FLI[,aggregation] <- sapply(FLI[,aggregation,with=F],as.character)
   FLI_y1 <- FLI[timepointyears== ComparisonYear[1],c(aggregation,"Index"),with=F] 
   FLI_y2 <- FLI[timepointyears== ComparisonYear[2],c(aggregation,"Index"),with=F]
@@ -181,6 +247,7 @@ if(gfli_compare){
   
 }  
 
+#### Reporting Documents ####
 if(gfli_Reporting){
   reporting(ReportingYear,ComparisonYear)
 

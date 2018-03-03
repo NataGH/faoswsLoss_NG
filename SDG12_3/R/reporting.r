@@ -16,11 +16,11 @@ reporting <- function(ReportingYear,ComparisonYear){
   ReportingYr <- as.numeric(max(ReportingYear))
   
   ##### Official SDG Reporting ##############
-  wb <- loadWorkbook(paste(fileTemplates,"SDGDataRequest_02Feb2017.xlsx", sep=""))
+  wb <- loadWorkbook(paste(fileTemplates,"SDGDataRequest_02Feb2017_original.xlsx", sep=""))
   Sub <- read.xlsx(wb, sheet = "Submission")
   HeadingsKeep1 <- Sub[5,]
   Sub <- as.data.table(Sub[6:dim(Sub)[1],])
-  colnames(Sub) <- gsub(" ", ".",unlist(HeadingsKeep))
+  colnames(Sub) <- gsub(" ", ".",unlist(HeadingsKeep1))
   HeadingsKeep <- colnames(Sub)
   Sub$"Observation.value" <- as.numeric(Sub$"Observation.value")
   Sub$"Time.Period.(Year)" <- as.numeric(Sub$"Time.Period.(Year)")
@@ -30,14 +30,14 @@ reporting <- function(ReportingYear,ComparisonYear){
   RowOrder <-Sub$Reference.area.code
   
   # GFLI
-  GlobalfoodLoss <- GFLI_SDG_fun(selectedYear,BaseYear,keys_lower,"WORLD",weights,basketn,FLIData) 
+  GlobalfoodLoss <- GFLI_SDG_fun(BaseYear,keys_lower,"WORLD",basket,basketKeys,DataForIndex) 
   Sub[Reference.area.code == 1, "Observation.value"] = GlobalfoodLoss[timepointyears == ReportingYear,GFLI] # GFLI
   Sub$Reference.area.code <- as.character(Sub$Reference.area.code)
   Ref <- colnames(CountryGroup)
   
   for(ii in 1:(length(Ref)-1)){
-  
-      foodLossIndex <- GFLI_SDG_fun(selectedYear,BaseYear,keys_lower,Ref[ii],weights,basketn,FLIData)
+   
+      foodLossIndex <- GFLI_SDG_fun(BaseYear,keys_lower,Ref[ii],basket,basketKeys,DataForIndex)
       Index_RY <- foodLossIndex[timepointyears == ReportingYear, ]
       Sub <- merge(Sub,Index_RY,by.x = c("Reference.area.code"), by.y = c(Ref[ii]),all.x = TRUE)
       Sub[Reference.area.code %in% unlist(Index_RY[,Ref[ii],with=F]),Observation.value := Index]
@@ -56,13 +56,13 @@ reporting <- function(ReportingYear,ComparisonYear){
   saveWorkbook(wb,paste(fileSave,paste("SDGDataSubmission_", Sys.Date(), ".xlsx", sep=""), sep=""),overwrite = T)
 
   ##### ESS SDG Reporting ##############
-  Ind402B <- loadWorkbook(paste(fileTemplates,"Indicator402B.xlsx", sep=""))
+  Ind402B <- loadWorkbook(paste(fileTemplates,"Indicator402B_original.xlsx", sep=""))
   Ind402B_Sub <- read.xlsx( Ind402B, sheet = "Sheet1")
   Ind402B_Sub <- as.data.table(Ind402B_Sub [2:dim(Ind402B_Sub)[1],1:3])
   names(Ind402B_Sub) <- c("geographicaream49","M49 Country Name", "Delta (Δ)")
   Ind402B_Sub <-Ind402B_Sub %>%filter(!is.na(geographicaream49))
   
-  FLI<- GFLI_SDG_fun(selectedYear,BaseYear,keys_lower,"geographicaream49",weights,basketn,FLIData) 
+  FLI<- GFLI_SDG_fun( BaseYear,keys_lower,"geographicaream49",basket,basketKeys,DataForIndex) 
   FLI$geographicaream49 <- as.character(FLI$geographicaream49)
   FLI_y1 <- FLI[timepointyears== ComparisonYear[1],c("geographicaream49","Index")] 
   FLI_y2 <- FLI[timepointyears== ComparisonYear[2],c("geographicaream49","Index")]

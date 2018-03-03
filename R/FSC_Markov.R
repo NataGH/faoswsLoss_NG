@@ -42,17 +42,17 @@ FSC_Markov <- function(RawData,opt){
   # Sets the stage sequence for the markov chain
   colnames(TransitionMatrix) = c("farm","transport","storage", "trader","wholesale", "processing", "retail", "wholesupplychain", "sws_total")
   count = 1
-  for( i in 1:length(unique(RawData$geographicaream49))){
+  for(i in unique(RawData$geographicaream49)){
     # this first level selects the data for a specific country
     
-    data2 <- RawData %>% filter(geographicaream49 == unique(RawData$geographicaream49)[i])
+    data2 <- RawData %>% filter(geographicaream49 == i)
     data2$fsc_location1 = sapply(strsplit(data2$fsc_location,"/"), '[', 1)
-    for( ii in  1:length(unique(data2$measureditemcpc))){
+    for( ii in unique(data2$measureditemcpc)){
       # this first level selects the data for a specific crop
-      data3 <- data2 %>% filter(measureditemcpc == unique(data2$measureditemcpc)[ii])
-      for( iii in 1:length(unique(data3$timepointyears))){
+      data3 <- data2 %>% filter(measureditemcpc == ii)
+      for(iii in unique(data3$timepointyears)){
         # this first level selects the data for a specific Year
-        data4 <- data3 %>% filter(timepointyears == unique(data3$timepointyears)[iii])
+        data4 <- data3 %>% filter(timepointyears == iii)
         data4 <- data4[!(is.na(data4$loss_per_clean)),] 
         if(nrow(data4)==0){next}
         if(dim(data4)[1]> 1){
@@ -71,31 +71,31 @@ FSC_Markov <- function(RawData,opt){
             FSC <- TransitionMatrix[,1:7][TransitionMatrix[,1:7] > 0] #aggregates of the food supply chain
             for(ni in 1:length(FSC)){
               # Uses the referent quantity to aggregate losses alog the supply chain
-              ref <- ref- ref*(FSC[ni]/100)
-              amt <- ref*(FSC[ni]/100) + amt
+              ref <- ref- ref*(FSC[ni])
+              amt <- ref*(FSC[ni]) + amt
             }
             # Takes the average for the compounded losses over the FSC and averages with the Whole supply chain and the SWS
-            est = c(amt/ref0, WS/100, SWS/100 )
-            lossPer = mean(est[!est==0])*100
+            est = c(amt/ref0, WS, SWS)
+            lossPer = mean(est[!est==0])
 
-            FullSeta[1, geographicaream49 := data4$geographicaream49,]
-            FullSeta[1, timepointyears := data4$timepointyears,]
-            FullSeta[1, measureditemcpc := data4$measureditemcpc,]
-            FullSeta[1, isocode := data4$isocode,]
-            FullSeta[1, country := data4$country,]
-            FullSeta[1, crop := data4$crop,]
+            FullSeta[1, geographicaream49 := unique(data4$geographicaream49),]
+            FullSeta[1, timepointyears := unique(data4$timepointyears),]
+            FullSeta[1, measureditemcpc := unique(data4$measureditemcpc),]
+            FullSeta[1, isocode := unique(data4$isocode),]
+            FullSeta[1, country := unique(data4$country),]
+            FullSeta[1, crop := unique(data4$crop),]
             FullSeta[1, 'loss_per_clean':=lossPer]
             FullSeta[1, 'fsc_location'] <- "Calc"
           }} else{
             # If there is only one estimate for the country/commodity/year the estimate just gets added to the dataset   
-            FullSeta[1, geographicaream49 := data4$geographicaream49,]
-            FullSeta[1, timepointyears := data4$timepointyears,]
-            FullSeta[1, measureditemcpc := data4$measureditemcpc,]
-            FullSeta[1, isocode := data4$isocode,]
-            FullSeta[1, country := data4$country,]
-            FullSeta[1, crop := data4$crop,]
-            FullSeta[1, loss_per_clean:=data4$loss_per_clean,]
-            FullSeta[1, fsc_location := data4$fsc_location,]
+            FullSeta[1, geographicaream49 := unique(data4$geographicaream49),]
+            FullSeta[1, timepointyears := unique(data4$timepointyears),]
+            FullSeta[1, measureditemcpc := unique(data4$measureditemcpc),]
+            FullSeta[1, isocode := unique(data4$isocode),]
+            FullSeta[1, country := unique(data4$country),]
+            FullSeta[1, crop := unique(data4$crop),]
+            FullSeta[1, loss_per_clean:=unique(data4$loss_per_clean),]
+            FullSeta[1, fsc_location := unique(data4$fsc_location),]
 
           }
         

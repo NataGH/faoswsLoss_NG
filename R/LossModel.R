@@ -38,7 +38,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   timeSeriesDataToBeImputed[,flagcombination :=  paste(flagobservationstatus, flagmethod, sep = ";")] 
   
   timeSeriesDataToBeImputed[flagcombination %in% protectedFlag$flagCombination,Protected := TRUE,]
-  timeSeriesDataToBeImputed[Protected == TRUE,loss_per_clean:= loss_per_clean/100]
+
   
   ##### PART 1 - Data trasnformations and Clusters ####
   # The HierarchicalClusters set up the clusters for the analysis - as several HierarchicalClusters were tested
@@ -59,9 +59,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   }
   
   # Prepares the data for the analysis
-  Data <- Data %>% filter(loss_per_clean < 40) # Excludes outliers over 50%
-  
-  Data[,loss_per_clean := loss_per_clean/100 ]
+ 
   Data[loss_per_clean == 0,loss_per_clean := 0.0001,]
   Data[loss_per_clean == 1,loss_per_clean :=  0.9999,] 
   Data[,losstransf := log(loss_per_clean/(1-loss_per_clean))]
@@ -102,9 +100,13 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     modrun <- 0
     # filter the dataset to the
     data1 <- Data %>% filter(foodgroupname %in% name)
+    
+    # Truncates the data between 2 standard deviations of the mean 
+    data1 <- data1 %>% filter(loss_per_clean <= mean(data1$loss_per_clean, na.rm = T) + 3*sd(data1$loss_per_clean, na.rm = T))
+    data1 <- data1 %>% filter(loss_per_clean >= mean(data1$loss_per_clean, na.rm = T) - 3*sd(data1$loss_per_clean, na.rm = T))
  
     CPCs <- unique(data1$measureditemcpc)
-    #Makes the columsn numeric and 
+    #Makes the columns numeric and looks at correlated variables
     nums1 <- sapply(data1, is.numeric)
     dropCV <- list()
     stop = length(colnames(data1))
@@ -162,17 +164,19 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     # To impute data for the predictive set for missing observations in the explanatory data
     for(ir in 1:length(ImportVar)){
      for( j in unique(datapred$geographicaream49)){
-      #datapred[geographicaream49 == j,ImportVar[ir],with=F] <- with(datapred[geographicaream49 ==j,], impute(datapred[[ImportVar[ir]]], mean))
-      #datapred[,ImportVar[ir]] <- na.approx(datapred[,ImportVar[ir],with=F], na.rm = T)
-      if(is.integer(datapred[[ImportVar[ir]]])){
-        datapred[geographicaream49 == j & is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- as.integer(sum(datapred[geographicaream49 == j,ImportVar[ir],with=F], na.rm=TRUE)/dim(na.omit(datapred[geographicaream49 == j,ImportVar[ir],with=F]))[1])
-      }
-      else{datapred[geographicaream49 == j & is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- sum(datapred[geographicaream49 == j,ImportVar[ir],with=F], na.rm=TRUE)/dim(na.omit(datapred[geographicaream49 == j,ImportVar[ir],with=F]))[1]}
-     } 
-     if(is.integer(datapred[[ImportVar[ir]]])){
-       datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- as.integer(sum(datapred[[ImportVar[ir]]], na.rm=TRUE)/dim(datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir],with=F])[1])
-     }else{datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <-(sum(datapred[[ImportVar[ir]]], na.rm=TRUE)/dim(datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir],with=F])[1])}
-    }
+      datapred[geographicaream49 == j,ImportVar[ir]] <- with(datapred[geographicaream49 ==j,], impute(datapred[[ImportVar[ir]]], mean))
+      datapred[,ImportVar[ir]] <- na.approx(datapred[,ImportVar[ir],with=F], na.rm = T)
+       # if(is.integer(datapred[[ImportVar[ir]]])){
+       #   datapred[geographicaream49 == j & is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- as.integer(sum(datapred[geographicaream49 == j,ImportVar[ir],with=F], na.rm=TRUE)/dim(na.omit(datapred[geographicaream49 == j,ImportVar[ir],with=F]))[1])
+       # }
+       # else{datapred[geographicaream49 == j & is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- sum(datapred[geographicaream49 == j,ImportVar[ir],with=F], na.rm=TRUE)/dim(na.omit(datapred[geographicaream49 == j,ImportVar[ir],with=F]))[1]}
+      } 
+      # if(is.integer(datapred[[ImportVar[ir]]])){
+      #   datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- as.integer(sum(datapred[[ImportVar[ir]]], na.rm=TRUE)/dim(datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir],with=F])[1])
+      #  }else{
+      #   datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <-
+      #        (sum(datapred[[ImportVar[ir]]], na.rm=TRUE)/dim(datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir],with=F])[1])}
+     }
     ##### PART 3 - Full Specified Heirarchical model ####
     # The choice of model is based on the assumption that countries are inherehently different in their loss structure.
     # Given that the panel data is unbalanced, the model has been specified and tested  for different specifications
@@ -195,8 +199,11 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     # GIven the unbalanced aspects of the panels, for some cases it creates heteroskedastic errors which skew the data beyond the max/min of reasonable estimates
     # In these cases the data is averaged over cpc (which provided better explanatory power than over country) by year and then re-selected the variables and 
     # re-estimate the series
-    if(CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)>
-      max(Data[measureditemcpc %in% CPCs, loss_per_clean]) | CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)< .01 | name %in% "2911"){
+    coeffSig <- summary(mod2_rand)$coeff[,4][summary(mod2_rand)$coeff[,4] <.1]
+    coeffSig <- names(coeffSig)[names(coeffSig) %in%  c("timepointyears")]
+    
+    if(any(length() == 0 | CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)>
+      max(Data[measureditemcpc %in% CPCs, loss_per_clean]) | CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)< .01 | unique(name) %in% "2911")){
       tma2 <- data1[,!names(data1) %in% unique(c("loss_per_clean")),with=F]
       tma2 <- tma2[,!names(tma2) %in% c('geographicaream49',"m49CPC"),with=F]
       tma2 <- tma2[, lapply(.SD, mean), by = c("timepointyears", "measureditemcpc")]
@@ -300,7 +307,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
         }
         datapred[,intercept:=coefficients(mod2)[1]]
         #(cropdummy == 0) & (countydummy ==0)
-        if(length(coeffN) >0){
+        if(length(coeffSig) >0){
           # Applies the weights of the estimation across the entire cluster sets, using the demeaned coefficient as the intercept  (coefficients(mod2)[1]  
           datapred[,losstransf := 
                      rowSums(mapply(`*`,coefficients(mod2)[names(coefficients(mod2)) %in% coeffSig],datapred[ ,coeffSig,with=F]), na.rm=TRUE)+
@@ -348,13 +355,6 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     timeSeriesDataToBeImputed[is.na(Protected) & loss_per_cleana >0,flagcombination := paste(flagobservationstatus,flagmethod, sep=";"),]
     timeSeriesDataToBeImputed[,(nameadd):= NULL,]
    
-  
-    
-    if(graphLoss){
-      GraphLosses(timeSeriesDataToBeImputed,Data_Use_train,mod2res)
-    }
-    
-    
     ##### Save model parameters
 
     SavResult <- list(cluster=name,formula=formula,coeffnames = paste(unlist(names(coefficients(mod2))), collapse = "##"),mean_intercept=mean(ercomp(mod2)$theta),coeff =paste(unlist(coefficients(mod2)), collapse = "##"),

@@ -148,7 +148,7 @@ fbsTree[foodgroupname %in% c(2907,2913), GFLI_Basket :='Roots, Tubers & Oil-Bear
 fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), GFLI_Basket :='Other',]
 fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), GFLI_Basket :='Animals Products & Fish and fish products',] # |foodGroupName == "PRODUCTS FROM FISH",
 
-
+ConvFactor1[,loss_per_clean := loss_per_clean/100]
 #####  Runs the model and collects the needed data  #####
 finalModelData = 
   {
@@ -165,9 +165,9 @@ finalModelData =
     lossProtected$geographicaream49 <- as.character(lossProtected$geographicaream49)
     #Data for the model
     lossData <-  merge(production,lossProtected,  by.x = keys_lower,  by.y = keys_lower, all.y= TRUE)
-    lossData[, loss_per_clean := 100*(value_measuredelement_5016/value_measuredelement_5510)]
+    lossData[, loss_per_clean := (value_measuredelement_5016/value_measuredelement_5510)]
     lossData[, fsc_location := "SWS"]
-    lossData <- lossData %>% filter(!loss_per_clean > 100)
+    lossData <- lossData %>% filter(!loss_per_clean > 1)
     names(lossData) <- tolower(names(lossData))
     lossData <- merge(lossData,CountryGroup[,c("isocode","geographicaream49", "country")],  by = c("geographicaream49"), all.x = TRUE, all.y = FALSE)
     #lossData <- merge(lossData,FAOCrops[,c("measureditemcpc","crop")],  by = c("measureditemcpc"), all.x = TRUE, all.y = FALSE)
@@ -180,9 +180,9 @@ finalModelData =
                                                 measureditemcpc = as.character(unique(production$measureditemcpc))))
     
     # Take the Data to be imputed
-    timeSeriesDataToBeImputed <- merge(timeSeriesData, lossData,  by.x = (keys_lower), by.y = (keys_lower), all.x = TRUE, all.y = FALSE)
+    timeSeriesDataToBeImputed <- merge(timeSeriesData, lossData,  by= keys_lower, all.x = TRUE, all.y = FALSE)
     timeSeriesDataToBeImputed[is.na(loss_per_clean), loss_per_clean := 0]
-    timeSeriesDataToBeImputed$value_measuredelement_5016 = 0
+    timeSeriesDataToBeImputed[,value_measuredelement_5016 := loss_per_clean]
     timeSeriesDataToBeImputed[,flagcombination:="0"]
     
     
@@ -217,16 +217,20 @@ if(updatemodel==1){
        markov <- FSC_Markov(ConvFactor1,MarkovOpt)
        FullSet <- rbind(markov,lossData, fill=T)
        FullSet[,index :=rownames(FullSet)]
+       k2 <- names(FullSet)
       
        duplicates <- FullSet %>%
          dplyr::group_by(geographicaream49,timepointyears,measureditemcpc) %>%
          summarise(total.count=n())
-       duplicates <- duplicates %>% filter(total.count>1)
-       drop <- FullSet %>% filter(geographicaream49 %in% duplicates$geographicaream49 & timepointyears %in% duplicates$timepointyears
-                          & measureditemcpc  %in% duplicates$measureditemcpc & fsc_location != "SWS")
+       duplicates <-  as.data.table(duplicates %>% filter(total.count>1))
+       collapse(duplicates[,keys_lower,with=FALSE], sep=";")
        
-       FullSet <- FullSet %>% filter(!index %in% drop$index)
-       FullSet[,index :=NULL]
+       drop <- join(FullSet,duplicates, by =keys_lower)
+       drop$Keep = TRUE
+       drop[total.count>1 &fsc_location != "SWS",Keep := FALSE]
+       
+       FullSet <- drop %>% filter(Keep == TRUE)
+       FullSet[,c("index","total.count","Keep") :=NULL]
        }else{FullSet <- lossData}
   
  
@@ -245,7 +249,7 @@ if(updatemodel==1){
   AddInsertions(changeset,  FullSet[,c("geographicaream49","timepointyears","measureditemcpc","isocode","country","crop","loss_per_clean","fsc_location"),])
   Finalise(changeset)
 
-  FullSet <- FullSet %>% filter(loss_per_clean <40)
+  FullSet <- FullSet %>% filter(loss_per_clean <.40)
   ########### Variables for the module  ###################   
   # Adds the explanatory Varaibles,
   Predvar <- c()
