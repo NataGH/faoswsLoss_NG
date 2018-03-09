@@ -64,7 +64,7 @@ areaVar = "geographicAreaM49"
 yearVar = "timePointYears"
 itemVar = "measuredItemCPC"
 elementVar = "measuredElement"
-selectedYear = as.character(1991:2015)
+selectedYear = as.character(1991:2016)
 #----  Data In ------------------------------------------
 dataRaw <- ReadDatatable("aggregate_loss_table")
 dataRaw[,country :=NULL ]

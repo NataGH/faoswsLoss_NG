@@ -72,8 +72,8 @@ MarkovOpt <- "aveatFSP"  # "model"
 
 ## Year should be a paramameter selected.
 ## selectedYear = as.character(1961:2015)
-selectedYear = as.character(1991:2015)
-selectedModelYear = as.character(1961:2015)
+selectedYear = as.character(1991:2016)
+selectedModelYear = as.character(1961:2016)
 
 HierarchicalCluster <- "foodgroupname" # "isocode", "SDG.Regions"
 VaribleSelection <- "RandomForest_geo"
@@ -128,7 +128,7 @@ if(LocalRun ){
 
 CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
 FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
-ConvFactor1 <- ReadDatatable('flw_lossperfactors')
+ConvFactor1 <- ReadDatatable('flw_lossperfactors_')
   }
 
 CountryGroup$country <- tolower(CountryGroup$countryname)
@@ -231,9 +231,10 @@ if(updatemodel==1){
        
        FullSet <- drop %>% filter(Keep == TRUE)
        FullSet[,c("index","total.count","Keep") :=NULL]
-       }else{FullSet <- lossData}
+    }else{FullSet <- lossData}
   
- 
+  FullSet <-join(FullSet, FAOCrops[,c("measureditemcpc","crop")], by= c("measureditemcpc"))
+  FullSet <- FullSet %>% filter(loss_per_clean != 0)
   
   #write.table(FullSet,paste(githubsite, 'General/FullSet.csv', sep=''),sep=',' )
   ### Save the intermediate aggregation table  to the sws
@@ -249,18 +250,21 @@ if(updatemodel==1){
   AddInsertions(changeset,  FullSet[,c("geographicaream49","timepointyears","measureditemcpc","isocode","country","crop","loss_per_clean","fsc_location"),])
   Finalise(changeset)
 
-  FullSet <- FullSet %>% filter(loss_per_clean <.40)
+
   ########### Variables for the module  ###################   
   # Adds the explanatory Varaibles,
   Predvar <- c()
-  Data_Use_train <- VariablesAdd1(FullSet,keys_lower,Predvar)
+  Data_Use_train0 <- VariablesAdd1(FullSet,keys_lower,Predvar,FALSE)
+  Data_Use_train <- VariablesAdd1(FullSet,keys_lower,Predvar,"ctry")
+  Data_Use_train2 <- VariablesAdd1(FullSet,keys_lower,Predvar,"var")
+  Data_Use_train3 <- VariablesAdd1(FullSet,keys_lower,Predvar,"RF")
 
   ####### Model Estimation ############
   
   #KeepVar <- c(keys,'isocode','SDG_Regions',"measuredItemCPC",
   #             'FSC_Location',HierarchicalCluster)
   
-  timeSeriesDataToBeImputed2 <- LossModel(Data= Data_Use_train,timeSeriesDataToBeImputed, production,HierarchicalCluster,keys_lower)
+  timeSeriesDataToBeImputed2 <- LossModel(Data= Data_Use_train0,timeSeriesDataToBeImputed, production,HierarchicalCluster,keys_lower)
                                             
  
 }  
@@ -297,7 +301,7 @@ if(updatemodel ==0){
   timeSeriesDataToBeImputed[,flagcombination :=  paste(flagobservationstatus, flagmethod, sep = ";")] 
   
   timeSeriesDataToBeImputed[flagcombination %in% protectedFlag$flagCombination,Protected := TRUE,]
-  timeSeriesDataToBeImputed[Protected == TRUE,loss_per_clean:= loss_per_clean/100]
+  timeSeriesDataToBeImputed[Protected == TRUE,loss_per_clean:= loss_per_clean]
   
   timeSeriesDataToBeImputedGroups <- join(timeSeriesDataToBeImputed, fbsTree, by = c("measureditemcpc"),type= 'left', match='all')
   
@@ -406,10 +410,11 @@ if(updatemodel ==0){
   timeSeriesDataToBeImputed_5126 <- timeSeriesDataToBeImputed_5126 %>% filter(!is.na(flagMethod))
   
   # Save to the SWS
-  stats = SaveData(domain = "lossWaste",
+  stats = SaveData(domain =  "lossWaste",
                    dataset= "loss",
                    data   = timeSeriesDataToBeImputed_5016
   )
+  
   
   stats = SaveData(domain= "lossWaste",
                    dataset="loss",
@@ -418,6 +423,4 @@ if(updatemodel ==0){
   
 }
 
-if(graphLoss){
 
-}

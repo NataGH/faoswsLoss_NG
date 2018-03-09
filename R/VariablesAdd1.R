@@ -3,7 +3,7 @@
 #' @author Alicia English
 #' @export
 
-VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2){  
+VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute){  
   # Description:
   #Adds the explanatory variables to the dataset for either the estimation model or the predictive set
   # inputs:
@@ -66,13 +66,14 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2){
   DataUseInt <- join(DataUseInt, fbsTree, by = c("measureditemcpc"),type= 'left', match='all')
   
   ######## Weather Data  ################ 
+
   ConvFactor_calYr <- unique(DataUseInt[, c("timepointyears")])
   ConvFactor_cal <- unique(DataUseInt[, c("geographicaream49", "timepointyears")])
   ConvFactor_cal2 <- unique(DataUseInt[,keys_lower ,with=FALSE])
   names(ConvFactor_cal) <- tolower(names(ConvFactor_cal))
   names(ConvFactor_calYr) <- tolower(names(ConvFactor_calYr))
   ConvFactor_cal$geographicaream49 <- as.integer(ConvFactor_cal$geographicaream49)
-  
+  if(!any(unique(DataUseInt$foodgroupname) %in% c(2943, 2946,2945,2949,2948))){   
   names(Temperature)[names(Temperature) == 'year'] <- "timepointyears"
   Temperature <- merge( Temperature , CountryGroup[,c("geographicaream49", "isocode")], by.x = c('isocode'),
                       by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
@@ -100,9 +101,16 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2){
   Temperature2 <- join(AggCropCalendar, Temperature, by= c('geographicaream49','timepointyears', 'month'),type= 'left', match='all')
   Precipitation2 <- join(AggCropCalendar, Precipitation , by= c('geographicaream49','timepointyears', 'month'),type= 'left', match='all')
   
-  DataUseInt <- merge(DataUseInt, Temperature2, by = keys_lower, all.x = TRUE)  ### FInal Data set @@
-  DataUseInt <- merge(DataUseInt, Precipitation2,by = keys_lower, all.x = TRUE)  ### FInal Data set @@
+  tempPred <- lm(temperature_c ~geographicaream49 + timepointyears+ month,Temperature2)
+  PrecPred <-  lm(rainfall_mm ~geographicaream49 + timepointyears+ month,Precipitation2)
+  
+  Temperature2[is.na(temperature_c)&!is.na(month),temperature_c := coefficients(tempPred)[1] +rowSums(mapply(`*`,coefficients(tempPred)[-1],Temperature2[is.na(temperature_c)&!is.na(month) ,names(coefficients(tempPred)[-1]),with=F]), na.rm=TRUE)]
+  Precipitation2[is.na(rainfall_mm)&!is.na(month),rainfall_mm := coefficients(PrecPred)[1] +rowSums(mapply(`*`,coefficients(PrecPred)[-1],Precipitation2[is.na(rainfall_mm)&!is.na(month) ,names(coefficients(PrecPred)[-1]),with=F]), na.rm=TRUE)]
 
+
+    DataUseInt <- merge(DataUseInt, Temperature2, by = keys_lower, all.x = TRUE)  ### FInal Data set @@
+    DataUseInt <- merge(DataUseInt, Precipitation2,by = keys_lower, all.x = TRUE)  ### FInal Data set @@
+  }
   DataUseInt$geographicaream49 <- as.integer(DataUseInt$geographicaream49)
  
   names(DataUseInt) <- gsub("[[:punct:]]","_",names(DataUseInt))
@@ -189,7 +197,6 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2){
                               'bn_trf_curr_cd',
                               'bx_gsr_fcty_cd',
                               'bx_gsr_totl_cd',
-                              'bx_klt_drem_cd_dt',
                               'bx_trf_curr_cd',
                               'dt_dod_dect_ex_zs',
                               'dt_dod_dstc_xp_zs',
@@ -282,7 +289,9 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2){
       }
       close(pb)
     }
-    ConvFactor_cal[,(drops):=NULL]
+    if(length(drops[drops  %in% names(ConvFactor_cal)])>0){
+      ConvFactor_cal[,drops[drops  %in% names(ConvFactor_cal)] :=NULL]
+    }
     nums2 <- !sapply(ConvFactor_cal, is.numeric)
     nums2[names(nums2) == "geographicaream49"] <- FALSE
     nums2[names(nums2) == "timepointyears"] <- FALSE
@@ -350,7 +359,9 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2){
     
     
     lagyr <- c("lag1yr","lag2yr","lag3yr","lag1yr_lag1yr","lag2yr_lag2yr","lag3yr_lag3yr")
-    DataUseInt[,(lagyr) := NULL ]
+    if(length(lagyr[lagyr %in% names(DataUseInt)])>0){
+      DataUseInt[,(lagyr[lagyr %in% names(DataUseInt)]) := NULL ]
+    }
     
     DataUseInt$geographicaream49 <- as.character(DataUseInt$geographicaream49)
     #if(dropExtra){
@@ -364,5 +375,78 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2){
       tt <- names(DataUseInt)[grep(paste(i,"+",sep=""),names(DataUseInt))]
       DataUseInt[,c(tt):=NULL]
     }
+    DataUseInt[DataUseInt == ""] = NA
+    ##################Imputatuion of dataset#########################
+    if(Impute != FALSE){
+      VarNames <- names(DataUseInt)
+      VarNames <- VarNames[!VarNames %in% c("geographicaream49","timepointyears","measureditemcpc","country","crop","loss_per_clean","fsc_location" ,"id1" ,                 
+                                        "id2","foodgroupname","id4","month_x", "temperature_c" , "month_y" ,  "rainfall_mm")]
+      
+      
+      for(ir in 1:length(VarNames)){
+        where.na <- which(DataUseInt[ ,VarNames[ir],with=F ]=="NULL")
+        if(length(where.na)>0){
+          DataUseInt[,VarNames[ir]] <- as.numeric(DataUseInt[,VarNames[ir]])
+        }
+        DataUseInt[where.na,VarNames[ir]] <- NA
+      }
+      pb <- txtProgressBar()
+      ii=0
+      if(Impute == "ctry"){
+        for(ir in 1:length(VarNames)){
+          for( j in unique(DataUseInt$geographicaream49)){
+            i = ii /(length(unique(DataUseInt$geographicaream49))*length(VarNames))
+            setTxtProgressBar(pb, i)
+            DataUseInt[geographicaream49 == j,VarNames[ir]] <- with(DataUseInt[geographicaream49 ==j,], impute(DataUseInt[[VarNames[ir]]], mean))
+            #DataUseInt[,VarNames[ir]] <- na.approx(DataUseInt[,VarNames[ir],with=FALSE], na.rm = T)
+            ii =ii+1
+          }}
+      }  
+      if(Impute == "var"){
+        for(ir in 1:length(VarNames)){
+            DataUseInt[,VarNames[ir]] <- with(DataUseInt, impute(DataUseInt[[VarNames[ir]]], mean))
+          } 
+      }
+      if(Impute == "RF"){
+        for(ir in 1:length(VarNames)){
+          DataUseInt[,VarNames[ir]] <- missForest(DataUseInt[[VarNames[ir]]])
+        } 
+      }
+      }
+    
+    ########### Principal Component Analysis #### 
+    if(!dropExtra){
+    #Makes the columns numeric and looks at correlated variables
+    nums1 <- sapply(DataUseInt, is.numeric)
+    dropCV <- list()
+    stop = length(colnames(DataUseInt))
+    ii = 1
+    while(ii){
+      nam = colnames(DataUseInt)[ii]
+      if(is.na(nam)){break}
+      if(sapply(DataUseInt[,nam,with=F],class)== "numeric"){ 
+        corrV  <- cor(DataUseInt[,nam,with=F],DataUseInt[,colnames(DataUseInt) %in% names(nums1[nums1==T]) ,with=F],use="pairwise.complete.obs")
+        corrV2 <- colnames(corrV)[corrV >.85]
+        corrV2  <- corrV2[!corrV2 %in% c(keys_lower,nam)]
+        dropCV <- c(dropCV,na.omit(corrV2))
+        if(length(unique(na.omit(corrV2))) >0){
+          DataUseInt[,c(na.omit(unique(corrV2))):= NULL]
+          nums1 <- sapply(DataUseInt, is.numeric)
+        }}
+      ii =ii +1
+      
+    }
+
+    nums1[tolower(keys_lower)] <- TRUE
+    nums1[names(nums1) == "sdg_regions"]<- TRUE
+    explanatory <- names(nums1)[nums1 == TRUE]
+    explanatory <- c(explanatory,"foodgroupname") 
+    DataUseInt <-  DataUseInt[ , explanatory ,with=FALSE]
+    }
+    ###### Dimension Expansion #########
+    #if(length(colnames(DataUseInt))<20){
+   #   DataUseInt <-MultiExp(DataUseInt, 2,"loss_per_clean")
+   # }  
+    
   return(DataUseInt)  
 }  

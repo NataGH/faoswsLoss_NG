@@ -1,8 +1,3 @@
-#' Part of the FAO Loss Module
-#' 
-#' @author Alicia English Marco Migone
-#' @export
-#' 
 
 LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalCluster,keys_lower){
   # Description:
@@ -18,6 +13,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   #     of the loss percentages by country, with data aggregated in the Markov model and with explanatory variables added. 
   #	DataPred: is the data that needs estimates predicted (finalPredictData)
   #	HierarchicalCluster: is for the group/cluster ("foodgroupname" was the best preformer)
+  Impute <- FALSE
   CB <- function(dataIn){
     r = exp(dataIn)/(1+exp(dataIn)) 
     return(r)}
@@ -28,9 +24,9 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   minctry <- 2
   NumImportVarUse <- 8
   names(Data) <- tolower(names(Data))
-
+  
   datasetN <- names(timeSeriesDataToBeImputed)
-
+  
   #### Protected Data ###
   flagValidTableLoss <- as.data.table(flagValidTable)
   protectedFlag <- flagValidTableLoss[flagValidTableLoss$Protected == TRUE,] %>%
@@ -38,7 +34,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   timeSeriesDataToBeImputed[,flagcombination :=  paste(flagobservationstatus, flagmethod, sep = ";")] 
   
   timeSeriesDataToBeImputed[flagcombination %in% protectedFlag$flagCombination,Protected := TRUE,]
-
+  
   
   ##### PART 1 - Data trasnformations and Clusters ####
   # The HierarchicalClusters set up the clusters for the analysis - as several HierarchicalClusters were tested
@@ -59,22 +55,21 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   }
   
   # Prepares the data for the analysis
- 
-  Data[loss_per_clean == 0,loss_per_clean := 0.0001,]
+  Data <- Data %>% filter (loss_per_clean > 0.01)
   Data[loss_per_clean == 1,loss_per_clean :=  0.9999,] 
   Data[,losstransf := log(loss_per_clean/(1-loss_per_clean))]
   names(Data) <- gsub("[[:punct:]]","_",names(Data)) 
   depVar <- "losstransf" 
- 
+  
   Data$geographicaream49 <- as.character(Data$geographicaream49)
   
   IdentVar <- c(keys_lower,"isocode","country","sdg_region")
   newcol  <- names(sapply(Data, is.numeric))[!(names(sapply(Data, is.numeric)) %in% IdentVar)]
-
+  
   drops2 <- c("lag1yr","lag2yr", "lag3yr", "month","month_x","month_y","harvesting_month_onset","area_code_y")
   drops1  <- c("loss_per_clean", IdentVar)
   Data <- Data[,names(Data)[!names(Data) %in% drops2],with=FALSE]
-
+  
   fbsTree <- ReadDatatable("fbs_tree")
   names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
   names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
@@ -104,7 +99,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     # Truncates the data between 2 standard deviations of the mean 
     data1 <- data1 %>% filter(loss_per_clean <= mean(data1$loss_per_clean, na.rm = T) + 3*sd(data1$loss_per_clean, na.rm = T))
     data1 <- data1 %>% filter(loss_per_clean >= mean(data1$loss_per_clean, na.rm = T) - 3*sd(data1$loss_per_clean, na.rm = T))
- 
+  
     CPCs <- unique(data1$measureditemcpc)
     #Makes the columns numeric and looks at correlated variables
     nums1 <- sapply(data1, is.numeric)
@@ -125,13 +120,15 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
         }}
       ii =ii +1
       
-     }
-
+    }
+    
     
     nums1[tolower(keys_lower)] <- TRUE
     nums1[names(nums1) == "sdg_regions"]<- TRUE
     explanatory <- names(nums1)[nums1 == TRUE]
     data1 <-  data1[ , explanatory ,with=FALSE]
+    
+    data1[,losstransf := log(loss_per_clean/(1-loss_per_clean))]
     
     #data1 <- data1 %>% filter(timepointyears >1990) # there is a data incongruity with the SWS at yr 1988/89
     datamod <- data1[,!names(data1) %in% unique(c("loss_per_clean")),with=F]
@@ -151,37 +148,40 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     # lag = 3
     # s <- adf.test(datamod$losstransf, k=lag)
     # datamod <- dataLag(datamod,indexVar= keys_lower,var="losstransf",timeVar="timepointyears",lag,LType='fullset')
-
+    
     ###################
     Predvar<- unique(na.omit(c(HierarchicalCluster, keys_lower,"loss_per_clean",UseVari ,"Protected")))
     DataPred <-  timeSeriesDataToBeImputed %>% filter(measureditemcpc %in% CPCs)
-    DataPred <- VariablesAdd1(DataPred,keys_lower,Predvar)
+    DataPred <- VariablesAdd1(DataPred,keys_lower,Predvar,Impute)
     names(DataPred) <- tolower(names(DataPred))
     names(DataPred) <- gsub("[[:punct:]]","_",names(DataPred)) 
-
+    
     datapred <- DataPred
     
     # To impute data for the predictive set for missing observations in the explanatory data
     for(ir in 1:length(ImportVar)){
-     for( j in unique(datapred$geographicaream49)){
-      datapred[geographicaream49 == j,ImportVar[ir]] <- with(datapred[geographicaream49 ==j,], impute(datapred[[ImportVar[ir]]], mean))
-      datapred[,ImportVar[ir]] <- na.approx(datapred[,ImportVar[ir],with=F], na.rm = T)
-       # if(is.integer(datapred[[ImportVar[ir]]])){
-       #   datapred[geographicaream49 == j & is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- as.integer(sum(datapred[geographicaream49 == j,ImportVar[ir],with=F], na.rm=TRUE)/dim(na.omit(datapred[geographicaream49 == j,ImportVar[ir],with=F]))[1])
-       # }
-       # else{datapred[geographicaream49 == j & is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- sum(datapred[geographicaream49 == j,ImportVar[ir],with=F], na.rm=TRUE)/dim(na.omit(datapred[geographicaream49 == j,ImportVar[ir],with=F]))[1]}
+      for( j in unique(datapred$geographicaream49)){
+        datapred[geographicaream49 == j,ImportVar[ir]] <- with(datapred[geographicaream49 ==j,], impute(datapred[[ImportVar[ir]]], mean))
+        datapred[,ImportVar[ir]] <- na.approx(datapred[,ImportVar[ir],with=F], na.rm = T)
+        
+        datamod[geographicaream49 == j,ImportVar[ir]] <- with(datamod[geographicaream49 ==j,], impute(datamod[[ImportVar[ir]]], mean))
+        datamod[,ImportVar[ir]] <- na.approx(datamod[,ImportVar[ir],with=F], na.rm = T)
+        # if(is.integer(datapred[[ImportVar[ir]]])){
+        #   datapred[geographicaream49 == j & is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- as.integer(sum(datapred[geographicaream49 == j,ImportVar[ir],with=F], na.rm=TRUE)/dim(na.omit(datapred[geographicaream49 == j,ImportVar[ir],with=F]))[1])
+        # }
+        # else{datapred[geographicaream49 == j & is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- sum(datapred[geographicaream49 == j,ImportVar[ir],with=F], na.rm=TRUE)/dim(na.omit(datapred[geographicaream49 == j,ImportVar[ir],with=F]))[1]}
       } 
       # if(is.integer(datapred[[ImportVar[ir]]])){
       #   datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- as.integer(sum(datapred[[ImportVar[ir]]], na.rm=TRUE)/dim(datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir],with=F])[1])
       #  }else{
       #   datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <-
       #        (sum(datapred[[ImportVar[ir]]], na.rm=TRUE)/dim(datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir],with=F])[1])}
-     }
+    }
     ##### PART 3 - Full Specified Heirarchical model ####
     # The choice of model is based on the assumption that countries are inherehently different in their loss structure.
     # Given that the panel data is unbalanced, the model has been specified and tested  for different specifications
     # With the challenge that losses may have a linear trend, but be increasing (decreasing) at decreasing rates
-
+    
     ## Model 
     formula <- paste(paste(depVar," ~",sep=""),paste(keys_lower,sep="+", collapse= " + "),'+',paste(unique(UseVari[!UseVari %in% c(depVar,keys_lower)]), collapse= " + ")) #
     formula4 <- paste(paste(depVar," ~",sep=""), paste(keys_lower,sep="+", collapse= " + "), collapse= " + ")
@@ -190,7 +190,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     mod2_rlm <- lm(as.formula(formula), data = datamod)
     mod2_rand <- plm(as.formula(formula), data = datamod , index=c("measureditemcpc"), model ="random")
     mod2_red  <- plm(as.formula(formula4), data = datamod , index=c("measureditemcpc"), model ="random")
-   
+    
     CB(mod2_rlm$coefficients[1] + mod2_rlm$coefficients[names(mod2_rlm$coefficients)=="timepointyears"]*2008)
     CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)
     CB(mod2_red$coefficients[1]+ mod2_red$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)
@@ -202,8 +202,8 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     coeffSig <- summary(mod2_rand)$coeff[,4][summary(mod2_rand)$coeff[,4] <.1]
     coeffSig <- names(coeffSig)[names(coeffSig) %in%  c("timepointyears")]
     
-    if(any(length() == 0 | CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)>
-      max(Data[measureditemcpc %in% CPCs, loss_per_clean]) | CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)< .01 | unique(name) %in% "2911")){
+    if(any(CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)>
+           max(Data[measureditemcpc %in% CPCs, loss_per_clean]) | CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)< .01 | !unique(name) %in% c(2943, 2946,2945,2949,2948))){
       tma2 <- data1[,!names(data1) %in% unique(c("loss_per_clean")),with=F]
       tma2 <- tma2[,!names(tma2) %in% c('geographicaream49',"m49CPC"),with=F]
       tma2 <- tma2[, lapply(.SD, mean), by = c("timepointyears", "measureditemcpc")]
@@ -258,66 +258,66 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     # pcdtest(mod2_fixed, test = c("lm")) # Cross sectional
     # pcdtest(mod2_fixed, test = c("cd")) # Cross sectional
     # 
-
+    
     # ################################################################
     
     ####################### Results #########################################
     OnlySigCoeff =T
-
+    
     
     #DV <- names(fixef(mod2))
     if(index1 == "measureditemcpc"){PD_V2 <- unique(unlist(c(datapred[,index1,with=FALSE])))} 
     if(index1 == "geographicaream49"){PD_V2 <- levels(unlist(c(datapred[,index1,with=FALSE])))}
     if(modelstr == "within"){  
-    # For each of the items in the index
-    coeffN <- unique(c( UseVari[!UseVari %in% c(keys_lower,depVar)]))
-    for(ind1 in 1:length(unique(DV))){
-          datapred[ which(datapred[,index1,with=FALSE] ==  names(fixef(mod2)[ind1]) & datapred[,DV,with=FALSE] ==  gsub(DV,"", names(coefficients(mod2)))[ind2]) ,]$losstransf =
-            fixef(mod2)[ind1] +coefficients(mod2)[names(coefficients(mod2))[ind2]]+
-            rowSums(data.frame(mapply(`*`,coefficients(mod2)[names(coefficients(mod2)) %in% coeffN],  datapred[ which(datapred[,index1,with=FALSE] ==  names(fixef(mod2)[ind1]) & datapred[,DV,with=FALSE] ==  gsub(DV,"", names(coefficients(mod2)))[ind2]),coeffN,with=FALSE]))) 
-        }
+      # For each of the items in the index
+      coeffN <- unique(c( UseVari[!UseVari %in% c(keys_lower,depVar)]))
+      for(ind1 in 1:length(unique(DV))){
+        datapred[ which(datapred[,index1,with=FALSE] ==  names(fixef(mod2)[ind1]) & datapred[,DV,with=FALSE] ==  gsub(DV,"", names(coefficients(mod2)))[ind2]) ,]$losstransf =
+          fixef(mod2)[ind1] +coefficients(mod2)[names(coefficients(mod2))[ind2]]+
+          rowSums(data.frame(mapply(`*`,coefficients(mod2)[names(coefficients(mod2)) %in% coeffN],  datapred[ which(datapred[,index1,with=FALSE] ==  names(fixef(mod2)[ind1]) & datapred[,DV,with=FALSE] ==  gsub(DV,"", names(coefficients(mod2)))[ind2]),coeffN,with=FALSE]))) 
       }
+    }
     if(modelstr == "random" |modelstr == "pooling"){  
-        # COmbines the coefficients to create an estimate for every column in the group
-        coeffN <- c(UseVari[!UseVari %in% c(index1,DV,depVar)])
-        coeffN <- na.omit(coeffN) 
-        
-        if(OnlySigCoeff){
-          coeffSig <- summary(mod2)$coeff[,4][summary(mod2)$coeff[,4] <.1]
-          coeffSig <- names(coeffSig)[names(coeffSig) %in%  UseVari]
-          Inters <- names(summary(mod2)$coeff[,4][summary(mod2)$coeff[,4] <.1])
-        }else{
-          coeffSig <- coeffN
-          Inters <- names(coefficients(mod2))
-        }
-        
-        coeffindex <-  grep(index1,Inters, perl=TRUE, value=TRUE)
-        coeffDV <-     grep(DV,Inters, perl=TRUE, value=TRUE)
-        
-        datapred[,countydummy :=0]
-        datapred[,cropdummy :=0]
-        datapred[,intercept :=0]
-        
-        for(ind1 in 1:length(unique(gsub(index1,"", coeffindex)))){
-          datapred[geographicaream49 == gsub(index1,"", coeffindex)[ind1],countydummy := as.numeric(coefficients(mod2)[coeffindex[ind1]]),]
-        }
-        for(ind2 in 1:length(unique(gsub(DV,"", coeffDV)))){ 
-          datapred[measureditemcpc == gsub(DV,"", coeffDV)[ind2],cropdummy:= as.numeric(coefficients(mod2)[coeffDV[ind2]]),]
-          
-        }
-        datapred[,intercept:=coefficients(mod2)[1]]
-        #(cropdummy == 0) & (countydummy ==0)
-        if(length(coeffSig) >0){
-          # Applies the weights of the estimation across the entire cluster sets, using the demeaned coefficient as the intercept  (coefficients(mod2)[1]  
-          datapred[,losstransf := 
-                     rowSums(mapply(`*`,coefficients(mod2)[names(coefficients(mod2)) %in% coeffSig],datapred[ ,coeffSig,with=F]), na.rm=TRUE)+
-                     countydummy+cropdummy+intercept,] 
-        }else{ datapred[,losstransf := countydummy+cropdummy+intercept,]}
+      # COmbines the coefficients to create an estimate for every column in the group
+      coeffN <- c(UseVari[!UseVari %in% c(index1,DV,depVar)])
+      coeffN <- na.omit(coeffN) 
+      
+      if(OnlySigCoeff){
+        coeffSig <- summary(mod2)$coeff[,4][summary(mod2)$coeff[,4] <.1]
+        coeffSig <- names(coeffSig)[names(coeffSig) %in%  UseVari]
+        Inters <- names(summary(mod2)$coeff[,4][summary(mod2)$coeff[,4] <.1])
+      }else{
+        coeffSig <- coeffN
+        Inters <- names(coefficients(mod2))
       }
- 
+      
+      coeffindex <-  grep(index1,Inters, perl=TRUE, value=TRUE)
+      coeffDV <-     grep(DV,Inters, perl=TRUE, value=TRUE)
+      
+      datapred[,countydummy :=0]
+      datapred[,cropdummy :=0]
+      datapred[,intercept :=0]
+      
+      for(ind1 in 1:length(unique(gsub(index1,"", coeffindex)))){
+        datapred[geographicaream49 == gsub(index1,"", coeffindex)[ind1],countydummy := as.numeric(coefficients(mod2)[coeffindex[ind1]]),]
+      }
+      for(ind2 in 1:length(unique(gsub(DV,"", coeffDV)))){ 
+        datapred[measureditemcpc == gsub(DV,"", coeffDV)[ind2],cropdummy:= as.numeric(coefficients(mod2)[coeffDV[ind2]]),]
+        
+      }
+      datapred[,intercept:=coefficients(mod2)[1]]
+      #(cropdummy == 0) & (countydummy ==0)
+      if(length(coeffSig) >0){
+        # Applies the weights of the estimation across the entire cluster sets, using the demeaned coefficient as the intercept  (coefficients(mod2)[1]  
+        datapred[,losstransf := 
+                   rowSums(mapply(`*`,coefficients(mod2)[names(coefficients(mod2)) %in% coeffSig],datapred[ ,coeffSig,with=F]), na.rm=TRUE)+
+                   countydummy+cropdummy+intercept,] 
+      }else{ datapred[,losstransf := countydummy+cropdummy+intercept,]}
+    }
+    
     if(modrun ==1){
       #Transform the losses back to % and not logged numbers 
-
+      
       names(datapred) <- tolower(names(datapred))
       names(production) <- tolower(names(production))
       production$geographicaream49 <-as.character(production$geographicaream49)
@@ -334,11 +334,17 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
       medianLoss <- median(datapred$value_measuredelement_5126, na.rm=TRUE)
       medianLossRaw <- median(unlist(Data[measureditemcpc %in% CPCs,"loss_per_clean"]))
       print(paste('average loss:',medianLoss*100, "%"))
+      
       print(paste('average loss Raw:',medianLossRaw*100, "%"))
       print(paste('Number of countries:',length(unique(datamod$geographicaream49))))
       print(paste('Number of comodities:',length(unique(datamod$measureditemcpc))))
     }
+    # In the cases where the model over estimates the loss to unrealistic numbers then the dataset reverts to the mean of the data available
+  
+    datapred[value_measuredelement_5126 >mean(data1$loss_per_clean, na.rm = T) + 3*sd(data1$loss_per_clean, na.rm = T),] <- mean(data1$loss_per_clean, na.rm = T) 
+    datapred[value_measuredelement_5126 <.01,"value_measuredelement_5126"] <- mean(data1$loss_per_clean, na.rm = T) 
     
+    print(paste('max loss:',max(datapred$value_measuredelement_5126, na.rm=TRUE)*100, "%"))
     timeSeriesDataToBeImputed$geographicaream49 <- as.character(timeSeriesDataToBeImputed$geographicaream49)
     
     int1 <-datapred[,tolower(datasetN), with=F]
@@ -354,14 +360,14 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     timeSeriesDataToBeImputed[is.na(Protected) & loss_per_cleana >0,flagmethod:= 'e',]
     timeSeriesDataToBeImputed[is.na(Protected) & loss_per_cleana >0,flagcombination := paste(flagobservationstatus,flagmethod, sep=";"),]
     timeSeriesDataToBeImputed[,(nameadd):= NULL,]
-   
+    
     ##### Save model parameters
-
+    
     SavResult <- list(cluster=name,formula=formula,coeffnames = paste(unlist(names(coefficients(mod2))), collapse = "##"),mean_intercept=mean(ercomp(mod2)$theta),coeff =paste(unlist(coefficients(mod2)), collapse = "##"),
-                     coeffsig=paste(unlist(coeffSig), collapse = "##"), coeffindex=paste(unlist(coeffindex), collapse = "##"), coeffdv= paste(unlist(coeffDV), collapse = "##") )
-
+                      coeffsig=paste(unlist(coeffSig), collapse = "##"), coeffindex=paste(unlist(coeffindex), collapse = "##"), coeffdv= paste(unlist(coeffDV), collapse = "##") )
+    
     lossmodelruns = as.data.table(SavResult)
-
+    
     lossmodelruns[,daterun := date() ]
     lossmodelruns[,modelversion := modelversion ]
     setcolorder(lossmodelruns, c("daterun","modelversion",names(SavResult)))
@@ -383,7 +389,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   timeSeriesDataToBeImputed <- timeSeriesDataToBeImputed %>% filter(!is.na(value_measuredelement_5016))
   datasetN[datasetN=="loss_per_clean"] <- "value_measuredelement_5126"
   
-
+  
   ### Splits the data tables for the SWS ####
   timeSeriesDataToBeImputed_5016 <- timeSeriesDataToBeImputed[,c(keys_lower,"value_measuredelement_5016","flagobservationstatus", "flagmethod") ,with=F] 
   
@@ -409,25 +415,22 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
               c("geographicAreaM49", "measuredElementSuaFbs" ,"measuredItemSuaFbs" ,"timePointYears", "Value", "flagObservationStatus", "flagMethod") )
   
   timeSeriesDataToBeImputed_5126 <- timeSeriesDataToBeImputed_5126 %>% filter(!is.na(flagMethod))
-
+  
   # Save to the SWS
   stats = SaveData(domain = "lossWaste",
-                dataset="loss",
-                data = timeSeriesDataToBeImputed_5016
-               )
-
+                   dataset="loss",
+                   data = timeSeriesDataToBeImputed_5016
+  )
+  
   stats = SaveData(domain = "lossWaste",
-                      dataset="loss",
-                       data=timeSeriesDataToBeImputed_5126
-      )
-
-    
-      
-    
-    
+                   dataset="loss",
+                   data=timeSeriesDataToBeImputed_5126
+  )
+  
+  
+  
+  
   #write_json(list(DataIN = Data), paste(dirmain,'\\ModelResults\\',HierarchicalCluster,'_ModelResults.json',sep="")) 
   return(list(timeSeriesDataToBeImputed_5016=timeSeriesDataToBeImputed_5016,timeSeriesDataToBeImputed_5126=timeSeriesDataToBeImputed_5126))
   
 }
-
-

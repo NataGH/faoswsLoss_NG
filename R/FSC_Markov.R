@@ -29,7 +29,7 @@ FSC_Markov <- function(RawData,opt){
   names(RawData) <- tolower(names(RawData))
 
   FullSet <- subset(RawData,
-         select = c(keys_lower, "isocode",  "country",  "crop", "loss_per_clean", "fsc_location")
+         select = c(keys_lower, "isocode",  "country", "loss_per_clean", "fsc_location")
          )
   
   nro = length(unique(paste(RawData$measureditemcpc,RawData$timepointyears,RawData$geographicaream49, sep=";")))
@@ -83,7 +83,6 @@ FSC_Markov <- function(RawData,opt){
             FullSeta[1, measureditemcpc := unique(data4$measureditemcpc),]
             FullSeta[1, isocode := unique(data4$isocode),]
             FullSeta[1, country := unique(data4$country),]
-            FullSeta[1, crop := unique(data4$crop),]
             FullSeta[1, 'loss_per_clean':=lossPer]
             FullSeta[1, 'fsc_location'] <- "Calc"
           }} else{
@@ -93,7 +92,6 @@ FSC_Markov <- function(RawData,opt){
             FullSeta[1, measureditemcpc := unique(data4$measureditemcpc),]
             FullSeta[1, isocode := unique(data4$isocode),]
             FullSeta[1, country := unique(data4$country),]
-            FullSeta[1, crop := unique(data4$crop),]
             FullSeta[1, loss_per_clean:=unique(data4$loss_per_clean),]
             FullSeta[1, fsc_location := unique(data4$fsc_location),]
 
@@ -110,5 +108,7 @@ FSC_Markov <- function(RawData,opt){
   FullSet <- FullSet %>% filter(country!='antarctica')
   FullSet$measureditemcpc <- addHeadingsCPC(FullSet$measureditemcpc) 
   names(FullSet) <- tolower(names(FullSet))
+  
+
   return(FullSet)
 }  

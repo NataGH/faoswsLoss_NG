@@ -39,7 +39,7 @@ MultiExp<- function(X, degree,depVar){
       for (mm in 1:m){
         new <-Numerical[1:n,names(Numerical)[mm],with=F]*Numerical[1:n,names(Numerical)[mm],with=F]
         if(mm!= m){
-          colnames(new) <- paste(colnames(Numerical)[mm], colnames(Numerical)[mm:m], sep = ".")
+          colnames(new) <- paste(colnames(Numerical)[mm], colnames(Numerical)[mm:m], sep = ".")[mm]
         }
         interaction <- cbind(interaction, new)
         if(mm == m){
@@ -50,12 +50,12 @@ MultiExp<- function(X, degree,depVar){
     out <- interaction 
     if(j>= 2){
       for (mm in 1:m){
-        new <- Numerical[, mm]*interaction
+        new <- mapply(`*`,Numerical[, mm,with=FALSE],interaction)
         colnames(new) <- paste(colnames(Numerical)[mm], colnames(interaction), sep = ".")
         out <- cbind(out, new)
-        if(mm == 1){
-          out <- out[, 1:dim(out)[2]]
-        }
+        #if(mm == 1){
+        #  out <- out[, 1:dim(out)[2]]
+        #}
         
       }
     }
@@ -68,7 +68,7 @@ MultiExp<- function(X, degree,depVar){
     # }, error = function(e){})}
   }
   
-  drops <- out[, duplicated(colnames(out)) == FALSE]
+  drops <- out[, duplicated(colnames(out)) == FALSE,with=F]
   factorized <- cbind(Numerical, drops)
   
   allData <- cbind(Y,NonNumer, factorized) 
