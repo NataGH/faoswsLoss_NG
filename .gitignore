@@ -10,3 +10,4 @@
 /target
 /test-results.xml
 tests/test-results.xml
+.Rproj.user

@@ -5,38 +5,37 @@
 ##'   \link{fromJSON} in RJSONIO for details.
 ##'   
 ##' @import RJSONIO
-##' @import RCurl
+##' @import curl
 ##' 
 ##' @keywords internal
 
 GetRestCall <- function(url, nullValue = NULL) {
 
-  ch <- RCurl::getCurlHandle()
+  # TODO check .encoding = "UTF-8" parameter that was passed to RCurl::getURL()
+
+  ch <- curl::new_handle()
+  curl::handle_setheaders(ch,
+    .list = list(Accept = "application/json", `Content-Type` = "application/json"))
   
-  withCallingHandlers(if (Sys.info()['sysname'] == 'Darwin') { 
-    response <- RCurl::getURL(
-      url = url,
-      curl = ch,
-      verbose = FALSE,
-      noproxy = .swsenv$swsContext.noProxy,
-      ssl.verifypeer = FALSE, 
-      sslcert = path.expand(.swsenv$swsContext.clientP12),
-      sslcertpasswd = .swsenv$swsContext.p12Password,
-      ssl.verifyhost = 2,
-      httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"),
-      .encoding = "UTF-8")
-  } else {
-    response <- RCurl::getURL(
-      url = url,
-      curl = ch,
-      verbose = FALSE,
-      noproxy = .swsenv$swsContext.noProxy,
-      ssl.verifypeer = FALSE, 
-      sslcert = path.expand(.swsenv$swsContext.clientCertificate),
-      sslkey = path.expand(.swsenv$swsContext.clientKey),
-      ssl.verifyhost = 2,
-      httpheader = c(Accept = "application/json", 'Content-Type' = "application/json"),
-      .encoding = "UTF-8")
+  withCallingHandlers({
+    if (Sys.info()['sysname'] == 'Darwin') { 
+      curl::handle_setopt(ch,
+                          verbose = FALSE,
+                          noproxy = .swsenv$swsContext.noProxy,
+                          ssl_verifypeer = FALSE,
+                          sslcert = path.expand(.swsenv$swsContext.clientP12),
+                          sslcertpasswd = .swsenv$swsContext.p12Password,
+                          ssl_verifyhost = 2)
+    } else {
+      curl::handle_setopt(ch,
+                          verbose = FALSE,
+                          noproxy = .swsenv$swsContext.noProxy,
+                          ssl_verifypeer = FALSE,
+                          sslcert = path.expand(.swsenv$swsContext.clientCertificate),
+                          sslkey = path.expand(.swsenv$swsContext.clientKey),
+                          ssl_verifyhost = 2)
+    }
+    response <- curl_fetch_memory(url, handle = ch)
   },
   SSL_CONNECT_ERROR = function(e){
     stop("Incorrect certificates. Either use 'SetClientFiles' or put the correct certificates in ", 
@@ -45,16 +44,18 @@ GetRestCall <- function(url, nullValue = NULL) {
 
 	# Check returned status code.
 	#
-	status <- RCurl::getCurlInfo(ch, which = "response.code")
-	if(status != 200) {
-	  HandleHTTPError(status, response)
+	status <- response$status_code
+  content <- rawToChar(response$content)
+
+	if (status != 200) {
+	  HandleHTTPError(status, content)
 	}
 
-	# Prevent error on blank response
-	if(response == ""){
+	# Prevent error on blank content
+	if (content == "") {
 	  return(invisible(""))
 	} else {
-	  return(RJSONIO::fromJSON(response, nullValue = nullValue))
+	  return(RJSONIO::fromJSON(content, nullValue = nullValue))
 	}
 	
 }
