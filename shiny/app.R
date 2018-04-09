@@ -60,44 +60,48 @@ suppressMessages({
 # }
 # 
 # 
-areaVar = "geographicAreaM49"
-yearVar = "timePointYears"
-itemVar = "measuredItemCPC"
-elementVar = "measuredElement"
-selectedYear = as.character(1991:2016)
-#----  Data In ------------------------------------------
-dataRaw <- ReadDatatable("aggregate_loss_table")
-dataRaw[,country :=NULL ]
-dataModel <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
-names(dataModel) <- tolower(names(dataModel))
-names(dataModel)[names(dataModel) =='measureditemsuafbs'] <- "measureditemcpc"
-dataModel$geographicaream49 <- as.character(dataModel$geographicaream49)
-#----
-CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
-fbsTree <- ReadDatatable("fbs_tree")
-FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
-#----
-CountryGroup$country <- tolower(CountryGroup$countryname)
-CountryGroup[,"geographicaream49":=CountryGroup$m49code]
-
-names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
-names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
-FAOCrops[, "crop" := FAOCrops$description]
-names(FAOCrops)[names(FAOCrops) =='cpc'] <- "measureditemcpc"
-
-fbsTree[foodgroupname %in% c(2905), gfli_basket :='Cereals',]
-fbsTree[foodgroupname %in% c(2911), gfli_basket :='Pulses',]
-fbsTree[foodgroupname %in% c(2919,2918), gfli_basket :='Fruits & Vegetables',]
-fbsTree[foodgroupname %in% c(2907,2913), gfli_basket :='Roots, Tubers & Oil-Bearing Crops',]
-fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), gfli_basket :='Other',]
-fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), gfli_basket :='Animals Products & Fish and fish products',] # |fo
-#----
-Crops <- merge(fbsTree,FAOCrops, by=("measureditemcpc"), all.x =T)
-dataRaw <-merge(dataRaw, fbsTree, by=("measureditemcpc"), all.x =T)
-dataRaw <-merge(dataRaw, CountryGroup, by=("geographicaream49"), all.x =T)
-dataModel <-merge(dataModel, fbsTree, by=("measureditemcpc"), all.x =T)
-dataModel <-merge(dataModel, CountryGroup, by=("geographicaream49"), all.x =T)
-#-------------------------------------------------------
+# areaVar = "geographicAreaM49"
+# yearVar = "timePointYears"
+# itemVar = "measuredItemCPC"
+# elementVar = "measuredElement"
+# selectedYear = as.character(1991:2016)
+# #----  Data In ------------------------------------------
+# dataRaw <- ReadDatatable("aggregate_loss_table")
+# dataRaw[,country :=NULL ]
+# dataRaw[fsc_location =="SWS","fsc_location" ] <- "Official/Semi-Official - National"
+# dataRaw[fsc_location =="sws_total","fsc_location" ] <- "Official/Semi-Official - National"
+# dataRaw[fsc_location =="Calc","fsc_location" ] <- "Aggregated from multiple sources"
+# setnames(dataRaw,"fsc_location", "Source"  )
+# dataModel <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
+# names(dataModel) <- tolower(names(dataModel))
+# names(dataModel)[names(dataModel) =='measureditemsuafbs'] <- "measureditemcpc"
+# dataModel$geographicaream49 <- as.character(dataModel$geographicaream49)
+# #----
+# CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+# fbsTree <- ReadDatatable("fbs_tree")
+# FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
+# #----
+# CountryGroup$country <- tolower(CountryGroup$countryname)
+# CountryGroup[,"geographicaream49":=CountryGroup$m49code]
+# 
+# names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
+# names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
+# FAOCrops[, "crop" := FAOCrops$description]
+# names(FAOCrops)[names(FAOCrops) =='cpc'] <- "measureditemcpc"
+# 
+# fbsTree[foodgroupname %in% c(2905), gfli_basket :='Cereals',]
+# fbsTree[foodgroupname %in% c(2911), gfli_basket :='Pulses',]
+# fbsTree[foodgroupname %in% c(2919,2918), gfli_basket :='Fruits & Vegetables',]
+# fbsTree[foodgroupname %in% c(2907,2913), gfli_basket :='Roots, Tubers & Oil-Bearing Crops',]
+# fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), gfli_basket :='Other',]
+# fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), gfli_basket :='Animals Products & Fish and fish products',] # |fo
+# #----
+# Crops <- merge(fbsTree,FAOCrops, by=("measureditemcpc"), all.x =T)
+# dataRaw <-merge(dataRaw, fbsTree, by=("measureditemcpc"), all.x =T)
+# dataRaw <-merge(dataRaw, CountryGroup, by=("geographicaream49"), all.x =T)
+# dataModel <-merge(dataModel, fbsTree, by=("measureditemcpc"), all.x =T)
+# dataModel <-merge(dataModel, CountryGroup, by=("geographicaream49"), all.x =T)
+# # #-------------------------------------------------------
 
 ui <- fluidPage(theme = shinytheme("lumen"),
                 sidebarLayout(
@@ -130,12 +134,17 @@ ui <- fluidPage(theme = shinytheme("lumen"),
                       label = "Country",
                       choices = NULL, selected =NULL, multiple=TRUE, selectize=TRUE
                     ),
+                    selectInput(
+                      inputId = "Source",
+                      label = "Source",
+                      choices = c("All",unique(dataRaw$Source)), selected ="All", multiple=TRUE, selectize=TRUE
+                    ),
                     selectInput("dataset", "Choose a dataset for download:",
                                 choices = c("National Raw Aggregated Data","Modeled Estimates","Descriptive Stats")),
                     downloadButton("Data.csv", "Download"),
                     selectInput("datasetPlot", "Choose a Plot for download:",
                                 choices = c("National Raw Aggregated Data","By CPC","By Country")),
-                    downloadButton("MeasuredElement5126.pdf", "Plots")
+                    downloadButton("MeasuredElement5126.jpeg", "Plots")
                   ),
 
                   mainPanel(
@@ -179,8 +188,9 @@ server <- function(input, output, session) {
       updateSelectInput(session, "Country", choices=ctry_choices, selected ="All")
     }
   })
+
     
-  dataR <- reactive({dataRaw %>% filter((timepointyears %in% seq(input$Year[1],input$Year[2], by=1)) &
+    dataR <- reactive({dataRaw %>% filter((timepointyears %in% seq(input$Year[1],input$Year[2], by=1)) &
                                             (measureditemcpc %in%
                                              if(input$CommodityGroup %in%  'All'){unlist(unique(dataRaw[,"measureditemcpc",with=F]))}
                                              else if(any(input$itemcpc %in%  c('All'))){unlist(unique(dataRaw[gfli_basket %in%  input$CommodityGroup,"measureditemcpc",with=F]))}
@@ -191,9 +201,15 @@ server <- function(input, output, session) {
                                              if(input$SDG_Reg %in%  'All'){unlist(dataRaw[,"geographicaream49",with=F])}
                                              else if(any(input$Country %in%  c('All'))){unlist(dataRaw[sdg_regions %in%  input$SDG_Reg,"geographicaream49",with=F])}
                                              else if(!is.null(input$Country)){unlist(dataRaw[countryname %in% input$Country,"geographicaream49",with=F])}
-                                             else{unlist(dataRaw[sdg_regions %in%  input$SDG_Reg,"geographicaream49",with=F])})
+                                             else{unlist(dataRaw[sdg_regions %in%  input$SDG_Reg,"geographicaream49",with=F])})&
+                                          (Source %in%
+                                             if(any(input$Source == 'All')){unlist(dataRaw[,"Source",with=F])}
+                                             else{unlist(dataRaw[Source %in% input$Source,"Source",with=F])}
+                                           )
                                         )
     })
+
+
 
   dataMI <- reactive({dataModel%>% filter((timepointyears %in% seq(input$Year[1],input$Year[2], by=1)) &
                                             (measureditemcpc %in%
@@ -211,7 +227,7 @@ server <- function(input, output, session) {
   })
 
   plotRawData = function(){
-    ggplot(dataR(), aes(x = timepointyears, y = loss_per_clean, color = fsc_location)) +
+    ggplot(dataR(), aes(x = timepointyears, y = loss_per_clean, color = Source)) +
       geom_point() +
       xlab('timePointYears') + ylab('Loss (%)') +
       theme(axis.text.x = element_text(angle = 45, vjust = .5)) +
@@ -300,10 +316,10 @@ server <- function(input, output, session) {
     }
   )
   
-  output$MeasuredElement5126.pdf <- downloadHandler(
-    filename = function(){paste("MeasuredElement5126",input$filename, ".pdf", sep = "")},
+  output$MeasuredElement5126.jpeg <- downloadHandler(
+    filename = function(){paste("MeasuredElement5126",input$filename, ".jpeg", sep = "")},
     content = function(file) {
-      ggsave(file, plot =   datasetPlot(),  width = 10, height = 8, dpi = 150, units = "in", device =  "pdf")
+      ggsave(file, plot =   datasetPlot(),  scale = .8, width = 450, height = 200, dpi = 300, units = "mm", device =  "jpeg")
     }
   )
   ### R Check##

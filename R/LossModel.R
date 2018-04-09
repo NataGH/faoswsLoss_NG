@@ -99,7 +99,8 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     # Truncates the data between 2 standard deviations of the mean 
     data1 <- data1 %>% filter(loss_per_clean <= mean(data1$loss_per_clean, na.rm = T) + 3*sd(data1$loss_per_clean, na.rm = T))
     data1 <- data1 %>% filter(loss_per_clean >= mean(data1$loss_per_clean, na.rm = T) - 3*sd(data1$loss_per_clean, na.rm = T))
-  
+ 
+    
     CPCs <- unique(data1$measureditemcpc)
     #Makes the columns numeric and looks at correlated variables
     nums1 <- sapply(data1, is.numeric)
@@ -152,7 +153,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     ###################
     Predvar<- unique(na.omit(c(HierarchicalCluster, keys_lower,"loss_per_clean",UseVari ,"Protected")))
     DataPred <-  timeSeriesDataToBeImputed %>% filter(measureditemcpc %in% CPCs)
-    DataPred <- VariablesAdd1(DataPred,keys_lower,Predvar,Impute)
+    DataPred <- VariablesAdd1(DataPred,keys_lower,Predvar,Impute, name)
     names(DataPred) <- tolower(names(DataPred))
     names(DataPred) <- gsub("[[:punct:]]","_",names(DataPred)) 
     
@@ -191,6 +192,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     mod2_rand <- plm(as.formula(formula), data = datamod , index=c("measureditemcpc"), model ="random")
     mod2_red  <- plm(as.formula(formula4), data = datamod , index=c("measureditemcpc"), model ="random")
     
+    
     CB(mod2_rlm$coefficients[1] + mod2_rlm$coefficients[names(mod2_rlm$coefficients)=="timepointyears"]*2008)
     CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)
     CB(mod2_red$coefficients[1]+ mod2_red$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)
@@ -203,7 +205,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     coeffSig <- names(coeffSig)[names(coeffSig) %in%  c("timepointyears")]
     
     if(any(CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)>
-           max(Data[measureditemcpc %in% CPCs, loss_per_clean]) | CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)< .01 | !unique(name) %in% c(2943, 2946,2945,2949,2948))){
+           max(Data[measureditemcpc %in% CPCs, loss_per_clean]) | CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)< .01 )){
       tma2 <- data1[,!names(data1) %in% unique(c("loss_per_clean")),with=F]
       tma2 <- tma2[,!names(tma2) %in% c('geographicaream49',"m49CPC"),with=F]
       tma2 <- tma2[, lapply(.SD, mean), by = c("timepointyears", "measureditemcpc")]
@@ -341,10 +343,10 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     }
     # In the cases where the model over estimates the loss to unrealistic numbers then the dataset reverts to the mean of the data available
   
-    datapred[value_measuredelement_5126 >mean(data1$loss_per_clean, na.rm = T) + 3*sd(data1$loss_per_clean, na.rm = T),] <- mean(data1$loss_per_clean, na.rm = T) 
-    datapred[value_measuredelement_5126 <.01,"value_measuredelement_5126"] <- mean(data1$loss_per_clean, na.rm = T) 
+    datapred[loss_per_clean >mean(data1$loss_per_clean, na.rm = T) + 3*sd(data1$loss_per_clean, na.rm = T),"loss_per_clean"] <- mean(data1$loss_per_clean, na.rm = T) 
+    datapred[loss_per_clean <.01,"loss_per_clean"] <- mean(data1$loss_per_clean, na.rm = T) 
     
-    print(paste('max loss:',max(datapred$value_measuredelement_5126, na.rm=TRUE)*100, "%"))
+    print(paste('max loss:',max(datapred$loss_per_clean, na.rm=TRUE)*100, "%"))
     timeSeriesDataToBeImputed$geographicaream49 <- as.character(timeSeriesDataToBeImputed$geographicaream49)
     
     int1 <-datapred[,tolower(datasetN), with=F]
@@ -389,6 +391,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   timeSeriesDataToBeImputed <- timeSeriesDataToBeImputed %>% filter(!is.na(value_measuredelement_5016))
   datasetN[datasetN=="loss_per_clean"] <- "value_measuredelement_5126"
   
+  ### Narrows the data to the CPCs in the loss domain
   
   ### Splits the data tables for the SWS ####
   timeSeriesDataToBeImputed_5016 <- timeSeriesDataToBeImputed[,c(keys_lower,"value_measuredelement_5016","flagobservationstatus", "flagmethod") ,with=F] 
@@ -421,6 +424,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
                    dataset="loss",
                    data = timeSeriesDataToBeImputed_5016
   )
+  
   
   stats = SaveData(domain = "lossWaste",
                    dataset="loss",

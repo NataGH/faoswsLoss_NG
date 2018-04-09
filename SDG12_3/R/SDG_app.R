@@ -62,54 +62,54 @@ itemVar = "measuredItemCPC"
 elementVar = "measuredElement"
 
 
-# # ###----  Data In ----------############
-# Losses <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
-# production <- getProductionData(areaVar,itemVar,yearVar,elementVar) # Value_measuredElement_5510
-# fbsTree <- ReadDatatable("fbs_tree")
-# CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
-# FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
-# 
-# names(CountryGroup)[names(CountryGroup) =="countryname"] <- "Country"
-# names(CountryGroup)[names(CountryGroup) =="m49code"] <- "geographicaream49"
-# CountryGroup[,c("iso2code","isocode") :=NULL]
-# 
-# names(Losses)[names(Losses) =="Value"] <- "value_measuredelement_5126"
-# names(Losses)[names(Losses) =="measuredItemSuaFbs"] <- "measureditemcpc"
-# names(Losses) <- tolower(names(Losses))
-# names(production) <- tolower(names(production))
-# names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
-# names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
-# FAOCrops[, "crop" := FAOCrops$description]
-# names(FAOCrops)[names(FAOCrops) =='cpc'] <- "measureditemcpc"
-# 
-# #SDG Headings
-# fbsTree[foodgroupname %in% c(2905,2911), gfli_basket :='Cereals & Pulses',]
-# fbsTree[foodgroupname %in% c(2919,2918), gfli_basket :='Fruits & Vegetables',]
-# fbsTree[foodgroupname %in% c(2907,2913), gfli_basket :='Roots, Tubers & Oil-Bearing Crops',]
-# fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), gfli_basket :='Other',]
-# fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), gfli_basket :='Animals Products & Fish and fish products',] # |foodGroupName == "PRODUCTS FROM FISH",
-# 
-# ###Weight Options
-# intPrice2005 <-  ReadDatatable("int_$_prices_2005")
-# pvail <- unique(intPrice2005$itemcode)
-# intPrice2005Selected =
-#   intPrice2005 %>%
-#   select(itemcode,itemname, value) %>%
-#   filter(itemcode %in% as.numeric(unlist(na.omit(pvail))))
-# 
-# intPrice2005Selected$intprice <- intPrice2005Selected$value
-# #intPrice2005Selected$measureditemfclname <- intPrice2005Selected$ItemName
-# 
-# intPrice2005Selected$measureditemfcl <- addHeadingsFCL(intPrice2005Selected$itemcode)
-# intPrice2005Selected$measureditemcpc <- fcl2cpc(intPrice2005Selected$measureditemfcl,version = "2.1")
-# intPrice2005Selected$itemname <- tolower(intPrice2005Selected$itemname)
-# 
-# ############ Index Calculations #############
-# ProdQtySWS <- subset(production,
-#                      select = c(keys_lower,"value_measuredelement_5510")) %>% filter(timepointyears >= BaseYear[1] & timepointyears <= BaseYear[2])
-# 
-# Base_Prod <- ProdQtySWS[,qty_avey1y2 := mean(value_measuredelement_5510),by = c("geographicaream49",'measureditemcpc')]
-# Base_Prod <- unique(Base_Prod[,c("geographicaream49",'measureditemcpc','qty_avey1y2'),with=F])
+# ###----  Data In ----------############
+Losses <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
+production <- getProductionData(areaVar,itemVar,yearVar,elementVar) # Value_measuredElement_5510
+fbsTree <- ReadDatatable("fbs_tree")
+CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
+
+names(CountryGroup)[names(CountryGroup) =="countryname"] <- "Country"
+names(CountryGroup)[names(CountryGroup) =="m49code"] <- "geographicaream49"
+CountryGroup[,c("iso2code","isocode") :=NULL]
+
+names(Losses)[names(Losses) =="Value"] <- "value_measuredelement_5126"
+names(Losses)[names(Losses) =="measuredItemSuaFbs"] <- "measureditemcpc"
+names(Losses) <- tolower(names(Losses))
+names(production) <- tolower(names(production))
+names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
+names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
+FAOCrops[, "crop" := FAOCrops$description]
+names(FAOCrops)[names(FAOCrops) =='cpc'] <- "measureditemcpc"
+
+#SDG Headings
+fbsTree[foodgroupname %in% c(2905,2911), gfli_basket :='Cereals & Pulses',]
+fbsTree[foodgroupname %in% c(2919,2918), gfli_basket :='Fruits & Vegetables',]
+fbsTree[foodgroupname %in% c(2907,2913), gfli_basket :='Roots, Tubers & Oil-Bearing Crops',]
+fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), gfli_basket :='Other',]
+fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), gfli_basket :='Animals Products & Fish and fish products',] # |foodGroupName == "PRODUCTS FROM FISH",
+
+###Weight Options
+intPrice2005 <-  ReadDatatable("int_$_prices_2005")
+pvail <- unique(intPrice2005$itemcode)
+intPrice2005Selected =
+  intPrice2005 %>%
+  select(itemcode,itemname, value) %>%
+  filter(itemcode %in% as.numeric(unlist(na.omit(pvail))))
+
+intPrice2005Selected$intprice <- intPrice2005Selected$value
+#intPrice2005Selected$measureditemfclname <- intPrice2005Selected$ItemName
+
+intPrice2005Selected$measureditemfcl <- addHeadingsFCL(intPrice2005Selected$itemcode)
+intPrice2005Selected$measureditemcpc <- fcl2cpc(intPrice2005Selected$measureditemfcl,version = "2.1")
+intPrice2005Selected$itemname <- tolower(intPrice2005Selected$itemname)
+
+############ Index Calculations #############
+ProdQtySWS <- subset(production,
+                     select = c(keys_lower,"value_measuredelement_5510")) %>% filter(timepointyears >= BaseYear[1] & timepointyears <= BaseYear[2])
+
+Base_Prod <- ProdQtySWS[,qty_avey1y2 := mean(value_measuredelement_5510),by = c("geographicaream49",'measureditemcpc')]
+Base_Prod <- unique(Base_Prod[,c("geographicaream49",'measureditemcpc','qty_avey1y2'),with=F])
 
 
 

@@ -25,20 +25,23 @@ getLossData_LossDomain = function(areaVar,itemVar,yearVar,elementVar,selectedYea
                                    dimension = "measuredItemSuaFbs")[, code]))
   )
   
-  ## Pivot to vectorize yield computation
-  lossPivot = c(
-    ## Pivoting(code = areaVarFS, ascending = TRUE),
-    ## Pivoting(code = itemVarFS, ascending = TRUE),
-    ## Pivoting(code = yearVar, ascending = FALSE),
-    ## Pivoting(code = elementVarFS, ascending = TRUE)
-    Pivoting(code = areaVar, ascending = TRUE),
-    Pivoting(code = itemVar, ascending = TRUE),
-    Pivoting(code = yearVar, ascending = FALSE),
-    Pivoting(code = elementVar, ascending = TRUE)
-  )
   lossQuery = GetData(
     lossKey,
     flags = T)
+  
+
+  
+  ## Pivot to vectorize yield computation
+  # lossPivot = c(
+  #   ## Pivoting(code = areaVarFS, ascending = TRUE),
+  #   ## Pivoting(code = itemVarFS, ascending = TRUE),
+  #   ## Pivoting(code = yearVar, ascending = FALSE),
+  #   ## Pivoting(code = elementVarFS, ascending = TRUE)
+  #   Pivoting(code = areaVar, ascending = TRUE),
+  #   Pivoting(code = itemVar, ascending = TRUE),
+  #   Pivoting(code = yearVar, ascending = FALSE),
+  #   Pivoting(code = elementVar, ascending = TRUE)
+  # )
   
   ## Query the data
   # lossQuery = GetData(

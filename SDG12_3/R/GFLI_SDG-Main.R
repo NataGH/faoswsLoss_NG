@@ -66,7 +66,7 @@ if(CheckDebug()){
 
 ######### Options ############
 savesws <- TRUE
-selectedYear <- as.character(1991:2015)
+selectedYear <- as.character(1991:2016)
 
 
 gfli_calc <- TRUE
@@ -79,7 +79,7 @@ weights <- "intl_prices"
 basketn <- "top2perhead_byCtry" # "top2perhead_Globatop10","top2_calories"
 
 gfli_compare <- TRUE
-ComparisonYear <- as.character(c(2013,2015))
+ComparisonYear <- as.character(c(2013,2016))
 
 gfli_Reporting <- TRUE
 ReportingYear <- as.character(c(2015))
@@ -152,7 +152,7 @@ FLIData <-  merge(Base_Prod,Weights, by.x = c('measureditemcpc'), by.y = c('meas
 FLIData[, p0q0 := qty_avey1y2*intprice,]
 
 ## Loss percentages multiplied by the quantity weighted (for the numerator), Includes all commodities
-DataForIndex <- join(Losses[,c(keys_lower,"value_measuredelement_5126"),with=F] , FLIData, by =c("measureditemcpc","geographicaream49"),type= 'left', match='all')
+DataForIndex <- merge(Losses[,c(keys_lower,"value_measuredelement_5126"),with=F] , FLIData, by =c("measureditemcpc","geographicaream49"),type= 'left', match='all')
 DataForIndex$l0ptqt =0
 DataForIndex[,l0ptqt:=value_measuredelement_5126*p0q0,with=T]
 
@@ -249,6 +249,6 @@ if(gfli_compare){
 
 #### Reporting Documents ####
 if(gfli_Reporting){
-  reporting(ReportingYear,ComparisonYear)
+  reporting(ReportingYear,ComparisonYear,BaseYear)
 
 }

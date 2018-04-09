@@ -90,7 +90,7 @@ getLossData = function(areaVar,itemVar,yearVar,elementVar,selectedYear, protecte
   ##           keys = selectedYear)
   ##    )
   ## )
-
+  
   ## define measured elements
   lossKey = DatasetKey(
     domain = "agriculture",
@@ -101,7 +101,7 @@ getLossData = function(areaVar,itemVar,yearVar,elementVar,selectedYear, protecte
                                    dataset = "aproduction",
                                    dimension = "geographicAreaM49")[type == "country", code]),
       Dimension(name = "measuredElement", keys = c("5016")), 
-      Dimension(name = "timePointYears", keys = as.character(1990:max(selectedYear))),
+      Dimension(name = "timePointYears", keys = as.character(2016:2016)),
       Dimension(name = "measuredItemCPC",
                 keys = GetCodeList(domain = "agriculture",
                                    dataset = "aproduction",
@@ -156,26 +156,94 @@ getLossData = function(areaVar,itemVar,yearVar,elementVar,selectedYear, protecte
   #flagValidTableLoss <- read_csv("~/faoswsLoss/data-raw/flagValidTable.csv")
   flagValidTableLoss <- as.data.table(flagValidTable)
 
-
-  ## Taking only official data
-  ## distinct(lossQuery,flagFaostat_measuredElementFS_5120)
-  ## lossQuery = lossQuery[flagFaostat_measuredElementFS_5120 == "", ]
-
-  if (protected) {
-    protectedFlag <- flagValidTableLoss[flagValidTableLoss$Protected == TRUE,] %>%
-      .[, flagCombination := paste(flagObservationStatus, flagMethod, sep = ";")]
-
-    col_keep <- names(lossQuery) %>%
-      .[.!="flagCombination"]
-
-    ## subset to protected flags
-    ## requires dtplyr, the data table back-end for 'dplyr'
-    lossQuery <-
-      lossQuery[, flagCombination := paste(flagObservationStatus, flagMethod, sep = ";")] %>%
-      merge(., protectedFlag, by = "flagCombination") %>%
-      filter(Protected == TRUE) 
+  
+  ### all places for losses data
+  GetDatasetConfig("faostat_one","updated_sua_data")
+  GetDatasetConfig("faostat_one","updated_sua_2013_data") 
+  
+  getDataFAOSTAT1 <- function(geographicAreaM49, element, measuredItemCPC, yearRange, dataset) {
+    code <- element
+    fcl =  suppressWarnings(as.character(as.numeric(cpc2fcl(measuredItemCPC, returnFirst = T))))
+    fcl = fcl[!is.na(fcl)]
+    countryFS =  suppressWarnings(m492fs(geographicAreaM49))
+    countryFS = countryFS[!is.na(countryFS)]
+    Key = DatasetKey(
+      domain = "faostat_one",
+      dataset = dataset,
+      dimensions = list(
+        Dimension(name = "geographicAreaFS",
+                  keys = countryFS),
+        Dimension(name = "measuredElementFS", keys = code),
+        Dimension(name = "timePointYears", keys = yearRange),
+        Dimension(name = "measuredItemFS",
+                  keys = fcl)
+      )
+    )
+    
+    data = GetData(
+      Key,
+      flags = TRUE)
+    
+    data[, geographicAreaM49 := fs2m49(geographicAreaFS)]
+    data[, measuredItemCPC := fcl2cpc(formatC(as.numeric(measuredItemFS), width = 4,
+                                              flag = "0"))]
+    
+    data[, flagObservationStatus := getFlagObservationStatus(flagFaostat)]
+    data[, flagMethod := getFlagMethod(flagFaostat)]    
+    
+    data[, measuredElement := "5141"]
+    data[, c("geographicAreaFS", "measuredItemFS", "measuredElementFS", "flagFaostat") := NULL]
+    
+    setcolorder(data, c("geographicAreaM49", "measuredElement",
+                        "measuredItemCPC", "Value", "timePointYears",
+                        "flagObservationStatus", "flagMethod"))
+    
+    data <- data[!is.na(geographicAreaM49)]
+    
   }
-
-  lossQuery
-
+  ##############################################################################
+  #losses = 121
+  countriesM49 <- GetCodeList(domain = "agriculture",dataset = "aproduction",
+                              dimension ="geographicAreaM49")[type == "country", code]
+  
+  countriesM49 <- countriesM49[!(countriesM49 %in% c("831", "832", "274"))]
+  
+  cpcCodes <- GetCodeList(domain = "agriculture",dataset = "aproduction",
+                          dimension ="measuredItemCPC")[, code]
+  
+  
+  SuaY90_13data = getDataFAOSTAT1(countriesM49,
+                         element = "121",
+                         measuredItemCPC = cpcCodes,
+                         yearRange = as.character(1990:2013),
+                         dataset = "updated_sua_2013_data") 
+  
+  SuaY14_15data = getDataFAOSTAT1(countriesM49,
+                         element = "121",
+                         measuredItemCPC = cpcCodes,
+                         yearRange = as.character(2014:2015),
+                         dataset = "updated_sua_data") 
+  
+  
+ Lossdata<-rbind(SuaY90_13data,lossQuery,SuaY14_15data)
+ 
+ ## Taking only official data
+ ## distinct(lossQuery,flagFaostat_measuredElementFS_5120)
+ ## lossQuery = lossQuery[flagFaostat_measuredElementFS_5120 == "", ]
+ 
+ if (protected) {
+   protectedFlag <- flagValidTableLoss[flagValidTableLoss$Protected == TRUE,] %>%
+     .[, flagCombination := paste(flagObservationStatus, flagMethod, sep = ";")]
+   
+   col_keep <- names(Lossdata) %>%
+     .[.!="flagCombination"]
+   
+   ## subset to protected flags
+   ## requires dtplyr, the data table back-end for 'dplyr'
+   Lossdata <-
+     Lossdata[, flagCombination := paste(flagObservationStatus, flagMethod, sep = ";")] %>%
+     merge(., protectedFlag, by = "flagCombination") %>%
+     filter(Protected == TRUE) 
+ }
+ Lossdata
 }

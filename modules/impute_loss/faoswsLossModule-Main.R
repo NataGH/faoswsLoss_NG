@@ -162,7 +162,9 @@ finalModelData =
     names(lossProtected) <- tolower(names(lossProtected))
     names(production) <- tolower(names(production ))
     production$geographicaream49 <- as.character(production$geographicaream49)
+    production$timepointyears <- as.numeric(production$timepointyears)
     lossProtected$geographicaream49 <- as.character(lossProtected$geographicaream49)
+    lossProtected$timepointyears <- as.numeric(lossProtected$timepointyears)
     #Data for the model
     lossData <-  merge(production,lossProtected,  by.x = keys_lower,  by.y = keys_lower, all.y= TRUE)
     lossData[, loss_per_clean := (value_measuredelement_5016/value_measuredelement_5510)]
@@ -254,10 +256,10 @@ if(updatemodel==1){
   ########### Variables for the module  ###################   
   # Adds the explanatory Varaibles,
   Predvar <- c()
-  Data_Use_train0 <- VariablesAdd1(FullSet,keys_lower,Predvar,FALSE)
-  Data_Use_train <- VariablesAdd1(FullSet,keys_lower,Predvar,"ctry")
-  Data_Use_train2 <- VariablesAdd1(FullSet,keys_lower,Predvar,"var")
-  Data_Use_train3 <- VariablesAdd1(FullSet,keys_lower,Predvar,"RF")
+  Data_Use_train0 <- VariablesAdd1(FullSet,keys_lower,Predvar,FALSE,'00')
+  #Data_Use_train <- VariablesAdd1(FullSet,keys_lower,Predvar,"ctry",'00')
+  #Data_Use_train2 <- VariablesAdd1(FullSet,keys_lower,Predvar,"var",'00')
+  #Data_Use_train3 <- VariablesAdd1(FullSet,keys_lower,Predvar,"RF",'00')
 
   ####### Model Estimation ############
   

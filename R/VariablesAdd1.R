@@ -3,7 +3,7 @@
 #' @author Alicia English
 #' @export
 
-VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute){  
+VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){  
   # Description:
   #Adds the explanatory variables to the dataset for either the estimation model or the predictive set
   # inputs:
@@ -49,6 +49,7 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute){
   
   CountryGroup[,"geographicaream49":=CountryGroup$m49code]
   CountryGroup$geographicaream49 <- as.integer(CountryGroup$geographicaream49)
+  CropCalendar$geographicaream49 <- as.integer(CropCalendar$geographicaream49)
 
   names(CountryGroup) <- gsub("[[:punct:]]","_",names(CountryGroup))
   
@@ -73,7 +74,7 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute){
   names(ConvFactor_cal) <- tolower(names(ConvFactor_cal))
   names(ConvFactor_calYr) <- tolower(names(ConvFactor_calYr))
   ConvFactor_cal$geographicaream49 <- as.integer(ConvFactor_cal$geographicaream49)
-  if(!any(unique(DataUseInt$foodgroupname) %in% c(2943, 2946,2945,2949,2948))){   
+  if(!any(fgroup %in% c("2943", "2946","2945","2949","2948"))){   
   names(Temperature)[names(Temperature) == 'year'] <- "timepointyears"
   Temperature <- merge( Temperature , CountryGroup[,c("geographicaream49", "isocode")], by.x = c('isocode'),
                       by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
@@ -84,8 +85,8 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute){
                         by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
   Precipitation <-Precipitation %>% filter(geographicaream49 %in%  unique(ConvFactor_cal$geographicaream49)  & timepointyears %in%  unique(ConvFactor_cal$timepointyears))
   
-  CropCalendar <- merge(CropCalendar, CountryGroup[,c("geographicaream49", "isocode")], by.x = c('isocode'),
-                         by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
+  CropCalendar <- merge(CropCalendar, CountryGroup[,c("geographicaream49", "isocode")], by.x = c("geographicaream49"),
+                         by.y = c("geographicaream49"), all.x = TRUE, all.y = FALSE)
   
   CropCalendar <- CropCalendar[, c("geographicaream49","measureditemcpc","crop", "harvesting_month_onset", "harvesting_month_end")]
   CropCalendar$measureditemcpc <- addHeadingsCPC(CropCalendar$measureditemcpc) 

@@ -6,37 +6,34 @@
 
 
 getProductionData = function(areaVar,itemVar,yearVar,elementVar){
-  
-  ## allCountries =
-  ##   GetCodeList(domain = "agriculture",
-  ##               dataset = "aproduction",
-  ##               dimension = "geographicAreaM49")[type == "country", code]
-  ## ##
-  ## productionKey = DatasetKey(
-  ##   domain = "agriculture",
-  ##   dataset = "aproduction",
-  ##   dimensions = list(
-  ##     Dimension(name = areaVar,
-  ##               keys = allCountries),
-  ##     Dimension(name = elementVar,
-  ##               keys = "5510"),
-  ##     Dimension(name = itemVar,
-  ##               keys = as.character(requiredItems$measuredItemCPC)),
-  ##     Dimension(name = yearVar,
-  ##               keys = selectedYear)
-  ##   )
-  ## )
-
-  ## create keys for data retrieval
   productionKey <- faoswsUtil::getCompleteImputationKey(table = "production")
+  
+  milk=ReadDatatable("animal_milk_correspondence")
+  milk=milk[,milk_item_cpc]
+  
+  productionKey@dimensions$measuredItemCPC@keys=c(productionKey@dimensions$measuredItemCPC@keys,milk )
+  
+  
   productionKey@dimensions$measuredElement@keys <- "5510"
   
- # cpcList <- GetCodeList("agriculture", "aproduction", "measuredItemCPC")[, code]
-  #productionKey@dimensions$measuredItemCPC@keys <- cpcList
-  
-  #foodCPC <- ReadDatatable("food_classification")
-  #foodCPC <- unique(foodCPC[type %in% c("Food Estimate", "Food Residual"), measured_item_cpc])
-  #productionKey@dimensions$measuredItemCPC@keys <-  foodCPC
+  ## create keys for data retrieval
+  # productionKey = DatasetKey(
+  #   domain = "agriculture",
+  #   dataset = "aproduction",
+  #   dimensions = list(
+  #     Dimension(name = "geographicAreaM49",
+  #               keys = GetCodeList(domain = "agriculture",
+  #                                  dataset = "aproduction",
+  #                                  dimension = "geographicAreaM49")[type == "country", code]),
+  #     Dimension(name = "measuredElement", keys = c("5510")), 
+  #     Dimension(name = "timePointYears", keys = as.character(1990:2016)),
+  #     Dimension(name = "measuredItemCPC",
+  #               keys = GetCodeList(domain = "agriculture",
+  #                                  dataset = "aproduction",
+  #                                  dimension = "measuredItemCPC")[, code]))
+  # )
+  # 
+
   
   ## Pivot to vectorize yield computation
   productionPivot = c(
@@ -53,13 +50,6 @@ getProductionData = function(areaVar,itemVar,yearVar,elementVar){
     normalized = FALSE,
     pivoting = productionPivot
   )
-  
-  
-  ## ## Convert geographicAreaM49 to geographicAreaFS
-  ## productionQuery[, geographicAreaFS := as.numeric(faoswsUtil::m492fs(as.character(geographicAreaM49)))]
-  
-  ##   ## Convert measuredItemCPC to measuredItemFCL
-  ## productionQuery[, measuredItemFCL := faoswsUtil::cpc2fcl(as.character(measuredItemCPC),returnFirst = TRUE)]
   
   
   ## Convert time to numeric

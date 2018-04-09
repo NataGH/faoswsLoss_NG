@@ -9,34 +9,34 @@
 # output: html_document
 # ---
 # 
-# library(faosws)
-# library(faoswsUtil)
-# library(faoswsLoss)
-# library(shiny)
-# library(shinythemes)
-# library(shinydashboard)
-# library(rmarkdown)
-# library(gtools)
-# library(ggplot2)
-# library(dplyr)
-# library(dtplyr)
-# library(DT)
-# library(magrittr)
-# remove.packages(pkgs, lib, version)
-#
-#
-# suppressMessages({
-#   library(faosws)
-#   library(faoswsUtil)
-#   library(faoswsFlag)
-#   library(lme4)
-#   library(data.table)
-#   library(magrittr)
-#   library(reshape2)
-#   library(plyr)
-#   library(dplyr)
-#
-# })
+library(faosws)
+library(faoswsUtil)
+library(faoswsLoss)
+library(shiny)
+library(shinythemes)
+library(shinydashboard)
+library(rmarkdown)
+library(gtools)
+library(ggplot2)
+library(dplyr)
+library(dtplyr)
+library(DT)
+library(magrittr)
+remove.packages(pkgs, lib, version)
+
+
+suppressMessages({
+  library(faosws)
+  library(faoswsUtil)
+  library(faoswsFlag)
+  library(lme4)
+  library(data.table)
+  library(magrittr)
+  library(reshape2)
+  library(plyr)
+  library(dplyr)
+
+})
 
 
 # if(CheckDebug()){
@@ -65,39 +65,53 @@ elementVar = "measuredElement"
 
 
 # ###----  Data In ----------############
-# ConvFactor1 <- ReadDatatable('flw_lossperfactors')
-# fbsTree <- ReadDatatable("fbs_tree")
-# CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
-# FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
-# 
-# names(CountryGroup)[names(CountryGroup) =="countryname"] <- "Country"
-# names(CountryGroup)[names(CountryGroup) =="m49code"] <- "geographicaream49"
-# 
-# names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
-# names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
-# FAOCrops[, "crop" := FAOCrops$description]
-# names(FAOCrops)[names(FAOCrops) =='cpc'] <- "measureditemcpc"
-# 
-# #SDG Headings
-# fbsTree[foodgroupname %in% c(2905,2911), gfli_basket :='Cereals & Pulses',]
-# fbsTree[foodgroupname %in% c(2919,2918), gfli_basket :='Fruits & Vegetables',]
-# fbsTree[foodgroupname %in% c(2907,2913), gfli_basket :='Roots, Tubers & Oil-Bearing Crops',]
-# fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), gfli_basket :='Other',]
-# fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), gfli_basket :='Animals Products & Fish and fish products',] # |foodGroupName == "PRODUCTS FROM FISH",
-# 
-# ConvFactor1[,"percentage_loss_of_quantity" := NULL]
-# ConvFactor1[,"month" := NULL]
-# ConvFactor1[,"countryalt" := NULL]
-# setnames(ConvFactor1, old = c("isocode","country","region","measureditemcpc","crop","year","periodofstorage","treatment","causeofloss","loss_per_clean",
-#                              "loss_quantity","loss_qualitiative","loss_monetary","activity","fsc_location",         
-#                              "samplesize","totalsize","method_datacollection","tag_datacollection","reference","url","notes"),
-#           new = c("isocode","Country","Region","measureditemcpc","Crop","timepointyears","period of storage","treatment","causes of loss","Quantity Loss (%)",
-#                  "Loss (quantity, tons)","Loss (Qualitative, tons)","Loss (Monetary, LCU)","Activity","Food Value Chain Stage",         
-#                  "Sampling Units","Quantity Coverage","Method of Data Collection","Data Collection Tag","Reference","Url","Notes"))
-# ConvFactor1$fsc_location1 = sapply(strsplit(ConvFactor1$"Food Value Chain Stage","/"), '[', 1)
-# ConvFactor1 <- merge(ConvFactor1,CountryGroup, by=c("isocode"))
-# ConvFactor1[, "Country.y" := NULL]
-# names(ConvFactor1)[names(ConvFactor1) =="Country.x"] <- "Country"
+LossFactorRaw <- ReadDatatable('flw_lossperfactors_')
+LossFactorRaw$measureditemcpc <- addHeadingsCPC(LossFactorRaw$measureditemcpc)
+fbsTree <- ReadDatatable("fbs_tree")
+CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
+
+names(CountryGroup)[names(CountryGroup) =="countryname"] <- "Country"
+names(CountryGroup)[names(CountryGroup) =="m49code"] <- "geographicaream49"
+
+names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
+names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
+FAOCrops[, "crop" := FAOCrops$description]
+names(FAOCrops)[names(FAOCrops) =='cpc'] <- "measureditemcpc"
+
+#SDG Headings
+fbsTree[foodgroupname %in% c(2905,2911), gfli_basket :='Cereals & Pulses',]
+fbsTree[foodgroupname %in% c(2919,2918), gfli_basket :='Fruits & Vegetables',]
+fbsTree[foodgroupname %in% c(2907,2913), gfli_basket :='Roots, Tubers & Oil-Bearing Crops',]
+fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), gfli_basket :='Other',]
+fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), gfli_basket :='Animals Products & Fish and fish products',] # |foodGroupName == "PRODUCTS FROM FISH",
+
+LossFactorRaw[fsc_location =="SWS","fsc_location" ] <- "Official/Semi-Official - National"
+LossFactorRaw[fsc_location =="sws_total","fsc_location" ] <- "Official/Semi-Official - National"
+LossFactorRaw[fsc_location =="Calc","fsc_location" ] <- "Aggregated from multiple sources"
+
+unlist(names(LossFactorRaw))
+
+LossFactorRaw[,"analyst" := NULL]
+LossFactorRaw[,"notes" := NULL]
+setnames(LossFactorRaw, old = c("geographicaream49","isocode","country","region","measureditemcpc","crop","timepointyears","loss_per_clean","percentage_loss_of_quantity",
+                                "loss_quantity","loss_qualitiative","loss_monetary",
+                                "activity","fsc_location","periodofstorage","treatment","causeofloss","samplesize",
+                                "units","method_datacollection","tag_datacollection","reference","url"),
+          new = c("geographicaream49","isocode","Country","Region","measureditemcpc","Crop","Year","Average Quantity Loss (%)","Range of Quantity Loss (%)",
+                  "Loss (quantity, tons)","Loss (Qualitative, tons)","Loss (Monetary, LCU)",
+                  "Activity","Food Value Chain Stage","period of storage","treatment","Causes of loss","Sample Size",
+                  "Sampling Units","Method of Data Collection","Data Collection Tag","Reference","Url"))
+
+
+
+
+LossFactorRaw$fsc_location1 = sapply(strsplit(LossFactorRaw$"Food Value Chain Stage","/"), '[', 1)
+LossFactorRaw <- merge(LossFactorRaw,CountryGroup, by=c("isocode", "geographicaream49"))
+LossFactorRaw[, "Country.y" := NULL]
+names(LossFactorRaw)[names(LossFactorRaw) =="Country.x"] <- "Country"
+
+# # # #-------------------------------------------------------
 
 ui <- dashboardPage(
   dashboardHeader(title = "Post-Harvest Loss Data, Studies and Resources"),
@@ -134,6 +148,16 @@ ui <- dashboardPage(
       inputId = "itemcpc",
       label = "measureditemcpc",
       choices = NULL, selected =NULL, multiple=TRUE, selectize=TRUE
+    ),
+    selectInput(
+      inputId = "Source",
+      label = "Source",
+      choices = c("All",unique(LossFactorRaw$"Food Value Chain Stage")), selected ="All", multiple=TRUE, selectize=TRUE
+    ),
+    selectInput(
+      inputId = "DataCollect",
+      label = "Method of Data Collection",
+      choices = c("All",unique(LossFactorRaw$"Data Collection Tag")), selected ="All", multiple=TRUE, selectize=TRUE
     ),
     
     downloadButton("Data.csv", "Download")
@@ -288,34 +312,41 @@ server <- function(input, output, session) {
   dataR1 <- reactive({
     options(show.error.messages = FALSE)
     if((input$aggregation == "Country")) {
-      ConvFactor1 %>% filter((timepointyears %in% seq(input$Year[1],input$Year[2], by=1)) &
+      LossFactorRaw %>% filter((Year %in% seq(input$Year[1],input$Year[2], by=1)) &
                             (Country %in% unlist(input$Country)) 
                             
       )
     }
     else if((input$aggregation != "WORLD") & (input$Agg_options != "All")){
-      ConvFactor1[(timepointyears %in% seq(input$Year[1],input$Year[2], by=1)) &
-                  (unlist(ConvFactor1 [,input$aggregation, with=F]) %in%  unlist(input$Agg_options))
+      LossFactorRaw[(Year %in% seq(input$Year[1],input$Year[2], by=1)) &
+                  (unlist(LossFactorRaw [,input$aggregation, with=F]) %in%  unlist(input$Agg_options))
                 ,]
     }
     else{
-      ConvFactor1 [timepointyears %in% seq(input$Year[1],input$Year[2], by=1),]
+      LossFactorRaw[Year %in% seq(input$Year[1],input$Year[2], by=1),]
     }
   })
   dataR <- reactive({
-    if((input$aggregation != "All")) {
-      dataR1()[MeasuredItemCPC %in% unlist(fbsTree[gfli_basket %in% input$BasketItems,"measureditemcpc"]) ,]
-    }
-    else{
-      dataR1()
-    }
+    dataR1() %>% filter(measureditemcpc %in%
+                          if(input$BasketItems %in%  'All'){unlist(unique(LossFactorRaw[,"measureditemcpc",with=F]))}
+                          else if(any(input$itemcpc %in%  c('All'))){unlist(unique(fbsTree[gfli_basket %in%  input$BasketItems,"measureditemcpc",with=F]))}
+                          else if(!(is.null(input$itemcpc))){unlist(unique(LossFactorRaw[measureditemcpc %in%  unlist(unique(FAOCrops[crop %in%  input$itemcpc,"measureditemcpc"])),"measureditemcpc",with=F]))}
+                          else{unlist(unique(LossFactorRaw[gfli_basket %in%  input$BasketItems,"measureditemcpc",with=F]))}
+                         )
+    #dataR1()[measureditemcpc %in% unlist(fbsTree[gfli_basket %in% input$BasketItems,"measureditemcpc"]) ,]
+    # if((input$aggregation != "All")) {
+    #   dataR1()[measureditemcpc %in% unlist(fbsTree[gfli_basket %in% input$BasketItems,"measureditemcpc"]) ,]
+    # }
+    # else{
+    #   dataR1()
+    # }
   })
 
   output$HarvestBox <- renderValueBox({
     valueBox(
-      if(nrow(dataR()[(fsc_location1 == "Harvest") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F])>0){
-         paste0(round(sum(dataR()[fsc_location1 == "Harvest", "Quantity Loss (%)",with=F], na.rm=T)/
-                nrow(dataR()[(fsc_location1 == "Harvest") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F]),2)
+      if(nrow(dataR()[(fsc_location1 == "Harvest") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F])>0){
+         paste0(round(sum(dataR()[fsc_location1 == "Harvest", "Average Quantity Loss (%)",with=F], na.rm=T)/
+                nrow(dataR()[(fsc_location1 == "Harvest") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F]),2)
               , "%")}else{"No Data"}, 
       "Harvest", icon = icon("grain", lib = "glyphicon"),
       color = "yellow"
@@ -325,9 +356,9 @@ server <- function(input, output, session) {
   
   output$FarmBox <- renderValueBox({
     valueBox(
-      if(nrow(dataR()[(fsc_location1 == "Farm") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F])>0){
-      paste0(round(sum(dataR()[fsc_location1 == "Farm", "Quantity Loss (%)",with=F], na.rm=T)/
-                     nrow(dataR()[(fsc_location1 == "Farm") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F]),2)
+      if(nrow(dataR()[(fsc_location1 == "Farm") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F])>0){
+      paste0(round(sum(dataR()[fsc_location1 == "Farm", "Average Quantity Loss (%)",with=F], na.rm=T)/
+                     nrow(dataR()[(fsc_location1 == "Farm") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F]),2)
              , "%")}else{"No Data"}
         , "Farm", icon = icon("chevron-right"),
       color = "green"
@@ -335,9 +366,9 @@ server <- function(input, output, session) {
   })
   output$TransportBox <- renderValueBox({
     valueBox(
-      if( nrow(dataR()[(fsc_location1 == "Transport") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F])>0){
-      paste0(round(sum(dataR()[fsc_location1 == "Transport", "Quantity Loss (%)",with=F], na.rm=T)/
-                     nrow(dataR()[(fsc_location1 == "Transport") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F]),2)
+      if( nrow(dataR()[(fsc_location1 == "Transport") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F])>0){
+      paste0(round(sum(dataR()[fsc_location1 == "Transport", "Average Quantity Loss (%)",with=F], na.rm=T)/
+                     nrow(dataR()[(fsc_location1 == "Transport") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F]),2)
              , "%")}else{"No Data"}
       ,"Transport", icon = icon("chevron-right"),
       color = "olive"
@@ -345,9 +376,9 @@ server <- function(input, output, session) {
   })
   output$StorageBox <- renderValueBox({
     valueBox(
-    if(nrow(dataR()[(fsc_location1 == "Storage") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F])>0){
-      paste0(round(sum(dataR()[fsc_location1 == "Storage", "Quantity Loss (%)",with=F], na.rm=T)/
-                     nrow(dataR()[(fsc_location1 == "Storage") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F]),2)
+    if(nrow(dataR()[(fsc_location1 == "Storage") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F])>0){
+      paste0(round(sum(dataR()[fsc_location1 == "Storage", "Average Quantity Loss (%)",with=F], na.rm=T)/
+                     nrow(dataR()[(fsc_location1 == "Storage") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F]),2)
              , "%")}else{"No Data"}
     ,"Storage", icon = icon("chevron-right"),
       color = "teal"
@@ -355,9 +386,9 @@ server <- function(input, output, session) {
   })
   output$TraderBox <- renderValueBox({
     valueBox(
-      if( nrow(dataR()[(fsc_location1 == "Trader") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F])>0){
-      paste0(round(sum(dataR()[fsc_location1 == "Trader", "Quantity Loss (%)",with=F], na.rm=T)/
-                     nrow(dataR()[(fsc_location1 == "Trader") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F]),2)
+      if( nrow(dataR()[(fsc_location1 == "Trader") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F])>0){
+      paste0(round(sum(dataR()[fsc_location1 == "Trader", "Average Quantity Loss (%)",with=F], na.rm=T)/
+                     nrow(dataR()[(fsc_location1 == "Trader") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F]),2)
              , "%")}else{"No Data"}
       ,"Trader", icon = icon("chevron-right"),
       color = "aqua"
@@ -365,54 +396,54 @@ server <- function(input, output, session) {
   })
   output$WholesaleBox <- renderValueBox({
     valueBox(
-      if(nrow(dataR()[(fsc_location1 =="Wholesale") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F])){
-      paste0(round(sum(dataR()[fsc_location1 == "Wholesale", "Quantity Loss (%)",with=F], na.rm=T)/
-                     nrow(dataR()[(fsc_location1 =="Wholesale") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F]),2)
+      if(nrow(dataR()[(fsc_location1 =="Wholesale") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F])){
+      paste0(round(sum(dataR()[fsc_location1 == "Wholesale", "Average Quantity Loss (%)",with=F], na.rm=T)/
+                     nrow(dataR()[(fsc_location1 =="Wholesale") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F]),2)
              , "%")}else{"No Data"},"Wholesale", icon = icon("chevron-right"),
       color = "light-blue"
     )
   })
   output$ProcessingBox <- renderValueBox({
     valueBox(
-      if(nrow(dataR()[(fsc_location1 =="Processing") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F])){
-      paste0(round(sum(dataR()[fsc_location1 == "Processing", "Quantity Loss (%)",with=F], na.rm=T)/
-                     nrow(dataR()[(fsc_location1 =="Processing") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F]),2)
+      if(nrow(dataR()[(fsc_location1 =="Processing") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F])){
+      paste0(round(sum(dataR()[fsc_location1 == "Processing", "Average Quantity Loss (%)",with=F], na.rm=T)/
+                     nrow(dataR()[(fsc_location1 =="Processing") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F]),2)
              , "%")}else{"No Data"},"Processing", icon = icon("chevron-right"),
       color = "blue"
     )
   })
   output$RetailBox <- renderValueBox({
     valueBox(
-      if(nrow(dataR()[(fsc_location1 =="Retail") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F])>0){
-      paste0(round(sum(dataR()[fsc_location1 == "Retail", "Quantity Loss (%)",with=F], na.rm=T)/
-                     nrow(dataR()[(fsc_location1 =="Retail") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F]),2)
+      if(nrow(dataR()[(fsc_location1 =="Retail") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F])>0){
+      paste0(round(sum(dataR()[fsc_location1 == "Retail", "Average Quantity Loss (%)",with=F], na.rm=T)/
+                     nrow(dataR()[(fsc_location1 =="Retail") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F]),2)
              , "%")}else{"No Data"},"Retail", icon = icon("cultery", lib = "glyphicon"),
       color = "navy"
     )
   })
   output$WholeSupplyChainBox <- renderValueBox({
     valueBox(
-      if(nrow(dataR()[(fsc_location1 =="WholeSupplyChain") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F])>0){
-      paste0(round(sum(dataR()[fsc_location1 == "WholeSupplyChain", "Quantity Loss (%)",with=F], na.rm=T)/
-                     nrow(dataR()[(fsc_location1 =="WholeSupplyChain") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F]),2)
+      if(nrow(dataR()[(fsc_location1 =="WholeSupplyChain") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F])>0){
+      paste0(round(sum(dataR()[fsc_location1 == "WholeSupplyChain", "Average Quantity Loss (%)",with=F], na.rm=T)/
+                     nrow(dataR()[(fsc_location1 =="WholeSupplyChain") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F]),2)
              , "%")}else{"No Data"},"Whole Supply Chain", icon = icon("option-horizontal", lib = "glyphicon"),
       color = "maroon"
     )
   })
   output$SWSBox <- renderValueBox({
     valueBox(
-      if( nrow(dataR()[(fsc_location1 =="SWS_Total") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F])>0){
-      paste0(round(sum(dataR()[fsc_location1 == "SWS_Total", "Quantity Loss (%)",with=F], na.rm=T)/
-                     nrow(dataR()[(fsc_location1 =="SWS_Total") & (!is.na("Quantity Loss (%)")), "Quantity Loss (%)",with=F]),2)
+      if( nrow(dataR()[(fsc_location1 =="SWS_Total") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F])>0){
+      paste0(round(sum(dataR()[fsc_location1 == "SWS_Total", "Average Quantity Loss (%)",with=F], na.rm=T)/
+                     nrow(dataR()[(fsc_location1 =="SWS_Total") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F]),2)
              , "%")}else{"No Data"},"Official Estimates", icon = icon("option-horizontal", lib = "glyphicon"),
       color = "purple"
     )
   })
   
   DataOutput <- function()({
-    dataR()[ ,c("isocode","Country","Region","MeasuredItemCPC","Crop","timepointyears","Food Value Chain Stage","Quantity Loss (%)",
-                "Loss (quantity, tons)","Loss (Qualitative, tons)","Loss (Monetary, LCU)","causes of loss","Activity",         
-                "period of storage","treatment","Sampling Units","Quantity Coverage","Method of Data Collection","Data Collection Tag","Reference","Url","Notes"),with=FALSE]
+    dataR()[ ,c("isocode","Country","Region","measureditemcpc","Crop","Year","Food Value Chain Stage","Average Quantity Loss (%)",
+                "Loss (quantity, tons)","Loss (Qualitative, tons)","Loss (Monetary, LCU)","Causes of loss","Activity",         
+                "period of storage","treatment","Sampling Units","Method of Data Collection","Data Collection Tag","Reference","Url"),with=FALSE]
   })
 
 
@@ -431,7 +462,8 @@ server <- function(input, output, session) {
     }
   )
   obsB <- observe({
-    dataR()
+    print(dataR())
+    #print(  dataR1())
   })
   
   
