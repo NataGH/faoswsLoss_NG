@@ -18,6 +18,7 @@ library(shinydashboard)
 library(rmarkdown)
 library(gtools)
 library(ggplot2)
+library(grid)
 library(dplyr)
 library(dtplyr)
 library(DT)
@@ -39,24 +40,6 @@ suppressMessages({
 })
 
 
-# if(CheckDebug()){
-#   message("Not on server, so setting up environment...")
-#   USER <- if_else(.Platform$OS.type == "unix",
-#                   Sys.getenv('USER'),
-#                   Sys.getenv('USERNAME'))
-#   
-#   
-#   library(faoswsModules)
-#   settings <- ReadSettings(file = file.path(paste(dirmain,"sws.yml", sep='/')))
-#   #SetClientFiles(settings[["certdir"]])
-#   
-#   GetTestEnvironment(
-#     baseUrl = settings[["server"]],
-#     token = settings[["token"]]
-#   )
-#   
-# }
-# 
 BaseYear = as.character(c(2004,2006)) ## This is not an option to choose after the movement to the SDG base yr
 areaVar = "geographicAreaM49"
 yearVar = "timePointYears"
@@ -64,12 +47,37 @@ itemVar = "measuredItemCPC"
 elementVar = "measuredElement"
 
 
+
 # ###----  Data In ----------############
-LossFactorRaw <- ReadDatatable('flw_lossperfactors_')
-LossFactorRaw$measureditemcpc <- addHeadingsCPC(LossFactorRaw$measureditemcpc)
-fbsTree <- ReadDatatable("fbs_tree")
-CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
-FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
+if(CheckDebug()){
+  message("Not on server, so setting up environment...")
+  USER <- if_else(.Platform$OS.type == "unix",
+                  Sys.getenv('USER'),
+                  Sys.getenv('USERNAME'))
+  
+  
+  library(faoswsModules)
+  settings <- ReadSettings(file = file.path(paste(getwd(),"sws.yml", sep='/')))
+  SetClientFiles(settings[["certdir"]])
+  
+  GetTestEnvironment(
+    baseUrl = settings[["server"]],
+    token = settings[["token"]]
+  )
+  
+  LossFactorRaw <- ReadDatatable('flw_lossperfactors_')
+  AggregateLoss <- ReadDatatable('aggregate_loss_table')
+  fbsTree <- ReadDatatable("fbs_tree")
+  CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+  FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
+  LossFactorRaw$measureditemcpc <- addHeadingsCPC(LossFactorRaw$measureditemcpc)
+  
+}else{
+  setwd(paste(getwd(),"/shiny/Input_Data",sep=""))
+  load("Inputs.RData")
+  
+}
+
 
 names(CountryGroup)[names(CountryGroup) =="countryname"] <- "Country"
 names(CountryGroup)[names(CountryGroup) =="m49code"] <- "geographicaream49"
@@ -78,6 +86,7 @@ names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
 names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
 FAOCrops[, "crop" := FAOCrops$description]
 names(FAOCrops)[names(FAOCrops) =='cpc'] <- "measureditemcpc"
+FAOCrops <- FAOCrops[order(FAOCrops$measureditemcpc),]
 
 #SDG Headings
 fbsTree[foodgroupname %in% c(2905,2911), gfli_basket :='Cereals & Pulses',]
@@ -90,7 +99,13 @@ LossFactorRaw[fsc_location =="SWS","fsc_location" ] <- "Official/Semi-Official -
 LossFactorRaw[fsc_location =="sws_total","fsc_location" ] <- "Official/Semi-Official - National"
 LossFactorRaw[fsc_location =="Calc","fsc_location" ] <- "Aggregated from multiple sources"
 
-unlist(names(LossFactorRaw))
+
+AggregateLoss[fsc_location =="SWS","fsc_location" ] <- "Official/Semi-Official - National"
+AggregateLoss[fsc_location =="sws_total","fsc_location" ] <- "Official/Semi-Official - National"
+AggregateLoss[fsc_location =="Calc","fsc_location" ] <- "Aggregated from multiple sources"
+
+
+unlist(names(AggregateLoss))
 
 LossFactorRaw[,"analyst" := NULL]
 LossFactorRaw[,"notes" := NULL]
@@ -98,18 +113,41 @@ setnames(LossFactorRaw, old = c("geographicaream49","isocode","country","region"
                                 "loss_quantity","loss_qualitiative","loss_monetary",
                                 "activity","fsc_location","periodofstorage","treatment","causeofloss","samplesize",
                                 "units","method_datacollection","tag_datacollection","reference","url"),
-          new = c("geographicaream49","isocode","Country","Region","measureditemcpc","Crop","Year","Average Quantity Loss (%)","Range of Quantity Loss (%)",
+          new = c("geographicaream49","isocode","Country","Region","measureditemcpc","Crop","Year","loss_per_clean","Range of Quantity Loss (%)",
                   "Loss (quantity, tons)","Loss (Qualitative, tons)","Loss (Monetary, LCU)",
-                  "Activity","Food Value Chain Stage","period of storage","treatment","Causes of loss","Sample Size",
+                  "Activity","Stage","period of storage","treatment","Causes of loss","Sample Size",
                   "Sampling Units","Method of Data Collection","Data Collection Tag","Reference","Url"))
 
+setnames(AggregateLoss, old = c("geographicaream49","isocode","timepointyears","country","measureditemcpc","crop",
+                                "loss_per_clean","fsc_location"),
+         new = c("geographicaream49","isocode","Year","Country","measureditemcpc","Crop",
+                 "loss_per_clean","Stage"))
 
 
 
-LossFactorRaw$fsc_location1 = sapply(strsplit(LossFactorRaw$"Food Value Chain Stage","/"), '[', 1)
+LossFactorRaw[,"Average Quantity Loss (%)":=loss_per_clean]
+AggregateLoss[,"Average Quantity Loss (%)":=loss_per_clean]
+
+LossFactorRaw$fsc_location1 = sapply(strsplit(LossFactorRaw$Stage,"/"), '[', 1)
 LossFactorRaw <- merge(LossFactorRaw,CountryGroup, by=c("isocode", "geographicaream49"))
+AggregateLoss <- merge(AggregateLoss,CountryGroup, by=c("isocode", "geographicaream49"))
 LossFactorRaw[, "Country.y" := NULL]
 names(LossFactorRaw)[names(LossFactorRaw) =="Country.x"] <- "Country"
+names(AggregateLoss)[names(AggregateLoss) =="Country.x"] <- "Country"
+datatags <- sort(unlist(unique(LossFactorRaw$"Data Collection Tag")),decreasing=F)
+dataStages <- sort(unlist(unique(LossFactorRaw$Stage)))
+LossFactorRaw[Stage =="SWS_Total","Stage"] = "Official - Whole chain Estimate"
+
+LossFactorRaw2 <- merge(LossFactorRaw,fbsTree, by=c("measureditemcpc"))
+LossFactorRaw_descriptivestat <- LossFactorRaw2 %>%
+  filter(loss_per_clean >0 & Reference != "SWS") %>%
+  group_by(gfli_basket) %>%
+  do(data.frame(t(quantile(.$loss_per_clean, probs = c(0.25, 0.50, 0.75)))))
+
+LossFactorRaw_descriptivestat2 <- LossFactorRaw2 %>%
+  filter(loss_per_clean >0 & Reference != "SWS") %>%
+  group_by(gfli_basket) %>%
+  dplyr::summarise(n=n())
 
 # # # #-------------------------------------------------------
 
@@ -119,7 +157,7 @@ ui <- dashboardPage(
     sliderInput(
       inputId = "Year",
       label = "Year Range",
-      value = c(2005,2015),step =1,sep = "", min = as.integer(min(selectedYear)), max =  as.integer(max(selectedYear))
+      value = c(1990,2016),step =1,sep = "", min = as.integer(min(na.omit(unique(LossFactorRaw$Year)))), max =  as.integer(max(na.omit(unique(LossFactorRaw$Year))))
     ),
     selectInput(
       inputId = "aggregation",
@@ -150,17 +188,19 @@ ui <- dashboardPage(
       choices = NULL, selected =NULL, multiple=TRUE, selectize=TRUE
     ),
     selectInput(
-      inputId = "Source",
-      label = "Source",
-      choices = c("All",unique(LossFactorRaw$"Food Value Chain Stage")), selected ="All", multiple=TRUE, selectize=TRUE
+      inputId = "Stage",
+      label = "Value Chain Stage(s)",
+      choices = c("All",dataStages), selected ="All", multiple=TRUE, selectize=TRUE
     ),
     selectInput(
       inputId = "DataCollect",
       label = "Method of Data Collection",
-      choices = c("All",unique(LossFactorRaw$"Data Collection Tag")), selected ="All", multiple=TRUE, selectize=TRUE
+      choices = c("All",datatags) , selected ="All", multiple=TRUE, selectize=TRUE
     ),
+
     
-    downloadButton("Data.csv", "Download")
+    downloadButton("Data.csv", "Download"),
+    downloadButton("ValueChain_Stages.jpeg", "Plots")
     
   ),
 
@@ -187,7 +227,13 @@ ui <- dashboardPage(
       valueBoxOutput("HarvestBox"),
       "These values are not included (yet) but are important for
       focusing losses that occur due to harvesting practices or market failures "
-      )
+      ),
+      box(
+      title = "Aggregates",status = "primary",
+      valueBoxOutput("WholeSupplyChainBox"),
+      valueBoxOutput("SWSBox"),
+      valueBoxOutput("ModelBox")
+    )
     ),
     fluidRow(
       box(title ="Global Food Loss Index",status = "primary",
@@ -198,14 +244,13 @@ ui <- dashboardPage(
       valueBoxOutput("WholesaleBox"),
       valueBoxOutput("ProcessingBox")
     ),
-    box(
-      title = "Aggregates",status = "primary",
-      valueBoxOutput("WholeSupplyChainBox"),
-      valueBoxOutput("SWSBox")
-    )),
-    fluidRow(
       box(title = "Boundary",status = "warning",
       valueBoxOutput("RetailBox")
+    )),
+    fluidRow(
+      box(width=12,  collapsible = TRUE,
+      title = "Graph",status = "primary",
+      plotOutput("PointGraphs")
     )),
     fluidRow(
       box(width=12, title = "Data Available",  solidHeader = TRUE,
@@ -262,11 +307,11 @@ server <- function(input, output, session) {
     }
     if (input$aggregation == "Country") {
       if(input$Agg_options == 'All'){
-        ctry_choices <- c(unique(CountryGroup[geographicaream49 %in% Losses$geographicaream49,"Country"]))
+        ctry_choices <- c(unique(CountryGroup[geographicaream49 %in% LossFactorRaw$geographicaream49,"Country"]))
         updateSelectInput(session, "Country", choices=ctry_choices, selected = "Italy")
       }
       if(input$Agg_options != 'All'){
-        ctry_choices <- c(unique(CountryGroup[(sdg_regions ==input$Agg_options)&(geographicaream49 %in% Losses$geographicaream49),"Country",with=F]))
+        ctry_choices <- c(unique(CountryGroup[(sdg_regions ==input$Agg_options)&(geographicaream49 %in% LossFactorRaw$geographicaream49),"Country",with=F]))
         updateSelectInput(session, "Country", choices=ctry_choices, selected = NULL)
       }
     }
@@ -326,22 +371,68 @@ server <- function(input, output, session) {
       LossFactorRaw[Year %in% seq(input$Year[1],input$Year[2], by=1),]
     }
   })
-  dataR <- reactive({
-    dataR1() %>% filter(measureditemcpc %in%
+  dataR1_agg <- reactive({
+    options(show.error.messages = FALSE)
+    if((input$aggregation == "Country")) {
+      AggregateLoss %>% filter((Year %in% seq(input$Year[1],input$Year[2], by=1)) &
+                                 (Country %in% unlist(input$Country)) 
+                               
+      )
+    }
+    else if((input$aggregation != "WORLD") & (input$Agg_options != "All")){
+      AggregateLoss[(Year %in% seq(input$Year[1],input$Year[2], by=1)) &
+                      (unlist(AggregateLoss[,input$aggregation, with=F]) %in%  unlist(input$Agg_options))
+                    ,]
+    }
+    else{
+      AggregateLoss[Year %in% seq(input$Year[1],input$Year[2], by=1),]
+    }
+  })
+  dataR2 <- reactive({
+    dataR1() %>% filter((measureditemcpc %in%
                           if(input$BasketItems %in%  'All'){unlist(unique(LossFactorRaw[,"measureditemcpc",with=F]))}
                           else if(any(input$itemcpc %in%  c('All'))){unlist(unique(fbsTree[gfli_basket %in%  input$BasketItems,"measureditemcpc",with=F]))}
-                          else if(!(is.null(input$itemcpc))){unlist(unique(LossFactorRaw[measureditemcpc %in%  unlist(unique(FAOCrops[crop %in%  input$itemcpc,"measureditemcpc"])),"measureditemcpc",with=F]))}
-                          else{unlist(unique(LossFactorRaw[gfli_basket %in%  input$BasketItems,"measureditemcpc",with=F]))}
-                         )
-    #dataR1()[measureditemcpc %in% unlist(fbsTree[gfli_basket %in% input$BasketItems,"measureditemcpc"]) ,]
-    # if((input$aggregation != "All")) {
-    #   dataR1()[measureditemcpc %in% unlist(fbsTree[gfli_basket %in% input$BasketItems,"measureditemcpc"]) ,]
-    # }
-    # else{
-    #   dataR1()
-    # }
+                          else if(!(is.null(input$itemcpc))){unlist(unique(dataR1()[measureditemcpc %in%  unlist(unique(FAOCrops[crop %in%  input$itemcpc,"measureditemcpc"])),"measureditemcpc",with=F]))}
+                          else{unlist(unique(dataR1()[gfli_basket %in%  input$BasketItems,"measureditemcpc",with=F]))}
+                         ))
+    
+  })
+  dataR2_agg <- reactive({
+    dataR1_agg() %>% filter((measureditemcpc %in%
+                           if(input$BasketItems %in%  'All'){unlist(unique(LossFactorRaw[,"measureditemcpc",with=F]))}
+                         else if(any(input$itemcpc %in%  c('All'))){unlist(unique(fbsTree[gfli_basket %in%  input$BasketItems,"measureditemcpc",with=F]))}
+                         else if(!(is.null(input$itemcpc))){unlist(unique(LossFactorRaw[measureditemcpc %in%  unlist(unique(FAOCrops[crop %in%  input$itemcpc,"measureditemcpc"])),"measureditemcpc",with=F]))}
+                         else{unlist(unique(LossFactorRaw[gfli_basket %in%  input$BasketItems,"measureditemcpc",with=F]))}
+    ))
+    
   })
 
+  dataR3 <- reactive({
+    if(any(input$DataCollect %in% c('All'))){dataR2()}
+    else if(!any(input$DataCollect %in% c('All'))){dataR2() %>% filter(dataR2()[['Data Collection Tag']] %in% input$DataCollect)}
+    
+                                                               
+  })
+  dataR3_agg <- reactive({
+    if(any(input$DataCollect %in% c('All'))){dataR2_agg()}
+    else if(!any(input$DataCollect %in% c('All'))){dataR2_agg() %>% filter(dataR2_agg()[['Data Collection Tag']] %in% input$DataCollect)}
+    
+    
+  })
+  dataR <- reactive({
+    if(any(input$Stage %in% c('All'))){dataR3()}
+    else if(!any(input$Stage %in% c('All'))){dataR3() %>% filter(Stage %in% input$Stage)}
+    
+    
+  })
+  dataR_agg <- reactive({
+    if(any(input$Stage %in% c('All'))){dataR3_agg()}
+    else if(!any(input$Stage %in% c('All'))){dataR3_agg() %>% filter(Stage %in% input$Stage)}
+    
+    
+  })
+  
+  
   output$HarvestBox <- renderValueBox({
     valueBox(
       if(nrow(dataR()[(fsc_location1 == "Harvest") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F])>0){
@@ -426,7 +517,7 @@ server <- function(input, output, session) {
       if(nrow(dataR()[(fsc_location1 =="WholeSupplyChain") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F])>0){
       paste0(round(sum(dataR()[fsc_location1 == "WholeSupplyChain", "Average Quantity Loss (%)",with=F], na.rm=T)/
                      nrow(dataR()[(fsc_location1 =="WholeSupplyChain") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F]),2)
-             , "%")}else{"No Data"},"Whole Supply Chain", icon = icon("option-horizontal", lib = "glyphicon"),
+             , "%")}else{"No Data"},"Whole Supply Chain - Studies", icon = icon("option-horizontal", lib = "glyphicon"),
       color = "maroon"
     )
   })
@@ -435,13 +526,22 @@ server <- function(input, output, session) {
       if( nrow(dataR()[(fsc_location1 =="SWS_Total") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F])>0){
       paste0(round(sum(dataR()[fsc_location1 == "SWS_Total", "Average Quantity Loss (%)",with=F], na.rm=T)/
                      nrow(dataR()[(fsc_location1 =="SWS_Total") & (!is.na("Average Quantity Loss (%)")), "Average Quantity Loss (%)",with=F]),2)
-             , "%")}else{"No Data"},"Official Estimates", icon = icon("option-horizontal", lib = "glyphicon"),
+             , "%")}else{"No Data"},"Official and Semi-Official Estimates", icon = icon("option-horizontal", lib = "glyphicon"),
       color = "purple"
+    )
+  })
+  output$ModelBox <- renderValueBox({
+    valueBox(
+      if( nrow(dataR_agg()[, "Average Quantity Loss (%)",with=F])>0){
+        paste0(round(sum(dataR_agg()[, "Average Quantity Loss (%)",with=F], na.rm=T)/
+                       nrow(dataR_agg()[, "Average Quantity Loss (%)",with=F]),2)
+               , "%")}else{"No Data"},"National Estimates (Model Aggregates)", icon = icon("option-horizontal", lib = "glyphicon"),
+      color = "black"
     )
   })
   
   DataOutput <- function()({
-    dataR()[ ,c("isocode","Country","Region","measureditemcpc","Crop","Year","Food Value Chain Stage","Average Quantity Loss (%)",
+    dataR()[ ,c("isocode","Country","Region","measureditemcpc","Crop","Year","Stage","Average Quantity Loss (%)",
                 "Loss (quantity, tons)","Loss (Qualitative, tons)","Loss (Monetary, LCU)","Causes of loss","Activity",         
                 "period of storage","treatment","Sampling Units","Method of Data Collection","Data Collection Tag","Reference","Url"),with=FALSE]
   })
@@ -451,6 +551,45 @@ server <- function(input, output, session) {
     DataOutput()
     
   })
+  
+  lab <- reactive({
+    paste("Source: FAO", 
+    paste("Date: ",as.character(Sys.time()),sep=""),
+    paste("Country Aggregation: ",input$aggregation,sep=""),
+    paste("Commodity Aggregation: ",input$BasketItems,sep=""),
+    paste("Data Tag: ",input$DataCollect,sep="")
+               ,sep="\n")
+  })  
+
+  
+  
+  plotInput = function() {
+    if(length(dataR())>1){
+      ggplot(dataR(), aes(x = Year, y = loss_per_clean, colour = Stage)) +
+        geom_point()+
+        xlab('Year') + ylab('Average Quantity Loss (%)') +
+        labs( caption=lab())+
+        scale_x_continuous(labels = function(x) round(as.numeric(x), digits=0)) +
+        theme(axis.text.x = element_text(angle = 45, vjust = .5)) +
+        theme(axis.text=element_text(size=12, face="bold"),
+              axis.title=element_text(size=12,face="bold"))+ 
+        theme(plot.margin = unit(c(1,1,3,1), "cm"))+
+        theme(plot.caption=element_text(vjust= -0.6))
+
+        
+
+    }else{
+      print("Please Choose Another Option")
+    }
+    
+  }
+
+ 
+
+  output$PointGraphs <- renderPlot({
+    plotInput()
+    
+  })
   #### Downloadable csv of selected dataset ####
   
   output$Data.csv <- downloadHandler(
@@ -458,12 +597,22 @@ server <- function(input, output, session) {
       paste(input$dataset, ".csv", sep = "")
     },
     content = function(file) {
-      write.csv(DataOutput(), file, row.names = FALSE)
+      write.csv(DataOutput(), file, row.names = FALSE, na = "")
     }
   )
+
+
+  
+  output$ValueChain_Stages.jpeg <- downloadHandler(
+    filename = function(){paste("ValueChain_Stages_",input$filename, ".jpeg", sep = "")},
+    content = function(file) {
+      ggsave(file, plot = plotInput(),   scale = .8, width = 450, height = 200, dpi = 300, units = "mm", device =  "jpeg")
+    }
+  )
+  
   obsB <- observe({
-    print(dataR())
-    #print(  dataR1())
+    #print(plotInput())
+    print(  dataR1_agg())
   })
   
   

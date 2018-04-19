@@ -44,30 +44,14 @@ suppressMessages({
   
 })
 
+R_SWS_SHARE_PATH <- Sys.getenv("R_SWS_SHARE_PATH")
+DEBUG_MODE <- Sys.getenv("R_DEBUG_MODE")
 
-
-if(CheckDebug()){
-  message("Not on server, so setting up environment...")
-  USER <- if_else(.Platform$OS.type == "unix",
-                  Sys.getenv('USER'),
-                  Sys.getenv('USERNAME'))
-
-
-  library(faoswsModules)
-  settings <- ReadSettings(file = file.path(paste(dirmain,"sws.yml", sep='/')))
-  #SetClientFiles(settings[["certdir"]])
-
-  GetTestEnvironment(
-    baseUrl = settings[["server"]],
-    token = settings[["token"]]
-  )
-
-}
 
 ######### Options ############
 savesws <- TRUE
 selectedYear <- as.character(1991:2016)
-
+LocalRun <- FALSE
 
 gfli_calc <- TRUE
 aggregation  <-  "geographicaream49" 
@@ -79,7 +63,7 @@ weights <- "intl_prices"
 basketn <- "top2perhead_byCtry" # "top2perhead_Globatop10","top2_calories"
 
 gfli_compare <- TRUE
-ComparisonYear <- as.character(c(2013,2016))
+ComparisonYear <- as.character(c(2005,2016))
 
 gfli_Reporting <- TRUE
 ReportingYear <- as.character(c(2015))
@@ -94,11 +78,54 @@ keys =c(areaVar,yearVar,itemVar)
 keys_lower =tolower(keys)
 
 ####----  Data In ----------############
-Losses <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
-production <- getProductionData(areaVar,itemVar,yearVar,elementVar) # Value_measuredElement_5510
-fbsTree <- ReadDatatable("fbs_tree")
-CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
-FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
+# This return FALSE if on the Statistical Working System
+if(CheckDebug() & !LocalRun){
+    message("Not on server, so setting up environment...")
+    USER <- if_else(.Platform$OS.type == "unix",
+                    Sys.getenv('USER'),
+                    Sys.getenv('USERNAME'))
+    
+    
+    library(faoswsModules)
+    settings <- ReadSettings(file = file.path(paste(getwd(),"sws.yml", sep='/')))
+    SetClientFiles(settings[["certdir"]])
+    
+    GetTestEnvironment(
+      baseUrl = settings[["server"]],
+      token = settings[["token"]]
+    )
+  
+  Losses <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
+  production <- getProductionData(areaVar,itemVar,yearVar,elementVar) # Value_measuredElement_5510
+  fbsTree <- ReadDatatable("fbs_tree")
+  CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+  FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
+  
+}else if(CheckDebug() & LocalRun){
+  #Load local last dataset
+  load("InputData.RData")
+ 
+  }else{
+   # Remove domain from username
+   USER <- regmatches(
+     swsContext.username,
+     regexpr("(?<=/).+$", swsContext.username, perl = TRUE)
+   )
+   
+   options(error = function(){
+     dump.frames()
+     
+     filename <- file.path(Sys.getenv("R_SWS_SHARE_PATH"), USER, "PPR")
+     
+     dir.create(filename, showWarnings = FALSE, recursive = TRUE)
+     
+     save(last.dump, file = file.path(filename, "last.dump.RData"))
+   })
+}
+
+initial <- file.path(R_SWS_SHARE_PATH, "mongeau")
+save    <- file.path(R_SWS_SHARE_PATH, "trade/pre_processing_report")
+
 
 CountryGroup$Country <- tolower(CountryGroup$countryname)
 CountryGroup[,"geographicaream49":=CountryGroup$m49code] 
@@ -165,12 +192,20 @@ if(basketn == "top2perhead_byCtry"){
     filter(timepointyears == as.numeric(BaseYear[2])-1) %>%
     arrange(geographicaream49, -p0q0) 
   
+  Top10_VP <- DataForIndex %>%
+    filter(timepointyears == as.numeric(BaseYear[2])-1) %>%
+    group_by(geographicaream49) %>%
+    dplyr:: summarise(All_p0q0 = sum(p0q0, na.rm = TRUE))
+  
   basket <- Top10perctry[ ,head(.SD, 2), by= c('geographicaream49','gfli_basket')]
   basket <- basket %>% filter(!is.na(gfli_basket))
   basketKeys <- c('geographicaream49', "measureditemcpc")
   ComBasketN  <- 'Production Value- Top 10 by country'
   basket[,basketname := ComBasketN]
   basket[,protected := FALSE] 
+  
+  basket <- merge(basket,Top10_VP, by =c("geographicaream49"), all.x=TRUE)
+  basket[,Percent_prod := p0q0/All_p0q0]
 }
 
 if(basketn == "top2perhead_Globatop10"){
@@ -180,12 +215,21 @@ if(basketn == "top2perhead_Globatop10"){
     dplyr:: summarise(All_p0q0 = sum(p0q0, na.rm = TRUE)) %>%
     arrange(-All_p0q0)
   
+  Top10_VP <- DataForIndex %>%
+    filter(timepointyears == as.numeric(BaseYear[2])-1) %>%
+    group_by(geographicaream49) %>%
+    dplyr:: summarise(All_p0q0 = sum(p0q0, na.rm = TRUE))
+  
   ItemsBasket <- Top10Global[ ,head(.SD, 2), by= c('gfli_basket')]
+  merge( ItemsBasket, FAOCrops[,c("measureditemcpc","crop")], by= c("measureditemcpc"), all.x = TRUE )
   basket <-   DataForIndex %>% filter(measureditemcpc %in%  unlist(ItemsBasket[!is.na(gfli_basket),measureditemcpc]))
   basketKeys <- ( "measureditemcpc")
   ComBasketN  <- 'Production Value- Top 10 by World'
   basket[,basketname := ComBasketN]
   basket[,protected := FALSE] 
+  
+  basket <- merge(basket,Top10_VP, by =c("geographicaream49"), all.x=TRUE)
+  basket[,Percent_prod := p0q0/All_p0q0]
 }
 # if(basketn == "calories"){
 #   Globalkcal1 <- ReadDatatable("top10_foodsupplykcal")
@@ -205,11 +249,13 @@ if(basketn == "top2perhead_Globatop10"){
 #   
 # } 
 
-basket <- basket[,c("geographicaream49", "gfli_basket","measureditemcpc","itemname","qty_avey1y2","intprice","p0q0","basketname","protected")]
+basket <- basket[,c("geographicaream49", "gfli_basket","measureditemcpc","itemname","qty_avey1y2","intprice","p0q0","basketname","Percent_prod", "protected")]
+basket$geographicaream49<- as.character(basket$geographicaream49)
+basket <- merge(basket, CountryGroup, by= c("geographicaream49"), all.x = TRUE)
 
 ### Save the Basket Selection to the sws ####
 if(savesws){
-  #write.table(basket ,'Commodbasket.csv', sep=",", row.names=FALSE)
+  write.table(basket ,'Commodbasket.csv', sep=",", row.names=FALSE)
   names(basket) <- tolower(names(basket))
   ## Delete
   table = "sdg123_commoditybasket"
@@ -251,4 +297,5 @@ if(gfli_compare){
 if(gfli_Reporting){
   reporting(ReportingYear,ComparisonYear,BaseYear)
 
-}
+
+  }

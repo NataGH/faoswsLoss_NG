@@ -37,13 +37,13 @@ reporting <- function(ReportingYear,ComparisonYear,BaseYear){
   Ref <- colnames(CountryGroup)
   
   for(ii in 1:(length(Ref)-1)){
-   
+    if(Ref[ii] != "fao_operationalcoverage"){
       foodLossIndex <- GFLI_SDG_fun(BaseYear,keys_lower,Ref[ii],basket,basketKeys,DataForIndex)
       Index_RY <- foodLossIndex[timepointyears == ReportingYear, ]
       Sub <- merge(Sub,Index_RY,by.x = c("Reference.area.code"), by.y = c(Ref[ii]),all.x = TRUE)
       Sub[Reference.area.code %in% unlist(Index_RY[,Ref[ii],with=F]),Observation.value := Index]
       Sub <- Sub[,HeadingsKeep,with=F]
-  }
+  }}
   
   Sub <- Sub %>% slice(match(RowOrder,Reference.area.code))
   writeData(wb, "Submission", Sys.Date()   , startRow = 1, startCol = 2)
@@ -82,6 +82,7 @@ reporting <- function(ReportingYear,ComparisonYear,BaseYear){
   DeltaTab$geographicaream49 <- as.numeric(DeltaTab$geographicaream49)
   DeltaTab <- DeltaTab[order(geographicaream49),]
   DeltaTab[,(ComparisonYear) := round(.SD,3), .SDcols=ComparisonYear]
+  Report_Ctrys <- DeltaTab[,c("geographicaream49", "M49 Country Name",ComparisonYear[1],ComparisonYear[2],"Delta (Δ)"),with=F]
 
   BasketLosses <- merge(basket,DataForIndex, by=c(keys_lower[1],keys_lower[3]))
   BasketLosses <- BasketLosses[,c("measureditemcpc","geographicaream49","timepointyears","value_measuredelement_5126"),with=F]
@@ -89,8 +90,9 @@ reporting <- function(ReportingYear,ComparisonYear,BaseYear){
   BasketLossesC  <-BasketLosses[,names(BasketLosses)[names(BasketLosses) %in% c(keys_lower,ComparisonYear[1]:ComparisonYear[2])]]
   Basket_Losses_yr <- merge(basket,BasketLossesC, by=c(keys_lower[1],keys_lower[3]))
   names(Basket_Losses_yr)[names(Basket_Losses_yr) %in% c(ComparisonYear[1]:ComparisonYear[2])] <- paste("value_measuredelement_5126_",ComparisonYear[1]:ComparisonYear[2], sep="")
-  Report_Ctrys <- DeltaTab[,c("geographicaream49", "M49 Country Name",ComparisonYear[1],ComparisonYear[2],"Delta (Δ)"),with=F]
-
+  Basket_Losses_yr $geographicaream49 <- as.character(Basket_Losses_yr$geographicaream49)
+  Basket_Losses_yr <- merge(Basket_Losses_yr ,CountryGroup[,c("geographicaream49","Country")], by=c("geographicaream49"), all.x =TRUE)
+  
   ### FAO member Countries 
   FAO_regions_FLI  <- GFLI_SDG_fun( BaseYear,keys_lower,"fao_region",basket,basketKeys,DataForIndex) 
   FAO_regions_FLI2 <- FAO_regions_FLI %>% filter( timepointyears %in% c(ComparisonYear[1]:ComparisonYear[2]))

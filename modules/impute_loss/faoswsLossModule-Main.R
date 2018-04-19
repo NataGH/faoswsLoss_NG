@@ -80,28 +80,6 @@ VaribleSelection <- "RandomForest_geo"
 graphLoss <- 0
 ##########################################################
 
-
-if(CheckDebug()){
-  message("Not on server, so setting up environment...")
-  USER <- if_else(.Platform$OS.type == "unix",
-                    Sys.getenv('USER'),
-                    Sys.getenv('USERNAME'))
-
-
-  library(faoswsModules)
-  settings <- ReadSettings(file = file.path(paste(dirmain,"sws.yml", sep='/')))
-  #SetClientFiles(settings[["certdir"]])
-
-  GetTestEnvironment(
-    baseUrl = settings[["server"]],
-    token = settings[["token"]]
-  )
-
-}
-
-
-
-
 areaVar = "geographicAreaM49"
 yearVar = "timePointYears"
 itemVar = "measuredItemCPC"
@@ -116,20 +94,57 @@ keys2 =c(areaVar,itemVar)
 
 ##### Load Data ######
 ## These two tables are constantly needing to be merged - country groups and food groups
-if(LocalRun ){
-  CountryGroup <- as.data.table(read.csv(paste(githubsite, 'General/a2017regionalgroupings_SDG_02Feb2017.csv', sep='')))
-  FAOCrops <- as.data.table(read.csv(paste(githubsite, 'General/Cpc.csv', sep=''))) ## All Crops in the CPC system
-  ConvFactor1 <- as.data.table(read.csv(paste(githubsite, 'General/FLW_LossPercFactors.csv', sep='')))
-  names(CountryGroup) <- tolower(names(CountryGroup))
-  names(FAOCrops) <- tolower(names(FAOCrops))
-  names(ConvFactor1) <- tolower(names(ConvFactor1))
-  ConvFactor1[,loss_per_clean := as.numeric(levels(loss_per_clean))[loss_per_clean]]
-  }else{
-
-CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
-FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
-ConvFactor1 <- ReadDatatable('flw_lossperfactors_')
-  }
+if(CheckDebug()){
+  message("Not on server, so setting up environment...")
+  USER <- if_else(.Platform$OS.type == "unix",
+                  Sys.getenv('USER'),
+                  Sys.getenv('USERNAME'))
+  
+  
+  library(faoswsModules)
+  settings <- ReadSettings(file = file.path(paste(getwd(),"sws.yml", sep='/')))
+  SetClientFiles(settings[["certdir"]])
+  
+  GetTestEnvironment(
+    baseUrl = settings[["server"]],
+    token = settings[["token"]]
+  )
+  
+  CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+  FAOCrops     <- ReadDatatable("fcl2cpc_ver_2_1")
+  ConvFactor1  <- ReadDatatable('flw_lossperfactors_')
+  fbsTree      <- ReadDatatable("fbs_tree")
+  
+}else if(CheckDebug() & LocalRun){
+  #Load local last dataset
+  load("InputData.RData")
+  
+  # CountryGroup <- as.data.table(read.csv(paste(githubsite, 'General/a2017regionalgroupings_SDG_02Feb2017.csv', sep='')))
+  # FAOCrops <- as.data.table(read.csv(paste(githubsite, 'General/Cpc.csv', sep=''))) ## All Crops in the CPC system
+  # ConvFactor1 <- as.data.table(read.csv(paste(githubsite, 'General/FLW_LossPercFactors.csv', sep='')))
+  # names(CountryGroup) <- tolower(names(CountryGroup))
+  # names(FAOCrops) <- tolower(names(FAOCrops))
+  # names(ConvFactor1) <- tolower(names(ConvFactor1))
+  # ConvFactor1[,loss_per_clean := as.numeric(levels(loss_per_clean))[loss_per_clean]]
+  
+  
+}else{
+  # Remove domain from username
+  USER <- regmatches(
+    swsContext.username,
+    regexpr("(?<=/).+$", swsContext.username, perl = TRUE)
+  )
+  
+  options(error = function(){
+    dump.frames()
+    
+    filename <- file.path(Sys.getenv("R_SWS_SHARE_PATH"), USER, "PPR")
+    
+    dir.create(filename, showWarnings = FALSE, recursive = TRUE)
+    
+    save(last.dump, file = file.path(filename, "last.dump.RData"))
+  })
+} 
 
 CountryGroup$country <- tolower(CountryGroup$countryname)
 CountryGroup[,"geographicaream49":=CountryGroup$m49code]
@@ -137,8 +152,6 @@ CountryGroup[,"geographicaream49":=CountryGroup$m49code]
 FAOCrops[, "crop" := FAOCrops$description]
 FAOCrops[, "measureditemcpc" := addHeadingsCPC(FAOCrops$cpc)]
 
-
-fbsTree <- ReadDatatable("fbs_tree")
 names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
 names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
 fbsTree[foodgroupname %in% c(2905), GFLI_Basket :='Cereals',]
@@ -152,10 +165,7 @@ ConvFactor1[,loss_per_clean := loss_per_clean/100]
 #####  Runs the model and collects the needed data  #####
 finalModelData = 
   {
-    ## requiredItems <<- getRequiredItems()
     production <- getProductionData(areaVar,itemVar,yearVar,elementVar) # Value_measuredElement_5510
-    
-    #lossDataAll <-getLossData() 
     lossProtected <- getLossData(areaVar,itemVar,yearVar,elementVar,selectedYear,protected = TRUE)     # Value_measuredElement_5016
     names(lossProtected)[ names(lossProtected) == "Value"] <-  "value_measuredelement_5016"
     names(lossProtected)[ names(lossProtected) == "measuredItemSuaFbs"] <-  "measureditemcpc"

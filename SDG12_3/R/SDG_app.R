@@ -37,24 +37,6 @@ suppressMessages({
 })
 
 
-# if(CheckDebug()){
-#   message("Not on server, so setting up environment...")
-#   USER <- if_else(.Platform$OS.type == "unix",
-#                   Sys.getenv('USER'),
-#                   Sys.getenv('USERNAME'))
-#   
-#   
-#   library(faoswsModules)
-#   settings <- ReadSettings(file = file.path(paste(dirmain,"sws.yml", sep='/')))
-#   #SetClientFiles(settings[["certdir"]])
-#   
-#   GetTestEnvironment(
-#     baseUrl = settings[["server"]],
-#     token = settings[["token"]]
-#   )
-#   
-# }
-# 
 BaseYear = as.character(c(2004,2006)) ## This is not an option to choose after the movement to the SDG base yr
 areaVar = "geographicAreaM49"
 yearVar = "timePointYears"
@@ -63,11 +45,34 @@ elementVar = "measuredElement"
 
 
 # ###----  Data In ----------############
-Losses <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
-production <- getProductionData(areaVar,itemVar,yearVar,elementVar) # Value_measuredElement_5510
-fbsTree <- ReadDatatable("fbs_tree")
-CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
-FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
+if(CheckDebug()){
+  message("Not on server, so setting up environment...")
+  USER <- if_else(.Platform$OS.type == "unix",
+                  Sys.getenv('USER'),
+                  Sys.getenv('USERNAME'))
+  
+  
+  library(faoswsModules)
+  settings <- ReadSettings(file = file.path(paste(getwd(),"sws.yml", sep='/')))
+  SetClientFiles(settings[["certdir"]])
+  
+  GetTestEnvironment(
+    baseUrl = settings[["server"]],
+    token = settings[["token"]]
+  )
+  
+  Losses <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
+  production <- getProductionData(areaVar,itemVar,yearVar,elementVar) # Value_measuredElement_5510
+  fbsTree <- ReadDatatable("fbs_tree")
+  CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+  FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
+  
+}else{
+  load("InputData.RData")
+}
+
+
+
 
 names(CountryGroup)[names(CountryGroup) =="countryname"] <- "Country"
 names(CountryGroup)[names(CountryGroup) =="m49code"] <- "geographicaream49"
