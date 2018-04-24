@@ -9,9 +9,9 @@
 # output: html_document
 # ---
 # 
-library(faosws)
-library(faoswsUtil)
-library(faoswsLoss)
+#library(faosws)
+#library(faoswsUtil)
+#library(faoswsLoss)
 library(shiny)
 library(shinythemes)
 library(shinydashboard)
@@ -23,18 +23,10 @@ library(dplyr)
 library(dtplyr)
 library(DT)
 library(magrittr)
-remove.packages(pkgs, lib, version)
+
 
 
 suppressMessages({
-  library(faosws)
-  library(faoswsUtil)
-  library(faoswsFlag)
-  library(lme4)
-  library(data.table)
-  library(magrittr)
-  library(reshape2)
-  library(plyr)
   library(dplyr)
 
 })
@@ -78,9 +70,18 @@ if(CheckDebug()){
   
 }
 
+CountryGroup$fao_operationalcoverage<-as.character(CountryGroup$fao_operationalcoverage)
+CountryGroup[fao_operationalcoverage %in% c("1"),fao_operationalcoverage := "Yes"]
+CountryGroup[fao_operationalcoverage %in% c("0"),fao_operationalcoverage := "No"]
 
-names(CountryGroup)[names(CountryGroup) =="countryname"] <- "Country"
-names(CountryGroup)[names(CountryGroup) =="m49code"] <- "geographicaream49"
+
+setnames(CountryGroup, old = c("m49code","iso2code","isocode","countryname","sdgregion_code","sdg_regions","m49_level1_code",        
+                               "m49_level1_region","m49_level2_region_code","m49_level2_region","mdgregions_code","mdgregions","ldcs_code","ldcs",                   
+                               "lldcssids_code","lldcssids","fao_region","fao_operationalcoverage"),
+         new = c("geographicaream49","ISO2code","isocode","Country","sdgregion_code","SDG Regions","m49_level1_code",        
+                 "Geographic Regions(m49) Level1","m49_level2_region_code","Geographic Regions(m49) Level2","mdgregions_code","MDG Regions","ldcs_code","Least Developed Countries (LDC)",                   
+                 "lldcssids_code","Land Locked Developing Countries (LLDC)","FAO Operational Region","FAO Operational Coverage"))
+         
 
 names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
 names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
@@ -135,7 +136,7 @@ LossFactorRaw[, "Country.y" := NULL]
 names(LossFactorRaw)[names(LossFactorRaw) =="Country.x"] <- "Country"
 names(AggregateLoss)[names(AggregateLoss) =="Country.x"] <- "Country"
 datatags <- sort(unlist(unique(LossFactorRaw$"Data Collection Tag")),decreasing=F)
-dataStages <- sort(unlist(unique(LossFactorRaw$Stage)))
+dataStages <- sort(unlist(unique(LossFactorRaw$fsc_location1)))
 LossFactorRaw[Stage =="SWS_Total","Stage"] = "Official - Whole chain Estimate"
 
 LossFactorRaw2 <- merge(LossFactorRaw,fbsTree, by=c("measureditemcpc"))
@@ -268,31 +269,35 @@ server <- function(input, output, session) {
   set.seed(122)
   observe({
     if (input$aggregation == "Country") {
-      Agg_choices <- c("All",unlist(unique(CountryGroup[,sdg_regions])))
+      Agg_choices <- c("All",unlist(unique(CountryGroup[,"SDG Regions"])))
       updateSelectInput(session, "Agg_options", choices=Agg_choices, selected ="All")
     }
-    if (input$aggregation == "sdg_regions") {
-      Agg_choices <- c("All",unlist(unique(CountryGroup[,sdg_regions])))
+    if (input$aggregation == "SDG Regions") {
+      Agg_choices <- c("All",unique(CountryGroup[,"SDG Regions"]))
       updateSelectInput(session, "Agg_options", choices=Agg_choices, selected ="All")
     }
-    if (input$aggregation == "m49_level1_region") {
-      Agg_choices <- c("All",unlist(unique(CountryGroup[,m49_level1_region])))
+    if (input$aggregation == "Geographic Regions(m49) Level1") {
+      Agg_choices <- c("All",unique(CountryGroup[,"Geographic Regions(m49) Level1"]))
       updateSelectInput(session, "Agg_options", choices=Agg_choices, selected ="All")
     }
-    if (input$aggregation == "m49_level2_region") {
-      Agg_choices <- c("All",unlist(unique(CountryGroup[,m49_level2_region])))
+    if (input$aggregation == "Geographic Regions(m49) Level2") {
+      Agg_choices <- c("All",unique(CountryGroup[,"Geographic Regions(m49) Level2"]))
       updateSelectInput(session, "Agg_options", choices=Agg_choices, selected ="All")
     }
-    if (input$aggregation == "mdgregions") {
-      Agg_choices <- c("All",unlist(unique(CountryGroup[,mdgregions])))
+    if (input$aggregation == "MDG Regions") {
+      Agg_choices <- c("All",unique(CountryGroup[,"MDG Regions"]))
       updateSelectInput(session, "Agg_options", choices=Agg_choices, selected ="All")
     }
-    if (input$aggregation == "ldcs") {
-      Agg_choices <- c("All",unlist(na.omit(unique(CountryGroup[,ldcs]))))
+    if (input$aggregation == "Least Developed Countries (LDC)") {
+      Agg_choices <- c("All",na.omit(unique(CountryGroup[,"Least Developed Countries (LDC)"])))
       updateSelectInput(session, "Agg_options", choices=Agg_choices, selected ="All")
     }
-    if (input$aggregation == "lldcssids") {
-      Agg_choices <- c("All",unlist(na.omit(unique(CountryGroup[,lldcssids]))))
+    if (input$aggregation == "Land Locked Developing Countries (LLDC)") {
+      Agg_choices <- c("All",na.omit(unique(CountryGroup[,"Land Locked Developing Countries (LLDC)"])))
+      updateSelectInput(session, "Agg_options",choices=Agg_choices, selected ="All")
+    }
+    if (input$aggregation == "FAO Operational Coverage") {
+      Agg_choices <- c("All",na.omit(unique(CountryGroup[,"FAO Operational Coverage"])))
       updateSelectInput(session, "Agg_options",choices=Agg_choices, selected ="All")
     }
     if (input$aggregation == "WORLD") {
@@ -311,34 +316,39 @@ server <- function(input, output, session) {
         updateSelectInput(session, "Country", choices=ctry_choices, selected = "Italy")
       }
       if(input$Agg_options != 'All'){
-        ctry_choices <- c(unique(CountryGroup[(sdg_regions ==input$Agg_options)&(geographicaream49 %in% LossFactorRaw$geographicaream49),"Country",with=F]))
+        ctry_choices <- c(unique(CountryGroup[(CountryGroup[["SDG Regions"]]   %in% input$Agg_options)&(geographicaream49 %in% LossFactorRaw$geographicaream49),"Country",with=F]))
         updateSelectInput(session, "Country", choices=ctry_choices, selected = NULL)
       }
     }
-    if (input$aggregation == "sdg_regions") {
-      ctry_choices <- c(unique("All",CountryGroup[sdg_regions ==input$Agg_options,"Country",with=F]))
+    if (input$aggregation == "SDG Regions") {
+      ctry_choices <- c("All",unique(CountryGroup[CountryGroup[["SDG Regions"]]  %in% input$Agg_options,"Country",with=F]))
       updateSelectInput(session, "Country", choices=ctry_choices, selected ="All")
     }
-    if (input$aggregation == "m49_level1_region") {
-      ctry_choices <- c("All",unique(CountryGroup[m49_level1_region ==input$Agg_options,"Country",with=F]))
+    if (input$aggregation == "Geographic Regions(m49) Level1") {
+      ctry_choices <- c("All",unique(CountryGroup[CountryGroup[["Geographic Regions(m49) Level1"]] %in%  input$Agg_options,"Country",with=F]))
       updateSelectInput(session, "Country", choices=ctry_choices, selected ="All")
     }
-    if (input$aggregation == "m49_level2_region") {
-      ctry_choices <- c("All",unique(CountryGroup[m49_level2_region ==input$Agg_options,"Country",with=F]))
+    if (input$aggregation == "Geographic Regions(m49) Level2") {
+      ctry_choices <- c("All",unique(CountryGroup[CountryGroup[["Geographic Regions(m49) Level2"]] %in% input$Agg_options,"Country",with=F]))
       updateSelectInput(session, "Country", choices=ctry_choices, selected ="All")
     }
-    if (input$aggregation ==  "mdgregions") {
-      ctry_choices <- c("All",unique(CountryGroup[mdgregions ==input$Agg_options,"Country",with=F]))
+    if (input$aggregation ==  "MDG Regions") {
+      ctry_choices <- c("All",unique(CountryGroup[CountryGroup[["MDG Regions"]]  %in% input$Agg_options,"Country",with=F]))
       updateSelectInput(session, "Country", choices=ctry_choices, selected ="All")
     }
-    if (input$aggregation ==  "ldcs") {
-      ctry_choices <- c("All",unique(CountryGroup[ldcs ==input$Agg_options,"Country",with=F]))
+    if (input$aggregation ==  "Least Developed Countries (LDC)") {
+      ctry_choices <- c("All",unique(CountryGroup[CountryGroup[["Least Developed Countries (LDC)"]] ==input$Agg_options,"Country",with=F]))
       updateSelectInput(session, "Country", choices=ctry_choices, selected ="All")
     }
-    if (input$aggregation ==  "lldcssids") {
-      ctry_choices <- c("All",unique(CountryGroup[lldcssids ==input$Agg_options,"Country",with=F]))
+    if (input$aggregation ==  "Land Locked Developing Countries (LLDC)") {
+      ctry_choices <- c("All",unique(CountryGroup[CountryGroup[["Land Locked Developing Countries (LLDC)"]] ==input$Agg_options,"Country",with=F]))
       updateSelectInput(session, "Country", choices=ctry_choices, selected ="All")
     }
+    if (input$aggregation ==  "FAO Operational Coverage") {
+      ctry_choices <- c("All",unique(CountryGroup[CountryGroup[["FAO Operational Coverage"]] ==input$Agg_options,"Country",with=F]))
+      updateSelectInput(session, "Country", choices=ctry_choices, selected ="All")
+    }
+    
   })
   
   observe({
@@ -348,7 +358,7 @@ server <- function(input, output, session) {
     }
     if (input$BasketItems != "All") {
       Comm_grp <- unlist(fbsTree[gfli_basket == input$BasketItems,measureditemcpc])
-      itemcpc_choices <- c("All", FAOCrops[measureditemcpc %in% Comm_grp,'crop',with=F])
+      itemcpc_choices <- c("All", unique(FAOCrops[measureditemcpc %in% Comm_grp,'crop',with=F]))
       updateSelectInput(session, "itemcpc", choices=itemcpc_choices, selected ="All")
     }
     
@@ -421,13 +431,13 @@ server <- function(input, output, session) {
   })
   dataR <- reactive({
     if(any(input$Stage %in% c('All'))){dataR3()}
-    else if(!any(input$Stage %in% c('All'))){dataR3() %>% filter(Stage %in% input$Stage)}
+    else if(!any(input$Stage %in% c('All'))){dataR3() %>% filter(fsc_location1 %in% input$Stage)}
     
     
   })
   dataR_agg <- reactive({
     if(any(input$Stage %in% c('All'))){dataR3_agg()}
-    else if(!any(input$Stage %in% c('All'))){dataR3_agg() %>% filter(Stage %in% input$Stage)}
+    else if(!any(input$Stage %in% c('All'))){dataR3_agg() %>% filter(fsc_location1 %in% input$Stage)}
     
     
   })
@@ -534,7 +544,7 @@ server <- function(input, output, session) {
     valueBox(
       if( nrow(dataR_agg()[, "Average Quantity Loss (%)",with=F])>0){
         paste0(round(sum(dataR_agg()[, "Average Quantity Loss (%)",with=F], na.rm=T)/
-                       nrow(dataR_agg()[, "Average Quantity Loss (%)",with=F]),2)
+                       nrow(dataR_agg()[, "Average Quantity Loss (%)",with=F]),2)*100
                , "%")}else{"No Data"},"National Estimates (Model Aggregates)", icon = icon("option-horizontal", lib = "glyphicon"),
       color = "black"
     )
@@ -612,7 +622,7 @@ server <- function(input, output, session) {
   
   obsB <- observe({
     #print(plotInput())
-    print(  dataR1_agg())
+    print( dataR())
   })
   
   

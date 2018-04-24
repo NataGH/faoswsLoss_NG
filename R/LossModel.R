@@ -189,8 +189,8 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     
     #paste("factor(", keys_lower[3], ")",sep="", collapse= " + "),'+',
     mod2_rlm <- lm(as.formula(formula), data = datamod)
-    mod2_rand <- plm(as.formula(formula), data = datamod , index=c("measureditemcpc"), model ="random")
-    mod2_red  <- plm(as.formula(formula4), data = datamod , index=c("measureditemcpc"), model ="random")
+    mod2_rand <- plm::plm(as.formula(formula), data = datamod , index=c("measureditemcpc"), model ="random")
+    mod2_red  <- plm::plm(as.formula(formula4), data = datamod , index=c("measureditemcpc"), model ="random")
     
     
     CB(mod2_rlm$coefficients[1] + mod2_rlm$coefficients[names(mod2_rlm$coefficients)=="timepointyears"]*2008)
@@ -217,7 +217,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
       #### Exclude NaN
       datamodTMA <-datamodTMA[complete.cases(datamodTMA), ]
       formulaTMA <- paste(paste(depVar," ~",sep=""), paste(keys_lower[2:3], collapse= " + "),'+',paste(unique(UseVariTMA[!UseVariTMA %in% c(depVar,keys_lower)]), collapse= " + ")) #
-      mod2_rand <- plm(as.formula(formulaTMA), data = datamodTMA%>% filter(timepointyears>1990) , index=c("measureditemcpc"), model ="random")
+      mod2_rand <- plm::plm(as.formula(formulaTMA), data = datamodTMA%>% filter(timepointyears>1990) , index=c("measureditemcpc"), model ="random")
       modelspec = 'randomAveraged'
     }
     
