@@ -174,7 +174,7 @@ ui <- fluidPage(theme = shinytheme("lumen"),
                                 choices = c("Index", "Weights", "Basket")),
                    
                     downloadButton("Data.csv", "Download"),
-                    downloadButton("SDG12_3_Plot.pdf", "Plots")
+                    downloadButton("SDG12_3_Plot.jpeg", "Plots")
                   ),
                   
                  mainPanel(
@@ -374,12 +374,21 @@ server <- function(input, output, session) {
     }
   })
   
+  lab <- reactive({
+    paste("Source: FAO", 
+          paste("Date: ",as.character(Sys.time()),sep=""),
+          paste("Country Aggregation: ",input$aggregation,sep=""),
+          paste("Commodity Aggregation: ",input$BasketItems,sep="")
+          ,sep="\n")
+  }) 
+  
   plotInput = function() {
     if(input$aggregation != "Country"){
     ggplot(dataR(), aes(x = timepointyears, y = Index)) +
       facet_wrap(~ unlist(unique(dataR()[,input$aggregation,with=F])))+
       geom_line()+
       xlab('timePointYears') + ylab('FLI') +
+      labs( caption=lab())+
       theme(axis.text.x = element_text(angle = 45, vjust = .5)) +
       theme(axis.text=element_text(size=12, face="bold"),
             axis.title=element_text(size=12,face="bold"))
@@ -388,6 +397,7 @@ server <- function(input, output, session) {
         facet_wrap(~ unlist(unique(input$Country)))+
         geom_line()+
         xlab('timePointYears') + ylab('FLI') +
+        labs( caption=lab())+
         theme(axis.text.x = element_text(angle = 45, vjust = .5)) +
         theme(axis.text=element_text(size=12, face="bold"),
               axis.title=element_text(size=12,face="bold"))
@@ -434,6 +444,8 @@ server <- function(input, output, session) {
     IndexAgg()
   })
   
+
+  
   #### Downloadable csv of selected dataset ####
   datasetInput <- reactive({
     switch(input$dataset,
@@ -459,10 +471,10 @@ server <- function(input, output, session) {
     }
   )
   
-  output$SDG12_3_Plot.pdf <- downloadHandler(
-    filename = function(){paste("SDG12_3_Plot_",input$filename, ".pdf", sep = "")},
+  output$SDG12_3_Plot.jpeg <- downloadHandler(
+    filename = function(){paste("SDG12_3_Plot_",input$filename, ".jpeg", sep = "")},
     content = function(file) {
-      ggsave(file, plot = plotInput(),  width = 10, height = 8, dpi = 150, units = "in", device =  "pdf")
+      ggsave(file, plot = plotInput(),  width = 10, height = 8, dpi = 150, units = "in", device =  "jpeg")
     }
   )
   

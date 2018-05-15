@@ -23,6 +23,7 @@ library(dplyr)
 library(dtplyr)
 library(DT)
 library(magrittr)
+library(data.table)
 
 
 
@@ -37,11 +38,15 @@ areaVar = "geographicAreaM49"
 yearVar = "timePointYears"
 itemVar = "measuredItemCPC"
 elementVar = "measuredElement"
+LocalRun <- FALSE
 
 
 
 # ###----  Data In ----------############
-if(CheckDebug()){
+if(!LocalRun){
+  library(faosws)
+  library(faoswsUtil)
+  library(faoswsLoss)
   message("Not on server, so setting up environment...")
   USER <- if_else(.Platform$OS.type == "unix",
                   Sys.getenv('USER'),
@@ -64,6 +69,14 @@ if(CheckDebug()){
   FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
   LossFactorRaw$measureditemcpc <- addHeadingsCPC(LossFactorRaw$measureditemcpc)
   
+  setnames(CountryGroup, old = c("m49code","iso2code","isocode","countryname","sdgregion_code","sdg_regions","m49_level1_code",        
+                                 "m49_level1_region","m49_level2_region_code","m49_level2_region","mdgregions_code","mdgregions","ldcs_code","ldcs",                   
+                                 "lldcssids_code","lldcssids","fao_region","fao_operationalcoverage"),
+           new = c("geographicaream49","ISO2code","isocode","Country","sdgregion_code","SDG Regions","m49_level1_code",        
+                   "Geographic Regions(m49) Level1","m49_level2_region_code","Geographic Regions(m49) Level2","mdgregions_code","MDG Regions","ldcs_code","Least Developed Countries (LDC)",                   
+                   "lldcssids_code","Land Locked Developing Countries (LLDC)","FAO Operational Region","FAO Operational Coverage"))
+  
+  
 }else{
   setwd(paste(getwd(),"/shiny/Input_Data",sep=""))
   load("Inputs.RData")
@@ -74,14 +87,6 @@ CountryGroup$fao_operationalcoverage<-as.character(CountryGroup$fao_operationalc
 CountryGroup[fao_operationalcoverage %in% c("1"),fao_operationalcoverage := "Yes"]
 CountryGroup[fao_operationalcoverage %in% c("0"),fao_operationalcoverage := "No"]
 
-
-setnames(CountryGroup, old = c("m49code","iso2code","isocode","countryname","sdgregion_code","sdg_regions","m49_level1_code",        
-                               "m49_level1_region","m49_level2_region_code","m49_level2_region","mdgregions_code","mdgregions","ldcs_code","ldcs",                   
-                               "lldcssids_code","lldcssids","fao_region","fao_operationalcoverage"),
-         new = c("geographicaream49","ISO2code","isocode","Country","sdgregion_code","SDG Regions","m49_level1_code",        
-                 "Geographic Regions(m49) Level1","m49_level2_region_code","Geographic Regions(m49) Level2","mdgregions_code","MDG Regions","ldcs_code","Least Developed Countries (LDC)",                   
-                 "lldcssids_code","Land Locked Developing Countries (LLDC)","FAO Operational Region","FAO Operational Coverage"))
-         
 
 names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
 names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
@@ -104,7 +109,6 @@ LossFactorRaw[fsc_location =="Calc","fsc_location" ] <- "Aggregated from multipl
 AggregateLoss[fsc_location =="SWS","fsc_location" ] <- "Official/Semi-Official - National"
 AggregateLoss[fsc_location =="sws_total","fsc_location" ] <- "Official/Semi-Official - National"
 AggregateLoss[fsc_location =="Calc","fsc_location" ] <- "Aggregated from multiple sources"
-
 
 unlist(names(AggregateLoss))
 

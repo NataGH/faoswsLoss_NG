@@ -40,67 +40,72 @@ suppressMessages({
 
 })
 
+areaVar = "geographicAreaM49"
+yearVar = "timePointYears"
+itemVar = "measuredItemCPC"
+elementVar = "measuredElement"
+selectedYear = as.character(1991:2016)
+
+# ###----  Data In ----------############
+if(CheckDebug()){
+  message("Not on server, so setting up environment...")
+  USER <- if_else(.Platform$OS.type == "unix",
+                  Sys.getenv('USER'),
+                  Sys.getenv('USERNAME'))
+  
+  
+  library(faoswsModules)
+  settings <- ReadSettings(file = file.path(paste(getwd(),"sws.yml", sep='/')))
+  SetClientFiles(settings[["certdir"]])
+  
+  GetTestEnvironment(
+    baseUrl = settings[["server"]],
+    token = settings[["token"]]
+  )
+  
+  dataRaw <- ReadDatatable("aggregate_loss_table")
+  CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+  fbsTree <- ReadDatatable("fbs_tree")
+  FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
+  dataModel <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
+  
+}else{
+  load("InputData.RData")
+}
+
 # 
-# if(CheckDebug()){
-#   message("Not on server, so setting up environment...")
-#   USER <- if_else(.Platform$OS.type == "unix",
-#                   Sys.getenv('USER'),
-#                   Sys.getenv('USERNAME'))
-#   
-#   
-#   library(faoswsModules)
-#   settings <- ReadSettings(file = file.path(paste(dirmain,"sws.yml", sep='/')))
-#   #SetClientFiles(settings[["certdir"]])
-#   
-#   GetTestEnvironment(
-#     baseUrl = settings[["server"]],
-#     token = settings[["token"]]
-#   )
-#   
-# }
 # 
-# 
-# areaVar = "geographicAreaM49"
-# yearVar = "timePointYears"
-# itemVar = "measuredItemCPC"
-# elementVar = "measuredElement"
-# selectedYear = as.character(1991:2016)
+
 # #----  Data In ------------------------------------------
-# dataRaw <- ReadDatatable("aggregate_loss_table")
-# dataRaw[,country :=NULL ]
-# dataRaw[fsc_location =="SWS","fsc_location" ] <- "Official/Semi-Official - National"
-# dataRaw[fsc_location =="sws_total","fsc_location" ] <- "Official/Semi-Official - National"
-# dataRaw[fsc_location =="Calc","fsc_location" ] <- "Aggregated from multiple sources"
-# setnames(dataRaw,"fsc_location", "Source"  )
-# dataModel <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
-# names(dataModel) <- tolower(names(dataModel))
-# names(dataModel)[names(dataModel) =='measureditemsuafbs'] <- "measureditemcpc"
-# dataModel$geographicaream49 <- as.character(dataModel$geographicaream49)
-# #----
-# CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
-# fbsTree <- ReadDatatable("fbs_tree")
-# FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
-# #----
-# CountryGroup$country <- tolower(CountryGroup$countryname)
-# CountryGroup[,"geographicaream49":=CountryGroup$m49code]
-# 
-# names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
-# names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
-# FAOCrops[, "crop" := FAOCrops$description]
-# names(FAOCrops)[names(FAOCrops) =='cpc'] <- "measureditemcpc"
-# 
-# fbsTree[foodgroupname %in% c(2905), gfli_basket :='Cereals',]
-# fbsTree[foodgroupname %in% c(2911), gfli_basket :='Pulses',]
-# fbsTree[foodgroupname %in% c(2919,2918), gfli_basket :='Fruits & Vegetables',]
-# fbsTree[foodgroupname %in% c(2907,2913), gfli_basket :='Roots, Tubers & Oil-Bearing Crops',]
-# fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), gfli_basket :='Other',]
-# fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), gfli_basket :='Animals Products & Fish and fish products',] # |fo
-# #----
-# Crops <- merge(fbsTree,FAOCrops, by=("measureditemcpc"), all.x =T)
-# dataRaw <-merge(dataRaw, fbsTree, by=("measureditemcpc"), all.x =T)
-# dataRaw <-merge(dataRaw, CountryGroup, by=("geographicaream49"), all.x =T)
-# dataModel <-merge(dataModel, fbsTree, by=("measureditemcpc"), all.x =T)
-# dataModel <-merge(dataModel, CountryGroup, by=("geographicaream49"), all.x =T)
+
+dataRaw[,country :=NULL ]
+dataRaw[fsc_location =="SWS","fsc_location" ] <- "Official/Semi-Official - National"
+dataRaw[fsc_location =="sws_total","fsc_location" ] <- "Official/Semi-Official - National"
+dataRaw[fsc_location =="Calc","fsc_location" ] <- "Aggregated from multiple sources"
+setnames(dataRaw,"fsc_location", "Source"  )
+names(dataModel) <- tolower(names(dataModel))
+names(dataModel)[names(dataModel) =='measureditemsuafbs'] <- "measureditemcpc"
+dataModel$geographicaream49 <- as.character(dataModel$geographicaream49)
+CountryGroup$country <- tolower(CountryGroup$countryname)
+CountryGroup[,"geographicaream49":=CountryGroup$m49code]
+
+names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
+names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
+FAOCrops[, "crop" := FAOCrops$description]
+names(FAOCrops)[names(FAOCrops) =='cpc'] <- "measureditemcpc"
+
+fbsTree[foodgroupname %in% c(2905), gfli_basket :='Cereals',]
+fbsTree[foodgroupname %in% c(2911), gfli_basket :='Pulses',]
+fbsTree[foodgroupname %in% c(2919,2918), gfli_basket :='Fruits & Vegetables',]
+fbsTree[foodgroupname %in% c(2907,2913), gfli_basket :='Roots, Tubers & Oil-Bearing Crops',]
+fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), gfli_basket :='Other',]
+fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), gfli_basket :='Animals Products & Fish and fish products',] # |fo
+#----
+Crops <- merge(fbsTree,FAOCrops, by=("measureditemcpc"), all.x =T)
+dataRaw <-merge(dataRaw, fbsTree, by=("measureditemcpc"), all.x =T)
+dataRaw <-merge(dataRaw, CountryGroup, by=("geographicaream49"), all.x =T)
+dataModel <-merge(dataModel, fbsTree, by=("measureditemcpc"), all.x =T)
+dataModel <-merge(dataModel, CountryGroup, by=("geographicaream49"), all.x =T)
 # # #-------------------------------------------------------
 
 ui <- fluidPage(theme = shinytheme("lumen"),

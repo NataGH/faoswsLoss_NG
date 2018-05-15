@@ -29,10 +29,8 @@ library(reshape)
 #library(devtools)
 library(lmtest)
 library(Hmisc)
-
-
 library(magrittr) 
-remove.packages(pkgs, lib, version)
+
 
 library(faosws)
 library(faoswsUtil)
@@ -62,9 +60,14 @@ LocalRun <- FALSE
 subnationalestimates <- TRUE
 
 # selecting data collection methods for aggregating the subnational estimates 
-DataCollectionTags_all <- c("SWS","APHLIS","Rapid Assessment","Expert Opinion",
-  "Laboratory Trials","Field Trial","Survey","Declarative","Crop-Cutting","Case study")
-DataCollectionTags_represent <- c("SWS","APHLIS","Expert Opinion","Survey","Declarative")
+DataCollectionTags_all <- c("Expert Opinion","-","SWS","NationalStatsYearbook" 
+                            ,"NonProtected","Survey","Rapid Assessment","NationalAcctSys"              
+                            ,"WRI Protocol","FBS/APQ","LitReview","Case Study"                   
+                            ,"APHLIS","NP","Laboratory Trials","Modelled"                     
+                            ,"Field Trial","Crop Cutting Field Experiment","Census" )
+
+DataCollectionTags_represent <- c("SWS","NationalStatsYearbook","NonProtected","NationalAcctSys","FBS/APQ","Census",
+                                      "APHLIS", "Expert Opinion","Survey","Declarative","-","LitReview")
 ExternalDataOpt <- DataCollectionTags_represent
 
 # For aggregating the subnational using the markov function
@@ -146,6 +149,8 @@ if(CheckDebug()){
   })
 } 
 
+
+
 CountryGroup$country <- tolower(CountryGroup$countryname)
 CountryGroup[,"geographicaream49":=CountryGroup$m49code]
 
@@ -220,7 +225,6 @@ if(updatemodel==1){
   if(subnationalestimates){
        # brings in the current file of converstion factors 
 
-       ConvFactor1  <- join(ConvFactor1,CountryGroup[,c('isocode',"geographicaream49")],  by = c('isocode'),type= 'left', match='all')
        ConvFactor1  <- ConvFactor1 %>% filter(tag_datacollection %in%  ExternalDataOpt)
        ConvFactor1$measureditemcpc <- addHeadingsCPC(ConvFactor1$measureditemcpc)
        names(ConvFactor1)[names(ConvFactor1)=='year'] <-'timepointyears'
@@ -262,7 +266,7 @@ if(updatemodel==1){
   AddInsertions(changeset,  FullSet[,c("geographicaream49","timepointyears","measureditemcpc","isocode","country","crop","loss_per_clean","fsc_location"),])
   Finalise(changeset)
 
-
+  #FullSet <- ReadDatatable("aggregate_loss_table")
   ########### Variables for the module  ###################   
   # Adds the explanatory Varaibles,
   Predvar <- c()
@@ -288,7 +292,8 @@ if(updatemodel ==0){
   ## Read DataTables of the existing model runs 
   modelRuns <- ReadDatatable("lossmodelruns")
   
-  Cluster2Update <- na.omit(unique(fbsTree$GFLI_Basket))[1]
+  Cluster2Update <- na.omit(unique(fbsTree$GFLI_Basket))[vi]
+  
   name <-unique(fbsTree[GFLI_Basket %in% Cluster2Update,foodgroupname])
   CPCs <-unique(fbsTree[GFLI_Basket %in% Cluster2Update,measureditemcpc])
     

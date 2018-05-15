@@ -123,8 +123,6 @@ if(CheckDebug() & !LocalRun){
    })
 }
 
-initial <- file.path(R_SWS_SHARE_PATH, "mongeau")
-save    <- file.path(R_SWS_SHARE_PATH, "trade/pre_processing_report")
 
 
 CountryGroup$Country <- tolower(CountryGroup$countryname)
@@ -272,7 +270,7 @@ if(savesws){
 
 #### Calculations ####
 if(gfli_calc){
- 
+  DataForIndex$geographicaream49 <- as.character(DataForIndex$geographicaream49)
   GlobalfoodLoss <- GFLI_SDG_fun(BaseYear,keys_lower,"WORLD",basket,basketKeys,DataForIndex)
   FoodLossIndex <- GFLI_SDG_fun(BaseYear,keys_lower,aggregation,basket,basketKeys,DataForIndex)
 }
