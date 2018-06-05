@@ -4,7 +4,7 @@
 \alias{VariablesAdd1}
 \title{Part of the FAO Loss Module}
 \usage{
-VariablesAdd1(DataUseInt, keys_lower, Predvar2)
+VariablesAdd1(DataUseInt, keys_lower, Predvar2, Impute, fgroup)
 }
 \description{
 Part of the FAO Loss Module
