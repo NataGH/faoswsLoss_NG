@@ -198,7 +198,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     CB(mod2_red$coefficients[1]+ mod2_red$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)
     
     modelspec = 'random'
-    # GIven the unbalanced aspects of the panels, for some cases it creates heteroskedastic errors which skew the data beyond the max/min of reasonable estimates
+    # Given the unbalanced aspects of the panels, for some cases it creates heteroskedastic errors which skew the data beyond the max/min of reasonable estimates
     # In these cases the data is averaged over cpc (which provided better explanatory power than over country) by year and then re-selected the variables and 
     # re-estimate the series
     coeffSig <- summary(mod2_rand)$coeff[,4][summary(mod2_rand)$coeff[,4] <.1]

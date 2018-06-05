@@ -100,6 +100,7 @@ if(CheckDebug() & !LocalRun){
   fbsTree <- ReadDatatable("fbs_tree")
   CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
   FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
+ 
   
 }else if(CheckDebug() & LocalRun){
   #Load local last dataset
@@ -170,6 +171,9 @@ if(weights == "intl_prices"){
   Weights <- intPrice2005Selected[, c("itemname","measureditemcpc","intprice")]
   
   #distinct(intPrice2005Selected,measuredItemCPC)
+}if(weights == "calories"){
+  
+  
 }
 
 ## Production multiplied by the weighting scheme

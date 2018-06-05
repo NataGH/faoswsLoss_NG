@@ -101,7 +101,7 @@ getLossData = function(areaVar,itemVar,yearVar,elementVar,selectedYear, protecte
                                    dataset = "aproduction",
                                    dimension = "geographicAreaM49")[type == "country", code]),
       Dimension(name = "measuredElement", keys = c("5016")), 
-      Dimension(name = "timePointYears", keys = as.character(2016:2016)),
+      Dimension(name = "timePointYears", keys = as.character(min(selectedYear):max(selectedYear))),
       Dimension(name = "measuredItemCPC",
                 keys = GetCodeList(domain = "agriculture",
                                    dataset = "aproduction",
