@@ -19,7 +19,6 @@ library(data.table)
 library(plyr)
 library(dplyr)
 library(dtplyr)
-library(devtools)
 library(openxlsx)
 library(tidyr)
 
