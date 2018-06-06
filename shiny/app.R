@@ -15,7 +15,6 @@ library(gridExtra)
 library(ggplot2)
 library(trelliscopejs)
 library(rmarkdown)
-#library(gtools)
 library(ggplot2)
 library(dplyr)
 library(dtplyr)
@@ -23,8 +22,6 @@ library(dtplyr)
 library(magrittr)
 remove.packages(pkgs, lib, version)
 
-library(faosws)
-library(faoswsUtil)
 library(faoswsLoss)
 
 suppressMessages({

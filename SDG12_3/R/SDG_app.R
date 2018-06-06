@@ -9,19 +9,17 @@
 # output: html_document
 # ---
 
-library(faosws)
-library(faoswsUtil)
+
 library(faoswsLoss)
 library(shiny)
 library(shinythemes)
 library(rmarkdown)
-#library(gtools)
 library(ggplot2)
 library(dplyr)
 library(dtplyr)
 library(DT)
 library(magrittr)
-remove.packages(pkgs, lib, version)
+
 
 suppressMessages({
   library(faosws)
