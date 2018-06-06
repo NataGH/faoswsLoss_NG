@@ -23,6 +23,12 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
   DataUseInt$timepointyears <- as.integer(DataUseInt$timepointyears)
   
   names(DataUseInt) <-tolower(names(DataUseInt))
+  ## Imputation function for data
+  x_impute <- function(x, fun) {
+    x[is.na(x)] <- fun(x, na.rm = TRUE)
+    return(x)
+  } 
+  
   if(LocalRun){
     CountryGroup <- as.data.table(read.csv(paste(githubsite, 'General/a2017regionalgroupings_SDG_02Feb2017.csv', sep='')))
     Temperature <-  as.data.table(read.csv(paste(githubsite, 'General/Temp_climate.csv', sep='')))
@@ -393,19 +399,20 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
       }
       pb <- txtProgressBar()
       ii=0
+      
       if(Impute == "ctry"){
         for(ir in 1:length(VarNames)){
           for( j in unique(DataUseInt$geographicaream49)){
             i = ii /(length(unique(DataUseInt$geographicaream49))*length(VarNames))
             setTxtProgressBar(pb, i)
-            DataUseInt[geographicaream49 == j,VarNames[ir]] <- with(DataUseInt[geographicaream49 ==j,], impute(DataUseInt[[VarNames[ir]]], mean))
+            DataUseInt[geographicaream49 == j,VarNames[ir]] <- with(DataUseInt[geographicaream49 ==j,],  x_impute(DataUseInt[[VarNames[ir]]], mean))
             #DataUseInt[,VarNames[ir]] <- na.approx(DataUseInt[,VarNames[ir],with=FALSE], na.rm = T)
             ii =ii+1
           }}
       }  
       if(Impute == "var"){
         for(ir in 1:length(VarNames)){
-            DataUseInt[,VarNames[ir]] <- with(DataUseInt, impute(DataUseInt[[VarNames[ir]]], mean))
+            DataUseInt[,VarNames[ir]] <- with(DataUseInt, x_impute(DataUseInt[[VarNames[ir]]], mean))
           } 
       }
       if(Impute == "RF"){

@@ -14,9 +14,15 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   #	DataPred: is the data that needs estimates predicted (finalPredictData)
   #	HierarchicalCluster: is for the group/cluster ("foodgroupname" was the best preformer)
   Impute <- FALSE
+  
   CB <- function(dataIn){
     r = exp(dataIn)/(1+exp(dataIn)) 
     return(r)}
+  
+  x_impute <- function(x, fun) {
+    x[is.na(x)] <- fun(x, na.rm = TRUE)
+    return(x)
+  } 
   
   modelversion <- "0.1.0"
   
@@ -162,10 +168,10 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     # To impute data for the predictive set for missing observations in the explanatory data
     for(ir in 1:length(ImportVar)){
       for( j in unique(datapred$geographicaream49)){
-        datapred[geographicaream49 == j,ImportVar[ir]] <- with(datapred[geographicaream49 ==j,], impute(datapred[[ImportVar[ir]]], mean))
+        datapred[geographicaream49 == j,ImportVar[ir]] <- with(datapred[geographicaream49 ==j,], x_impute(datapred[[ImportVar[ir]]], mean))
         datapred[,ImportVar[ir]] <- na.approx(datapred[,ImportVar[ir],with=F], na.rm = T)
         
-        datamod[geographicaream49 == j,ImportVar[ir]] <- with(datamod[geographicaream49 ==j,], impute(datamod[[ImportVar[ir]]], mean))
+        datamod[geographicaream49 == j,ImportVar[ir]] <- with(datamod[geographicaream49 ==j,], x_impute(datamod[[ImportVar[ir]]], mean))
         datamod[,ImportVar[ir]] <- na.approx(datamod[,ImportVar[ir],with=F], na.rm = T)
         # if(is.integer(datapred[[ImportVar[ir]]])){
         #   datapred[geographicaream49 == j & is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- as.integer(sum(datapred[geographicaream49 == j,ImportVar[ir],with=F], na.rm=TRUE)/dim(na.omit(datapred[geographicaream49 == j,ImportVar[ir],with=F]))[1])

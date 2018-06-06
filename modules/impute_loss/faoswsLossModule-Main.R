@@ -236,7 +236,7 @@ if(updatemodel==1){
       
        duplicates <- FullSet %>%
          dplyr::group_by(geographicaream49,timepointyears,measureditemcpc) %>%
-         summarise(total.count=n())
+         dplyr::summarise(total.count= n())
        duplicates <-  as.data.table(duplicates %>% filter(total.count>1))
        collapse(duplicates[,keys_lower,with=FALSE], sep=";")
        
