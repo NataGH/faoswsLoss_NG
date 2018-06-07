@@ -74,7 +74,6 @@ if(CheckDebug()){
 
 names(CountryGroup)[names(CountryGroup) =="countryname"] <- "Country"
 names(CountryGroup)[names(CountryGroup) =="m49code"] <- "geographicaream49"
-CountryGroup[,c("iso2code","isocode") :=NULL]
 
 names(Losses)[names(Losses) =="Value"] <- "value_measuredelement_5126"
 names(Losses)[names(Losses) =="measuredItemSuaFbs"] <- "measureditemcpc"

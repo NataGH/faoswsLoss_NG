@@ -5,7 +5,6 @@
 ##' @export
 ##' 
 
-
 addHeadingsFCL = function(measuredItemFCL){ 
   ifelse(nchar(measuredItemFCL) == 2, 
          paste0("00",measuredItemFCL, sep = ""),

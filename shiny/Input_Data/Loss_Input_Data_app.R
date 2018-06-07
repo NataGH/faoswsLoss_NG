@@ -109,8 +109,6 @@ AggregateLoss[fsc_location =="SWS","fsc_location" ] <- "Official/Semi-Official -
 AggregateLoss[fsc_location =="sws_total","fsc_location" ] <- "Official/Semi-Official - National"
 AggregateLoss[fsc_location =="Calc","fsc_location" ] <- "Aggregated from multiple sources"
 
-unlist(names(AggregateLoss))
-
 LossFactorRaw[,"analyst" := NULL]
 LossFactorRaw[,"notes" := NULL]
 setnames(LossFactorRaw, old = c("geographicaream49","isocode","country","region","measureditemcpc","crop","timepointyears","loss_per_clean","percentage_loss_of_quantity",
@@ -368,7 +366,7 @@ server <- function(input, output, session) {
   })
 
   dataR1 <- reactive({
-    options(show.error.messages = FALSE)
+    #options(show.error.messages = FALSE)
     if((input$aggregation == "Country")) {
       LossFactorRaw %>% filter((Year %in% seq(input$Year[1],input$Year[2], by=1)) &
                             (Country %in% unlist(input$Country)) 
