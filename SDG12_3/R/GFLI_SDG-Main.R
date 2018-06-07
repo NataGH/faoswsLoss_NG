@@ -21,10 +21,8 @@ library(dplyr)
 library(dtplyr)
 library(openxlsx)
 library(tidyr)
-
-
 library(magrittr) 
-remove.packages(pkgs, lib, version)
+
 
 library(faosws)
 library(faoswsUtil)
@@ -34,10 +32,8 @@ suppressMessages({
   library(faosws)
   library(faoswsUtil)
   library(faoswsFlag)
-  library(lme4)
   library(data.table)
   library(magrittr)
-  library(reshape2)
   library(plyr)
   library(dplyr)
   
