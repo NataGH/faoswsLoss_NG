@@ -1,7 +1,7 @@
 Package: faoswsLoss
 Type: Package
 Title: Package to perform the computation of food loss FAO food balance sheets
-Version: 1.7
+Version: 1.8
 Date: 2018-06-08
 Authors@R: c(person("Alicia", "English", role = c("aut", "cre"), email = "alicia.english@fao.org"), person("Natalia", "Golini", role = c("aut"), email =
                   "natalia.golini@fao.org"), person("Michael C. J.", "Kao", role = "aut", email = "michael.kao@fao.org"), person("Josh", "Browning", role =
