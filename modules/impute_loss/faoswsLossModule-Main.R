@@ -25,7 +25,7 @@ library(dplyr)
 library(dtplyr)
 library(rpart)
 library(scales)
-library(reshape)
+
 library(lmtest)
 library(magrittr) 
 
@@ -42,7 +42,6 @@ suppressMessages({
     library(lme4)
     library(data.table)
     library(magrittr)
-    library(reshape2)
     library(plyr)
     library(dplyr)
     
