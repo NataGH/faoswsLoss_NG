@@ -166,7 +166,7 @@ if(weights == "intl_prices"){
   Weights <- intPrice2005Selected[, c("itemname","measureditemcpc","intprice")]
   
   #distinct(intPrice2005Selected,measuredItemCPC)
-}if(weights == "calories"){
+}else if(weights == "calories"){
   
   
 }

@@ -7,7 +7,6 @@
 library(openxlsx)
 library(tidyr)
 library(dplyr)
-library(reshape)
 
 reporting <- function(ReportingYear,ComparisonYear,BaseYear){
   # 
@@ -86,17 +85,17 @@ reporting <- function(ReportingYear,ComparisonYear,BaseYear){
 
   BasketLosses <- merge(basket,DataForIndex, by=c(keys_lower[1],keys_lower[3]))
   BasketLosses <- BasketLosses[,c("measureditemcpc","geographicaream49","timepointyears","value_measuredelement_5126"),with=F]
-  BasketLosses <- cast(BasketLosses, measureditemcpc+geographicaream49 ~ timepointyears, value= "value_measuredelement_5126")
+  BasketLosses <- dcast(BasketLosses, measureditemcpc+geographicaream49 ~ timepointyears, value.var= "value_measuredelement_5126")
   BasketLossesC  <-BasketLosses[,names(BasketLosses)[names(BasketLosses) %in% c(keys_lower,ComparisonYear[1]:ComparisonYear[2])]]
   Basket_Losses_yr <- merge(basket,BasketLossesC, by=c(keys_lower[1],keys_lower[3]))
   names(Basket_Losses_yr)[names(Basket_Losses_yr) %in% c(ComparisonYear[1]:ComparisonYear[2])] <- paste("value_measuredelement_5126_",ComparisonYear[1]:ComparisonYear[2], sep="")
   Basket_Losses_yr $geographicaream49 <- as.character(Basket_Losses_yr$geographicaream49)
-  Basket_Losses_yr <- merge(Basket_Losses_yr ,CountryGroup[,c("geographicaream49","Country")], by=c("geographicaream49"), all.x =TRUE)
+  #Basket_Losses_yr <- merge(Basket_Losses_yr ,CountryGroup[,c("geographicaream49","Country")], by=c("geographicaream49"), all.x =TRUE)
   
   ### FAO member Countries 
   FAO_regions_FLI  <- GFLI_SDG_fun( BaseYear,keys_lower,"fao_region",basket,basketKeys,DataForIndex) 
   FAO_regions_FLI2 <- FAO_regions_FLI %>% filter( timepointyears %in% c(ComparisonYear[1]:ComparisonYear[2]))
-  FAO_regions_FLI2a <- as.data.table(cast(FAO_regions_FLI2, fao_region ~timepointyears, value="Index"))
+  FAO_regions_FLI2a <- as.data.table(dcast(FAO_regions_FLI2, fao_region ~timepointyears, value.var="Index"))
   FAO_regions_FLI2a[,"Delta (Δ)":= FAO_regions_FLI2a[,ComparisonYear[2],with=F]/FAO_regions_FLI2a[,ComparisonYear[1], with=F]]
   FAO_regions_FLI2a[,"geographicaream49":= ""]
   Report_Regions <- FAO_regions_FLI2a[,c("geographicaream49", "fao_region",ComparisonYear[1],ComparisonYear[2],"Delta (Δ)"),with=F]
@@ -104,7 +103,7 @@ reporting <- function(ReportingYear,ComparisonYear,BaseYear){
   
   FAO_globalCov_FLI <- GFLI_SDG_fun( BaseYear,keys_lower,"fao_operationalcoverage",basket,basketKeys,DataForIndex) 
   FAO_globalCov_FLI2 <- FAO_globalCov_FLI %>% filter( fao_operationalcoverage == 1 & timepointyears %in% c(ComparisonYear[1]:ComparisonYear[2]))
-  FAO_globalCov_FLI2a <- as.data.table(cast(FAO_globalCov_FLI2 ,fao_operationalcoverage ~ timepointyears, value="Index"))
+  FAO_globalCov_FLI2a <- as.data.table(dcast(FAO_globalCov_FLI2 ,fao_operationalcoverage ~ timepointyears, value.var="Index"))
   FAO_globalCov_FLI2a[,"Delta (Δ)":= FAO_globalCov_FLI2a[,ComparisonYear[2],with=F]/FAO_globalCov_FLI2a[,ComparisonYear[1], with=F]]
   FAO_globalCov_FLI2a[,"geographicaream49":= ""]
   FAO_globalCov_FLI2a[,"fao_operationalcoverage":= "FAO Operational Countries (149)"]
@@ -113,7 +112,7 @@ reporting <- function(ReportingYear,ComparisonYear,BaseYear){
   
   GFLI <- GFLI_SDG_fun( BaseYear,keys_lower,"WORLD",basket,basketKeys,DataForIndex) 
   GFLI2 <- GFLI %>% filter(timepointyears %in% c(ComparisonYear[1]:ComparisonYear[2]))
-  GFLI2a <- as.data.table(cast(GFLI2 , WORLD ~ timepointyears, value="Index"))
+  GFLI2a <- as.data.table(dcast(GFLI2 , WORLD ~ timepointyears, value.var="Index"))
   GFLI2a[,"Delta (Δ)":= GFLI2a[,ComparisonYear[2],with=F]/GFLI2a[,ComparisonYear[1], with=F]]
   GFLI2a[,"geographicaream49":= ""]
   Report_G <-  GFLI2a[,c("geographicaream49", "WORLD",ComparisonYear[1],ComparisonYear[2],"Delta (Δ)"),with=F]

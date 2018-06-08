@@ -19,7 +19,7 @@ License: FAO
 Depends: faosws (>= 0.6.1)
 Imports: stats4, plm, ggplot2, data.table, plyr, dplyr, dtplyr, rpart, scales,
          reshape, lmtest, magrittr, faoswsFlag, faoswsUtil,
-         openxlsx,tidyr,reshape
+         openxlsx,tidyr
 swsDatasetDepends: agriculture:aproduction, lossWaste:loss
 swsModuleDepends: faoswsProduction
 LazyData: true
