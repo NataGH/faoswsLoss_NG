@@ -5,7 +5,7 @@
 #' @import faoswsFlag faosws
 #' @export getLossData_LossDomain
 
-getLossData_LossDomain = function(areaVar,itemVar,yearVar,elementVar,selectedYear,KeyEle, protected = FALSE){
+getLossData_LossDomain <- function(areaVar,itemVar,yearVar,elementVar,selectedYear,KeyEle, protected = FALSE){
   #install.packages("faoswsFlags")
 
   ## define measured elements
