@@ -2,7 +2,6 @@
 #' 
 #' @author Alicia English Marco Migone
 #' @export GFLI_SDG_fun
-#' 
 
 GFLI_SDG_fun <- function(BaseYear,keys_lower,aggregation,basket,basketKeys,DataForIndex){
     # Description:

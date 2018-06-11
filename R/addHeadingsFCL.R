@@ -1,9 +1,9 @@
-##' addHeadingsFCL
-##'
-##' Function to add headings to fcl codes in order to have 4 digits fcl codes
-##' 
-##' @export addHeadingsFCL 
-##' 
+#' addHeadingsFCL
+#'
+#' Function to add headings to fcl codes in order to have 4 digits fcl codes
+#' 
+#' @export addHeadingsFCL 
+
 
 addHeadingsFCL = function(measuredItemFCL){ 
   ifelse(nchar(measuredItemFCL) == 2, 

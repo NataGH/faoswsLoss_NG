@@ -5,8 +5,8 @@
 ##' @param flags Character vector with the Faostat flag.
 ##' @return Vector with the method flag.
 ##'
-##' @export getFlagMethod 
-##'
+##' @export getFlagMethod
+
 
 getFlagMethod <- function(flags){
     

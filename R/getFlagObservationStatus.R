@@ -1,12 +1,12 @@
-##' Get Flag Observation Status
-##'
-##' This function converts the Faostat flag to the flag osbervation status
-##'
-##' @param flags Character vector with the Faostat flag.
-##' @return Vector with the method flag.
-##'
-##' @export getFlagObservationStatus
-##'
+#' Get Flag Observation Status
+#'
+#' This function converts the Faostat flag to the flag osbervation status
+#'
+#' @param flags Character vector with the Faostat flag.
+#' @return Vector with the method flag.
+#'
+#' @export getFlagObservationStatus
+
 
 
 getFlagObservationStatus <- function(flags){

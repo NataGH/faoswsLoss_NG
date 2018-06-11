@@ -4,8 +4,7 @@
 #' @aliases faoswsLoss
 #' 
 #' @author Alicia English 
-#' 
-#' 
+
 ######### Load all libraries ###########
 #install.packages('faosws')
 #install_github(repo = "SWS-Methodology/faoswsFlag")
