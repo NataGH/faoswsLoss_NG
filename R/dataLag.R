@@ -1,7 +1,7 @@
 #' Part of the FAO Loss Module
 #' 
 #' @author Alicia English
-#' @export
+#' @export dataLag
 
 # DataIn <- datamod
 # indexVar <- keys_lower

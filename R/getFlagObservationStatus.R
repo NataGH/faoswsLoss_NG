@@ -5,7 +5,7 @@
 ##' @param flags Character vector with the Faostat flag.
 ##' @return Vector with the method flag.
 ##'
-##' @export
+##' @export getFlagObservationStatus
 ##'
 
 

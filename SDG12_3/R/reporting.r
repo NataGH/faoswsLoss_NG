@@ -1,14 +1,16 @@
 #' Part of the FAO Loss Module
 #' 
 #' @author Alicia English 
-#' 
+#' @export reporting 
 #' 
 
-library(openxlsx)
-library(tidyr)
-library(dplyr)
+
 
 reporting <- function(ReportingYear,ComparisonYear,BaseYear){
+  
+  library(openxlsx)
+  library(tidyr)
+  library(dplyr)
   # 
   fileTemplates <- "C:\\Users\\ENGLISHA\\Documents\\faoswsLossa\\SDG12_3\\Excel\\"
   fileSave <- readline("Where would you like to save the file: ")  

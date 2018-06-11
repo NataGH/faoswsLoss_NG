@@ -89,7 +89,7 @@ if(CheckDebug() & !LocalRun){
       baseUrl = settings[["server"]],
       token = settings[["token"]]
     )
-  
+
   Losses <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
   production <- getProductionData(areaVar,itemVar,yearVar,elementVar) # Value_measuredElement_5510
   fbsTree <- ReadDatatable("fbs_tree")

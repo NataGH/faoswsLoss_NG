@@ -2,7 +2,7 @@
 ##' 
 ##' Function to obtain production data at primary level
 #' @import  faosws
-##' @export
+##' @export getProductionData
 
 
 getProductionData = function(areaVar,itemVar,yearVar,elementVar){

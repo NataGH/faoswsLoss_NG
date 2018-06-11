@@ -1,7 +1,7 @@
 #' Part of the FAO Loss Module
 #' 
 #' @author Alicia English
-#' @export
+#' @export VariablesAdd1
 
 VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){  
   # Description:

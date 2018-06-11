@@ -1,7 +1,7 @@
 #' Part of the FAO Loss Module
 #' 
 #' @author Alicia English
-#' @export
+#' @export MultiExp
 
 MultiExp<- function(X, degree,depVar){
   # Allows the interaction of the varaible terms (X) to the specified degree, 
