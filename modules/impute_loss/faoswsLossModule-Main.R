@@ -110,10 +110,7 @@ if(CheckDebug()){
     token = settings[["token"]]
   )
   
-  CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
-  FAOCrops     <- ReadDatatable("fcl2cpc_ver_2_1")
-  ConvFactor1  <- ReadDatatable('flw_lossperfactors_')
-  fbsTree      <- ReadDatatable("fbs_tree")
+
   
 }else if(CheckDebug() & LocalRun){
   #Load local last dataset
@@ -145,7 +142,10 @@ if(CheckDebug()){
     save(last.dump, file = file.path(filename, "last.dump.RData"))
   })
 } 
-
+CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+FAOCrops     <- ReadDatatable("fcl2cpc_ver_2_1")
+ConvFactor1  <- ReadDatatable('flw_lossperfactors_')
+fbsTree      <- ReadDatatable("fbs_tree")
 
 
 CountryGroup$country <- tolower(CountryGroup$countryname)
@@ -183,7 +183,7 @@ finalModelData =
     lossData[, fsc_location := "SWS"]
     lossData <- lossData %>% filter(!loss_per_clean > 1)
     names(lossData) <- tolower(names(lossData))
-    lossData <- merge(lossData,CountryGroup[,c("isocode","geographicaream49", "country")],  by = c("geographicaream49"), all.x = TRUE, all.y = FALSE)
+    lossData <- merge(lossData,CountryGroup[,c("isocode","geographicaream49", "country"), with=FALSE],  by = c("geographicaream49"), all.x = TRUE, all.y = FALSE)
     #lossData <- merge(lossData,FAOCrops[,c("measureditemcpc","crop")],  by = c("measureditemcpc"), all.x = TRUE, all.y = FALSE)
     
     #write.table(highLosses,paste(githubsite, 'General/highLosses',date, '.csv', sep=''),sep=',' )
