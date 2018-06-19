@@ -79,17 +79,17 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
   ConvFactor_cal2 <- unique(DataUseInt[,keys_lower ,with=FALSE])
   names(ConvFactor_cal) <- tolower(names(ConvFactor_cal))
   names(ConvFactor_calYr) <- tolower(names(ConvFactor_calYr))
-  ConvFactor_cal$geographicaream49 <- as.integer(ConvFactor_cal$geographicaream49)
+  #ConvFactor_cal$geographicaream49 <- as.integer(ConvFactor_cal$geographicaream49)
   if(!any(fgroup %in% c("2943", "2946","2945","2949","2948"))){   
   names(Temperature)[names(Temperature) == 'year'] <- "timepointyears"
   Temperature <- merge( Temperature , CountryGroup[,c("geographicaream49", "isocode"), with=FALSE], by.x = c('isocode'),
                       by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
-  Temperature <-Temperature %>% filter(geographicaream49 %in%  ConvFactor_cal$geographicaream49  & timepointyears %in%  ConvFactor_cal$timepointyears)
+  Temperature <-Temperature %>% filter(geographicaream49 %in%  ConvFactor_cal[['geographicaream49']] & timepointyears %in%   ConvFactor_cal[['timepointyears']])
   
   names(Precipitation)[names(Precipitation) == 'year'] <- "timepointyears"
   Precipitation <- merge(Precipitation, CountryGroup[,c("geographicaream49", "isocode"), with=FALSE], by.x = c('isocode'),
                         by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
-  Precipitation <-Precipitation %>% filter(geographicaream49 %in%  unique(ConvFactor_cal$geographicaream49)  & timepointyears %in%  unique(ConvFactor_cal$timepointyears))
+  Precipitation <-Precipitation %>% filter(geographicaream49 %in%  unique( ConvFactor_cal[['geographicaream49']])  & timepointyears %in%  unique( ConvFactor_cal[['timepointyears']]))
   
   CropCalendar <- merge(CropCalendar, CountryGroup[,c("geographicaream49", "isocode"), with=FALSE], by.x = c("geographicaream49"),
                          by.y = c("geographicaream49"), all.x = TRUE, all.y = FALSE)
@@ -113,7 +113,8 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
   
   Temperature2[is.na(temperature_c)&!is.na(month),temperature_c := coefficients(tempPred)[1] +rowSums(mapply(`*`,coefficients(tempPred)[-1],Temperature2[is.na(temperature_c)&!is.na(month) ,names(coefficients(tempPred)[-1]),with=F]), na.rm=TRUE)]
   Precipitation2[is.na(rainfall_mm)&!is.na(month),rainfall_mm := coefficients(PrecPred)[1] +rowSums(mapply(`*`,coefficients(PrecPred)[-1],Precipitation2[is.na(rainfall_mm)&!is.na(month) ,names(coefficients(PrecPred)[-1]),with=F]), na.rm=TRUE)]
-
+  Temperature2[,isocode:=NULL]
+  Precipitation2[,isocode:=NULL]
 
     DataUseInt <- merge(DataUseInt, Temperature2, by = keys_lower, all.x = TRUE)  ### FInal Data set @@
     DataUseInt <- merge(DataUseInt, Precipitation2,by = keys_lower, all.x = TRUE)  ### FInal Data set @@

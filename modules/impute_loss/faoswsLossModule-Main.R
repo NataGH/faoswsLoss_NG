@@ -268,6 +268,7 @@ if(updatemodel==1){
   # Adds the explanatory Varaibles,
   Predvar <- c()
   Data_Use_train0 <- VariablesAdd1(FullSet,keys_lower,Predvar,FALSE,'00')
+  ## These options change the method of estimating the missing data in the explanatory dataset
   #Data_Use_train <- VariablesAdd1(FullSet,keys_lower,Predvar,"ctry",'00')
   #Data_Use_train2 <- VariablesAdd1(FullSet,keys_lower,Predvar,"var",'00')
   #Data_Use_train3 <- VariablesAdd1(FullSet,keys_lower,Predvar,"RF",'00')
