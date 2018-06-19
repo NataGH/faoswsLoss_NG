@@ -59,7 +59,7 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
 
   names(CountryGroup) <- gsub("[[:punct:]]","_",names(CountryGroup))
   
-  DataUseInt <- merge(DataUseInt , CountryGroup[, c('geographicaream49', 'isocode')], by.x = c("geographicaream49"),
+  DataUseInt <- merge(DataUseInt , CountryGroup[, c('geographicaream49', 'isocode'), with=FALSE], by.x = c("geographicaream49"),
                       by.y = c("geographicaream49"), all.x = TRUE, all.y = FALSE)
 
   DataUseInt[,lag1yr:= timepointyears - 1]
@@ -82,16 +82,16 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
   ConvFactor_cal$geographicaream49 <- as.integer(ConvFactor_cal$geographicaream49)
   if(!any(fgroup %in% c("2943", "2946","2945","2949","2948"))){   
   names(Temperature)[names(Temperature) == 'year'] <- "timepointyears"
-  Temperature <- merge( Temperature , CountryGroup[,c("geographicaream49", "isocode")], by.x = c('isocode'),
+  Temperature <- merge( Temperature , CountryGroup[,c("geographicaream49", "isocode"), with=FALSE], by.x = c('isocode'),
                       by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
   Temperature <-Temperature %>% filter(geographicaream49 %in%  ConvFactor_cal$geographicaream49  & timepointyears %in%  ConvFactor_cal$timepointyears)
   
   names(Precipitation)[names(Precipitation) == 'year'] <- "timepointyears"
-  Precipitation <- merge(Precipitation, CountryGroup[,c("geographicaream49", "isocode")], by.x = c('isocode'),
+  Precipitation <- merge(Precipitation, CountryGroup[,c("geographicaream49", "isocode"), with=FALSE], by.x = c('isocode'),
                         by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
   Precipitation <-Precipitation %>% filter(geographicaream49 %in%  unique(ConvFactor_cal$geographicaream49)  & timepointyears %in%  unique(ConvFactor_cal$timepointyears))
   
-  CropCalendar <- merge(CropCalendar, CountryGroup[,c("geographicaream49", "isocode")], by.x = c("geographicaream49"),
+  CropCalendar <- merge(CropCalendar, CountryGroup[,c("geographicaream49", "isocode"), with=FALSE], by.x = c("geographicaream49"),
                          by.y = c("geographicaream49"), all.x = TRUE, all.y = FALSE)
   
   CropCalendar <- CropCalendar[, c("geographicaream49","measureditemcpc","crop", "harvesting_month_onset", "harvesting_month_end")]

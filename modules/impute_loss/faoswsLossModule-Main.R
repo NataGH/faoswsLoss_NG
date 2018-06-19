@@ -246,7 +246,7 @@ if(updatemodel==1){
        FullSet[,c("index","total.count","Keep") :=NULL]
     }else{FullSet <- lossData}
   
-  FullSet <-join(FullSet, FAOCrops[,c("measureditemcpc","crop")], by= c("measureditemcpc"))
+  FullSet <-join(FullSet, FAOCrops[,c("measureditemcpc","crop"), with=FALSE], by= c("measureditemcpc"))
   FullSet <- FullSet %>% filter(loss_per_clean != 0)
   
   #write.table(FullSet,paste(githubsite, 'General/FullSet.csv', sep=''),sep=',' )
@@ -260,7 +260,7 @@ if(updatemodel==1){
   AddDeletions(changeset, newdat)
   Finalise(changeset)
   ## Add
-  AddInsertions(changeset,  FullSet[,c("geographicaream49","timepointyears","measureditemcpc","isocode","country","crop","loss_per_clean","fsc_location"),])
+  AddInsertions(changeset,  FullSet[,c("geographicaream49","timepointyears","measureditemcpc","isocode","country","crop","loss_per_clean","fsc_location"), with=FALSE])
   Finalise(changeset)
 
   #FullSet <- ReadDatatable("aggregate_loss_table")
