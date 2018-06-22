@@ -40,14 +40,19 @@ FSC_Markov <- function(RawData,opt){
   FullSeta <-   FullSet[1,,] 
   TransitionMatrix = matrix(0,1,9)
   
+  #Splits the location to the first observation 
+  RawData$fsc_location1 = sapply(strsplit(RawData$fsc_location,"/"), '[', 1)
+  locations <- c("farm","transport","storage", "trader","wholesale", "processing", "retail", "wholesupplychain", "sws_total")
+  RawData <- RawData %>% filter(fsc_location1 %in% locations)
+  
   # Sets the stage sequence for the markov chain
-  colnames(TransitionMatrix) = c("farm","transport","storage", "trader","wholesale", "processing", "retail", "wholesupplychain", "sws_total")
+  colnames(TransitionMatrix) = locations
   count = 1
   for(i in unique(RawData$geographicaream49)){
     # this first level selects the data for a specific country
     
     data2 <- RawData %>% filter(geographicaream49 == i)
-    data2$fsc_location1 = sapply(strsplit(data2$fsc_location,"/"), '[', 1)
+    
     for( ii in unique(data2$measureditemcpc)){
       # this first level selects the data for a specific crop
       data3 <- data2 %>% filter(measureditemcpc == ii)

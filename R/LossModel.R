@@ -1,3 +1,7 @@
+#' Part of the FAO Loss Module
+#' 
+#' @author Alicia English
+#' @export LossModel
 
 LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalCluster,keys_lower){
   # Description:
@@ -24,7 +28,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     return(x)
   } 
   
-  modelversion <- "0.1.0"
+  modelversion <- "0.1.12"
   
   minobs <- 4
   minctry <- 2
@@ -37,6 +41,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   flagValidTableLoss <- as.data.table(flagValidTable)
   protectedFlag <- flagValidTableLoss[flagValidTableLoss$Protected == TRUE,] %>%
     .[, flagCombination := paste(flagObservationStatus, flagMethod, sep = ";")]
+  timeSeriesDataToBeImputed$flagcombination <- " "
   timeSeriesDataToBeImputed[,flagcombination :=  paste(flagobservationstatus, flagmethod, sep = ";")] 
   
   timeSeriesDataToBeImputed[flagcombination %in% protectedFlag$flagCombination,Protected := TRUE,]
@@ -81,13 +86,14 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
   
   timeSeriesDataToBeImputedGroups <- join(timeSeriesDataToBeImputed, fbsTree, by = c("measureditemcpc"),type= 'left', match='all')
-  
+  fbsTree$GFLI_Basket <- 'NA'
   fbsTree[foodgroupname %in% c(2905), GFLI_Basket :='Cereals',]
   fbsTree[foodgroupname %in% c(2911), GFLI_Basket :='Pulses',]
   fbsTree[foodgroupname %in% c(2919,2918), GFLI_Basket :='Fruits & Vegetables',]
   fbsTree[foodgroupname %in% c(2907,2913), GFLI_Basket :='Roots, Tubers & Oil-Bearing Crops',]
   fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), GFLI_Basket :='Other',]
   fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), GFLI_Basket :='Animals Products & Fish and fish products',] # |foodGroupName == "PRODUCTS FROM FISH",
+  fbsTree[GFLI_Basket == "NA", 'GFLI_Basket'] <- NA
   #unique(timeSeriesDataToBeImputedGroups $foodgroupname)[!is.na(unique(timeSeriesDataToBeImputedGroups $foodgroupname))])
   ##### PART 2 - Random Forest ####
   for (vi in 1:length(na.omit(unique(fbsTree$GFLI_Basket)))){
@@ -118,7 +124,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
       if(is.na(nam)){break}
       if(sapply(data1[,nam,with=F],class)== "numeric"){ 
         corrV  <- cor(data1[,nam,with=F],data1[,colnames(data1) %in% names(nums1[nums1==T]) ,with=F],use="pairwise.complete.obs")
-        corrV2 <- colnames(corrV)[corrV >.85]
+        corrV2 <- colnames(corrV)[corrV >.85 | is.na(corrV) ]
         corrV2  <- corrV2[!corrV2 %in% c(keys_lower,nam)]
         dropCV <- c(dropCV,na.omit(corrV2))
         if(length(unique(na.omit(corrV2))) >0){
@@ -164,6 +170,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     names(DataPred) <- gsub("[[:punct:]]","_",names(DataPred)) 
     
     datapred <- DataPred
+    datamod$measureditemcpc<- as.factor(datamod$measureditemcpc)
     
     # To impute data for the predictive set for missing observations in the explanatory data
     for(ir in 1:length(ImportVar)){
@@ -173,6 +180,8 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
         
         datamod[geographicaream49 == j,ImportVar[ir]] <- with(datamod[geographicaream49 ==j,], x_impute(datamod[[ImportVar[ir]]], mean))
         datamod[,ImportVar[ir]] <- na.approx(datamod[,ImportVar[ir],with=F], na.rm = T)
+        
+        var(datamod)
         # if(is.integer(datapred[[ImportVar[ir]]])){
         #   datapred[geographicaream49 == j & is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- as.integer(sum(datapred[geographicaream49 == j,ImportVar[ir],with=F], na.rm=TRUE)/dim(na.omit(datapred[geographicaream49 == j,ImportVar[ir],with=F]))[1])
         # }
@@ -195,13 +204,14 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     
     #paste("factor(", keys_lower[3], ")",sep="", collapse= " + "),'+',
     mod2_rlm <- lm(as.formula(formula), data = datamod)
-    mod2_rand <- plm::plm(as.formula(formula), data = datamod , index=c("measureditemcpc"), model ="random")
-    mod2_red  <- plm::plm(as.formula(formula4), data = datamod , index=c("measureditemcpc"), model ="random")
+
+    mod2_rand <- plm(as.formula(formula), data = datamod , index=c("measureditemcpc"), model ="pooling")
+    #mod2_red  <- plm(as.formula(formula4), data = datamod , index=c("geographicaream49"), model ="random")
     
     
     CB(mod2_rlm$coefficients[1] + mod2_rlm$coefficients[names(mod2_rlm$coefficients)=="timepointyears"]*2008)
     CB(mod2_rand$coefficients[1]+ mod2_rand$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)
-    CB(mod2_red$coefficients[1]+ mod2_red$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)
+    #CB(mod2_red$coefficients[1]+ mod2_red$coefficients[names(mod2_rand$coefficients)=="timepointyears"]*2008)
     
     modelspec = 'random'
     # Given the unbalanced aspects of the panels, for some cases it creates heteroskedastic errors which skew the data beyond the max/min of reasonable estimates
@@ -340,7 +350,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
       datapred[,flagcombination := 'I;e',]
       datapred[,protected := FALSE,]
       medianLoss <- median(datapred$value_measuredelement_5126, na.rm=TRUE)
-      medianLossRaw <- median(unlist(Data[measureditemcpc %in% CPCs,"loss_per_clean"]))
+      medianLossRaw <- median(unlist(Data[measureditemcpc %in% CPCs,"loss_per_clean", with=F]))
       print(paste('average loss:',medianLoss*100, "%"))
       
       print(paste('average loss Raw:',medianLossRaw*100, "%"))
@@ -371,7 +381,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     
     ##### Save model parameters
     
-    SavResult <- list(cluster=name,formula=formula,coeffnames = paste(unlist(names(coefficients(mod2))), collapse = "##"),mean_intercept=mean(ercomp(mod2)$theta),coeff =paste(unlist(coefficients(mod2)), collapse = "##"),
+    SavResult <- list(cluster=name,formula=formula,coeffnames = paste(unlist(names(coefficients(mod2))), collapse = "##"),mean_intercept= mod2_rand$coefficients[1],coeff =paste(unlist(coefficients(mod2)), collapse = "##"),
                       coeffsig=paste(unlist(coeffSig), collapse = "##"), coeffindex=paste(unlist(coeffindex), collapse = "##"), coeffdv= paste(unlist(coeffDV), collapse = "##") )
     
     lossmodelruns = as.data.table(SavResult)
@@ -391,7 +401,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   }
   
   # Multiplies loss percentages by production
-  timeSeriesDataToBeImputed <- merge(timeSeriesDataToBeImputed,production, by.x = (keys_lower), by.y = (keys_lower), all.x = TRUE, all.y = FALSE)
+  timeSeriesDataToBeImputed <- merge(timeSeriesDataToBeImputed,production[,c("geographicaream49", "measuredelement", "measureditemcpc", "timepointyears", "value_measuredelement_5510"), with=F], by.x = (keys_lower), by.y = (keys_lower), all.x = TRUE, all.y = FALSE)
   timeSeriesDataToBeImputed[,value_measuredelement_5126 := loss_per_clean,]
   timeSeriesDataToBeImputed[,value_measuredelement_5016 := value_measuredelement_5126*value_measuredelement_5510,]
   timeSeriesDataToBeImputed <- timeSeriesDataToBeImputed %>% filter(!is.na(value_measuredelement_5016))

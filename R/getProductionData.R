@@ -36,20 +36,24 @@ getProductionData = function(areaVar,itemVar,yearVar,elementVar){
 
   
   ## Pivot to vectorize yield computation
-  productionPivot = c(
-    Pivoting(code = areaVar, ascending = TRUE),
-    Pivoting(code = itemVar, ascending = TRUE),
-    Pivoting(code = yearVar, ascending = FALSE),
-    Pivoting(code = elementVar, ascending = TRUE)
-  )
+  # productionPivot = c(
+  #   Pivoting(code = areaVar, ascending = TRUE),
+  #   Pivoting(code = itemVar, ascending = TRUE),
+  #   Pivoting(code = yearVar, ascending = FALSE),
+  #   Pivoting(code = elementVar, ascending = TRUE)
+  # )
   
   ## Query the data
+  # productionQuery = GetData(
+  #   key = productionKey,
+  #   flags = TRUE,
+  #   normalized = FALSE,
+  #   pivoting = productionPivot
+  # )
+  
   productionQuery = GetData(
     key = productionKey,
-    flags = TRUE,
-    normalized = FALSE,
-    pivoting = productionPivot
-  )
+    flags = TRUE)
   
   
   ## Convert time to numeric

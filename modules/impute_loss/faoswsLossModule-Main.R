@@ -17,7 +17,6 @@
 
 
 library(stats4)
-library(plm)
 library(ggplot2)
 library(data.table)
 library(plyr)
@@ -25,6 +24,7 @@ library(dplyr)
 library(dtplyr)
 library(rpart)
 library(scales)
+library(plm)
 
 library(lmtest)
 library(magrittr) 
@@ -63,8 +63,9 @@ DataCollectionTags_all <- c("Expert Opinion","-","SWS","NationalStatsYearbook"
                             ,"APHLIS","NP","Laboratory Trials","Modelled"                     
                             ,"Field Trial","Crop Cutting Field Experiment","Census" )
 
-DataCollectionTags_represent <- c("SWS","NationalStatsYearbook","NonProtected","NationalAcctSys","FBS/APQ","Census",
-                                      "APHLIS", "Expert Opinion","Survey","Declarative","-","LitReview")
+DataCollectionTags_represent <- c("SWS","APHLIS","Expert Opinion","Survey","Declarative")
+#  c("SWS","NationalStatsYearbook","NonProtected","NationalAcctSys","FBS/APQ","Census",
+#                                      "APHLIS", "Expert Opinion","Survey","Declarative","-","LitReview")
 ExternalDataOpt <- DataCollectionTags_represent
 
 # For aggregating the subnational using the markov function
@@ -156,19 +157,22 @@ FAOCrops[, "measureditemcpc" := addHeadingsCPC(FAOCrops$cpc)]
 
 names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
 names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
+
+fbsTree$GFLI_Basket <- 'NA'
 fbsTree[foodgroupname %in% c(2905), GFLI_Basket :='Cereals',]
 fbsTree[foodgroupname %in% c(2911), GFLI_Basket :='Pulses',]
 fbsTree[foodgroupname %in% c(2919,2918), GFLI_Basket :='Fruits & Vegetables',]
 fbsTree[foodgroupname %in% c(2907,2913), GFLI_Basket :='Roots, Tubers & Oil-Bearing Crops',]
 fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), GFLI_Basket :='Other',]
 fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), GFLI_Basket :='Animals Products & Fish and fish products',] # |foodGroupName == "PRODUCTS FROM FISH",
+fbsTree[GFLI_Basket == "NA", 'GFLI_Basket'] <- NA
 
-ConvFactor1[,loss_per_clean := loss_per_clean/100]
 #####  Runs the model and collects the needed data  #####
 finalModelData = 
   {
     production <- getProductionData(areaVar,itemVar,yearVar,elementVar) # Value_measuredElement_5510
     lossProtected <- getLossData(areaVar,itemVar,yearVar,elementVar,selectedYear,protected = TRUE)     # Value_measuredElement_5016
+    names(production)[ names(production) == "Value"] <-  "value_measuredelement_5510"
     names(lossProtected)[ names(lossProtected) == "Value"] <-  "value_measuredelement_5016"
     names(lossProtected)[ names(lossProtected) == "measuredItemSuaFbs"] <-  "measureditemcpc"
     names(lossProtected) <- tolower(names(lossProtected))
@@ -220,14 +224,16 @@ if(updatemodel==1){
   ########### Loss Factor Data and Aggregation ################### 
   ## This section imports the data of the loss factors and then merges it with the country designations for the SDG 
   if(subnationalestimates){
-       # brings in the current file of converstion factors 
-
+       # brings in the current file of converstion factors and divides by 100
+       ConvFactor1[,loss_per_clean := loss_per_clean/100]
+       # Filters out the non-representative observations
        ConvFactor1  <- ConvFactor1 %>% filter(tag_datacollection %in%  ExternalDataOpt)
+       ConvFactor1  <- ConvFactor1 %>% filter(!is.na(loss_per_clean ))
        ConvFactor1$measureditemcpc <- addHeadingsCPC(ConvFactor1$measureditemcpc)
        names(ConvFactor1)[names(ConvFactor1)=='year'] <-'timepointyears'
        
        ## Runs the Markov Model to standardize estimates 
-       markov <- FSC_Markov(ConvFactor1,MarkovOpt)
+       markov <- FSC_Markov(RawData=ConvFactor1,opt=MarkovOpt)
        FullSet <- rbind(markov,lossData, fill=T)
        FullSet[,index :=rownames(FullSet)]
        k2 <- names(FullSet)
