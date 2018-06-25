@@ -1,21 +1,18 @@
 Package: faoswsLoss
 Type: Package
 Title: Package to perform the computation of food loss FAO food balance sheets
-Version: 1.11
-Date: 2018-06-11
-Authors@R: c(person("Alicia", "English", role = c("aut", "cre"), email = "alicia.english@fao.org"),
-             person("Natalia", "Golini", role = c("aut"), email = "natalia.golini@fao.org"), person("Michael C. J.",
-             "Kao", role = "aut", email = "michael.kao@fao.org"), person("Josh", "Browning", role = "ctb", email =
-             "joshua.browning@fao.org"), person("Bruno Caetano", "Vidigal", role = "ctb", email =
-             "bruno.caetanovidigal@fao.org"))
-Description: This package provides all the functions to perfom computation of food loss for the FAO food balance
-             sheets and the SDG FLI. The first model was developed by Michael Kao and then modified by Natalia
-             Golini. The latest iteration was developed by Alicia English
+Version: 1.12
+Date: 2018-06-25
+Authors@R: c(person("Alicia", "English", role = c("aut", "cre"), email = "alicia.english@fao.org"), person("Natalia", "Golini", role = c("aut"),
+                email = "natalia.golini@fao.org"), person("Michael C. J.", "Kao", role = "aut", email = "michael.kao@fao.org"), person("Josh",
+                "Browning", role = "ctb", email = "joshua.browning@fao.org"), person("Bruno Caetano", "Vidigal", role = "ctb", email =
+                "bruno.caetanovidigal@fao.org"))
+Description: This package provides all the functions to perfom computation of food loss for the FAO food balance sheets and the SDG FLI. The first
+                model was developed by Michael Kao and then modified by Natalia Golini. The latest iteration was developed by Alicia English
 URL: https://github.com/SWS-Methodology/faoswsLoss
 License: FAO
 Depends: faosws (>= 0.6.1)
-Imports: stats4, plm, ggplot2, data.table, plyr, dplyr, dtplyr, rpart, scales, lmtest, magrittr, faoswsFlag,
-             faoswsUtil, openxlsx,tidyr
+Imports: stats4, plm, ggplot2, data.table, plyr, dplyr, dtplyr, rpart, scales, lmtest, magrittr, faoswsFlag, faoswsUtil, openxlsx,tidyr
 swsDatasetDepends: agriculture:aproduction, lossWaste:loss
 swsModuleDepends: faoswsProduction
 LazyData: true
