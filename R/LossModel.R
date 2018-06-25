@@ -435,16 +435,25 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   
   timeSeriesDataToBeImputed_5126 <- timeSeriesDataToBeImputed_5126 %>% filter(!is.na(flagMethod))
   
+  DataSave <- rbind(timeSeriesDataToBeImputed_5016,timeSeriesDataToBeImputed_5126)
   # Save to the SWS
   stats = SaveData(domain = "lossWaste",
                    dataset="loss",
-                   data = timeSeriesDataToBeImputed_5016
+                   data = DataSave
   )
   
-  
-  stats = SaveData(domain = "lossWaste",
-                   dataset="loss",
-                   data=timeSeriesDataToBeImputed_5126
+
+  sprintf(
+    "Module completed in %1.2f minutes.
+    Values inserted: %s
+    appended: %s
+    ignored: %s
+    discarded: %s",
+    difftime(Sys.time(), startTime, units = "min"),
+    stats[["inserted"]],
+    stats[["appended"]],
+    stats[["ignored"]],
+    stats[["discarded"]]
   )
   
   

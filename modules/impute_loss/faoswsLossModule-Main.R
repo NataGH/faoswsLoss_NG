@@ -6,15 +6,17 @@
 #' @author Alicia English Marco Mingione 
 #' 
 #' 
+#  This module does two things - 
+# 1) runs the Loss model for the Food Balance Sheets, which will select new variables and estimate new coefficients 
+# 2) If updatemodel =FALSE then, the model will take the last estimation of the model, pull the previous coefficients and apply them to the 
+#  selected year.
+
 ######### Load all libraries ###########
 #install.packages('faosws')
 #install_github(repo = "SWS-Methodology/faoswsFlag")
 #install_github(repo = "SWS-Methodology/faoswsUtil")
 #install.packages("faoswsLoss", repo = "http://hqlprsws1.hq.un.fao.org/fao-sws-cran/") 
 #install.packages("faoswsModules", repos = "http://hqlprsws1.hq.un.fao.org/fao-sws-cran/")
-
-
-
 
 library(stats4)
 library(ggplot2)
@@ -49,14 +51,32 @@ suppressMessages({
 
 
 ############# Computation Parameters #####################################
-## Options for the user - See full documentation for the User Oriented Work Flow 
-updatemodel <- TRUE
-LocalRun <- FALSE
+LocalRun <- FALSE # For if you are running the model on a local environment and loading data tables from local fiiles
 
-#For the model - using more than the SWS loss % for the 
-subnationalestimates <- TRUE
+## Options for the user - See full documentation for the User Oriented Work Flow #
+#updatemodel <- TRUE
+if (!exists('updatemodel', inherits = FALSE)) {
+  # the choice here is whether to run the model esetimates again potentially choosing new variables (TRUE)
+  # or to use the parameters already estimated (FALSE)
+  updatemodel <- swsContext.computationParams$updatemodel
+}
+if (!exists('subnationalestimates', inherits = FALSE)) {
+  # the choice here is whether to use the Subnational Data aggregated via the Markov function and combine with current SWS Estimates (TRUE)
+  # or to use the parameters already estimated (FALSE)
+  subnationalestimates <- swsContext.computationParams$subnationalestimates
+}
+if (!exists('selectedYear', inherits = FALSE)) {
+  ## Year should be a paramameter selected.
+  selectedYear_start <- swsContext.computationParams$selectedYear_start
+  selectedYear_end <- swsContext.computationParams$selectedYear_end
+  selectedYear = as.character(selectedYear_start:selectedYear_end)
+}
+selectedModelYear = as.character(1961:2016)
 
-# selecting data collection methods for aggregating the subnational estimates 
+
+# These are all the potential tags on the SUbnational Estimates
+# selecting data collection methods for aggregating the subnational estimates are
+# based on those that will give the best range of representative data
 DataCollectionTags_all <- c("Expert Opinion","-","SWS","NationalStatsYearbook" 
                             ,"NonProtected","Survey","Rapid Assessment","NationalAcctSys"              
                             ,"WRI Protocol","FBS/APQ","LitReview","Case Study"                   
@@ -68,17 +88,15 @@ DataCollectionTags_represent <- c("SWS","APHLIS","Expert Opinion","Survey","Decl
 #                                      "APHLIS", "Expert Opinion","Survey","Declarative","-","LitReview")
 ExternalDataOpt <- DataCollectionTags_represent
 
-# For aggregating the subnational using the markov function
+# For aggregating the subnational using the markov function, 
+# at present there is only the option for averaging the subnational estimates by stage. but could be altered in the future
+# to model subnational-stages as functions 
 MarkovOpt <- "aveatFSP"  # "model"
 
-## Year should be a paramameter selected.
-## selectedYear = as.character(1961:2015)
-selectedYear = as.character(1991:2016)
-selectedModelYear = as.character(1961:2016)
-
+## This option is how the clusters are arranged. At the moment the best performing cluster was based on FBS Food Groups for estimation 
+## This is not an option for the SWS user for consistency of estimates, should only be used to test the differences in estimates 
 HierarchicalCluster <- "foodgroupname" # "isocode", "SDG.Regions"
-VaribleSelection <- "RandomForest_geo"
-graphLoss <- 0
+
 ##########################################################
 
 areaVar = "geographicAreaM49"
@@ -287,8 +305,9 @@ if(updatemodel==1){
   timeSeriesDataToBeImputed2 <- LossModel(Data= Data_Use_train0,timeSeriesDataToBeImputed, production,HierarchicalCluster,keys_lower)
                                             
  
-}  
-if(updatemodel ==0){
+}
+
+if(updatemodel == FALSE){
   ###Computation parameters##
   LastRun <- TRUE
   Cluster2Update <- na.omit(unique(fbsTree$GFLI_Basket))
@@ -430,17 +449,28 @@ if(updatemodel ==0){
   
   timeSeriesDataToBeImputed_5126 <- timeSeriesDataToBeImputed_5126 %>% filter(!is.na(flagMethod))
   
+  DataSave <- rbind(timeSeriesDataToBeImputed_5016,timeSeriesDataToBeImputed_5126)
+
   # Save to the SWS
-  stats = SaveData(domain =  "lossWaste",
-                   dataset= "loss",
-                   data   = timeSeriesDataToBeImputed_5016
-  )
-  
-  
-  stats = SaveData(domain= "lossWaste",
+  stats = SaveData(domain = "lossWaste",
                    dataset="loss",
-                   data=timeSeriesDataToBeImputed_5126
+                   data = DataSave
   )
+  
+  
+  sprintf(
+    "Module completed in %1.2f minutes.
+    Values inserted: %s
+    appended: %s
+    ignored: %s
+    discarded: %s",
+    difftime(Sys.time(), startTime, units = "min"),
+    stats[["inserted"]],
+    stats[["appended"]],
+    stats[["ignored"]],
+    stats[["discarded"]]
+  )
+  
   
 }
 
