@@ -67,8 +67,8 @@ if (!exists('subnationalestimates', inherits = FALSE)) {
 }
 if (!exists('selectedYear', inherits = FALSE)) {
   ## Year should be a paramameter selected.
-  selectedYear_start <- swsContext.computationParams$selectedYear_start
-  selectedYear_end <- swsContext.computationParams$selectedYear_end
+  selectedYear_start <- swsContext.computationParams$selectedyear_start
+  selectedYear_end <- swsContext.computationParams$selectedyear_end
   selectedYear = as.character(selectedYear_start:selectedYear_end)
 }
 selectedModelYear = as.character(1961:2016)
