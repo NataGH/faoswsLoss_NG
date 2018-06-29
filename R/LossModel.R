@@ -436,30 +436,16 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   timeSeriesDataToBeImputed_5126 <- timeSeriesDataToBeImputed_5126 %>% filter(!is.na(flagMethod))
   
   DataSave <- rbind(timeSeriesDataToBeImputed_5016,timeSeriesDataToBeImputed_5126)
-  # Save to the SWS
-  stats = SaveData(domain = "lossWaste",
-                   dataset="loss",
-                   data = DataSave
-  )
-  
+  # # Save to the SWS
+  # stats = SaveData(domain = "lossWaste",
+  #                  dataset="loss",
+  #                  data = DataSave
+  # )
+  # 
 
-  sprintf(
-    "Module completed in %1.2f minutes.
-    Values inserted: %s
-    appended: %s
-    ignored: %s
-    discarded: %s",
-    difftime(Sys.time(), startTime, units = "min"),
-    stats[["inserted"]],
-    stats[["appended"]],
-    stats[["ignored"]],
-    stats[["discarded"]]
-  )
-  
-  
-  
+
   
   #write_json(list(DataIN = Data), paste(dirmain,'\\ModelResults\\',HierarchicalCluster,'_ModelResults.json',sep="")) 
-  return(list(timeSeriesDataToBeImputed_5016=timeSeriesDataToBeImputed_5016,timeSeriesDataToBeImputed_5126=timeSeriesDataToBeImputed_5126))
+  return(DataSave)
   
 }

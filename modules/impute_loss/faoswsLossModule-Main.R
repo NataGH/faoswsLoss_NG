@@ -65,14 +65,19 @@ if (!exists('subnationalestimates', inherits = FALSE)) {
   # or to use the parameters already estimated (FALSE)
   subnationalestimates <- swsContext.computationParams$subnationalestimates
 }
-if (!exists('selectedYear', inherits = FALSE)) {
+if (!exists('selectedYear_start')| !exists('selectedYear_end')) {
   ## Year should be a paramameter selected.
   selectedYear_start <- swsContext.computationParams$selectedyear_start
   selectedYear_end <- swsContext.computationParams$selectedyear_end
-  selectedYear = as.character(selectedYear_start:selectedYear_end)
+  selectedYear = as.character(as.numeric(selectedYear_start):as.numeric(selectedYear_end))
+}else{
+  selectedYear =  as.character(1990:2016)
 }
 selectedModelYear = as.character(1961:2016)
 
+print(paste("updatemodel: ", updatemodel))
+print(paste("subnationalestimates: ", subnationalestimates))
+print(paste('selectedYear:', paste(selectedYear, collapse = ', ')))
 
 # These are all the potential tags on the SUbnational Estimates
 # selecting data collection methods for aggregating the subnational estimates are
@@ -237,8 +242,8 @@ finalModelData =
     
     
 } 
- 
-if(updatemodel==1){  
+print(paste(" Number of lossData to estimate: ", length(lossData) ))
+if(updatemodel){  
   ########### Loss Factor Data and Aggregation ################### 
   ## This section imports the data of the loss factors and then merges it with the country designations for the SDG 
   if(subnationalestimates){
@@ -286,7 +291,9 @@ if(updatemodel==1){
   ## Add
   AddInsertions(changeset,  FullSet[,c("geographicaream49","timepointyears","measureditemcpc","isocode","country","crop","loss_per_clean","fsc_location"), with=FALSE])
   Finalise(changeset)
-
+  
+  print("Markov chain complete")
+  
   #FullSet <- ReadDatatable("aggregate_loss_table")
   ########### Variables for the module  ###################   
   # Adds the explanatory Varaibles,
@@ -296,14 +303,33 @@ if(updatemodel==1){
   #Data_Use_train <- VariablesAdd1(FullSet,keys_lower,Predvar,"ctry",'00')
   #Data_Use_train2 <- VariablesAdd1(FullSet,keys_lower,Predvar,"var",'00')
   #Data_Use_train3 <- VariablesAdd1(FullSet,keys_lower,Predvar,"RF",'00')
-
+  print("Variables Added")
   ####### Model Estimation ############
   
   #KeepVar <- c(keys,'isocode','SDG_Regions',"measuredItemCPC",
   #             'FSC_Location',HierarchicalCluster)
   
   timeSeriesDataToBeImputed2 <- LossModel(Data= Data_Use_train0,timeSeriesDataToBeImputed, production,HierarchicalCluster,keys_lower)
-                                            
+  
+
+  # Save to the SWS
+  stats = SaveData(domain = "lossWaste",
+                   dataset="loss",
+                   data =  timeSeriesDataToBeImputed2
+  )
+  sprintf(
+    "Module completed in %1.2f minutes.
+    Values inserted: %s
+    appended: %s
+    ignored: %s
+    discarded: %s",
+    difftime(Sys.time(), startTime, units = "min"),
+    stats[["inserted"]],
+    stats[["appended"]],
+    stats[["ignored"]],
+    stats[["discarded"]]
+  )
+  print("Model Ran")                                          
  
 }
 
