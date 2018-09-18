@@ -70,8 +70,17 @@ if (!exists('selectedYear_start')| !exists('selectedYear_end')) {
   selectedYear_start <- swsContext.computationParams$selectedyear_start
   selectedYear_end <- swsContext.computationParams$selectedyear_end
   selectedYear = as.character(as.numeric(selectedYear_start):as.numeric(selectedYear_end))
+}
+if (!exists('ctry_modelvar')) {
+  ## IF just one country is modeled
+  ctry_modelvar <- swsContext.computationParams$ctry_modelvar
+ 
 }else{
+  ctry_modelvar <- 'All'
+  updatemodel <- TRUE
+  subnationalestimates <- TRUE
   selectedYear =  as.character(1990:2016)
+  
 }
 selectedModelYear = as.character(1961:2016)
 
@@ -128,6 +137,7 @@ if(CheckDebug()){
   library(faoswsModules)
   settings <- ReadSettings(file = file.path(paste(getwd(),"sws.yml", sep='/')))
   SetClientFiles(settings[["certdir"]])
+  
   
   GetTestEnvironment(
     baseUrl = settings[["server"]],
@@ -187,25 +197,35 @@ fbsTree[foodgroupname %in% c(2911), GFLI_Basket :='Pulses',]
 fbsTree[foodgroupname %in% c(2919,2918), GFLI_Basket :='Fruits & Vegetables',]
 fbsTree[foodgroupname %in% c(2907,2913), GFLI_Basket :='Roots, Tubers & Oil-Bearing Crops',]
 fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), GFLI_Basket :='Other',]
-fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), GFLI_Basket :='Animals Products & Fish and fish products',] # |foodGroupName == "PRODUCTS FROM FISH",
+fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), GFLI_Basket :='Meat & Animals Products',] # |foodGroupName == "PRODUCTS FROM FISH",
 fbsTree[GFLI_Basket == "NA", 'GFLI_Basket'] <- NA
 
 #####  Runs the model and collects the needed data  #####
 finalModelData = 
   {
-    production <- getProductionData(areaVar,itemVar,yearVar,elementVar) # Value_measuredElement_5510
+    production <- getProductionData(areaVar,itemVar,yearVar,elementVar, selectedYear) # Value_measuredElement_5510
+    imports <- getImportData(areaVar,itemVar,yearVar, selectedYear)
     lossProtected <- getLossData(areaVar,itemVar,yearVar,elementVar,selectedYear,protected = TRUE)     # Value_measuredElement_5016
+    
     names(production)[ names(production) == "Value"] <-  "value_measuredelement_5510"
     names(lossProtected)[ names(lossProtected) == "Value"] <-  "value_measuredelement_5016"
     names(lossProtected)[ names(lossProtected) == "measuredItemSuaFbs"] <-  "measureditemcpc"
     names(lossProtected) <- tolower(names(lossProtected))
-    names(production) <- tolower(names(production ))
+    names(production) <- tolower(names(production))
+    names(imports) <- tolower(names(imports))
+    
     production$geographicaream49 <- as.character(production$geographicaream49)
     production$timepointyears <- as.numeric(production$timepointyears)
+    imports$timepointyears<- as.numeric(imports$timepointyears)
+    
+    prod_imports <- merge(production,imports, by= keys_lower, all.x = TRUE)
+    prod_imports[,prod_imports := rowSums(.SD, na.rm = TRUE), .SDcols=c("value_measuredelement_5510","value")]
+    prod_imports <-prod_imports[,c(keys_lower,"value_measuredelement_5510","prod_imports"),with=F]
+
     lossProtected$geographicaream49 <- as.character(lossProtected$geographicaream49)
     lossProtected$timepointyears <- as.numeric(lossProtected$timepointyears)
     #Data for the model
-    lossData <-  merge(production,lossProtected,  by.x = keys_lower,  by.y = keys_lower, all.y= TRUE)
+    lossData <-  merge(prod_imports,lossProtected,  by.x = keys_lower,  by.y = keys_lower, all.y= TRUE)
     lossData[, loss_per_clean := (value_measuredelement_5016/value_measuredelement_5510)]
     lossData[, fsc_location := "SWS"]
     lossData <- lossData %>% filter(!loss_per_clean > 1)
@@ -220,19 +240,59 @@ finalModelData =
                                                 geographicaream49 = as.character(unique(production$geographicaream49)),
                                                 measureditemcpc = as.character(unique(production$measureditemcpc))))
     
-    # Take the Data to be imputed
-    timeSeriesDataToBeImputed <- merge(timeSeriesData, lossData,  by= keys_lower, all.x = TRUE, all.y = FALSE)
+    # ################# Eggs - Delete after first run########################
+    # # Take the Data to be imputed
+    # timeSeriesDataToBeImputedEg <- merge(eggsEXtra, lossData,  by= keys_lower, all.x = TRUE, all.y = TRUE)
+    # timeSeriesDataToBeImputedEg[is.na(loss_per_clean), loss_per_clean := 0]
+    # timeSeriesDataToBeImputedEg[,value_measuredelement_5016 := loss_per_clean]
+    # timeSeriesDataToBeImputedEg[,flagcombination:="0"]
+    # setnames(timeSeriesDataToBeImputedEg, old =  c("timepointyears","geographicaream49","measureditemcpc","isocode","country","loss_per_clean","fsc_location","flagobservationstatus.y","flagmethod.y","value_measuredelement_5016","flagcombination"),
+    #          new =  c("timepointyears","geographicaream49","measureditemcpc","isocode","country","loss_per_clean","fsc_location","flagobservationstatus","flagmethod","value_measuredelement_5016","flagcombination") )
+    # timeSeriesDataToBeImputedEg <- subset(timeSeriesDataToBeImputedEg,
+    #                                     select = c(keys_lower,"value_measuredelement_5016", "flagcombination","flagobservationstatus","flagmethod","loss_per_clean"))               
+    # 
+    # #### Protected Data ###
+    # flagValidTableLoss <- as.data.table(flagValidTable)
+    # protectedFlag <- flagValidTableLoss[flagValidTableLoss$Protected == TRUE,] %>%
+    #   .[, flagCombination := paste(flagObservationStatus, flagMethod, sep = ";")]
+    # timeSeriesDataToBeImputedEg$flagcombination <- " "
+    # timeSeriesDataToBeImputedEg[,flagcombination :=  paste(flagobservationstatus, flagmethod, sep = ";")] 
+    # 
+    # timeSeriesDataToBeImputedEg[flagcombination %in% protectedFlag$flagCombination,Protected := TRUE,]
+    # timeSeriesDataToBeImputedEg <-timeSeriesDataToBeImputedEg %>%  arrange(geographicaream49,timepointyears,measureditemcpc, flagcombination) 
+    # 
+    # ### Extract Duplicates ###
+    # dd <-timeSeriesDataToBeImputedEg[duplicated(timeSeriesDataToBeImputedEg) | duplicated(timeSeriesDataToBeImputedEg, fromLast=TRUE)]
+    # timeSeriesDataToBeImputedEg <- unique(timeSeriesDataToBeImputedEg)
+    # 
+    # names(timeSeriesDataToBeImputedEg) <-tolower(names(timeSeriesDataToBeImputedEg))
+    
+    ##########
+    timeSeriesDataToBeImputed <- merge(timeSeriesData, lossData,  by= keys_lower, all.x = TRUE, all.y = TRUE)
     timeSeriesDataToBeImputed[is.na(loss_per_clean), loss_per_clean := 0]
     timeSeriesDataToBeImputed[,value_measuredelement_5016 := loss_per_clean]
     timeSeriesDataToBeImputed[,flagcombination:="0"]
-    
     
     setnames(timeSeriesDataToBeImputed, old =  c("timepointyears","geographicaream49","measureditemcpc","isocode","country","loss_per_clean","fsc_location","flagobservationstatus.y","flagmethod.y","value_measuredelement_5016","flagcombination"),
              new =  c("timepointyears","geographicaream49","measureditemcpc","isocode","country","loss_per_clean","fsc_location","flagobservationstatus","flagmethod","value_measuredelement_5016","flagcombination") )
     
     timeSeriesDataToBeImputed <- subset(timeSeriesDataToBeImputed,
                                         select = c(keys_lower,"value_measuredelement_5016", "flagcombination","flagobservationstatus","flagmethod","loss_per_clean")
-                                  )
+    )
+    
+    #### Protected Data ###
+    flagValidTableLoss <- as.data.table(flagValidTable)
+    protectedFlag <- flagValidTableLoss[flagValidTableLoss$Protected == TRUE,] %>%
+      .[, flagCombination := paste(flagObservationStatus, flagMethod, sep = ";")]
+    timeSeriesDataToBeImputed$flagcombination <- " "
+    timeSeriesDataToBeImputed[,flagcombination :=  paste(flagobservationstatus, flagmethod, sep = ";")] 
+    
+    timeSeriesDataToBeImputed[flagcombination %in% protectedFlag$flagCombination,Protected := TRUE,]
+    timeSeriesDataToBeImputed <- timeSeriesDataToBeImputed %>%  arrange(geographicaream49,timepointyears,measureditemcpc, flagcombination) 
+    
+    ### Extract Duplicates ###
+    dd <-timeSeriesDataToBeImputed[duplicated(timeSeriesDataToBeImputed) | duplicated(timeSeriesDataToBeImputed, fromLast=TRUE)]
+    timeSeriesDataToBeImputed <- unique(timeSeriesDataToBeImputed)
 
     names(timeSeriesDataToBeImputed) <-tolower(names(timeSeriesDataToBeImputed))
 
@@ -242,7 +302,8 @@ finalModelData =
     
     
 } 
-print(paste(" Number of lossData to estimate: ", length(lossData) ))
+print(paste(" Number of lossData available: ", dim(lossData)[1] ))
+print(paste(" Number of losses to estimate: ", dim(timeSeriesDataToBeImputed[is.na(protected),])[1] ))
 if(updatemodel){  
   ########### Loss Factor Data and Aggregation ################### 
   ## This section imports the data of the loss factors and then merges it with the country designations for the SDG 
@@ -280,7 +341,6 @@ if(updatemodel){
   
   #write.table(FullSet,paste(githubsite, 'General/FullSet.csv', sep=''),sep=',' )
   ### Save the intermediate aggregation table  to the sws
-  #<>
   names(FullSet) <- tolower(names(FullSet))
   ## Delete
   table = "aggregate_loss_table"
@@ -297,6 +357,7 @@ if(updatemodel){
   #FullSet <- ReadDatatable("aggregate_loss_table")
   ########### Variables for the module  ###################   
   # Adds the explanatory Varaibles,
+  
   Predvar <- c()
   Data_Use_train0 <- VariablesAdd1(FullSet,keys_lower,Predvar,FALSE,'00')
   ## These options change the method of estimating the missing data in the explanatory dataset
@@ -304,18 +365,69 @@ if(updatemodel){
   #Data_Use_train2 <- VariablesAdd1(FullSet,keys_lower,Predvar,"var",'00')
   #Data_Use_train3 <- VariablesAdd1(FullSet,keys_lower,Predvar,"RF",'00')
   print("Variables Added")
-  ####### Model Estimation ############
   
-  #KeepVar <- c(keys,'isocode','SDG_Regions',"measuredItemCPC",
-  #             'FSC_Location',HierarchicalCluster)
   
-  timeSeriesDataToBeImputed2 <- LossModel(Data= Data_Use_train0,timeSeriesDataToBeImputed, production,HierarchicalCluster,keys_lower)
-  
+  ####### Model Estimation - Percentages only ############
+  ctry_modelvar <- c(40,76) #c("all") 
+  # this model estimates by country and does carry-overs, once modeled the data is temporarily protected
+  timeSeriesDataToBeImputed_ctry2 <- LossModel_ctry(Data= Data_Use_train0,timeSeriesDataToBeImputed,ctry_modelvar,HierarchicalCluster,keys_lower)
 
+  save(timeSeriesDataToBeImputed_ctry2 , file = "timeSeriesDataToBeImputed_ctry2.RData")
+  timeSeriesDataToBeImputed <- LossModel(Data= Data_Use_train0,timeSeriesDataToBeImputed_ctry2, production,HierarchicalCluster,keys_lower)
+  timeSeriesDataToBeImputed2 <-timeSeriesDataToBeImputed
+  
+  timeSeriesDataToBeImputed2[!duplicated(timeSeriesDataToBeImputed2),]
+
+  ### Adds the Production and Imports to get the quantities ########## 
+  # Multiplies loss percentages by production
+  timeSeriesDataToBeImputed <- merge(timeSeriesDataToBeImputed,prod_imports, by.x = (keys_lower), by.y = (keys_lower), all.x = TRUE, all.y = FALSE)
+  timeSeriesDataToBeImputed[,value_measuredelement_5126 := loss_per_clean,]
+  timeSeriesDataToBeImputed[,value_measuredelement_5016 := value_measuredelement_5126*prod_imports,]
+  #timeSeriesDataToBeImputed[,value_measuredelement_5016 := value_measuredelement_5126*value_measuredelement_5510,] #over production only
+  #timeSeriesDataToBeImputed <- timeSeriesDataToBeImputed %>% filter(!is.na(value_measuredelement_5016))
+  datasetN[datasetN=="loss_per_clean"] <- "value_measuredelement_5126"
+  
+  ### Narrows the data to the CPCs in the loss domain
+  
+  ### Splits the data tables for the SWS ####
+  timeSeriesDataToBeImputed_5016 <- timeSeriesDataToBeImputed[,c(keys_lower,"value_measuredelement_5016","flagobservationstatus", "flagmethod") ,with=F] 
+  
+  timeSeriesDataToBeImputed_5016[, measuredElement := "5016"]
+  setnames(timeSeriesDataToBeImputed_5016, old =  c("geographicaream49", "timepointyears","measureditemcpc" , "value_measuredelement_5016", "flagobservationstatus", "flagmethod","measuredElement" ),
+           new =  c("geographicAreaM49", "timePointYears", "measuredItemSuaFbs"  ,"Value", "flagObservationStatus", "flagMethod","measuredElementSuaFbs") )
+  
+  
+  setcolorder(timeSeriesDataToBeImputed_5016, 
+              c("geographicAreaM49", "measuredElementSuaFbs" ,"measuredItemSuaFbs" ,"timePointYears", "Value", "flagObservationStatus", "flagMethod") )
+  
+  #timeSeriesDataToBeImputed_5016 <- timeSeriesDataToBeImputed_5016 %>% filter(!is.na(flagMethod))
+  
+  ##---------------------
+  timeSeriesDataToBeImputed_5126 <- timeSeriesDataToBeImputed[,c(keys_lower,"value_measuredelement_5126","flagobservationstatus", "flagmethod") ,with=F] 
+  
+  timeSeriesDataToBeImputed_5126[, measuredElement := "5126"]
+  setnames(timeSeriesDataToBeImputed_5126, old =  c("geographicaream49", "timepointyears","measureditemcpc" , "value_measuredelement_5126", "flagobservationstatus", "flagmethod","measuredElement" ),
+           new =  c("geographicAreaM49","timePointYears", "measuredItemSuaFbs"  , "Value", "flagObservationStatus", "flagMethod","measuredElementSuaFbs") )
+  
+  
+  setcolorder(timeSeriesDataToBeImputed_5126, 
+              c("geographicAreaM49", "measuredElementSuaFbs" ,"measuredItemSuaFbs" ,"timePointYears", "Value", "flagObservationStatus", "flagMethod") )
+  
+  #timeSeriesDataToBeImputed_5126 <- timeSeriesDataToBeImputed_5126 %>% filter(!is.na(flagMethod))
+  
+  DataSave <- rbind(timeSeriesDataToBeImputed_5016,timeSeriesDataToBeImputed_5126)
+  # # Save to the SWS
+  # stats = SaveData(domain = "lossWaste",
+  #                  dataset="loss",
+  #                  data = DataSave
+  # )
+  # 
+  
+  
   # Save to the SWS
   stats = SaveData(domain = "lossWaste",
                    dataset="loss",
-                   data =  timeSeriesDataToBeImputed2
+                   data = DataSave
   )
   sprintf(
     "Module completed in %1.2f minutes.
@@ -442,7 +554,7 @@ if(updatemodel == FALSE){
   timeSeriesDataToBeImputed[,(nameadd):= NULL,]
   
   # Multiplies loss percentages by production
-  timeSeriesDataToBeImputed <- merge(timeSeriesDataToBeImputed,production, by.x = (keys_lower), by.y = (keys_lower), all.x = TRUE, all.y = FALSE)
+  timeSeriesDataToBeImputed <- merge(timeSeriesDataToBeImputed,prod_imports, by.x = (keys_lower), by.y = (keys_lower), all.x = TRUE, all.y = FALSE)
   timeSeriesDataToBeImputed[,value_measuredelement_5126 := loss_per_clean,]
   timeSeriesDataToBeImputed[,value_measuredelement_5016 := value_measuredelement_5126*value_measuredelement_5510,]
   timeSeriesDataToBeImputed <- timeSeriesDataToBeImputed %>% filter(!is.na(value_measuredelement_5016))

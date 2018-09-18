@@ -40,7 +40,7 @@ GFLI_SDG_fun <- function(BaseYear,keys_lower,aggregation,basket,basketKeys,DataF
     filter(timepointyears == as.numeric(BaseYear[2]) - 1)
   
   foodLossIndex = data.table( 
-    merge(SumP0Qt,Sump0q0[,c(1,4)],
+    merge(SumP0Qt,Sump0q0[,c(1,4),with=F],
           by = c(aggregation),
           all.x = TRUE))
   
@@ -53,42 +53,42 @@ GFLI_SDG_fun <- function(BaseYear,keys_lower,aggregation,basket,basketKeys,DataF
   foodLossIndex <- foodLossIndex[where.na]
   
   if(agg){
-  ### Global #####
-  GFLI_WeightD <- ComBasket  %>%
-    group_by(timepointyears) %>%
-    dplyr:: summarise(Sum_p0q0 = sum(p0q0, na.rm = TRUE))%>%
-    filter(timepointyears == as.numeric(BaseYear[2]) - 1)
-
-  GFLI_Weight <- data.table( Sump0q0[,c(1,4)])
-  GFLI_Weight[, GFLI_W:= Sum_p0q0/GFLI_WeightD$Sum_p0q0]
-  names(GFLI_Weight)[names(GFLI_Weight)== "geographicaream49"] <- names(foodLossIndex)[names(foodLossIndex)== "geographicaream49"]
-
-  foodLossIndex = data.table(
-    merge(foodLossIndex,GFLI_Weight,
-          by = c("geographicaream49"),
-          all.x = TRUE))
-
-  foodLossIndex[, GFLI_N := Index*GFLI_W]
-
-  GFLI2 <- foodLossIndex %>%
-    group_by(timepointyears) %>%
-    dplyr:: summarise(Sum_GFLI_N = sum(GFLI_N, na.rm = TRUE))
-
-  GFLI2W <- foodLossIndex %>%
-    group_by(timepointyears) %>%
-    dplyr:: summarise(Sum_GFLI_D = sum(GFLI_W, na.rm = TRUE))
-
-  GlobalfoodLossIndex= data.table(
-    merge(GFLI2,GFLI2W,
-          by = c("timepointyears"),
-          all.x = TRUE))
-
-  GlobalfoodLossIndex[,Index :=(Sum_GFLI_N/Sum_GFLI_D)]
-  GlobalfoodLossIndex[,WORLD :="WORLD"]
-  setnames(GlobalfoodLossIndex, old=c("timepointyears", "Sum_GFLI_N", "Sum_GFLI_D", "Index"), 
-                                new=c("timepointyears", "Sum_p0qt", "Sum_p0q0", "Index"))
-  foodLossIndex=GlobalfoodLossIndex
-  aggregation = "WORLD"
+    ### Global #####
+    GFLI_WeightD <- ComBasket  %>%
+      group_by(timepointyears) %>%
+      dplyr:: summarise(Sum_p0q0 = sum(p0q0, na.rm = TRUE))%>%
+      filter(timepointyears == as.numeric(BaseYear[2]) - 1)
+  
+    GFLI_Weight <- data.table( Sump0q0[,c(1,4),with=F])
+    GFLI_Weight[, GFLI_W:= Sum_p0q0/GFLI_WeightD$Sum_p0q0]
+    names(GFLI_Weight)[names(GFLI_Weight)== "geographicaream49"] <- names(foodLossIndex)[names(foodLossIndex)== "geographicaream49"]
+  
+    foodLossIndex = data.table(
+      merge(foodLossIndex,GFLI_Weight,
+            by = c("geographicaream49"),
+            all.x = TRUE))
+  
+    foodLossIndex[, GFLI_N := Index*GFLI_W]
+  
+    GFLI2 <- foodLossIndex %>%
+      group_by(timepointyears) %>%
+      dplyr:: summarise(Sum_GFLI_N = sum(GFLI_N, na.rm = TRUE))
+  
+    GFLI2W <- foodLossIndex %>%
+      group_by(timepointyears) %>%
+      dplyr:: summarise(Sum_GFLI_D = sum(GFLI_W, na.rm = TRUE))
+  
+    GlobalfoodLossIndex= data.table(
+      merge(GFLI2,GFLI2W,
+            by = c("timepointyears"),
+            all.x = TRUE))
+  
+    GlobalfoodLossIndex[,Index :=(Sum_GFLI_N/Sum_GFLI_D)]
+    GlobalfoodLossIndex[,WORLD :="WORLD"]
+    setnames(GlobalfoodLossIndex, old=c("timepointyears", "Sum_GFLI_N", "Sum_GFLI_D", "Index"), 
+                                  new=c("timepointyears", "Sum_p0qt", "Sum_p0q0", "Index"))
+    foodLossIndex=GlobalfoodLossIndex
+    aggregation = "WORLD"
   }
 #GlobalfoodLossIndex=GlobalfoodLossIndex,RegionalfoodLossIndex=regionalLossIndex,
 return(foodLossIndex)

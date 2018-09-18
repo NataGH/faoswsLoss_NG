@@ -5,14 +5,18 @@
 #' @export getProductionData
 
 
-getProductionData = function(areaVar,itemVar,yearVar,elementVar){
+getProductionData = function(areaVar,itemVar,yearVar,elementVar, selectedYear){
   productionKey <- faoswsUtil::getCompleteImputationKey(table = "production")
   
   milk=ReadDatatable("animal_milk_correspondence")
   milk=milk[,milk_item_cpc]
   
-  productionKey@dimensions$measuredItemCPC@keys=c(productionKey@dimensions$measuredItemCPC@keys,milk )
+  eggs= ReadDatatable("animal_eggs_correspondence")
+  eggs=eggs[,eggs_item_cpc]
   
+  productionKey@dimensions$measuredItemCPC@keys=c(productionKey@dimensions$measuredItemCPC@keys,milk,eggs)
+  productionKey@dimensions$timePointYears@keys =  selectedYear
+   
   
   productionKey@dimensions$measuredElement@keys <- "5510"
   

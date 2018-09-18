@@ -82,50 +82,64 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
   ConvFactor_cal$geographicaream49 <- as.integer(ConvFactor_cal$geographicaream49)
 
   if(!any(fgroup %in% c("2943", "2946","2945","2949","2948"))){   
-  names(Temperature)[names(Temperature) == 'year'] <- "timepointyears"
-  Temperature <- merge( Temperature , CountryGroup[,c("geographicaream49", "isocode"), with=FALSE], by.x = c('isocode'),
-                      by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
-  
-  Temperature <-Temperature %>% filter(geographicaream49 %in%  ConvFactor_cal$geographicaream49  & timepointyears %in%  ConvFactor_cal$timepointyears)
-  
-  names(Precipitation)[names(Precipitation) == 'year'] <- "timepointyears"
-  Precipitation <- merge(Precipitation, CountryGroup[,c("geographicaream49", "isocode"), with=FALSE], by.x = c('isocode'),
+    names(Temperature)[names(Temperature) == 'year'] <- "timepointyears"
+    Temperature <- merge( Temperature , CountryGroup[,c("geographicaream49", "isocode"), with=FALSE], by.x = c('isocode'),
                         by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
-  Precipitation <-Precipitation %>% filter(geographicaream49 %in%  unique(ConvFactor_cal$geographicaream49)  & timepointyears %in%  unique(ConvFactor_cal$timepointyears))
-  
-  CropCalendar <- merge(CropCalendar, CountryGroup[,c("geographicaream49", "isocode"), with=FALSE], by.x = c("geographicaream49"),
-                         by.y = c("geographicaream49"), all.x = TRUE, all.y = FALSE)
-  
-  CropCalendar <- CropCalendar[, c("geographicaream49","measureditemcpc","crop", "harvesting_month_onset", "harvesting_month_end"), with=FALSE]
-  CropCalendar$measureditemcpc <- addHeadingsCPC(CropCalendar$measureditemcpc) 
-  CropCalendar$crop <- tolower(CropCalendar$crop)
-  CropCalendar <- CropCalendar %>% arrange(geographicaream49, -harvesting_month_end) %>% 
-                                  filter(!is.na(harvesting_month_end))
-  
-  AggCropCalendar <- as.data.table(aggregate(harvesting_month_end ~ geographicaream49+measureditemcpc, data = CropCalendar, min))
-  AggCropCalendar <- merge(ConvFactor_cal2,AggCropCalendar, by= c('geographicaream49','measureditemcpc'), all.x = TRUE, all.y = FALSE)
-  names(AggCropCalendar)[names(AggCropCalendar) == 'harvesting_month_end'] <- 'month'
-  
- 
-  Temperature2 <- join(AggCropCalendar, Temperature, by= c('geographicaream49','timepointyears', 'month'),type= 'left', match='all')
-  Precipitation2 <- join(AggCropCalendar, Precipitation , by= c('geographicaream49','timepointyears', 'month'),type= 'left', match='all')
-  
-  tempPred <- lm(temperature_c ~geographicaream49 + timepointyears+ month,Temperature2)
-  PrecPred <-  lm(rainfall_mm ~geographicaream49 + timepointyears+ month,Precipitation2)
-  
-  Temperature2[is.na(temperature_c)&!is.na(month),temperature_c := coefficients(tempPred)[1] +rowSums(mapply(`*`,coefficients(tempPred)[-1],Temperature2[is.na(temperature_c)&!is.na(month) ,names(coefficients(tempPred)[-1]),with=F]), na.rm=TRUE)]
-  Precipitation2[is.na(rainfall_mm)&!is.na(month),rainfall_mm := coefficients(PrecPred)[1] +rowSums(mapply(`*`,coefficients(PrecPred)[-1],Precipitation2[is.na(rainfall_mm)&!is.na(month) ,names(coefficients(PrecPred)[-1]),with=F]), na.rm=TRUE)]
-
-
-    DataUseInt <- merge(DataUseInt, Temperature2, by = keys_lower, all.x = TRUE)  ### FInal Data set @@
-    DataUseInt <- merge(DataUseInt, Precipitation2,by = keys_lower, all.x = TRUE)  ### FInal Data set @@
+    
+    Temperature <-Temperature %>% filter(geographicaream49 %in%  ConvFactor_cal$geographicaream49  & timepointyears %in%  ConvFactor_cal$timepointyears)
+    
+    names(Precipitation)[names(Precipitation) == 'year'] <- "timepointyears"
+    Precipitation <- merge(Precipitation, CountryGroup[,c("geographicaream49", "isocode"), with=FALSE], by.x = c('isocode'),
+                          by.y = c('isocode'), all.x = TRUE, all.y = FALSE)
+    Precipitation <-Precipitation %>% filter(geographicaream49 %in%  unique(ConvFactor_cal$geographicaream49)  & timepointyears %in%  unique(ConvFactor_cal$timepointyears))
+    
+    CropCalendar <- merge(CropCalendar, CountryGroup[,c("geographicaream49", "isocode"), with=FALSE], by.x = c("geographicaream49"),
+                           by.y = c("geographicaream49"), all.x = TRUE, all.y = FALSE)
+    
+    CropCalendar <- CropCalendar[, c("geographicaream49","measureditemcpc","crop", "harvesting_month_onset", "harvesting_month_end"), with=FALSE]
+    CropCalendar$measureditemcpc <- addHeadingsCPC(CropCalendar$measureditemcpc) 
+    CropCalendar$crop <- tolower(CropCalendar$crop)
+    CropCalendar <- CropCalendar %>% arrange(geographicaream49, -harvesting_month_end) %>% 
+                                    filter(!is.na(harvesting_month_end))
+    
+    AggCropCalendar <- as.data.table(aggregate(harvesting_month_end ~ geographicaream49+measureditemcpc, data = CropCalendar, min))
+    AggCropCalendar <- merge(ConvFactor_cal2,AggCropCalendar, by= c('geographicaream49','measureditemcpc'), all.x = TRUE, all.y = FALSE)
+    names(AggCropCalendar)[names(AggCropCalendar) == 'harvesting_month_end'] <- 'month'
+    
+    if(length(na.omit(AggCropCalendar$month))>0){
+      Temperature2 <- join(AggCropCalendar, Temperature, by= c('geographicaream49','timepointyears', 'month'),type= 'left', match='all')
+      Precipitation2 <- join(AggCropCalendar, Precipitation , by= c('geographicaream49','timepointyears', 'month'),type= 'left', match='all')
+      
+      if(length(na.omit(Temperature2$temperature_c)) >0){
+         tempPred <- lm(temperature_c ~geographicaream49 + timepointyears+ month,Temperature2)
+         Temperature2[is.na(temperature_c)&!is.na(month),temperature_c := coefficients(tempPred)[1] +
+                        if(dim(Temperature2[is.na(temperature_c)&!is.na(month)])[1]>2){
+                         rowSums(mapply(`*`,coefficients(tempPred)[-1],Temperature2[is.na(temperature_c)&!is.na(month) ,names(coefficients(tempPred)[-1]),with=F]), na.rm=TRUE)
+                        }else{
+                          sum(mapply(`*`,coefficients(tempPred)[-1],Temperature2[is.na(temperature_c)&!is.na(month) ,names(coefficients(tempPred)[-1]),with=F]),na.rm = T)
+                        }]
+         DataUseInt <- merge(DataUseInt, Temperature2, by = keys_lower, all.x = TRUE)  
+      }
+      if(length(na.omit(Precipitation2$rainfall_mm)) >0){
+        PrecPred <-  lm(rainfall_mm ~geographicaream49 + timepointyears+ month,Precipitation2)
+        Precipitation2[is.na(rainfall_mm)&!is.na(month),rainfall_mm := coefficients(PrecPred)[1] +
+                        if(dim(Precipitation2[is.na(rainfall_mm)&!is.na(month)])[1]>2){ 
+                         rowSums(mapply(`*`,coefficients(PrecPred)[-1],Precipitation2[is.na(rainfall_mm)&!is.na(month) ,names(coefficients(PrecPred)[-1]),with=F]), na.rm=TRUE)
+                        }else{
+                          sum(mapply(`*`,coefficients(PrecPred)[-1],Precipitation2[is.na(rainfall_mm)&!is.na(month) ,names(coefficients(PrecPred)[-1]),with=F]), na.rm=TRUE)
+                        }]
+        DataUseInt <- merge(DataUseInt, Precipitation2,by = keys_lower, all.x = TRUE)  
+      }
+      
+    }else{
+        DataUseInt <-DataUseInt}
   }
   DataUseInt$geographicaream49 <- as.integer(DataUseInt$geographicaream49)
  
   names(DataUseInt) <- gsub("[[:punct:]]","_",names(DataUseInt))
   if(dropExtra){
     keepForPred <- names(DataUseInt)[names(DataUseInt) %in% Predvar]
-    DataUseInt <-DataUseInt[,keepForPred, with=FALSE]
+    DataUseInt <- DataUseInt[,keepForPred, with=FALSE]
   }
   ####Import and merge By Year ###############
   if(LocalRun){
@@ -154,9 +168,9 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
       }
   }
   
-  ConvFactor_calYr[, oilave:=lapply(.SD,mean, na.rm=TRUE), .SDcols=c("crude_petro","crude_brent","crude_dubai","crude_wti")]
-  ConvFactor_calYr[, coalave:=lapply(.SD,mean, na.rm=TRUE), .SDcols=c("coal_aus","coal_col","coal_safrica")]
-  ConvFactor_calYr[, natgasave:=lapply(.SD,mean, na.rm=TRUE), .SDcols=c("ngas_us","ngas_eur","ngas_jp", "inatgas")]
+  ConvFactor_calYr[, oilave:=rowMeans(.SD, na.rm=TRUE), .SDcols=c("crude_petro","crude_brent","crude_dubai","crude_wti")]
+  ConvFactor_calYr[, coalave:=rowMeans(.SD, na.rm=TRUE), .SDcols=c("coal_aus","coal_col","coal_safrica")]
+  ConvFactor_calYr[, natgasave:=rowMeans(.SD, na.rm=TRUE), .SDcols=c("ngas_us","ngas_eur","ngas_jp", "inatgas")]
   AvePs <- c("crude_petro","crude_brent","crude_dubai","crude_wti","coal_aus","coal_col","coal_safrica","ngas_us","ngas_eur","ngas_jp","inatgas")
   ConvFactor_calYr[,  (AvePs):= NULL,]
   ## Load first all the data tables and merges with the time and country set from the training or predicitve set and then merge with the data 
@@ -194,7 +208,8 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
               'item_code',
               'Unit',
               'description',
-              'descriptoin'
+              'descriptoin',
+              "area_code"
               
     )
 
@@ -299,6 +314,10 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
       close(pb)
     }
     if(length(drops[drops  %in% names(ConvFactor_cal)])>0){
+      for(rx in 1:length(drops)){
+      drops = c(drops,names(ConvFactor_cal)[grep(tolower(drops[rx]),names(ConvFactor_cal))])
+      }
+      drops = unique(drops)
       ConvFactor_cal[,drops[drops  %in% names(ConvFactor_cal)] :=NULL]
     }
     nums2 <- !sapply(ConvFactor_cal, is.numeric)
@@ -373,17 +392,16 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
     }
     
     DataUseInt$geographicaream49 <- as.character(DataUseInt$geographicaream49)
-    #if(dropExtra){
-   #   keepForPred <- names(DataUseInt)[names(DataUseInt) %in% Predvar]
-   #   DataUseInt <-DataUseInt[,keepForPred, with=FALSE]
-   # }
-    # Drop the remaining descriptive var
-    drops <-tolower(drops)
-    names(DataUseInt) <- tolower(names(DataUseInt))
-    for(i in drops ){
-      tt <- names(DataUseInt)[grep(paste(i,"+",sep=""),names(DataUseInt))]
-      DataUseInt[,c(tt):=NULL]
+    
+    if(dropExtra){
+      keepForPred <- names(DataUseInt)[names(DataUseInt) %in% Predvar]
+      DataUseInt <-DataUseInt[,keepForPred, with=FALSE]
     }
+    # # Drop the remaining descriptive var
+    # drops <-tolower(drops)
+    # names(DataUseInt) <- tolower(names(DataUseInt))
+    # drops[drops %in% names(DataUseInt)]
+
     DataUseInt[DataUseInt == ""] = NA
     ##################Imputatuion of dataset#########################
     if(Impute != FALSE){
@@ -425,9 +443,10 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
       }
     
     ########### Principal Component Analysis #### 
+    nums1 <- sapply(DataUseInt, is.numeric)
     if(!dropExtra){
     #Makes the columns numeric and looks at correlated variables
-    nums1 <- sapply(DataUseInt, is.numeric)
+    
     dropCV <- list()
     stop = length(colnames(DataUseInt))
     ii = 1
@@ -447,12 +466,20 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
       
     }
 
+
+    }
     nums1[tolower(keys_lower)] <- TRUE
     nums1[names(nums1) == "sdg_regions"]<- TRUE
     explanatory <- names(nums1)[nums1 == TRUE]
-    explanatory <- c(explanatory,"foodgroupname") 
+    
+    if("fsc_location" %in% names(DataUseInt)){
+      explanatory <- c(explanatory,"foodgroupname", "fsc_location")
+      }else{ 
+      explanatory <- c(explanatory,"foodgroupname")
+      
+      }
+    explanatory <-explanatory[explanatory %in% names(DataUseInt)]  
     DataUseInt <-  DataUseInt[ , explanatory ,with=FALSE]
-    }
     ###### Dimension Expansion #########
     #if(length(colnames(DataUseInt))<20){
    #   DataUseInt <-MultiExp(DataUseInt, 2,"loss_per_clean")
