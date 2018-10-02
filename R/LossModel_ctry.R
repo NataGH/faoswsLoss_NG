@@ -143,9 +143,11 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
           timeSeriesDataToBeImputed[is.na(protected) & value_measuredelement_5016a>=0,flagcombination:= flagcombinationa,]
           timeSeriesDataToBeImputed[is.na(protected) & value_measuredelement_5016a>=0,loss_per_clean:= loss_per_cleana,]
           timeSeriesDataToBeImputed[is.na(protected) & loss_per_cleana >0,flagobservationstatus := 'I',] 
-          timeSeriesDataToBeImputed[is.na(protected) & loss_per_cleana >0,flagmethod:= 'e',]
+          timeSeriesDataToBeImputed[is.na(protected) & loss_per_cleana >0,flagmethod:= 'i',]
           timeSeriesDataToBeImputed[is.na(protected) & loss_per_cleana >0,flagcombination := paste(flagobservationstatus,flagmethod, sep=";"),]
           timeSeriesDataToBeImputed[,(nameadd):= NULL,]
+          
+          timeSeriesDataToBeImputed[flagcombination == "I;i" & is.na(protected),"protected"] <-TRUE
           
           print(dim(timeSeriesDataToBeImputed))
           print('for this commodity a carryover was applied')
@@ -397,7 +399,7 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
       nameadd <- paste(names(int1)[!names(int1) %in% keys_lower],'a',sep="")
       names(int1)[!names(int1) %in% keys_lower] <- paste(names(int1)[!names(int1) %in% keys_lower],'a',sep="")
       #int1 <- int1[!duplicated(int1),]
-      nameadd2 <- c(keys_lower,"value_measuredelement_5016", "flagcombination","flagobservationstatus","flagmethod","loss_per_clean","protected")
+      nameadd2 <- c(keys_lower,"value_measuredelement_5016","value_measuredelement_5126", "flagcombination","flagobservationstatus","flagmethod","loss_per_clean","protected")
       
       timeSeriesDataToBeImputed <-  merge(timeSeriesDataToBeImputed, int1, by=keys_lower, all.x= TRUE)
       print(dim(int1))

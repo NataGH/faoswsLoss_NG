@@ -12,8 +12,9 @@ reporting <- function(ReportingYear,ComparisonYear,BaseYear){
   library(tidyr)
   library(dplyr)
   # 
-  fileTemplates <- "C:\\Users\\ENGLISHA\\Documents\\faoswsLossa\\SDG12_3\\Excel\\"
-  fileSave <- readline("Where would you like to save the file: ")  
+  fileTemplates <- "C:\\Users\\Englisha.FAODOMAIN\\Documents\\faoswsLossa\\SDG12_3\\Excel\\"
+  fileSave <-  fileTemplates 
+    #readline("Where would you like to save the file: ")  
   
   ReportingYr <- as.numeric(max(ReportingYear))
   
