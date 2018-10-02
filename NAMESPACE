@@ -3,6 +3,7 @@
 export(FSC_Markov)
 export(GFLI_SDG_fun)
 export(LossModel)
+export(LossModel_ctry)
 export(MultiExp)
 export(VariablesAdd1)
 export(addHeadingsCPC)
