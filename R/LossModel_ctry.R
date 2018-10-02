@@ -1,7 +1,7 @@
 #' Part of the FAO Loss Module
 #' 
 #' @author Alicia English
-#' @export LossModel
+#' @export LossModel_ctry
 
 LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,HierarchicalCluster,keys_lower){
   # Description:
