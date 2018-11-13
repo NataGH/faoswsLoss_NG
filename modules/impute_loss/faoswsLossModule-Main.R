@@ -52,6 +52,7 @@ suppressMessages({
 
 ############# Computation Parameters #####################################
 LocalRun <- FALSE # For if you are running the model on a local environment and loading data tables from local fiiles
+maxYear <- format(Sys.Date(), "%Y")
 
 ## Options for the user - See full documentation for the User Oriented Work Flow #
 #updatemodel <- TRUE
@@ -80,10 +81,10 @@ if(CheckDebug()){
   ctry_modelvar <- 'All'
   updatemodel <- TRUE
   subnationalestimates <- TRUE
-  selectedYear =  as.character(1990:2016)
+  selectedYear =  as.character(1990:maxYear)
   
 }
-selectedModelYear = as.character(1961:2016)
+selectedModelYear = as.character(1961:maxYear)
 
 print(paste("updatemodel: ", updatemodel))
 print(paste("subnationalestimates: ", subnationalestimates))
@@ -98,7 +99,8 @@ DataCollectionTags_all <- c("Expert Opinion","-","SWS","NationalStatsYearbook"
                             ,"APHLIS","NP","Laboratory Trials","Modelled"                     
                             ,"Field Trial","Crop Cutting Field Experiment","Census" )
 
-DataCollectionTags_represent <- c("SWS","APHLIS","Expert Opinion","Survey","Declarative")
+DataCollectionTags_represent <- c("SWS","APHLIS","Expert Opinion","Survey","Declarative",
+                                  "NationalStatsYearbook","FBS/APQ","NonProtected","NationalAcctSys","Census","LitReview")
 #  c("SWS","NationalStatsYearbook","NonProtected","NationalAcctSys","FBS/APQ","Census",
 #                                      "APHLIS", "Expert Opinion","Survey","Declarative","-","LitReview")
 ExternalDataOpt <- DataCollectionTags_represent
@@ -240,6 +242,7 @@ finalModelData =
     comodities = lossData[per_diff>.1,c("geographicaream49","measureditemcpc","value_measuredelement_5016","prod_imports", "loss_per_clean",
                                                               "loss_per_clean_pi", "per_diff"),with=F]
     
+    
     comodities[, combp := paste(geographicaream49,measureditemcpc, sep=";")]
     comb <- unique(comodities$combp)
     #comodities[per_diff>1,]
@@ -257,6 +260,7 @@ finalModelData =
     
     
     ## Some commodities still produce greater than 100 % losses
+    lossData[value_measuredelement_5126 > 1,]
     lossData[value_measuredelement_5126 > 1,value_measuredelement_5126:=0]
     
     names(lossData) <- tolower(names(lossData))
@@ -318,13 +322,15 @@ if(updatemodel){
        # brings in the current file of converstion factors and divides by 100
        ConvFactor1[,loss_per_clean := loss_per_clean/100]
        # Filters out the non-representative observations
+       #unique(ConvFactor1[!tag_datacollection %in%  ExternalDataOpt  ,"tag_datacollection",with=F]) 
        ConvFactor1  <- ConvFactor1 %>% filter(tag_datacollection %in%  ExternalDataOpt)
        ConvFactor1  <- ConvFactor1 %>% filter(!is.na(loss_per_clean ))
-       ConvFactor1$measureditemcpc <- addHeadingsCPC(ConvFactor1$measureditemcpc)
+       #ConvFactor1$measureditemcpc <- addHeadingsCPC(ConvFactor1$measureditemcpc)
        names(ConvFactor1)[names(ConvFactor1)=='year'] <-'timepointyears'
        
        ## Runs the Markov Model to standardize estimates 
-       markov <- FSC_Markov(RawData=ConvFactor1,opt=MarkovOpt)
+       markov <- FSC_Markov(RawData=ConvFactor1,opt=markov)
+       
        FullSet <- rbind(markov,lossData, fill=T)
       
        duplicates <- FullSet[duplicated(FullSet) | duplicated(FullSet, fromLast=TRUE),]
@@ -365,7 +371,8 @@ if(updatemodel){
   
   
   ####### Model Estimation - Percentages only ############
-  ctry_modelvar <- c("all") 
+  ctry_modelvar <- c("all") #c("100", "191" ,"196", "203" ,"208", "233" ,"246", "250", "276" ,"300" ,"348" ,"372", "380", "40" , "428",
+  "440", "442" ,"470", "528", "56" , "616", "620" ,"642","703" ,"705")  
   # this model estimates by country and does carry-overs, once modeled the data is temporarily protected
   timeSeriesDataToBeImputed_ctry2 <- LossModel_ctry(Data= Data_Use_train0,timeSeriesDataToBeImputed,ctry_modelvar,HierarchicalCluster,keys_lower)
 

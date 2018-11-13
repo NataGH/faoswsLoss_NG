@@ -40,9 +40,13 @@ areaVar = "geographicAreaM49"
 yearVar = "timePointYears"
 itemVar = "measuredItemCPC"
 elementVar = "measuredElement"
+maxYear <- format(Sys.Date(), "%Y")
+
 
 
 # ###----  Data In ----------############
+##### Load Data ######
+## These two tables are constantly needing to be merged - country groups and food groups
 if(CheckDebug()){
   message("Not on server, so setting up environment...")
   USER <- if_else(.Platform$OS.type == "unix",
@@ -54,26 +58,46 @@ if(CheckDebug()){
   settings <- ReadSettings(file = file.path(paste(getwd(),"sws.yml", sep='/')))
   SetClientFiles(settings[["certdir"]])
   
+  
   GetTestEnvironment(
     baseUrl = settings[["server"]],
     token = settings[["token"]]
   )
   
-  Losses <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
-  production <- getProductionData(areaVar,itemVar,yearVar,elementVar) # Value_measuredElement_5510
-  fbsTree <- ReadDatatable("fbs_tree")
-  CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
-  FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
   
-}else{
+  
+}else if(CheckDebug() & LocalRun){
+  #Load local last dataset
   load("InputData.RData")
-}
+
+}else{
+  # Remove domain from username
+  USER <- regmatches(
+    swsContext.username,
+    regexpr("(?<=/).+$", swsContext.username, perl = TRUE)
+  )
+  
+  options(error = function(){
+    dump.frames()
+    
+    filename <- file.path(Sys.getenv("R_SWS_SHARE_PATH"), USER, "PPR")
+    
+    dir.create(filename, showWarnings = FALSE, recursive = TRUE)
+    
+    save(last.dump, file = file.path(filename, "last.dump.RData"))
+  })
+} 
 
 
 
+Losses <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
+production <- getProductionData(areaVar,itemVar,yearVar,elementVar, selectedYear) # Value_measuredElement_5510
+fbsTree <- ReadDatatable("fbs_tree")
+CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
 
-names(CountryGroup)[names(CountryGroup) =="countryname"] <- "Country"
-names(CountryGroup)[names(CountryGroup) =="m49code"] <- "geographicaream49"
+CountryGroup$country <- tolower(CountryGroup$m49_region)
+CountryGroup[,"geographicaream49":=CountryGroup$m49_code]
 
 names(Losses)[names(Losses) =="Value"] <- "value_measuredelement_5126"
 names(Losses)[names(Losses) =="measuredItemSuaFbs"] <- "measureditemcpc"
@@ -125,7 +149,7 @@ ui <- fluidPage(theme = shinytheme("lumen"),
                     sliderInput(
                       inputId = "Year",
                       label = "Year Range",
-                      value = c(2005,2015),step =1,sep = "", min = as.integer(min(selectedYear)), max =  as.integer(max(selectedYear))
+                      value = c(2005,maxYear),step =1,sep = "", min = as.integer(min(selectedYear)), max =  as.integer(max(selectedYear))
                     ),
                     selectInput(
                       inputId = "aggregation",

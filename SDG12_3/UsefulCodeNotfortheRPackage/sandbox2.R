@@ -37,3 +37,35 @@ for(t in unique(comodities$geographicaream49)){
  
 }
 
+ConvFactor1  <- ReadDatatable('flw_lossperfactors_')
+#############################################
+
+CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+FAOCrops     <- ReadDatatable("fcl2cpc_ver_2_1")
+Crops_dict <- setDT(unique(FAOCrops[,c("crop", "measureditemcpc"),with=F]))
+setkey(Crops_dict,measureditemcpc)
+key(Crops_dict)
+
+comodities2 <- comodities  
+comodities2 <- merge(comodities2,Crops_dict, by=("measureditemcpc"))
+comodities2 <- merge(comodities2,CountryGroup[,c("geographicaream49","country"),with=F], by=("geographicaream49"))
+comodities2[, combp := paste(country,crop, sep=";")]
+comb <- unique(comodities2$combp)
+  
+test <- markov[geographicaream49 == 104 &  measureditemcpc=="0142",]
+test2 <-test[1,]
+test2$fsc_location <- "SWS" 
+test2$loss_per_clean <- .10
+
+
+###
+r <-as.list(keys_lower)
+test2 <- as.data.table(test2)
+r <- paste( r,sep=";")
+rowSums(.SD, na.rm = TRUE), .SDcols=c("value_measuredelement_5510","value_measuredelement_5610")]
+r <- function(...){
+  paste(...,sep=";")
+}
+r(keys_lower)
+
+

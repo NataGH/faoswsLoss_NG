@@ -1,4 +1,7 @@
-#' Part of the FAO Loss Module
+#' Part of the FAO Loss Module. This is the reporting script for the SDG committee and for the 
+#' ESS reporting for the department indicator 402B.
+#' 
+#' The function reports for a specific year, and can include a comparison year.
 #' 
 #' @author Alicia English 
 #' @export reporting 

@@ -18,7 +18,7 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
   #	DataPred: is the data that needs estimates predicted (finalPredictData)
   # ctry_modelvar: is if a specific country is to be modeled
   #	HierarchicalCluster: is for the group/cluster ("foodgroupname" was the best preformer)
-  Impute <- FALSE
+  Impute <- 'ctry' # FALSE
   
   CB <- function(dataIn){
     r = exp(dataIn)/(1+exp(dataIn)) 
@@ -364,7 +364,7 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
                      countydummy+cropdummy+intercept,] 
         }else{ datapred[,losstransf := countydummy+cropdummy+intercept,]}
       }
-      
+      CB(datapred$losstransf)
       if(modrun ==1){
         #Transform the losses back to % and not logged numbers 
         

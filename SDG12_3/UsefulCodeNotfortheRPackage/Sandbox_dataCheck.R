@@ -1,7 +1,9 @@
-
+library(openxlsx)
+Losses <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5016')
 
 #'Data Check with the SUA Unbalanced
-
+load("C:\\Users\\Englisha.FAODOMAIN\\Documents\\faoswsLossa\\data\\July_Estimates.RData")
+names(July_Estimates) <- tolower(names(July_Estimates))
 SUAdata <- read.table("C:/Users/Englisha.FAODOMAIN/Desktop/SUA_balanced.csv", header=TRUE, sep=",")
 SUAdata$measuredItemFbsSua <- addHeadingsCPC(SUAdata$measuredItemFbsSua)
 #geographicAreaM49 measuredElementSuaFbs measuredItemSuaFbs timePointYears      Value flagObservationStatus flagMethod
@@ -88,18 +90,103 @@ SUA_nonadj[,"measuredElementSuaFbs" := 5016,]
 setcolorder(SUA_nonadj, 
             c("geographicAreaM49", "measuredElementSuaFbs" ,"measuredItemSuaFbs" ,"timePointYears", "Value", "flagObservationStatus", "flagMethod") )
 
-
-EstData <- DataSave %>% filter( measuredElementSuaFbs=="5016") 
+names(SUA_nonadj) <- tolower(names(SUA_nonadj))
+names(Losses) <- tolower(names(Losses))
+Losses <-Losses[timepointyears >=2000,]
+EstData <- Losses 
 ## Compare
-f1 <- EstData %>% filter((geographicAreaM49 %in% SUA_nonadj$geographicAreaM49))
+f1 <- EstData %>% filter((geographicaream49 %in% SUA_nonadj$geographicaream49))
 f2 <- f1 %>% filter((measuredItemSuaFbs %in% SUA_nonadj$measuredItemSuaFbs))
 f3 <- f2 %>% filter((timePointYears %in% SUA_nonadj$timePointYears))
 
-SUA_nonadj$geographicAreaM49 <- as.character(SUA_nonadj$geographicAreaM49)
-typeof(SUA_nonadj$geographicAreaM49)
+SUA_nonadj$geographicaream49 <- as.character(SUA_nonadj$geographicaream49)
+Losses$geographicaream49 <- as.character(Losses$geographicaream49)
 
-toCompare <- merge(SUA_nonadj,f3,by=c("geographicAreaM49", "measuredItemSuaFbs", "timePointYears"))
-toCompare[, "difference" := Value.x-Value.y,]
+typeof(SUA_nonadj$geographicaream49)
 
-toCompare %>% filter(difference ==0)
-write.table(toCompare , "C:/Users/Englisha.FAODOMAIN/Desktop/SUA_balanced_compare_15AUg18.csv", sep=",")
+toCompare <- merge(SUA_nonadj,Losses,by=c("geographicaream49", "measureditemsuafbs", "timepointyears"), all =T)
+toCompare[geographicaream49 %in% SUA_nonadj$geographicaream49,]
+unique(SUA_nonadj$geographicaream49)
+
+toCompare[, "difference" := value.x-value.y,]
+toCompare[is.na(difference) & value.x>=0,"difference" := value.x]
+toCompare[is.na(difference) & value.y>=0,"difference" := -value.y]
+toCompare <- toCompare[!(is.na(difference) &is.na(value.x)),]
+
+productionNum <- prod_imports
+protectedLossData<-lossData
+
+names(toCompare) <- tolower(names(toCompare))
+names(productionNum)[names(productionNum) == "measureditemcpc" ] <- "measureditemsuafbs"
+names(toCompare)[names(toCompare) == "value.x" ] <- "value_fbsteam"
+names(toCompare)[names(toCompare) == "value.y" ] <- "value_newmodel"
+
+toCompare2 <-merge(toCompare, productionNum, by=c("geographicaream49", "timepointyears", "measureditemsuafbs"), all.x= T)
+
+
+toCompare2[ , percent_prod := value_fbsteam/value_measuredelement_5510]
+toCompare2[ , percent_prod2 := value_newmodel/value_measuredelement_5510]
+
+names(fbsTree) <- tolower(names(fbsTree))
+toCompare2 <- merge(toCompare2, fbsTree[,c("measureditemcpc", "gfli_basket"),with=F], by.x =c("measureditemsuafbs"),by.y =c("measureditemcpc"), all.x=T)
+protectedLossData <-  merge(protectedLossData , fbsTree[,c("measureditemcpc", "gfli_basket"),with=F], by =c("measureditemcpc"))
+
+## add in the old estimates ##
+July_Estimates_5016 <- July_Estimates[measuredelementsuafbs == 5016,]
+July_Estimates_5126 <- July_Estimates[measuredelementsuafbs == 5126,]
+names(July_Estimates_5126)[names(July_Estimates_5126)=="value"] <- "July_5126_value"
+names(July_Estimates_5016)[names(July_Estimates_5016)=="value"] <- "July_5016_value"
+July_Estimates_5126[,measuredelementsuafbs := NULL]
+July_Estimates_5016[,measuredelementsuafbs := NULL]
+July_Estimates2 <- July_Estimates_5126
+July_Estimates2 <- unique(July_Estimates2)
+July_Estimates2 <-July_Estimates2[timepointyears>=2000,]
+
+
+toCompare3 <- merge(toCompare2, July_Estimates2 ,  by=c("geographicaream49","measureditemsuafbs","timepointyears"), all.x=T, all.y=F)
+toCompare3[, combp := paste(geographicaream49,measureditemsuafbs, sep=";")]
+
+### Add the countries that have the loss percentage divided by the production plus imports ###
+toCompare3[toCompare3$combp %in% comb, percent_prod := value_fbsteam/prod_imports]
+toCompare3[toCompare3$combp %in% comb, percent_prod2 := value_newmodel/prod_imports]
+toCompare3$per_prodimp <- F
+toCompare3[toCompare3$combp %in% comb, per_prodimp := T]
+
+### Add which country and years are modeled by country and which are modeled in the global ##
+# toCompare3$model <- ""
+# Losses[,flagcombination:= paste(flagObservationStatus ,flagmethod, sep=";")]
+# 
+# ctrymodel <- unique(Losses[flagcombination == "I;e",c("geographicaream49",  "measuredElementSuaFbs"), with=F])
+# ctrymodel[, combp := paste(geographicaream49,measuredElementSuaFbs, sep=";")] 
+
+# toCompare3[toCompare3$combp %in% ctrymodel$combp & modeled_flagcombo == "I;e",model := "ctry"]
+# toCompare3[ modeled_flagcombo == "I;e",model := "global"]
+
+##### Missing data #####
+Mflag <- unique(toCompare3[modeled_flagcombo == "M;-",c("geographicaream49","measureditemsuafbs"),with=F])
+checksM <- c()
+toCompare3[,modeled_flagcombo := paste(flagobservationstatus.y ,flagmethod.y, sep=";")] 
+for( mm in 1:nrow(Mflag)){
+  mm2 <- toCompare3[geographicaream49== Mflag$geographicaream49[mm] & measureditemsuafbs == Mflag$measureditemsuafbs[mm],]
+  if(!all(unique(mm2$modeled_flagcombo) %in% c("M;-","I;e"))){
+    checksM <- rbind(checksM, mm2)
+  }
+}
+
+toCompare3[,combp := NULL]
+
+for(t in unique(toCompare3$geographicaream49)){
+  wb <- createWorkbook()
+  for(i in unlist(na.omit(unique(toCompare2[geographicaream49== t,"gfli_basket",with=F])))){
+    addWorksheet(wb, unlist(strsplit(as.character(i), "&"))[1])
+    check1 <- toCompare3[geographicaream49 == t & gfli_basket == unname(unlist(i)) ,]
+    writeDataTable(wb, unlist(strsplit(as.character(i), "&"))[1], check1, startRow = 1, startCol = 1 ,withFilter = T)  
+  }
+  
+  saveWorkbook(wb, file =  paste("comparison_balanced_Newmodel", t,".xlsx",sep=""), overwrite = TRUE)
+  
+}
+
+addWorksheet(wb, "MissingMixed")
+writeDataTable(wb, "MissingMixed",checksM, startRow = 1, startCol = 1 ,withFilter = T)  
+saveWorkbook(wb, file =  paste("comparison_balanced_Newmodel", "Missing",".xlsx",sep=""), overwrite = TRUE)

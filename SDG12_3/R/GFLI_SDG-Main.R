@@ -156,7 +156,7 @@ imports$timepointyears<- as.numeric(imports$timepointyears)
 prod_imports <- merge(production,imports, by= keys_lower, all.x = TRUE)
 prod_imports[,prod_imports := rowSums(.SD, na.rm = TRUE), .SDcols=c("value.x","value.y")]
 
-CountryGroup$country <- tolower(CountryGroup$m49_regio)
+CountryGroup$country <- tolower(CountryGroup$m49_region)
 CountryGroup[,"geographicaream49":=CountryGroup$m49_code]
 
 FAOCrops[, "crop" := FAOCrops$description]
@@ -229,6 +229,10 @@ DataForIndex <- join(DataForIndex ,fbsTree , by = c('measureditemcpc'),type= 'le
 DataForIndex <- join(DataForIndex,CountryGroup, by = c('geographicaream49'),type= 'left', match='all')
 
 #### Basket ####
+# Pulls in the existing table
+BasketExist <- ReadDatatable("sdg123_commoditybasket")
+BasketExist <- BasketExist[protected == T,]
+
 if(basketn == "top2perhead_byCtry"){
   Top10perctry <- DataForIndex %>%
     filter(timepointyears == as.numeric(BaseYear[2])-1) %>%

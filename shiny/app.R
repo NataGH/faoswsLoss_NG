@@ -44,6 +44,8 @@ elementVar = "measuredElement"
 selectedYear = as.character(1991:2016)
 
 # ###----  Data In ----------############
+##### Load Data ######
+## These two tables are constantly needing to be merged - country groups and food groups
 if(CheckDebug()){
   message("Not on server, so setting up environment...")
   USER <- if_else(.Platform$OS.type == "unix",
@@ -55,23 +57,42 @@ if(CheckDebug()){
   settings <- ReadSettings(file = file.path(paste(getwd(),"sws.yml", sep='/')))
   SetClientFiles(settings[["certdir"]])
   
+  
   GetTestEnvironment(
     baseUrl = settings[["server"]],
     token = settings[["token"]]
   )
   
-  dataRaw <- ReadDatatable("aggregate_loss_table")
-  CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
-  fbsTree <- ReadDatatable("fbs_tree")
-  FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
-  dataModel <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
   
-}else{
+  
+}else if(CheckDebug() & LocalRun){
+  #Load local last dataset
   load("InputData.RData")
-}
 
-# 
-# 
+}else{
+  # Remove domain from username
+  USER <- regmatches(
+    swsContext.username,
+    regexpr("(?<=/).+$", swsContext.username, perl = TRUE)
+  )
+  
+  options(error = function(){
+    dump.frames()
+    
+    filename <- file.path(Sys.getenv("R_SWS_SHARE_PATH"), USER, "PPR")
+    
+    dir.create(filename, showWarnings = FALSE, recursive = TRUE)
+    
+    save(last.dump, file = file.path(filename, "last.dump.RData"))
+  })
+} 
+
+
+dataRaw <- ReadDatatable("aggregate_loss_table")
+CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
+dataModel <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
+gfli_basket  <- ReadDatatable('gfli_basket')
 
 # #----  Data In ------------------------------------------
 
@@ -83,25 +104,19 @@ setnames(dataRaw,"fsc_location", "Source"  )
 names(dataModel) <- tolower(names(dataModel))
 names(dataModel)[names(dataModel) =='measureditemsuafbs'] <- "measureditemcpc"
 dataModel$geographicaream49 <- as.character(dataModel$geographicaream49)
-CountryGroup$country <- tolower(CountryGroup$countryname)
-CountryGroup[,"geographicaream49":=CountryGroup$m49code]
+CountryGroup$country <- tolower(CountryGroup$m49_region)
+CountryGroup[,"geographicaream49":=CountryGroup$m49_code]
 
-names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
-names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
+
 FAOCrops[, "crop" := FAOCrops$description]
 names(FAOCrops)[names(FAOCrops) =='cpc'] <- "measureditemcpc"
 
-fbsTree[foodgroupname %in% c(2905), gfli_basket :='Cereals',]
-fbsTree[foodgroupname %in% c(2911), gfli_basket :='Pulses',]
-fbsTree[foodgroupname %in% c(2919,2918), gfli_basket :='Fruits & Vegetables',]
-fbsTree[foodgroupname %in% c(2907,2913), gfli_basket :='Roots, Tubers & Oil-Bearing Crops',]
-fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), gfli_basket :='Other',]
-fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), gfli_basket :='Animals Products & Fish and fish products',] # |fo
+
 #----
-Crops <- merge(fbsTree,FAOCrops, by=("measureditemcpc"), all.x =T)
-dataRaw <-merge(dataRaw, fbsTree, by=("measureditemcpc"), all.x =T)
+Crops <- merge(gfli_basket,FAOCrops, by=("measureditemcpc"), all.x =T)
+dataRaw <-merge(dataRaw, gfli_basket, by=("measureditemcpc"), all.x =T)
 dataRaw <-merge(dataRaw, CountryGroup, by=("geographicaream49"), all.x =T)
-dataModel <-merge(dataModel, fbsTree, by=("measureditemcpc"), all.x =T)
+dataModel <-merge(dataModel, gfli_basket, by=("measureditemcpc"), all.x =T)
 dataModel <-merge(dataModel, CountryGroup, by=("geographicaream49"), all.x =T)
 # # #-------------------------------------------------------
 
@@ -117,7 +132,7 @@ ui <- fluidPage(theme = shinytheme("lumen"),
                     selectInput(
                       inputId = "CommodityGroup",
                       label = "Selected Commodity",
-                      choices = c("All",na.omit(unique(fbsTree[,"gfli_basket",with=FALSE]))),
+                      choices = c("All",na.omit(unique(gfli_basket[,"gfli_basket",with=FALSE]))),
                       selected = "All"
                     ),
                     selectInput(
@@ -175,7 +190,7 @@ ui <- fluidPage(theme = shinytheme("lumen"),
 server <- function(input, output, session) {
   observe({
     if (input$CommodityGroup != "") {
-      CommodityGroup_item <- unlist(fbsTree[gfli_basket == input$CommodityGroup ,"measureditemcpc", with=FALSE])
+      CommodityGroup_item <- unlist(gfli_basket[gfli_basket == input$CommodityGroup ,"measureditemcpc", with=FALSE])
       Data_CommodityGroup_item <- unlist(unique(dataRaw[measureditemcpc %in%  CommodityGroup_item,"measureditemcpc",with=F]))
       cpc_choices <- c("All",unique(FAOCrops[measureditemcpc %in% Data_CommodityGroup_item,"crop",with=F]))
       updateSelectInput(session, "itemcpc", choices=cpc_choices, selected ="All")
@@ -186,7 +201,7 @@ server <- function(input, output, session) {
     if (input$SDG_Reg != "") {
       Sdg_m49 <- unlist(CountryGroup[sdg_regions ==input$SDG_Reg,"geographicaream49",with=F])
       Data_Sdg_m49 <- unlist(unique(dataRaw[geographicaream49 %in%  Sdg_m49,"geographicaream49",with=F]))
-      ctry_choices <- c("All",CountryGroup[geographicaream49 %in%  Data_Sdg_m49,"countryname",with=F])
+      ctry_choices <- c("All",CountryGroup[geographicaream49 %in%  Data_Sdg_m49,"country",with=F])
       updateSelectInput(session, "Country", choices=ctry_choices, selected ="All")
     }
   })
@@ -202,7 +217,7 @@ server <- function(input, output, session) {
                                           (geographicaream49 %in%
                                              if(input$SDG_Reg %in%  'All'){unlist(dataRaw[,"geographicaream49",with=F])}
                                              else if(any(input$Country %in%  c('All'))){unlist(dataRaw[sdg_regions %in%  input$SDG_Reg,"geographicaream49",with=F])}
-                                             else if(!is.null(input$Country)){unlist(dataRaw[countryname %in% input$Country,"geographicaream49",with=F])}
+                                             else if(!is.null(input$Country)){unlist(dataRaw[country %in% input$Country,"geographicaream49",with=F])}
                                              else{unlist(dataRaw[sdg_regions %in%  input$SDG_Reg,"geographicaream49",with=F])})&
                                           (Source %in%
                                              if(any(input$Source == 'All')){unlist(dataRaw[,"Source",with=F])}
@@ -223,7 +238,7 @@ server <- function(input, output, session) {
                                             (geographicaream49 %in%
                                                if(input$SDG_Reg %in%  'All'){unlist(dataRaw[,"geographicaream49",with=F])}
                                              else if(any(input$Country %in%  c('All'))){unlist(dataRaw[sdg_regions %in%  input$SDG_Reg,"geographicaream49",with=F])}
-                                             else if(!is.null(input$Country)){unlist(dataRaw[countryname %in% input$Country,"geographicaream49",with=F])}
+                                             else if(!is.null(input$Country)){unlist(dataRaw[country %in% input$Country,"geographicaream49",with=F])}
                                              else{unlist(dataRaw[sdg_regions %in%  input$SDG_Reg,"geographicaream49",with=F])})
   )
   })

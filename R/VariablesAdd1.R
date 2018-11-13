@@ -51,9 +51,11 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
     
   }
   names(CountryGroup) <- tolower(names(CountryGroup))
-  CountryGroup$country <- tolower(CountryGroup$countryname)
+  CountryGroup$country = CountryGroup$m49_region
+  CountryGroup$country <- tolower(CountryGroup$country)
+
   
-  CountryGroup[,"geographicaream49":=CountryGroup$m49code]
+  CountryGroup[,"geographicaream49":=CountryGroup$m49_code]
   CountryGroup$geographicaream49 <- as.integer(CountryGroup$geographicaream49)
   CropCalendar$geographicaream49 <- as.integer(CropCalendar$geographicaream49)
 
@@ -404,16 +406,19 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
 
     DataUseInt[DataUseInt == ""] = NA
     ##################Imputatuion of dataset#########################
-    if(Impute != FALSE){
-      VarNames <- names(DataUseInt)
-      VarNames <- VarNames[!VarNames %in% c("geographicaream49","timepointyears","measureditemcpc","country","crop","loss_per_clean","fsc_location" ,"id1" ,                 
-                                        "id2","foodgroupname","id4","month_x", "temperature_c" , "month_y" ,  "rainfall_mm")]
-      
+    VarNames <- names(DataUseInt)
+    VarNames <- VarNames[!VarNames %in% c("geographicaream49","timepointyears","measureditemcpc","country","crop","loss_per_clean","fsc_location" ,"id1" ,"protected", 
+                                          "value_measuredelement_5016", "value_measuredelement_5126", "flagcombination","flagobservationstatus" ,"flagmethod" ,
+                                          "id2","foodgroupname","id4","month_x", "temperature_c" , "month_y" ,  "rainfall_mm")]
+    
+    VarNames <- na.omit(VarNames)
+    if(Impute != FALSE & length(VarNames) >0  ){
+    
       
       for(ir in 1:length(VarNames)){
-        where.na <- which(DataUseInt[ ,VarNames[ir],with=F ]=="NULL")
+        where.na <- which(DataUseInt[ ,VarNames[ir],with=F ]=="NULL" )
         if(length(where.na)>0){
-          DataUseInt[,VarNames[ir]] <- as.numeric(DataUseInt[,VarNames[ir]])
+          DataUseInt[,VarNames[ir]] <- as.numeric(DataUseInt[[VarNames[ir]]])
         }
         DataUseInt[where.na,VarNames[ir]] <- NA
       }
@@ -421,24 +426,20 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
       ii=0
       
       if(Impute == "ctry"){
-        for(ir in 1:length(VarNames)){
+        for(irr in 1:length(VarNames)){
           for( j in unique(DataUseInt$geographicaream49)){
             i = ii /(length(unique(DataUseInt$geographicaream49))*length(VarNames))
             setTxtProgressBar(pb, i)
-            DataUseInt[geographicaream49 == j,VarNames[ir]] <- with(DataUseInt[geographicaream49 ==j,],  x_impute(DataUseInt[[VarNames[ir]]], mean))
+            
+            DataUseInt[geographicaream49 == j,VarNames[irr]] <- with(DataUseInt[geographicaream49 ==j,],  x_impute(DataUseInt[[VarNames[irr]]], mean))
             #DataUseInt[,VarNames[ir]] <- na.approx(DataUseInt[,VarNames[ir],with=FALSE], na.rm = T)
             ii =ii+1
           }}
       }  
       if(Impute == "var"){
-        for(ir in 1:length(VarNames)){
-            DataUseInt[,VarNames[ir]] <- with(DataUseInt, x_impute(DataUseInt[[VarNames[ir]]], mean))
+        for(irr in 1:length(VarNames)){
+            DataUseInt[,VarNames[irr]] <- with(DataUseInt, x_impute(DataUseInt[[VarNames[irr]]], mean))
           } 
-      }
-      if(Impute == "RF"){
-        for(ir in 1:length(VarNames)){
-          DataUseInt[,VarNames[ir]] <- missForest(DataUseInt[[VarNames[ir]]])
-        } 
       }
       }
     

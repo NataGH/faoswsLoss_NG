@@ -13,6 +13,7 @@ library(openxlsx)
 library(data.table)
 library(tidyr)
 library(dplyr)
+library(plyr)
 library(reshape)
 
 suppressMessages({
@@ -157,12 +158,13 @@ ctryFLIReport <- function(selectedYear,ctry_modelvar){
   imp <- imp%>% filter(timepointyears == as.numeric(BaseYear[2])-1)
   
   
-  table <- merge(CB, BaseProd[,c("measureditemcpc","Prodqty_avey1y2"),with=F], by= "measureditemcpc")
+  table <- merge(CB, BaseProd[,c("measureditemcpc","Prodqty_avey1y2")], by= "measureditemcpc")
   names(table)[names(table)=="Prodqty_avey1y2"] <- "Production" 
-  table <- merge(table,imp[,c("measureditemcpc","Prodqty_avey1y2"),with=F], by= "measureditemcpc",all.x=T) 
+  table <- merge(table,imp[,c("measureditemcpc","Prodqty_avey1y2")], by= "measureditemcpc",all.x=T) 
   names(table)[names(table)=="Prodqty_avey1y2"] <- "Imports"  
+  table <- as.data.table(table)
   table$pi = 0
-  table[,pi:= rowSums(.SD, na.rm = TRUE), .SDcols=c("Production" ,"Imports")]
+  table[,pi:= rowSums(.SD, na.rm = TRUE), .SDcols=c("Production" ,"Imports"),]
   
   table[,percent:= round(pi/pi_tot2,2)]
   table$Production <- format(round(table$Production,0), big.mark=",")
@@ -204,17 +206,17 @@ ctryFLIReport <- function(selectedYear,ctry_modelvar){
   
   table2 <- merge(production2,imports2, by= keys_lower, all.x=T)
   t2 <- table2 %>% filter((geographicaream49 %in% ctry_modelvar)  &( measureditemcpc %in% CommodityBasket$measureditemcpc))
-  
+  t2 <- as.data.table(t2)
   tb <-t2[timepointyears == 2015,"measureditemcpc",with=F]
   named <-"measureditemcpc"
   for( ii in 1:length(unique(t2$timepointyears))){
-    t2a <- t2 %>% filter(timepointyears == unique(t2$timepointyears)[ii]) %>% summarize(measureditemcpc,production,imports)
+    t2a <- t2 [timepointyears == unique(t2$timepointyears)[ii],c("measureditemcpc","production","imports"), with=F]
     tb <-merge(tb,t2a, by= c("measureditemcpc") )
     named <- cbind(named,"Production", "Imports")
   }
   tb3 <- table[,"CPC",with=F]
   names(tb3) <- "measureditemcpc"
-  tb3 <-join(tb3,tb, by= c("measureditemcpc"))
+  tb3 <- join(tb3,tb, by= c("measureditemcpc"))
   tb3[,measureditemcpc:=NULL]
   named <- as.data.frame(named)[2:length(named)]
   
@@ -232,7 +234,7 @@ ctryFLIReport <- function(selectedYear,ctry_modelvar){
     Step2 <- read.xlsx(wb, sheet = paste("Step2_FLP_SubNat_",selectedYear[yr],sep=""),startRow = 2)
     #First table - Identification
     Step2_1 <- Step2[1:3,1:2]
-    Step2_1[Step2_1$Item == "Country","Data"] <- CountryGroup[m49code == ctry_modelvar,"countryname",with=F]
+    Step2_1[Step2_1$Item == "Country","Data"] <- CountryGroup[m49_code == ctry_modelvar,"m49_region",with=F]
     Step2_1[Step2_1$Item == "Year ","Data"] <- selectedYear[yr]
     writeDataTable(wb,  paste("Step2_FLP_SubNat_",selectedYear[yr],sep=""), Step2_1, startRow = 2, startCol = 1,withFilter = FALSE )  
     
@@ -290,40 +292,41 @@ ctryFLIReport <- function(selectedYear,ctry_modelvar){
     
   ### Pre-2015 estimates along the supply chain ####
   a <- SourceConv[SourceConv$measureditemcpc %in%  CB$measureditemcpc,]
-  Step4 <- read.xlsx(wb, sheet =  sheets[5],startRow = 2)
+  if(nrow(a)>0){
+    Step4 <- read.xlsx(wb, sheet =  sheets[5],startRow = 2)
+    
+    Step4_1 <- Step4[1:3,1:2]
+    Step4_1[Step2_1$Item == "Country","Data"] <- CountryGroup[m49_code == ctry_modelvar,"m49_region",with=F]
+    Step4_1[Step2_1$Item == "Year ","Data"] <-  paste(min(a$timepointyears),max(a$timepointyears), sep=" - ")
+    writeDataTable(wb, sheets[5], Step4_1, startRow = 2, startCol = 1,withFilter = FALSE )  
+    
+    #second table _ loss percetnages by stage
+    Step4_2 <- as.data.table(Step4[7:19,4:9])
+    names(Step4_2) <-unname(unlist(Step4_2[1,]))
+    Step4_2 <- Step4_2[!1,]
+    
+    CB <- table[,c("CPC","Item Name"),with=F]
+    names( CB)[names( CB)=="CPC"] <- "measureditemcpc"
+    tb2_2 <- cbind(CB,Step4_2)
+    
   
-  Step4_1 <- Step4[1:3,1:2]
-  Step4_1[Step2_1$Item == "Country","Data"] <- CountryGroup[m49code == ctry_modelvar,"countryname",with=F]
-  Step4_1[Step2_1$Item == "Year ","Data"] <-  paste(min(a$timepointyears),max(a$timepointyears), sep=" - ")
-  writeDataTable(wb, sheets[5], Step4_1, startRow = 2, startCol = 1,withFilter = FALSE )  
-  
-  #second table _ loss percetnages by stage
-  Step4_2 <- as.data.table(Step4[7:19,4:9])
-  names(Step4_2) <-unname(unlist(Step4_2[1,]))
-  Step4_2 <- Step4_2[!1,]
-  
-  CB <- table[,c("CPC","Item Name"),with=F]
-  names( CB)[names( CB)=="CPC"] <- "measureditemcpc"
-  tb2_2 <- cbind(CB,Step4_2)
-  
-
- 
-  for( i in CB$measureditemcpc){
-    for(ii in names(Step4_2)){
-      if(!is.na(a[(measureditemcpc==i) & (fsc_location ==ii),"loss_per_clean"]) &
-          dim(a[(measureditemcpc==i) & (fsc_location ==ii),"loss_per_clean",with=F])[1]>0 ){
-        if(dim(a[(measureditemcpc==i) & (fsc_location ==ii),"loss_per_clean",with=F])[1]>=2){
-           tb2_2[(measureditemcpc==i), ii] <- paste(min( a[(measureditemcpc==i) & (fsc_location ==ii),"loss_per_clean",with=F]),
-                max(a[(measureditemcpc==i) & (fsc_location ==ii),"loss_per_clean",with=F]),sep= " - ")
-        }else{
-          tb2_2[(measureditemcpc==i), ii] <- as.character(a[(measureditemcpc==i) & (fsc_location ==ii),"loss_per_clean",with=F])
-        }
-    }}
-  }
-  
-  tb2_2[,c("measureditemcpc","Item Name") := NULL]
-  writeDataTable(wb,  sheets[5],tb2_2, startRow = 11, startCol = 4,withFilter = FALSE )  
-  
+    a <- as.data.table(a)
+    for( i in CB$measureditemcpc){
+      for(ii in names(Step4_2)){
+        if(!is.na(a[(measureditemcpc==i) & (fsc_location ==ii),"loss_per_clean"]) &
+            dim(a[(measureditemcpc==i) & (fsc_location ==ii),"loss_per_clean",with=F])[1]>0 ){
+          if(dim(a[(measureditemcpc==i) & (fsc_location ==ii),"loss_per_clean",with=F])[1]>=2){
+             tb2_2[(measureditemcpc==i), ii] <- paste(min( a[(measureditemcpc==i) & (fsc_location ==ii),"loss_per_clean",with=F]),
+                  max(a[(measureditemcpc==i) & (fsc_location ==ii),"loss_per_clean",with=F]),sep= " - ")
+          }else{
+            tb2_2[(measureditemcpc==i), ii] <- as.character(a[(measureditemcpc==i) & (fsc_location ==ii),"loss_per_clean",with=F])
+          }
+      }}
+    }
+    
+    tb2_2[,c("measureditemcpc","Item Name") := NULL]
+    writeDataTable(wb,  sheets[5],tb2_2, startRow = 11, startCol = 4,withFilter = FALSE )  
+  } 
   ### Write Sources Table ####
   
   writeDataTable(wb, sheets[length(sheets)],SourceConv , startRow = 1, startCol = 1,withFilter = T) 
@@ -341,7 +344,7 @@ ctryFLIReport <- function(selectedYear,ctry_modelvar){
     sheetVisibility(wb)[which(sheets == paste("Step2_FLP_SubNat_",iii,sep=""))] <- FALSE
     }
     
-  saveWorkbook(wb,paste(fileSave,paste("FLP-FLI Calculation_original_", Sys.Date(),"_",CountryGroup[m49code == ctry_modelvar,"countryname",with=F] ,".xlsx", sep=""), sep=""),overwrite = T)
+  saveWorkbook(wb,paste(fileSave,paste("FLP-FLI Calculation_original_", Sys.Date(),"_",CountryGroup[m49_code == ctry_modelvar,"m49_region",with=F] ,".xlsx", sep=""), sep=""),overwrite = T)
 }
 
 ctryFLIReport(selectedYear,ctry_modelvar)
