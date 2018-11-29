@@ -329,7 +329,7 @@ if(updatemodel){
        names(ConvFactor1)[names(ConvFactor1)=='year'] <-'timepointyears'
        
        ## Runs the Markov Model to standardize estimates 
-       markov <- FSC_Markov(RawData=ConvFactor1,opt=markov)
+       markov <- FSC_Markov(RawData=ConvFactor1,opt="aveatFSP")
        
        FullSet <- rbind(markov,lossData, fill=T)
       
@@ -362,7 +362,16 @@ if(updatemodel){
   # Adds the explanatory Varaibles,
   
   Predvar <- c()
-  Data_Use_train0 <- VariablesAdd1(FullSet,keys_lower,Predvar,FALSE,'00')
+  
+  Data_Use_train0  <- NULL 
+  while(is.null(Data_Use_train0)){ 
+    Data_Use_train0 <- tryCatch(VariablesAdd1(FullSet,keys_lower,Predvar,FALSE,'00'),
+                              error = function(error_condition) {
+                                return(NULL)
+                              }
+                              
+                              )
+  }
   ## These options change the method of estimating the missing data in the explanatory dataset
   #Data_Use_train <- VariablesAdd1(FullSet,keys_lower,Predvar,"ctry",'00')
   #Data_Use_train2 <- VariablesAdd1(FullSet,keys_lower,Predvar,"var",'00')
@@ -372,7 +381,7 @@ if(updatemodel){
   
   ####### Model Estimation - Percentages only ############
   ctry_modelvar <- c("all") #c("100", "191" ,"196", "203" ,"208", "233" ,"246", "250", "276" ,"300" ,"348" ,"372", "380", "40" , "428",
-  "440", "442" ,"470", "528", "56" , "616", "620" ,"642","703" ,"705")  
+  # "440", "442" ,"470", "528", "56" , "616", "620" ,"642","703" ,"705")  
   # this model estimates by country and does carry-overs, once modeled the data is temporarily protected
   timeSeriesDataToBeImputed_ctry2 <- LossModel_ctry(Data= Data_Use_train0,timeSeriesDataToBeImputed,ctry_modelvar,HierarchicalCluster,keys_lower)
 
@@ -406,8 +415,8 @@ if(updatemodel){
     }
   }
   
-
-  timeSeriesDataToBeImputed_PI <- timeSeriesDataToBeImputed_PI %>% filter(!is.na(value_measuredelement_5510))
+  nonEstCommod <- unique(timeSeriesDataToBeImputed_PI[value_measuredelement_5126==0,"measureditemcpc",with=F])
+  timeSeriesDataToBeImputed_PI <- timeSeriesDataToBeImputed_PI %>% filter(!is.na(prod_imports))
   timeSeriesDataToBeImputed_PI <- timeSeriesDataToBeImputed_PI %>% filter(!flagcombination == "NA;NA" )
   timeSeriesDataToBeImputed_PI  <- timeSeriesDataToBeImputed_PI %>% filter(!is.na(value_measuredelement_5016))
   ## Double check that the protected loss elements haven't been overwritten

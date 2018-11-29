@@ -194,7 +194,7 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
       print("Break 1")
       
       ###### Variable Selection ####
-      ## CLuster wide Variable selection ##
+      ## CLuster wide Variable selection - Random forest ##
       fit2 <- rpart(losstransf ~ ., data =  data_byctry[,!names(data_byctry) %in% unique(c(keys_lower, drops1)),with=F] ,control=rpart.control(minsplit=30, cp=0.001))
       ImportVar2 <- names(fit2$variable.importance)[1:NumImportVarUse]
       
@@ -211,7 +211,17 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
         next
       }
       
-      DataPred <- VariablesAdd1(DataPred,keys_lower,Predvar2,Impute,name)
+      ## Adds variables But if cas of timeout restarts
+      r <- NULL
+      while(is.null(r)){ 
+        r <- tryCatch(VariablesAdd1(DataPred,keys_lower,Predvar2,Impute,name),
+                                    error = function(error_condition) {
+                                      return(NULL)
+                                    }
+                                    
+        )
+      }
+      DataPred <- r
       print(dim(DataPred))
       
       Predvar2 <- Predvar2[!Predvar2 %in% c("losstransf", "protected")]

@@ -139,6 +139,7 @@ if(CheckDebug()){
 Losses <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
 production <- getProductionData(areaVar,itemVar,yearVar,elementVar,selectedYear) # Value_measuredElement_5510
 imports <- getImportData(areaVar,itemVar,yearVar, selectedYear)
+#nutrient_table <- getNutrientFactors()
 
 fbsTree <- ReadDatatable("fbs_tree")
 CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
@@ -319,6 +320,7 @@ if(basketn == "Global"){
   basket <- as.data.table(merge(basket,Top10_VP, by =c("geographicaream49"), all.x=TRUE))
   basket[,Percent_prod := p0q0/All_p0q0]
 }
+
 # if(basketn == "calories"){
 #   Globalkcal1 <- ReadDatatable("top10_foodsupplykcal")
 #   #Globalkcal1 <- Globalkcal1  %>%

@@ -3,6 +3,101 @@
 #' @author Alicia English
 #' @export VariablesAdd1
 
+
+### Importing the tables ###
+CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+fbsTree <- ReadDatatable("fbs_tree")
+Temperature <-  ReadDatatable("temp_climate_month_ctry")
+Precipitation <- ReadDatatable("rain_climate_month_ctry")
+CropCalendar <- ReadDatatable("crop_calendar_nov17")
+  
+## Yearly Variables ##
+LossTablelist_Yr <- c('world_bank_pinksheets')
+LossTables_Yr <- list()
+LossTables_Yr <- lapply(LossTablelist_Yr,ReadDatatable)
+names(LossTables_Yr) <- LossTablelist_Yr
+
+
+## Variables by country and Year ##
+LossTablelist_ctryYr <- c('bm_gsr_fcty_cd',
+                          'bm_gsr_totl_cd',
+                          'bm_trf_prvt_cd',
+                          'bn_gsr_fcty_cd',
+                          'bn_trf_curr_cd',
+                          'bx_gsr_fcty_cd',
+                          'bx_gsr_totl_cd',
+                          'bx_trf_curr_cd',
+                          'dt_dod_dect_ex_zs',
+                          'dt_dod_dstc_xp_zs',
+                          'dt_dod_pvlx_ex_zs',
+                          'dt_int_dect_ex_zs',
+                          'dt_oda_odat_mp_zs',
+                          'dt_tds_dect_ex_zs',
+                          'dt_tds_dppf_xp_zs',
+                          'dt_tds_dppg_xp_zs',
+                          'eg_elc_accs_zs',
+                          'gc_tax_ypkg_cn',
+                          'gc_tax_ypkg_rv_zs',
+                          'gc_tax_ypkg_zs',
+                          'ny_adj_nnty_cd',
+                          ## 'ny_adj_nnty_kd',
+                          'ny_adj_nnty_kd_zg',
+                          'ny_adj_nnty_pc_cd',
+                          'ny_adj_nnty_pc_kd',
+                          'ny_adj_nnty_pc_kd_zg',
+                          ## 'ny_gdy_totl_kn',
+                          'ny_gsr_nfcy_cd',
+                          'ny_gsr_nfcy_cn',
+                          'ny_gsr_nfcy_kn',
+                          'si_dst_02nd_20',
+                          'si_dst_03rd_20',
+                          'si_dst_04th_20',
+                          'si_dst_05th_20',
+                          'si_dst_10th_10',
+                          'si_dst_frst_10',
+                          'si_dst_frst_20',
+                          'si_spr_pc40',
+                          'si_spr_pc40_zg',
+                          'si_spr_pcap',
+                          'si_spr_pcap_zg',
+                          'tm_val_mrch_hi_zs',
+                          'tm_val_mrch_or_zs',
+                          'tm_val_mrch_r1_zs',
+                          'tm_val_mrch_r2_zs',
+                          'tm_val_mrch_r3_zs',
+                          'tm_val_mrch_r5_zs',
+                          'tm_val_mrch_r6_zs',
+                          'tm_val_mrch_wr_zs',
+                          'tx_val_mrch_hi_zs',
+                          'tx_val_mrch_or_zs',
+                          'tx_val_mrch_r1_zs',
+                          'tx_val_mrch_r2_zs',
+                          'tx_val_mrch_r3_zs',
+                          'tx_val_mrch_r4_zs',
+                          'tx_val_mrch_r5_zs',
+                          'tx_val_mrch_r6_zs',
+                          'tx_val_mrch_wr_zs',
+                          'wp_time_01_8',
+                          'wp_time_01_9',
+                          'wp15163_4_8',
+                          'wp15163_4_9',
+                          'credittoag',
+                          'investment_consumptionfixedcapital',
+                          'investment_grosscapitalstocks',
+                          'investment_grossfixedcapitalformation_usd',
+                          'investment_netcapitalstocks',
+                          'ironsteelimport7055475',
+                          'lpidata',
+                          'sankey_diagram_iea20apr17',
+                          'spendingonag_ifpri_com'
+)
+LossTables_ctryYr <- list()
+LossTables_ctryYr <- lapply(LossTablelist_ctryYr,ReadDatatable)
+names(LossTables_ctryYr) <- LossTablelist_ctryYr
+#LossTables_ctryYr[[LossTablelist_ctryYr[ii]]]
+
+
+
 VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){  
   # Description:
   #Adds the explanatory variables to the dataset for either the estimation model or the predictive set
@@ -29,27 +124,27 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
     return(x)
   } 
   
-  if(LocalRun){
-    CountryGroup <- as.data.table(read.csv(paste(githubsite, 'General/a2017regionalgroupings_SDG_02Feb2017.csv', sep='')))
-    Temperature <-  as.data.table(read.csv(paste(githubsite, 'General/Temp_climate.csv', sep='')))
-    Precipitation <- as.data.table(read.csv(paste(githubsite, 'General/Rain_climate.csv', sep='')))
-    CropCalendar <- as.data.table(read.csv(paste(githubsite, 'General/AllCropCalendar.csv', sep='')))
-    load(paste(githubsite, 'General/fbsTree.RData',sep=""))
-    
-    names(CountryGroup) <- tolower(names(CountryGroup))
-    names(Temperature) <- tolower(names(Temperature))
-    names(Precipitation) <- tolower(names(Precipitation))
-    names(CropCalendar) <- tolower(names(CropCalendar))
-    names(fbsTree) <- tolower(names(fbsTree))
-    
-  }else{
-    CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
-    fbsTree <- ReadDatatable("fbs_tree")
-    Temperature <-  ReadDatatable("temp_climate_month_ctry")
-    Precipitation <- ReadDatatable("rain_climate_month_ctry")
-    CropCalendar <- ReadDatatable("crop_calendar_nov17")
-    
-  }
+  # if(LocalRun){
+  #   CountryGroup <- as.data.table(read.csv(paste(githubsite, 'General/a2017regionalgroupings_SDG_02Feb2017.csv', sep='')))
+  #   Temperature <-  as.data.table(read.csv(paste(githubsite, 'General/Temp_climate.csv', sep='')))
+  #   Precipitation <- as.data.table(read.csv(paste(githubsite, 'General/Rain_climate.csv', sep='')))
+  #   CropCalendar <- as.data.table(read.csv(paste(githubsite, 'General/AllCropCalendar.csv', sep='')))
+  #   load(paste(githubsite, 'General/fbsTree.RData',sep=""))
+  #   
+  #   names(CountryGroup) <- tolower(names(CountryGroup))
+  #   names(Temperature) <- tolower(names(Temperature))
+  #   names(Precipitation) <- tolower(names(Precipitation))
+  #   names(CropCalendar) <- tolower(names(CropCalendar))
+  #   names(fbsTree) <- tolower(names(fbsTree))
+  #   
+  # }else{
+  #   CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+  #   fbsTree <- ReadDatatable("fbs_tree")
+  #   Temperature <-  ReadDatatable("temp_climate_month_ctry")
+  #   Precipitation <- ReadDatatable("rain_climate_month_ctry")
+  #   CropCalendar <- ReadDatatable("crop_calendar_nov17")
+  #   
+  # }
   names(CountryGroup) <- tolower(names(CountryGroup))
   CountryGroup$country = CountryGroup$m49_region
   CountryGroup$country <- tolower(CountryGroup$country)
@@ -158,12 +253,12 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
       
     }
      }else{
-      LossTablelist_Yr <- c('world_bank_pinksheets')
+      # LossTablelist_Yr <- c('world_bank_pinksheets')
       pb <- txtProgressBar()
       for (ii in seq_len(length(LossTablelist_Yr))){
         i = ii /length(LossTablelist_Yr)
         setTxtProgressBar(pb, i)
-        ConvFactor_calYr <-merge(ConvFactor_calYr, ReadDatatable(LossTablelist_Yr[ii]), 
+        ConvFactor_calYr <-merge(ConvFactor_calYr, LossTables_Yr[[LossTablelist_Yr[ii]]], 
                                  by.x =c("timepointyears"), by.y =c( "timepointyears"), all.x = TRUE, all.y = FALSE)
         ConvFactor_calYr <- ConvFactor_calYr %>% subset(., select=which(!duplicated(names(.)))) 
         
@@ -216,78 +311,78 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
     )
 
     ####Import and merge By Year & country ###############
-    LossTablelist_ctryYr <- c('bm_gsr_fcty_cd',
-                              'bm_gsr_totl_cd',
-                              'bm_trf_prvt_cd',
-                              'bn_gsr_fcty_cd',
-                              'bn_trf_curr_cd',
-                              'bx_gsr_fcty_cd',
-                              'bx_gsr_totl_cd',
-                              'bx_trf_curr_cd',
-                              'dt_dod_dect_ex_zs',
-                              'dt_dod_dstc_xp_zs',
-                              'dt_dod_pvlx_ex_zs',
-                              'dt_int_dect_ex_zs',
-                              'dt_oda_odat_mp_zs',
-                              'dt_tds_dect_ex_zs',
-                              'dt_tds_dppf_xp_zs',
-                              'dt_tds_dppg_xp_zs',
-                              'eg_elc_accs_zs',
-                              'gc_tax_ypkg_cn',
-                              'gc_tax_ypkg_rv_zs',
-                              'gc_tax_ypkg_zs',
-                              'ny_adj_nnty_cd',
-                              ## 'ny_adj_nnty_kd',
-                              'ny_adj_nnty_kd_zg',
-                              'ny_adj_nnty_pc_cd',
-                              'ny_adj_nnty_pc_kd',
-                              'ny_adj_nnty_pc_kd_zg',
-                              ## 'ny_gdy_totl_kn',
-                              'ny_gsr_nfcy_cd',
-                              'ny_gsr_nfcy_cn',
-                              'ny_gsr_nfcy_kn',
-                              'si_dst_02nd_20',
-                              'si_dst_03rd_20',
-                              'si_dst_04th_20',
-                              'si_dst_05th_20',
-                              'si_dst_10th_10',
-                              'si_dst_frst_10',
-                              'si_dst_frst_20',
-                              'si_spr_pc40',
-                              'si_spr_pc40_zg',
-                              'si_spr_pcap',
-                              'si_spr_pcap_zg',
-                              'tm_val_mrch_hi_zs',
-                              'tm_val_mrch_or_zs',
-                              'tm_val_mrch_r1_zs',
-                              'tm_val_mrch_r2_zs',
-                              'tm_val_mrch_r3_zs',
-                              'tm_val_mrch_r5_zs',
-                              'tm_val_mrch_r6_zs',
-                              'tm_val_mrch_wr_zs',
-                              'tx_val_mrch_hi_zs',
-                              'tx_val_mrch_or_zs',
-                              'tx_val_mrch_r1_zs',
-                              'tx_val_mrch_r2_zs',
-                              'tx_val_mrch_r3_zs',
-                              'tx_val_mrch_r4_zs',
-                              'tx_val_mrch_r5_zs',
-                              'tx_val_mrch_r6_zs',
-                              'tx_val_mrch_wr_zs',
-                              'wp_time_01_8',
-                              'wp_time_01_9',
-                              'wp15163_4_8',
-                              'wp15163_4_9',
-                              'credittoag',
-                              'investment_consumptionfixedcapital',
-                              'investment_grosscapitalstocks',
-                              'investment_grossfixedcapitalformation_usd',
-                              'investment_netcapitalstocks',
-                              'ironsteelimport7055475',
-                              'lpidata',
-                              'sankey_diagram_iea20apr17',
-                              'spendingonag_ifpri_com'
-    )
+    # LossTablelist_ctryYr <- c('bm_gsr_fcty_cd',
+    #                           'bm_gsr_totl_cd',
+    #                           'bm_trf_prvt_cd',
+    #                           'bn_gsr_fcty_cd',
+    #                           'bn_trf_curr_cd',
+    #                           'bx_gsr_fcty_cd',
+    #                           'bx_gsr_totl_cd',
+    #                           'bx_trf_curr_cd',
+    #                           'dt_dod_dect_ex_zs',
+    #                           'dt_dod_dstc_xp_zs',
+    #                           'dt_dod_pvlx_ex_zs',
+    #                           'dt_int_dect_ex_zs',
+    #                           'dt_oda_odat_mp_zs',
+    #                           'dt_tds_dect_ex_zs',
+    #                           'dt_tds_dppf_xp_zs',
+    #                           'dt_tds_dppg_xp_zs',
+    #                           'eg_elc_accs_zs',
+    #                           'gc_tax_ypkg_cn',
+    #                           'gc_tax_ypkg_rv_zs',
+    #                           'gc_tax_ypkg_zs',
+    #                           'ny_adj_nnty_cd',
+    #                           ## 'ny_adj_nnty_kd',
+    #                           'ny_adj_nnty_kd_zg',
+    #                           'ny_adj_nnty_pc_cd',
+    #                           'ny_adj_nnty_pc_kd',
+    #                           'ny_adj_nnty_pc_kd_zg',
+    #                           ## 'ny_gdy_totl_kn',
+    #                           'ny_gsr_nfcy_cd',
+    #                           'ny_gsr_nfcy_cn',
+    #                           'ny_gsr_nfcy_kn',
+    #                           'si_dst_02nd_20',
+    #                           'si_dst_03rd_20',
+    #                           'si_dst_04th_20',
+    #                           'si_dst_05th_20',
+    #                           'si_dst_10th_10',
+    #                           'si_dst_frst_10',
+    #                           'si_dst_frst_20',
+    #                           'si_spr_pc40',
+    #                           'si_spr_pc40_zg',
+    #                           'si_spr_pcap',
+    #                           'si_spr_pcap_zg',
+    #                           'tm_val_mrch_hi_zs',
+    #                           'tm_val_mrch_or_zs',
+    #                           'tm_val_mrch_r1_zs',
+    #                           'tm_val_mrch_r2_zs',
+    #                           'tm_val_mrch_r3_zs',
+    #                           'tm_val_mrch_r5_zs',
+    #                           'tm_val_mrch_r6_zs',
+    #                           'tm_val_mrch_wr_zs',
+    #                           'tx_val_mrch_hi_zs',
+    #                           'tx_val_mrch_or_zs',
+    #                           'tx_val_mrch_r1_zs',
+    #                           'tx_val_mrch_r2_zs',
+    #                           'tx_val_mrch_r3_zs',
+    #                           'tx_val_mrch_r4_zs',
+    #                           'tx_val_mrch_r5_zs',
+    #                           'tx_val_mrch_r6_zs',
+    #                           'tx_val_mrch_wr_zs',
+    #                           'wp_time_01_8',
+    #                           'wp_time_01_9',
+    #                           'wp15163_4_8',
+    #                           'wp15163_4_9',
+    #                           'credittoag',
+    #                           'investment_consumptionfixedcapital',
+    #                           'investment_grosscapitalstocks',
+    #                           'investment_grossfixedcapitalformation_usd',
+    #                           'investment_netcapitalstocks',
+    #                           'ironsteelimport7055475',
+    #                           'lpidata',
+    #                           'sankey_diagram_iea20apr17',
+    #                           'spendingonag_ifpri_com'
+    # )
 
     ## Load first all the data tables and merges with the time and country set from the training or predicitve set and then merge with the data 
     if(LocalRun){
@@ -308,7 +403,7 @@ VariablesAdd1 <- function(DataUseInt,keys_lower,Predvar2,Impute,fgroup){
       for (ii in seq_len(length(LossTablelist_ctryYr))){
         i = ii /length(LossTablelist_ctryYr)
         setTxtProgressBar(pb, i)
-        ConvFactor_cal <-merge(ConvFactor_cal, ReadDatatable(LossTablelist_ctryYr[ii]), 
+        ConvFactor_cal <-merge(ConvFactor_cal, LossTables_ctryYr[[LossTablelist_ctryYr[ii]]], 
                      by.x =c("geographicaream49", "timepointyears"), by.y =c("geographicaream49", "timepointyears"), all.x = TRUE, all.y = FALSE)
         ConvFactor_cal <- ConvFactor_cal%>% subset(., select=which(!duplicated(names(.)))) 
   
