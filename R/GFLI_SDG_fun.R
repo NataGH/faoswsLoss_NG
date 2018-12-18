@@ -30,6 +30,12 @@ GFLI_SDG_fun <- function(BaseYear,keys_lower,aggregation,basket,basketKeys,DataF
       aggregationName = "sdg_regions"
     }
   }
+  if(length(grep("agg" ,aggregation))>0){
+    aggregationName =aggregation
+  }
+  if(length(grep("gfli" ,aggregation))>0){
+    aggregationName =aggregation
+  }
 
  
   ###### Weights and GFLI Calculation ######### 
@@ -75,7 +81,9 @@ GFLI_SDG_fun <- function(BaseYear,keys_lower,aggregation,basket,basketKeys,DataF
   # index of aggregation column which is na
   where.na <- which(!is.na(foodLossIndex[ ,aggregation,with=F ]))
   foodLossIndex <-  data.table(foodLossIndex[where.na])
-  foodLossIndex <- join(foodLossIndex,NameConv, by=aggregation)
+  if(length(grep("region" ,aggregationName))>0){ 
+    foodLossIndex <- join(foodLossIndex,NameConv, by=aggregation)
+  }  
   names(foodLossIndex)[names(foodLossIndex) == aggregationName] <- "region_name"
   names(foodLossIndex)[names(foodLossIndex) == aggregation] <- "region_code"
   

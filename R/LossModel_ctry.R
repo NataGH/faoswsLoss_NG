@@ -127,7 +127,7 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
       for(viii in unique(data_byctry$measureditemcpc)){
         print(viii)
         if((dim(data_byctry[measureditemcpc == viii,"loss_per_clean",with=F])[1]>1) &
-            (var(data_byctry[measureditemcpc == viii,"loss_per_clean",with=F]) == 0)){
+           (var(data_byctry[measureditemcpc == viii,"loss_per_clean",with=F]) == 0)){
           # for countries that use carry-over percentages 
           
           carryover <- mean(data_byctry[measureditemcpc == viii ,loss_per_clean], na.rm=TRUE)
@@ -152,8 +152,8 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
           print(dim(timeSeriesDataToBeImputed))
           print('for this commodity a carryover was applied')
           data_byctry <- data_byctry %>% filter(!measureditemcpc ==viii )
-        }else{
-        next}
+        }
+        
         
       }
       if(dim(data_byctry)[1] == 0){
@@ -214,7 +214,7 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
       ## Adds variables But if cas of timeout restarts
       r <- NULL
       while(is.null(r)){ 
-        r <- tryCatch(VariablesAdd1(DataPred,keys_lower,Predvar2,Impute,name),
+        r <- tryCatch(VariablesAdd1(DataPred,keys_lower,Predvar2,Impute,name,CountryGroup,fbsTree,Temperature,Precipitation,CropCalendar,LossTables_Yr,LossTables_ctryYr),
                                     error = function(error_condition) {
                                       return(NULL)
                                     }

@@ -99,8 +99,11 @@ DataCollectionTags_all <- c("Expert Opinion","-","SWS","NationalStatsYearbook"
                             ,"APHLIS","NP","Laboratory Trials","Modelled"                     
                             ,"Field Trial","Crop Cutting Field Experiment","Census" )
 
-DataCollectionTags_represent <- c("SWS","APHLIS","Expert Opinion","Survey","Declarative",
-                                  "NationalStatsYearbook","FBS/APQ","NonProtected","NationalAcctSys","Census","LitReview")
+DataCollectionTags_represent <- c("-","APHLIS","Case Study","Census","Declarative","Expert Opinion",
+                                  "FBS/APQ","LitReview","Modelled","NationalAcctSys",
+                                  "NationalStatsYearbook","NonProtected","NP","Survey","SWS")
+UB<- 0.65
+LB <- 0.05
 #  c("SWS","NationalStatsYearbook","NonProtected","NationalAcctSys","FBS/APQ","Census",
 #                                      "APHLIS", "Expert Opinion","Survey","Declarative","-","LitReview")
 ExternalDataOpt <- DataCollectionTags_represent
@@ -206,6 +209,97 @@ fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), GFLI_Basket :='Meat & A
 fbsTree[GFLI_Basket == "NA", 'GFLI_Basket'] <- NA
 
 
+### Importing the tables ###
+Temperature <-  ReadDatatable("temp_climate_month_ctry")
+Precipitation <- ReadDatatable("rain_climate_month_ctry")
+CropCalendar <- ReadDatatable("crop_calendar_nov17")
+
+## Yearly Variables ##
+LossTablelist_Yr <- c('world_bank_pinksheets')
+LossTables_Yr <- list()
+LossTables_Yr <- lapply(LossTablelist_Yr,ReadDatatable)
+names(LossTables_Yr) <- LossTablelist_Yr
+
+
+## Variables by country and Year ##
+LossTablelist_ctryYr <- c('bm_gsr_fcty_cd',
+                          'bm_gsr_totl_cd',
+                          'bm_trf_prvt_cd',
+                          'bn_gsr_fcty_cd',
+                          'bn_trf_curr_cd',
+                          'bx_gsr_fcty_cd',
+                          'bx_gsr_totl_cd',
+                          'bx_trf_curr_cd',
+                          'dt_dod_dect_ex_zs',
+                          'dt_dod_dstc_xp_zs',
+                          'dt_dod_pvlx_ex_zs',
+                          'dt_int_dect_ex_zs',
+                          'dt_oda_odat_mp_zs',
+                          'dt_tds_dect_ex_zs',
+                          'dt_tds_dppf_xp_zs',
+                          'dt_tds_dppg_xp_zs',
+                          'eg_elc_accs_zs',
+                          'gc_tax_ypkg_cn',
+                          'gc_tax_ypkg_rv_zs',
+                          'gc_tax_ypkg_zs',
+                          'ny_adj_nnty_cd',
+                          ## 'ny_adj_nnty_kd',
+                          'ny_adj_nnty_kd_zg',
+                          'ny_adj_nnty_pc_cd',
+                          'ny_adj_nnty_pc_kd',
+                          'ny_adj_nnty_pc_kd_zg',
+                          ## 'ny_gdy_totl_kn',
+                          'ny_gsr_nfcy_cd',
+                          'ny_gsr_nfcy_cn',
+                          'ny_gsr_nfcy_kn',
+                          'si_dst_02nd_20',
+                          'si_dst_03rd_20',
+                          'si_dst_04th_20',
+                          'si_dst_05th_20',
+                          'si_dst_10th_10',
+                          'si_dst_frst_10',
+                          'si_dst_frst_20',
+                          'si_spr_pc40',
+                          'si_spr_pc40_zg',
+                          'si_spr_pcap',
+                          'si_spr_pcap_zg',
+                          'tm_val_mrch_hi_zs',
+                          'tm_val_mrch_or_zs',
+                          'tm_val_mrch_r1_zs',
+                          'tm_val_mrch_r2_zs',
+                          'tm_val_mrch_r3_zs',
+                          'tm_val_mrch_r5_zs',
+                          'tm_val_mrch_r6_zs',
+                          'tm_val_mrch_wr_zs',
+                          'tx_val_mrch_hi_zs',
+                          'tx_val_mrch_or_zs',
+                          'tx_val_mrch_r1_zs',
+                          'tx_val_mrch_r2_zs',
+                          'tx_val_mrch_r3_zs',
+                          'tx_val_mrch_r4_zs',
+                          'tx_val_mrch_r5_zs',
+                          'tx_val_mrch_r6_zs',
+                          'tx_val_mrch_wr_zs',
+                          'wp_time_01_8',
+                          'wp_time_01_9',
+                          'wp15163_4_8',
+                          'wp15163_4_9',
+                          'credittoag',
+                          'investment_consumptionfixedcapital',
+                          'investment_grosscapitalstocks',
+                          'investment_grossfixedcapitalformation_usd',
+                          'investment_netcapitalstocks',
+                          'ironsteelimport7055475',
+                          'lpidata',
+                          'sankey_diagram_iea20apr17',
+                          'spendingonag_ifpri_com'
+)
+LossTables_ctryYr <- list()
+LossTables_ctryYr <- lapply(LossTablelist_ctryYr,ReadDatatable)
+names(LossTables_ctryYr) <- LossTablelist_ctryYr
+#LossTables_ctryYr[[LossTablelist_ctryYr[ii]]]
+
+
 finalModelData = 
   {
     production <- getProductionData(areaVar,itemVar,yearVar,elementVar, selectedYear) # Value_measuredElement_5510
@@ -245,6 +339,8 @@ finalModelData =
     
     comodities[, combp := paste(geographicaream49,measureditemcpc, sep=";")]
     comb <- unique(comodities$combp)
+    comb <- c(comb, "604;01216","604;01243", "780;01213","332;01233", "780;01239.01","756;01253.01","780;01290.90","780;01311", "604;01344.02",
+              "604;01460","266;01540", "442;01701")
     #comodities[per_diff>1,]
     lossData[, fsc_location := "SWS"]
     for(t in unique(comodities$geographicaream49)){
@@ -325,6 +421,7 @@ if(updatemodel){
        #unique(ConvFactor1[!tag_datacollection %in%  ExternalDataOpt  ,"tag_datacollection",with=F]) 
        ConvFactor1  <- ConvFactor1 %>% filter(tag_datacollection %in%  ExternalDataOpt)
        ConvFactor1  <- ConvFactor1 %>% filter(!is.na(loss_per_clean ))
+       ConvFactor1 <- ConvFactor1 %>% filter(loss_per_clean < UB)
        #ConvFactor1$measureditemcpc <- addHeadingsCPC(ConvFactor1$measureditemcpc)
        names(ConvFactor1)[names(ConvFactor1)=='year'] <-'timepointyears'
        
@@ -341,6 +438,8 @@ if(updatemodel){
   
   FullSet <-join(FullSet, FAOCrops[,c("measureditemcpc","crop"), with=FALSE], by= c("measureditemcpc"))
   FullSet <- FullSet %>% filter(loss_per_clean != 0)
+  FullSet <- FullSet %>% filter(loss_per_clean > LB)
+  FullSet <- FullSet %>% filter(loss_per_clean < UB)
   
   #write.table(FullSet,paste(githubsite, 'General/FullSet.csv', sep=''),sep=',' )
   ### Save the intermediate aggregation table  to the sws
@@ -365,8 +464,8 @@ if(updatemodel){
   
   Data_Use_train0  <- NULL 
   while(is.null(Data_Use_train0)){ 
-    Data_Use_train0 <- tryCatch(VariablesAdd1(FullSet,keys_lower,Predvar,FALSE,'00'),
-                              error = function(error_condition) {
+    Data_Use_train0 <- tryCatch(VariablesAdd1(FullSet,keys_lower,Predvar,FALSE,'00',CountryGroup,fbsTree,Temperature,Precipitation,CropCalendar,LossTables_Yr,LossTables_ctryYr),
+                               error = function(error_condition) {
                                 return(NULL)
                               }
                               
@@ -380,13 +479,14 @@ if(updatemodel){
   
   
   ####### Model Estimation - Percentages only ############
-  ctry_modelvar <- c("all") #c("100", "191" ,"196", "203" ,"208", "233" ,"246", "250", "276" ,"300" ,"348" ,"372", "380", "40" , "428",
+  ctry_modelvar <-  c("all") #c("100", "191" ,"196", "203" ,"208", "233" ,"246", "250", "276" ,"300" ,"348" ,"372", "380", "40" , "428",
   # "440", "442" ,"470", "528", "56" , "616", "620" ,"642","703" ,"705")  
   # this model estimates by country and does carry-overs, once modeled the data is temporarily protected
   timeSeriesDataToBeImputed_ctry2 <- LossModel_ctry(Data= Data_Use_train0,timeSeriesDataToBeImputed,ctry_modelvar,HierarchicalCluster,keys_lower)
 
+
   #save(timeSeriesDataToBeImputed_ctry2 , file = "timeSeriesDataToBeImputed_ctry2.RData")
-  timeSeriesDataToBeImputed2 <- LossModel(Data= Data_Use_train0[fsc_location !="SWS;Prod_imp",],timeSeriesDataToBeImputed_ctry2, production,HierarchicalCluster,keys_lower)
+  timeSeriesDataToBeImputed2 <- LossModel(Data= Data_Use_train0[fsc_location !="SWS;Prod_imp",], timeSeriesDataToBeImputed, production,HierarchicalCluster,keys_lower)
   
   #timeSeriesDataToBeImputed2 <-timeSeriesDataToBeImputed
   timeSeriesDataToBeImputed2$protected = FALSE
@@ -463,17 +563,14 @@ if(updatemodel){
   
   DataSave <- rbind(timeSeriesDataToBeImputed_5016,timeSeriesDataToBeImputed_5126)
   # # Save to the SWS
-  # stats = SaveData(domain = "lossWaste",
-  #                  dataset="loss",
-  #                  data = DataSave
-  # )
-  # 
-  
-  
+  stats = SaveData(domain = "lossWaste",
+                   dataset="loss",
+                   data = timeSeriesDataToBeImputed_5016
+  ) 
   # Save to the SWS
   stats = SaveData(domain = "lossWaste",
                    dataset="loss",
-                   data = DataSave
+                   data = timeSeriesDataToBeImputed_5126
   )
    sprintf(
     "Module completed in %1.2f minutes.

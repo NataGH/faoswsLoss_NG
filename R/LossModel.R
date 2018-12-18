@@ -154,7 +154,16 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     DataPred <-  timeSeriesDataToBeImputed %>% filter(measureditemcpc %in% CPCs &
                                                         is.na(protected) &is.na(flagobservationstatus))
     
-    DataPred <- VariablesAdd1(DataPred,keys_lower,Predvar,Impute, name)
+    r <- NULL
+    while(is.null(r)){ 
+      r <- tryCatch(VariablesAdd1(DataPred,keys_lower,Predvar2,Impute,name,CountryGroup,fbsTree,Temperature,Precipitation,CropCalendar,LossTables_Yr,LossTables_ctryYr),
+                    error = function(error_condition) {
+                      return(NULL)
+                    }
+                    
+      )
+    }
+    DataPred <- r
     names(DataPred) <- tolower(names(DataPred))
     names(DataPred) <- gsub("[[:punct:]]","_",names(DataPred)) 
     

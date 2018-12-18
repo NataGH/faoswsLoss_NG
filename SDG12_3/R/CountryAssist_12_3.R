@@ -90,7 +90,7 @@ if (!exists('ctry_modelvar')) {
   ctry_modelvar <- swsContext.computationParams$ctry_modelvar
 }
 if(LocalRun){
-  ctry_modelvar <- '50'
+  ctry_modelvar <- '484'
   selectedYear <- as.character(2014:maxYear)
 }  
 BaseYear = as.character(c(2014,2016)) ## This is not an option to choose after the movement to the SDG base yr
@@ -158,9 +158,9 @@ ctryFLIReport <- function(selectedYear,ctry_modelvar){
   imp <- imp%>% filter(timepointyears == as.numeric(BaseYear[2])-1)
   
   
-  table <- merge(CB, BaseProd[,c("measureditemcpc","Prodqty_avey1y2")], by= "measureditemcpc")
+  table <- merge(CB, BaseProd[,c("measureditemcpc","Prodqty_avey1y2"),with=F], by= "measureditemcpc")
   names(table)[names(table)=="Prodqty_avey1y2"] <- "Production" 
-  table <- merge(table,imp[,c("measureditemcpc","Prodqty_avey1y2")], by= "measureditemcpc",all.x=T) 
+  table <- merge(table,imp[,c("measureditemcpc","Prodqty_avey1y2"),with=F], by= "measureditemcpc",all.x=T) 
   names(table)[names(table)=="Prodqty_avey1y2"] <- "Imports"  
   table <- as.data.table(table)
   table$pi = 0
