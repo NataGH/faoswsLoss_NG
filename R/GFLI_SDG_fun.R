@@ -21,7 +21,7 @@ GFLI_SDG_fun <- function(BaseYear,keys_lower,aggregation,basket,basketKeys,DataF
   
   ##### Commodity Groupings - 2013 ####
   ComBasket  <- merge(DataForIndex,basket[,basketKeys,with=FALSE], by=basketKeys, all.y= TRUE )
-  if( aggregation == "geographicaream49"){
+  if( aggregation == "geographicaream49" |aggregation == "m49_code"){
     aggregationName = "m49_region"
   }
   if(length(grep("code" ,aggregation))>0){
@@ -31,9 +31,9 @@ GFLI_SDG_fun <- function(BaseYear,keys_lower,aggregation,basket,basketKeys,DataF
     }
   }
   if(length(grep("agg" ,aggregation))>0){
-    aggregationName =aggregation
+    aggregationName = aggregation
   }
-  if(length(grep("gfli" ,aggregation))>0){
+  if(length(grep("basket" ,aggregation))>0){
     aggregationName =aggregation
   }
 
@@ -155,7 +155,8 @@ GFLI_SDG_fun <- function(BaseYear,keys_lower,aggregation,basket,basketKeys,DataF
     foodLossIndex=GlobalfoodLossPercent
     foodLossIndex[ ,region_name := "World"]
     names(foodLossIndex)[names(foodLossIndex) == aggregation] <- "region_code"
-
+    foodLossIndex$Sum_p0q0 <- GFLI_WeightD$Sum_p0q0
+    foodLossIndex$Sum_p0qt <- foodLossIndex$Sum_p0qt*GFLI_WeightD$Sum_p0q0
   }
 #GlobalfoodLossIndex=GlobalfoodLossIndex,RegionalfoodLossIndex=regionalLossIndex,
 return(foodLossIndex)

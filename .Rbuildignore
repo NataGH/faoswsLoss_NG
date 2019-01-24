@@ -13,3 +13,4 @@ shiny/
 sws\.yml.*
 .*\.docx$
 .*\.log$
+^\.httr-oauth$

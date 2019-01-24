@@ -87,7 +87,9 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
   fbsTree[foodgroupname %in% c(2949), GFLI_Basket :='Eggs',] 
   #fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), GFLI_Basket :='Fish',] #Fish needs to be included after it has losses in the SWS
   fbsTree[GFLI_Basket == "NA", 'GFLI_Basket'] <- NA
-  
+  model_mem <-0
+  model_restricted <- 0
+  model_mean <- 0
   
   ## extracts number of countries to model.
 
@@ -112,11 +114,14 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
       # for each subgroup in the cluster the model is created - with new varaibles selected
       name = unique(fbsTree[GFLI_Basket ==na.omit(unique(fbsTree$GFLI_Basket))[vi],foodgroupname])
       print(name)
+     
+      
+     # CPCs <- unique(data_byctry$measureditemcpc)
+      CPCs <- fbsTree[GFLI_Basket ==na.omit(unique(fbsTree$GFLI_Basket))[vi],measureditemcpc]
     
       # filters out the official data and prepares to estimate by country and commodity
       data_byctry <- Data %>% filter(foodgroupname %in% name &
-                                    geographicaream49 %in% na.omit(unique(Data$geographicaream49))[vii] & 
-                                    (fsc_location %in% c("sws_total","SWS")))
+                                    geographicaream49 %in% na.omit(unique(Data$geographicaream49))[vii] )
       
       data_byctry <- unique(data_byctry)
       
@@ -127,7 +132,7 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
       for(viii in unique(data_byctry$measureditemcpc)){
         print(viii)
         if((dim(data_byctry[measureditemcpc == viii,"loss_per_clean",with=F])[1]>1) &
-           (var(data_byctry[measureditemcpc == viii,"loss_per_clean",with=F]) == 0)){
+           (var(data_byctry[measureditemcpc == viii,"loss_per_clean",with=F]) < 0.0001)){
           # for countries that use carry-over percentages 
           
           carryover <- mean(data_byctry[measureditemcpc == viii ,loss_per_clean], na.rm=TRUE)
@@ -151,7 +156,7 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
           
           print(dim(timeSeriesDataToBeImputed))
           print('for this commodity a carryover was applied')
-          data_byctry <- data_byctry %>% filter(!measureditemcpc ==viii )
+          
         }
         
         
@@ -160,7 +165,7 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
         next
       }
       
-      CPCs <- unique(data_byctry$measureditemcpc)
+      
       
       nums1 <- sapply(data_byctry, is.numeric)
       dropCV <- list()
@@ -192,15 +197,20 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
       datamod_ctry <- data_byctry[,!names(data_byctry) %in% unique(c("loss_per_clean")),with=F]
       
       print("Break 1")
-      
-      ###### Variable Selection ####
-      ## CLuster wide Variable selection - Random forest ##
-      fit2 <- rpart(losstransf ~ ., data =  data_byctry[,!names(data_byctry) %in% unique(c(keys_lower, drops1)),with=F] ,control=rpart.control(minsplit=30, cp=0.001))
-      ImportVar2 <- names(fit2$variable.importance)[1:NumImportVarUse]
-      
+      if(length(explanatory[!explanatory %in% c("geographicaream49","timepointyears","measureditemcpc","loss_per_clean")]) >0){
+        ###### Variable Selection ####
+        ## CLuster wide Variable selection - Random forest ##
+        
+        fit2 <- rpart(losstransf ~ ., data =  data_byctry[,!names(data_byctry) %in% unique(c(keys_lower, drops1)),with=F] ,control=rpart.control(minsplit=30, cp=0.001))
+        ImportVar2 <- names(fit2$variable.importance)[1:NumImportVarUse]
+        
+        
+      }else{
+        ImportVar2 <-c("geographicaream49","timepointyears","measureditemcpc")
+      }  
       UseVari2 <- unique(na.omit(c(keys_lower,depVar,ImportVar2)))
       datamod_ctry <- datamod_ctry[,UseVari2,with=F]
-      
+        
       Predvar2 <- unique(na.omit(c(HierarchicalCluster, keys_lower,"loss_per_clean",UseVari2 ,"protected")))
       DataPred <-  timeSeriesDataToBeImputed %>% filter(measureditemcpc %in% CPCs &
                                          geographicaream49 %in% na.omit(unique(Data$geographicaream49))[vii] &
@@ -208,6 +218,7 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
       
       print(dim(DataPred))
       if(dim(DataPred)[1] < 1){
+        print("No predicted data needed")
         next
       }
       
@@ -249,7 +260,7 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
       
       # To impute data for the predictive set for missing observations in the explanatory data
       drop4 <- ""
-      if(length(ImportVar2)>0){
+      if(length(ImportVar2)>3){
         for(ir in 1:length(na.omit(ImportVar2))){
           for( j in unique(datapred$geographicaream49)){
             drop4 <- c()
@@ -297,9 +308,15 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
       
       ## Model 
       if(length(ImportVar2)>0){
+        if (paste(unique(UseVari2[!UseVari2 %in% c(depVar,keys_lower)]), collapse= " + ") != ""){
         formula_ctry <- paste(paste(depVar," ~",sep=""),paste(keys_lower_WOC,sep="+", collapse= " + "),'+',paste(unique(UseVari2[!UseVari2 %in% c(depVar,keys_lower)]), collapse= " + ")) #
-      }else{
+        }else{
+          formula_ctry <- paste(paste(depVar," ~",sep=""),paste(keys_lower_WOC,sep="+", collapse= " + "))
+        }
+        model_mem <- model_mem +1
+        }else{
         formula_ctry <- paste(paste(depVar," ~",sep=""), paste(keys_lower_WOC,sep="+", collapse= " + "), collapse= " + ")
+        model_restricted <- model_restricted +1
       }
       #paste("factor(", keys_lower[3], ")",sep="", collapse= " + "),'+',
       mod2_rlm <- lm(as.formula(formula_ctry), data = datamod_ctry)
@@ -310,13 +327,14 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
       
       mod2 <- mod2_rand
       summary(mod2)
+      summary(mod2_rlm )
       mod2res = resid(mod2)
       mod2res <-  as.data.table(mod2res)
       coeffSig <- summary(mod2)$coeff[,4][summary(mod2)$coeff[,4] <.1]
       modrun =1
       
       ####################### Results #########################################
-      OnlySigCoeff =T
+      OnlySigCoeff = T
       
       
       #DV <- names(fixef(mod2))
@@ -341,8 +359,8 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
           coeffSig <- names(coeffSig)[names(coeffSig) %in%  UseVari2]
           Inters <- names(summary(mod2)$coeff[,4][summary(mod2)$coeff[,4] <.1])
         }else{
-          coeffSig <- coeffN
-          Inters <- names(coefficients(mod2))
+          coeffSig <- names(coeffSig)[names(coeffSig) %in%  UseVari2]
+          Inters <- names(summary(mod2)$coeff[,4][summary(mod2)$coeff[,4]])
         }
         
         coeffindex <-  grep(index1,Inters, perl=TRUE, value=TRUE)
@@ -387,7 +405,7 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
         datapred[,value_measuredelement_5016 := 0,]
         datapred[,flagobservationstatus := 'I',] 
         datapred[,flagmethod:= 'e',]
-        datapred[,flagcombination := 'I;e',]
+        datapred[,flagcombination := 'I;ec',]
         datapred[,protected := FALSE,]
         medianLoss <- median(datapred$value_measuredelement_5126, na.rm=TRUE)
         medianLossRaw <- median(unlist(Data[measureditemcpc %in% CPCs,"loss_per_clean", with=F]))
@@ -398,9 +416,107 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
         print(paste('Number of comodities:',length(unique(datamod_ctry$measureditemcpc))))
       }
       print("Break 5")
-      # In the cases where the model over estimates the loss to unrealistic numbers then the dataset reverts to the mean of the data available
+      # In the cases where the model over estimates the loss to unrealistic numbers then the dataset reverts to the SIMPLIFIED model #########
+      ### Add when more data becomes available
+      #modelag <- unique(unlist(datapred[(value_measuredelement_5126< LB) & (value_measuredelement_5126< 3*sd(data_byctry$loss_per_clean, na.rm = T)),"measureditemcpc",with=F]))
+      #datapred[measureditemcpc %in% modelag,protected := FALSE]
+      
+      if(medianLoss> 3*sd(data_byctry$loss_per_clean, na.rm = T) | is.na(medianLoss)){
+        formula_ctry <- paste(paste(depVar," ~",sep=""), paste(keys_lower_WOC,sep="+", collapse= " + "), collapse= " + ")
+        model_restricted <- model_restricted +1
+        mod2_rand <- plm(as.formula(formula_ctry), data = datamod_ctry , index=c("measureditemcpc"), model ="pooling")
+        mod2 <- mod2_rand
+        summary(mod2)
+        
+        #DV <- names(fixef(mod2))
+        if(index1 == "measureditemcpc"){PD_V2 <- unique(unlist(c(datapred[,index1,with=FALSE])))} 
+        if(index1 == "geographicaream49"){PD_V2 <- levels(unlist(c(datapred[,index1,with=FALSE])))}
+        if(modelstr == "within"){  
+          # For each of the items in the index
+          coeffN <- unique(c( UseVari[!UseVari %in% c(keys_lower,depVar)]))
+          for(ind1 in 1:length(unique(DV))){
+            datapred[ which(datapred[,index1,with=FALSE] ==  names(fixef(mod2)[ind1]) & datapred[,DV,with=FALSE] ==  gsub(DV,"", names(coefficients(mod2)))[ind2]) ,]$losstransf =
+              fixef(mod2)[ind1] +coefficients(mod2)[names(coefficients(mod2))[ind2]]+
+              rowSums(data.frame(mapply(`*`,coefficients(mod2)[names(coefficients(mod2)) %in% coeffN],  datapred[ which(datapred[,index1,with=FALSE] ==  names(fixef(mod2)[ind1]) & datapred[,DV,with=FALSE] ==  gsub(DV,"", names(coefficients(mod2)))[ind2]),coeffN,with=FALSE]))) 
+          }
+        }
+        if(modelstr == "random" |modelstr == "pooling"){  
+          # COmbines the coefficients to create an estimate for every column in the group
+          coeffN <- c(UseVari2[!UseVari2 %in% c(index1,DV,depVar)])
+          coeffN <- na.omit(coeffN) 
+          
+          if(OnlySigCoeff){
+            coeffSig <- summary(mod2)$coeff[,4][summary(mod2)$coeff[,4] <.1]
+            coeffSig <- names(coeffSig)[names(coeffSig) %in%  UseVari2]
+            Inters <- names(summary(mod2)$coeff[,4][summary(mod2)$coeff[,4] <.1])
+          }else{
+            coeffSig <- summary(mod2)$coeff[,4]
+            coeffSig <- names(coeffSig)[names(coeffSig) %in%  UseVari2]
+            Inters <- names(summary(mod2)$coeff[,4])
+          }
+          
+          coeffindex <-  grep(index1,Inters, perl=TRUE, value=TRUE)
+          coeffDV <-     grep(DV,Inters, perl=TRUE, value=TRUE)
+          
+          datapred$countydummy =0
+          datapred$cropdummy  =0
+          datapred$intercept  =0
+          
+          print("Break 4X2")
+          
+          for(ind1 in 1:length(unique(gsub(index1,"", coeffindex)))){
+            datapred[geographicaream49 == gsub(index1,"", coeffindex)[ind1],countydummy := as.numeric(coefficients(mod2)[coeffindex[ind1]]),]
+          }
+          for(ind2 in 1:length(unique(gsub(DV,"", coeffDV)))){ 
+            datapred[measureditemcpc == gsub(DV,"", coeffDV)[ind2],cropdummy:= as.numeric(coefficients(mod2)[coeffDV[ind2]]),]
+            
+          }
+          datapred[,intercept:=coefficients(mod2)[1]]
+          #(cropdummy == 0) & (countydummy ==0)
+          if(length(coeffSig) >0){
+            # Applies the weights of the estimation across the entire cluster sets, using the demeaned coefficient as the intercept  (coefficients(mod2)[1]  
+            datapred[,losstransf := 
+                      if(dim(datapred)[1]>2){ 
+                       rowSums(mapply(`*`,coefficients(mod2)[names(coefficients(mod2)) %in% coeffSig],datapred[ ,coeffSig,with=F]), na.rm=TRUE)
+                        }else{
+                          mapply(`*`,coefficients(mod2)[names(coefficients(mod2)) %in% coeffSig],datapred[ ,coeffSig,with=F])
+                        }+
+                       countydummy+cropdummy+intercept,] 
+          }else{ datapred[,losstransf := countydummy+cropdummy+intercept,]}
+        }
+        CB(datapred$losstransf)
+        if(modrun ==1){
+          #Transform the losses back to % and not logged numbers 
+          
+          names(datapred) <- tolower(names(datapred))
+          datapred$geographicaream49 <-as.character(datapred$geographicaream49)
+          
+          datapred[datapred$losstransf !=0, loss_per_clean := exp(datapred$losstransf)/(1+exp(datapred$losstransf)),]
+          #datapred[datapred$losstransf !=0, loss_per_clean := datapred$losstransf[datapred$losstransf !=0]]
+          datapred[,value_measuredelement_5126 := loss_per_clean,]
+          datapred[,value_measuredelement_5016 := 0,]
+          datapred[,flagobservationstatus := 'I',] 
+          datapred[,flagmethod:= 'e',]
+          datapred[,flagcombination := 'I;es',]
+          datapred[,protected := FALSE,]
+          medianLoss <- median(datapred$value_measuredelement_5126, na.rm=TRUE)
+          medianLossRaw <- median(unlist(Data[measureditemcpc %in% CPCs,"loss_per_clean", with=F]))
+          print(paste('average loss:',medianLoss*100, "%"))
+          
+          print(paste('average loss Raw:',medianLossRaw*100, "%"))
+          print(paste('Number of countries:',length(unique(datamod_ctry$geographicaream49))))
+          print(paste('Number of comodities:',length(unique(datamod_ctry$measureditemcpc))))
+        }
+      }
+      
+
       datapred[loss_per_clean > mean(data_byctry$loss_per_clean, na.rm = T) + 3*sd(data_byctry$loss_per_clean, na.rm = T),"loss_per_clean"] <- mean(data_byctry$loss_per_clean, na.rm = T) 
       datapred[loss_per_clean <.01,"loss_per_clean"] <- mean(data_byctry$loss_per_clean, na.rm = T) 
+      datapred[is.na(loss_per_clean ),"loss_per_clean"]<- mean(data_byctry$loss_per_clean, na.rm = T) 
+      
+      datapred[loss_per_clean > mean(data_byctry$loss_per_clean, na.rm = T) + 3*sd(data_byctry$loss_per_clean, na.rm = T),"flagmethod"] <- "m"
+      datapred[loss_per_clean <.01,"flagmethod"] <- "m"
+      model_mean <- model_mean+ nrow(datapred["flagmethod"== "m",])
       
       print(paste('max loss:',max(datapred$loss_per_clean, na.rm=TRUE)*100, "%"))
       timeSeriesDataToBeImputed$geographicaream49 <- as.character(timeSeriesDataToBeImputed$geographicaream49)
@@ -466,6 +582,10 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
   print(paste("Number of estimated points: ",dim(timeSeriesDataToBeImputed[loss_per_clean>0 & is.na(protected),])[1],sep=""))
   print(paste("Percent of total: ",dim(timeSeriesDataToBeImputed[ !is.na(flagobservationstatus) & is.na(protected),])[1]/
                                     dim(timeSeriesDataToBeImputed[is.na(flagobservationstatus) & is.na(protected),])[1],sep=""))
+  
+  print(paste("Percent of total estimates done with the full model: ", model_mean))
+  print(paste("Percent of total estimates done with the restricted model: ", model_restricted))
+  print(paste("Percent of total estimates adjusted to mean: ", model_mean))
   
   timeSeriesDataToBeImputed[!is.na(flagobservationstatus) & is.na(protected),"protected"] <-TRUE
   

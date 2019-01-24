@@ -1,0 +1,13 @@
+name: soup2nuts2
+title: Soup2Nuts2
+username:
+account: faofoodlossdata
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 631714
+bundleId: 1803299
+url: https://faofoodlossdata.shinyapps.io/soup2nuts2/
+when: 1546968166.26926
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: data_InternalFAO.RData|timeSeriesDataToBeImputed_5126.RData

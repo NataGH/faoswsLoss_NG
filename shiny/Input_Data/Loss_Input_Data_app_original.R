@@ -32,20 +32,11 @@ suppressMessages({
 })
 
 
-BaseYear = as.character(c(2004,2006)) ## This is not an option to choose after the movement to the SDG base yr
-areaVar = "geographicAreaM49"
-yearVar = "timePointYears"
-itemVar = "measuredItemCPC"
-elementVar = "measuredElement"
-LocalRun <- FALSE
-
-
-
 # ###----  Data In ----------############
-if(!LocalRun){
-  library(faosws)
-  library(faoswsUtil)
-  library(faoswsLoss)
+
+##### Load Data ######
+## These two tables are constantly needing to be merged - country groups and food groups
+if(CheckDebug()){
   message("Not on server, so setting up environment...")
   USER <- if_else(.Platform$OS.type == "unix",
                   Sys.getenv('USER'),
@@ -56,31 +47,60 @@ if(!LocalRun){
   settings <- ReadSettings(file = file.path(paste(getwd(),"sws.yml", sep='/')))
   SetClientFiles(settings[["certdir"]])
   
+  
   GetTestEnvironment(
     baseUrl = settings[["server"]],
     token = settings[["token"]]
   )
   
-  LossFactorRaw <- ReadDatatable('flw_lossperfactors_')
-  AggregateLoss <- ReadDatatable('aggregate_loss_table')
-  fbsTree <- ReadDatatable("fbs_tree")
-  CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
-  FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
-  LossFactorRaw$measureditemcpc <- addHeadingsCPC(LossFactorRaw$measureditemcpc)
   
-  setnames(CountryGroup, old = c("m49code","iso2code","isocode","countryname","sdgregion_code","sdg_regions","m49_level1_code",        
-                                 "m49_level1_region","m49_level2_region_code","m49_level2_region","mdgregions_code","mdgregions","ldcs_code","ldcs",                   
-                                 "lldcssids_code","lldcssids","fao_region","fao_operationalcoverage"),
-           new = c("geographicaream49","ISO2code","isocode","Country","sdgregion_code","SDG Regions","m49_level1_code",        
-                   "Geographic Regions(m49) Level1","m49_level2_region_code","Geographic Regions(m49) Level2","mdgregions_code","MDG Regions","ldcs_code","Least Developed Countries (LDC)",                   
-                   "lldcssids_code","Land Locked Developing Countries (LLDC)","FAO Operational Region","FAO Operational Coverage"))
   
+}else if(CheckDebug() & LocalRun){
+  #Load local last dataset
+  load("InputData.RData")
   
 }else{
-  setwd(paste(getwd(),"/shiny/Input_Data",sep=""))
-  load("Inputs.RData")
+  # Remove domain from username
+  USER <- regmatches(
+    swsContext.username,
+    regexpr("(?<=/).+$", swsContext.username, perl = TRUE)
+  )
   
+  options(error = function(){
+    dump.frames()
+    
+    filename <- file.path(Sys.getenv("R_SWS_SHARE_PATH"), USER, "PPR")
+    
+    dir.create(filename, showWarnings = FALSE, recursive = TRUE)
+    
+    save(last.dump, file = file.path(filename, "last.dump.RData"))
+  })
 }
+
+
+BaseYear = as.character(c(2014,2016)) ## This is not an option to choose after the movement to the SDG base yr
+areaVar = "geographicAreaM49"
+yearVar = "timePointYears"
+itemVar = "measuredItemCPC"
+elementVar = "measuredElement"
+LocalRun <- FALSE
+
+
+LossFactorRaw <- ReadDatatable('flw_lossperfactors_')
+AggregateLoss <- ReadDatatable('aggregate_loss_table')
+fbsTree <- ReadDatatable("fbs_tree")
+CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
+FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
+LossFactorRaw$measureditemcpc <- addHeadingsCPC(LossFactorRaw$measureditemcpc)
+
+setnames(CountryGroup, old = c("m49_code","iso2code","isocode","m49_region","sdgregion_code","sdg_regions","m49_level1_code",        
+                               "m49_level1_region","m49_level2_code","m49_level2_region","mdgregions_code","mdgregions_region","ldcs_code","ldcs_region",                   
+                               "lldcssids_code","lldcssids_region","fao_region","fao_operational_agg", "worldbank_income2018_agg", "sofa_agg"),
+         new = c("geographicaream49","ISO2code","isocode","Country","sdgregion_code","SDG Regions","m49_level1_code",        
+                 "Geographic Regions(m49) Level1","m49_level2_region_code","Geographic Regions(m49) Level2","mdgregions_code","MDG Regions","ldcs_code","Least Developed Countries (LDC)",                   
+                 "lldcssids_code","Land Locked Developing Countries (LLDC)","FAO Operational Region","FAO Operational Coverage", "World Bank Income Groups", "SOFA Aggregations"))
+
+fbsTree <- ReadDatatable("gfli_basket")
 
 CountryGroup$fao_operationalcoverage<-as.character(CountryGroup$fao_operationalcoverage)
 CountryGroup[fao_operationalcoverage %in% c("1"),fao_operationalcoverage := "Yes"]
@@ -95,10 +115,6 @@ FAOCrops <- FAOCrops[order(FAOCrops$measureditemcpc),]
 
 #SDG Headings
 fbsTree[foodgroupname %in% c(2905,2911), gfli_basket :='Cereals & Pulses',]
-fbsTree[foodgroupname %in% c(2919,2918), gfli_basket :='Fruits & Vegetables',]
-fbsTree[foodgroupname %in% c(2907,2913), gfli_basket :='Roots, Tubers & Oil-Bearing Crops',]
-fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), gfli_basket :='Other',]
-fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), gfli_basket :='Animals Products & Fish and fish products',] # |foodGroupName == "PRODUCTS FROM FISH",
 
 LossFactorRaw[fsc_location =="SWS","fsc_location" ] <- "Official/Semi-Official - National"
 LossFactorRaw[fsc_location =="sws_total","fsc_location" ] <- "Official/Semi-Official - National"

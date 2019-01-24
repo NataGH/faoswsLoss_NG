@@ -89,8 +89,8 @@ selectedYear <- as.character(1991:2016)
 
 ###### Shinyio setup ##########
 settings <- yaml.load_file(file.path(paste(getwd(),"shiny", "Shiny.yml", sep='/')))
-rsconnect::setAccountInfo(name = settings$shinyio$name, token= settings$shinyio$token, secret=settings$shinyio$secret)
-rsconnect::deployApp(file.path(paste(getwd(),"shiny/Input_Data", sep='/')))
+#rsconnect::setAccountInfo(name = settings$shinyio$name, token= settings$shinyio$token, secret=settings$shinyio$secret)
+#rsconnect::deployApp(file.path(paste(getwd(),"shiny/Input_Data", sep='/')))
 
 #############
 LossFactorRaw <- ReadDatatable('flw_lossperfactors_')
@@ -100,6 +100,7 @@ FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
 Losses <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
 
 gfli_basket  <- ReadDatatable('gfli_basket')
+gfli_basket[foodgroupname %in% c(2905,2911), gfli_basket :='Cereals & Pulses',]
 
 CountryGroup$fao_operationalcoverage<-as.character(CountryGroup$fao_operationalcoverage)
 CountryGroup[fao_operationalcoverage %in% c(1),fao_operationalcoverage := "Yes"]
@@ -108,11 +109,11 @@ CountryGroup[fao_operationalcoverage %in% c(0),fao_operationalcoverage := "No"]
 setnames(CountryGroup, old = c("m49_code","iso2code","isocode","m49_region","sdgregion_code",
                                "sdg_regions","m49_level1_code","m49_level1_region","m49_level2_code","m49_level2_region" ,     
                                "mdgregions_code" ,"mdgregions_region","ldcs_code","ldcs_region","lldcssids_code",         
-                               "lldcssids_region","fao_region","fao_operationalcoverage"
+                               "lldcssids_region","fao_region","fao_operational_agg", "worldbank_income2018_agg", "sofa_agg"
                                ),
          new = c("geographicaream49","ISO2code","isocode","Country","sdgregion_code","SDG Regions","m49_level1_code",        
                  "Geographic Regions(m49) Level1","m49_level2_region_code","Geographic Regions(m49) Level2","mdgregions_code","MDG Regions","ldcs_code","Least Developed Countries (LDC)",                   
-                 "lldcssids_code","Land Locked Developing Countries (LLDC)","FAO Operational Region","FAO Operational Coverage"))
+                 "lldcssids_code","Land Locked Developing Countries (LLDC)","FAO Operational Region","FAO Operational Coverage", "World Bank Income Groups", "SOFA Aggregation"))
 
 
 
@@ -185,6 +186,7 @@ names(Losses) <- tolower(names(Losses))
 names(Losses)[names(Losses) == "measureditemsuafbs"] <- "measureditemcpc"
 names(Losses)[names(Losses) == "timepointyears"] <- "Year"
 names(Losses)[names(Losses) == "value"] <- "loss_per_clean"
+Losses$combo <- "NA;NA"
 Losses[,combo := paste(flagobservationstatus, flagmethod,sep=";")]
 Losses$loss_per_clean <-Losses$loss_per_clean*100 
 Losses$geographicaream49 <- as.character(Losses$geographicaream49 )
@@ -194,9 +196,12 @@ Losses
 
 AggregateLoss$loss_per_clean <-AggregateLoss$loss_per_clean*100 
 
-rm(swsContext.baseRestUrl,swsContext.username,swsContext.userId,swsContext.userEmail,
-   swsContext.token,swsContext.executionId,swsContext.datasets,swsContext.computationParams, settings,USER)
+rm( swsContext.computationParams,swsContext.datasets,swsContext.executionId,swsContext.token,swsContext.userEmail,swsContext.userId,swsContext.username)
+   
+swsContext.baseRestUrl,settings,USER)
+detach("package:faoswLosss", unload=TRUE)
 detach("package:faosws", unload=TRUE)
+detach("faoswsModules", unload=TRUE)
 
 save.image(file = "shiny/Input_Data/Inputs.RData")
 

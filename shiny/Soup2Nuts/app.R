@@ -1,0 +1,1 @@
+shinyApp(ui = ui, server = server,options=list(port = 7777,shiny.autoreload.interval = 20))

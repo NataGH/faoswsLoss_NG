@@ -141,7 +141,8 @@ production <- getProductionData(areaVar,itemVar,yearVar,elementVar,selectedYear)
 imports <- getImportData(areaVar,itemVar,yearVar, selectedYear)
 nutrient_table <- getNutritionData(areaVar,itemVar,yearVar,elementVar,selectedYear, protected = FALSE)
 
-fbsTree <- ReadDatatable("fbs_tree")
+#fbsTree <- ReadDatatable("fbs_tree")
+gfli_basket <- ReadDatatable("gfli_basket")
 CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
 FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
 intPrice <-  ReadDatatable("int_dollar_prices_all") #int_$_prices_2005
@@ -150,6 +151,7 @@ names(Losses) <- tolower(names(Losses))
 names(production) <- tolower(names(production))
 names(imports) <- tolower(names(imports))
 names(nutrient_table) <- tolower(names(nutrient_table))
+names(intPrice)[names(intPrice) == "measureditemcpc_description"] <- "crop"
 
 production$geographicaream49 <- as.character(production$geographicaream49)
 Losses$geographicaream49 <- as.character(Losses$geographicaream49)
@@ -162,21 +164,17 @@ prod_imports[,prod_imports := rowSums(.SD, na.rm = TRUE), .SDcols=c("value.x","v
 
 CountryGroup$country <- tolower(CountryGroup$m49_region)
 CountryGroup[,"geographicaream49":=CountryGroup$m49_code]
+CountryGroup$Country <- CountryGroup$m49_region
+CountryGroup$country <- CountryGroup$m49_region
 
 FAOCrops[, "crop" := FAOCrops$description]
 FAOCrops[, "measureditemcpc" := addHeadingsCPC(FAOCrops$cpc)]
+intPrice <- merge(intPrice, FAOCrops[,c("measureditemcpc","crop"),with=F], by= c("measureditemcpc"))
 
-names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
-names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
 
-fbsTree$GFLI_Basket <- 'NA'
-fbsTree[foodgroupname %in% c(2905,2911), GFLI_Basket :='Cereals & Pulses',]
-fbsTree[foodgroupname %in% c(2919,2918), GFLI_Basket :='Fruits & Vegetables',]
-fbsTree[foodgroupname %in% c(2907,2913), GFLI_Basket :='Roots, Tubers & Oil-Bearing Crops',]
-fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), GFLI_Basket :='Other',]
-fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), GFLI_Basket :='Meat & Animals Products',] 
-fbsTree[GFLI_Basket == "NA", 'GFLI_Basket'] <- NA
-names(fbsTree) <- tolower(names(fbsTree) )
+
+gfli_basket[foodgroupname %in% c(2905,2911), gfli_basket :='Cereals & Pulses',]
+
 ## Fish Products ##
 # This section will have to be added when Fisheries data is included in the SWS
 
@@ -198,7 +196,6 @@ Base_Prod <- Base_Prod[,c("geographicaream49",'measureditemcpc','qty_avey1y2'),w
 #### Weights ####
 if(weights == "intl_prices"){
  
-  intPrice <- merge(intPrice, FAOCrops[,c("measureditemcpc","crop"),with=F], by= c("measureditemcpc"))
   pvail <- unique(intPrice$measureditemcpc)
   
   intPriceSelected <-
@@ -212,26 +209,32 @@ if(weights == "intl_prices"){
   # intPriceSelected$measureditemfcl <- addHeadingsFCL(intPriceSelected$measureditemcpc)
   # intPriceSelected$measureditemcpc <- fcl2cpc(intPriceSelected$measureditemfcl,version = "2.1")
   intPriceSelected$itemname <- tolower(intPriceSelected$crop)
-  Weights <- intPriceSelected[, c("itemname","measureditemcpc","intprice"),with=F]
+  intPriceSelected$value <-intPriceSelected$intprice
+  Weights <- intPriceSelected[, c("itemname","measureditemcpc","value"),with=F]
+  Weights_keys <- "measureditemcpc"
   
   #distinct(intPriceSelected,measuredItemCPC)
 }else if(weights == "calories"){
-  
-  
+  Globalkcal1 <- nutrient_table %>% filter(measuredelement == 1001)
+  Weights <- Globalkcal1[, c("geographicaream49","measureditemcpc","value"),with=F]
+  Weights$value <-Weights$value*1/1000
+  Weights_keys <- c("geographicaream49","measureditemcpc")
+  Weights <- unique(  Weights)
 }
-
+Weights[, weightname := weights]
 ## Production multiplied by the weighting scheme
-FLIData <-  merge(Base_Prod,Weights, by = c('measureditemcpc'),all.x = F, all.y = F)
-FLIData[, p0q0 := qty_avey1y2*intprice,]
+FLIData <- merge(Base_Prod,Weights, by =  Weights_keys,all.x = F, all.y = F)
+FLIData[, p0q0 := qty_avey1y2*value,]
 
 ## Loss percentages multiplied by the quantity weighted (for the numerator), Includes all commodities
-DataForIndex <- merge(Losses[,c(keys_lower,"value_measuredelement_5126"),with=F] , FLIData, by =c("measureditemcpc","geographicaream49"),type= 'left', match='all')
+DataForIndex <- merge(Losses[,c(keys_lower,"value_measuredelement_5126"),with=F] , FLIData, by =c("measureditemcpc","geographicaream49"),all.x=T)
 DataForIndex$l0ptqt =0
 DataForIndex[,l0ptqt:=value_measuredelement_5126*p0q0,with=T]
 
-DataForIndex <- join(DataForIndex ,fbsTree , by = c('measureditemcpc'),type= 'left', match='all')
+DataForIndex <- join(DataForIndex ,gfli_basket , by = c('measureditemcpc'),type= 'left', match='all')
 DataForIndex <- join(DataForIndex,CountryGroup, by = c('geographicaream49'),type= 'left', match='all')
-
+DataForIndex <- DataForIndex[!is.na(gfli_basket),]
+DataForIndexD <- DataForIndex[duplicated(DataForIndex,fromLast = TRUE)]
 #### Basket ####
 # Pulls in the existing table
 BasketExist <- ReadDatatable("sdg123_commoditybasket")
@@ -257,6 +260,26 @@ if(basketn == "top2perhead_byCtry"){
   basket <- as.data.table(merge(basket,Top10_VP, by =c("geographicaream49"), all.x=TRUE))
   basket[,Percent_prod := p0q0/All_p0q0]
 }
+if(basketn == "Wageningen"){
+  Top10perctry <- DataForIndex %>%
+    filter(timepointyears == as.numeric(BaseYear[2])-1) %>%
+    arrange(geographicaream49, -p0q0) 
+  
+  Top10_VP <- DataForIndex %>%
+    filter(timepointyears == as.numeric(BaseYear[2])-1) %>%
+    group_by(geographicaream49) %>%
+    dplyr:: summarise(All_p0q0 = sum(p0q0, na.rm = TRUE))
+  
+  basket <- Top10perctry[ ,head(.SD, 2), by= c('geographicaream49','basket_sofa_wu')]
+  basket <- basket %>% filter(!is.na(gfli_basket))
+  basketKeys <- c('geographicaream49', "measureditemcpc")
+  ComBasketN  <- 'Production Value- Top 10 by country'
+  basket[,basketname := ComBasketN]
+  basket[,protected := FALSE] 
+  
+  basket <- as.data.table(merge(basket,Top10_VP, by =c("geographicaream49"), all.x=TRUE))
+  basket[,Percent_prod := p0q0/All_p0q0]
+}
 
 if(basketn == "top2perhead_Globatop10"){
   Top10Global<-   DataForIndex %>%
@@ -271,7 +294,6 @@ if(basketn == "top2perhead_Globatop10"){
     dplyr:: summarise(All_p0q0 = sum(p0q0, na.rm = TRUE))
   
   ItemsBasket <- Top10Global[ ,head(.SD, 2), by= c('gfli_basket')]
-  merge( ItemsBasket, FAOCrops[,c("measureditemcpc","crop")], by= c("measureditemcpc"), all.x = TRUE )
   basket <-   DataForIndex %>% filter(measureditemcpc %in%  unlist(ItemsBasket[!is.na(gfli_basket),measureditemcpc]))
   basketKeys <- ( "measureditemcpc")
   ComBasketN  <- 'Production Value- Top 10 by World'
@@ -343,8 +365,15 @@ if(basketn == "calories"){
    basket[,protected := FALSE] 
 } 
 
+zz <- as.data.table(  basket %>%
+  filter(timepointyears ==2015) %>%
+  group_by(country,gfli_basket) %>%
+  dplyr:: summarise(nr = n()))
+
+zz[nr <2,]
+
 basket <- subset(basket,
-                 select = c("geographicaream49", "gfli_basket","measureditemcpc","itemname","qty_avey1y2","intprice","p0q0","basketname","Percent_prod", "protected"))
+                 select = c("geographicaream49", "gfli_basket","measureditemcpc","itemname","qty_avey1y2","value","p0q0","basketname","Percent_prod", "protected"))
 basket$geographicaream49 <- as.character(basket$geographicaream49)
 
 ### Save the Basket Selection to the sws ####
@@ -396,7 +425,10 @@ FoodLossIndex <- GFLI_SDG_fun(BaseYear,keys_lower,"geographicaream49",basket,bas
 FoodLossIndex_inc <- GFLI_SDG_fun(BaseYear,keys_lower,"worldbank_income2018_agg",basket,basketKeys,DataForIndex)
 FoodLossIndex_sofa <- GFLI_SDG_fun(BaseYear,keys_lower,"sofa_agg",basket,basketKeys,DataForIndex)
 FoodLossIndex_gfli <- GFLI_SDG_fun(BaseYear,keys_lower,"gfli_basket",basket,basketKeys,DataForIndex)
-
+FoodLossIndex_sdg <- GFLI_SDG_fun(BaseYear,keys_lower,"sdgregion_code",basket,basketKeys,DataForIndex)
+FoodLossIndex_WU <- GFLI_SDG_fun(BaseYear,keys_lower,"basket_sofa_wu",basket,basketKeys,DataForIndex)
+cc <- basket[basket_sofa_wu  == "Red and processed meat",]
+write.xlsx(cc, "FLI_meat17Jan19a.xlsx")
 
 
 SDGRepotingAreas <- c(grep("m49", grep("code", names(CountryGroup),value=TRUE) ,value=TRUE), grep("sdg", grep("code", names(CountryGroup),value=TRUE) ,value=TRUE))

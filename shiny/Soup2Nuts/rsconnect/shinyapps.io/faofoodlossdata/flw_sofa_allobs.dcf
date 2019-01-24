@@ -1,0 +1,13 @@
+name: flw_sofa_allobs
+title: FLW_SoFA_allObs
+username:
+account: faofoodlossdata
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 637095
+bundleId: 1808488
+url: https://faofoodlossdata.shinyapps.io/flw_sofa_allobs/
+when: 1547198402.41575
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: timeSeriesDataToBeImputed_5126_jan-FFAll.RData|timeSeriesDataToBeImputed_5126_jan.RData|timeSeriesDataToBeImputed_5126_jan_alldatapt.RData|timeSeriesDataToBeImputed_5126_jan3.RData

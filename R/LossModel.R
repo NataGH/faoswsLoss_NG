@@ -3,7 +3,7 @@
 #' @author Alicia English
 #' @export LossModel
 
-LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalCluster,keys_lower){
+LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalCluster,keys_lower,CountryGroup,fbsTree,Temperature,Precipitation,CropCalendar,LossTables_Yr,LossTables_ctryYr){
   # Description:
   # The model operates in 3 parts, 
   #  1) sets the clusters for estimating for countries without data. 
@@ -83,6 +83,9 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), GFLI_Basket :='Other',]
   fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), GFLI_Basket :='Animals Products & Fish and fish products',] # |foodGroupName == "PRODUCTS FROM FISH",
   fbsTree[GFLI_Basket == "NA", 'GFLI_Basket'] <- NA
+  model_mem <-0
+  model_restricted <- 0
+  model_mean <- 0
   
   ##### PART 2 - Random Forest ####
   for (vi in 1:length(na.omit(unique(fbsTree$GFLI_Basket)))){
@@ -150,9 +153,9 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     # datamod <- dataLag(datamod,indexVar= keys_lower,var="losstransf",timeVar="timepointyears",lag,LType='fullset')
     
     ###################
-    Predvar<- unique(na.omit(c(HierarchicalCluster, keys_lower,"loss_per_clean",UseVari ,"protected")))
+    Predvar2<- unique(na.omit(c(HierarchicalCluster, keys_lower,"loss_per_clean",UseVari ,"protected")))
     DataPred <-  timeSeriesDataToBeImputed %>% filter(measureditemcpc %in% CPCs &
-                                                        is.na(protected) &is.na(flagobservationstatus))
+                                                        is.na(protected))
     
     r <- NULL
     while(is.null(r)){ 
@@ -177,7 +180,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     datamod_x <- datamod #<- datamod_x 
     datapred_x <- datapred #<- datapred_x 
     names(datamod_x) %in% names(datapred_x)
-    
+
     for(ir in 1:length(ImportVar)){
       for( j in unique(datapred$geographicaream49)){
         datapred[geographicaream49 == j,ImportVar[ir]] <- with(datapred[geographicaream49 ==j,], x_impute(datapred[[ImportVar[ir]]], mean))
@@ -191,7 +194,8 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
         #   datapred[geographicaream49 == j & is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- as.integer(sum(datapred[geographicaream49 == j,ImportVar[ir],with=F], na.rm=TRUE)/dim(na.omit(datapred[geographicaream49 == j,ImportVar[ir],with=F]))[1])
         # }
         # else{datapred[geographicaream49 == j & is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- sum(datapred[geographicaream49 == j,ImportVar[ir],with=F], na.rm=TRUE)/dim(na.omit(datapred[geographicaream49 == j,ImportVar[ir],with=F]))[1]}
-      } 
+      
+        } 
       # if(is.integer(datapred[[ImportVar[ir]]])){
       #   datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir]] <- as.integer(sum(datapred[[ImportVar[ir]]], na.rm=TRUE)/dim(datapred[is.na(datapred[[ImportVar[ir]]]), ImportVar[ir],with=F])[1])
       #  }else{
@@ -205,8 +209,14 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     # With the challenge that losses may have a linear trend, but be increasing (decreasing) at decreasing rates
     print("Break 3")
     ## Model 
-    formula <- paste(paste(depVar," ~",sep=""),paste(keys_lower,sep="+", collapse= " + "),'+',paste(unique(UseVari[!UseVari %in% c(depVar,keys_lower)]), collapse= " + ")) #
-    formula4 <- paste(paste(depVar," ~",sep=""), paste(keys_lower,sep="+", collapse= " + "), collapse= " + ")
+    ## Model 
+    if(length(ImportVar)>0){
+      formula <- paste(paste(depVar," ~",sep=""),paste(keys_lower,sep="+", collapse= " + "),'+',paste(unique(UseVari[!UseVari %in% c(depVar,keys_lower)]), collapse= " + ")) #
+      model_mem <- model_mem +1
+    }else{
+      formula4 <- paste(paste(depVar," ~",sep=""), paste(keys_lower,sep="+", collapse= " + "), collapse= " + ")
+      model_restricted <- model_restricted +1
+    }
     
     #paste("factor(", keys_lower[3], ")",sep="", collapse= " + "),'+',
     mod2_rlm <- lm(as.formula(formula), data = datamod)
@@ -311,8 +321,9 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
         coeffSig <- names(coeffSig)[names(coeffSig) %in%  UseVari]
         Inters <- names(summary(mod2)$coeff[,4][summary(mod2)$coeff[,4] <.1])
       }else{
-        coeffSig <- coeffN
-        Inters <- names(coefficients(mod2))
+        coeffSig <- summary(mod2)$coeff[,4]
+        coeffSig <- names(coeffSig)[names(coeffSig) %in%  UseVari]
+        Inters <- names(summary(mod2)$coeff[,4])
       }
       
       coeffindex <-  grep(index1,Inters, perl=TRUE, value=TRUE)
@@ -368,6 +379,10 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     datapred[loss_per_clean >mean(data1$loss_per_clean, na.rm = T) + 3*sd(data1$loss_per_clean, na.rm = T),"loss_per_clean"] <- mean(data1$loss_per_clean, na.rm = T) 
     datapred[loss_per_clean <.01,"loss_per_clean"] <- mean(data1$loss_per_clean, na.rm = T) 
     
+    datapred[loss_per_clean > mean(data1$loss_per_clean, na.rm = T) + 3*sd(data1$loss_per_clean, na.rm = T),"flagmethod"] <- "m"
+    datapred[loss_per_clean <.01,"flagmethod"] <- "m"
+    model_mean <- model_mean+ nrow(datapred["flagmethod"== "m",])
+    
     print(paste('max loss:',max(datapred$loss_per_clean, na.rm=TRUE)*100, "%"))
     timeSeriesDataToBeImputed$geographicaream49 <- as.character(timeSeriesDataToBeImputed$geographicaream49)
     
@@ -407,7 +422,7 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
     AddInsertions(changeset,  lossmodelruns)
     Finalise(changeset)
   }
-  
+  print("Break 7")
   # # Multiplies loss percentages by production
   # timeSeriesDataToBeImputed <- merge(timeSeriesDataToBeImputed,production[,c("geographicaream49", "measuredelement", "measureditemcpc", "timepointyears", "value_measuredelement_5510"), with=F], by.x = (keys_lower), by.y = (keys_lower), all.x = TRUE, all.y = FALSE)
   # timeSeriesDataToBeImputed[,value_measuredelement_5126 := loss_per_clean,]
@@ -451,7 +466,15 @@ LossModel <- function(Data,timeSeriesDataToBeImputed,production,HierarchicalClus
   # # )
   # # 
   # 
-
+  #end <- Sys.time()
+  #print(end - start)
+  print(paste("Number of estimated points: ",dim(timeSeriesDataToBeImputed[loss_per_clean>0 & is.na(protected),])[1],sep=""))
+  print(paste("Percent of total: ",dim(timeSeriesDataToBeImputed[ !is.na(flagobservationstatus) & is.na(protected),])[1]/
+                dim(timeSeriesDataToBeImputed[is.na(flagobservationstatus) & is.na(protected),])[1],sep=""))
+  
+  print(paste("Percent of total estimates done with the full model: ", model_mean))
+  print(paste("Percent of total estimates done with the restricted model: ", model_restricted))
+  print(paste("Percent of total estimates adjusted to mean: ", model_mean))
   
   #write_json(list(DataIN = Data), paste(dirmain,'\\ModelResults\\',HierarchicalCluster,'_ModelResults.json',sep="")) 
   return(timeSeriesDataToBeImputed)

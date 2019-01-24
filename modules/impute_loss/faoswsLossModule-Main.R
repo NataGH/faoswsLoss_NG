@@ -52,6 +52,7 @@ suppressMessages({
 
 ############# Computation Parameters #####################################
 LocalRun <- FALSE # For if you are running the model on a local environment and loading data tables from local fiiles
+savesws <- FALSE
 maxYear <- format(Sys.Date(), "%Y")
 
 ## Options for the user - See full documentation for the User Oriented Work Flow #
@@ -98,12 +99,16 @@ DataCollectionTags_all <- c("Expert Opinion","-","SWS","NationalStatsYearbook"
                             ,"WRI Protocol","FBS/APQ","LitReview","Case Study"                   
                             ,"APHLIS","NP","Laboratory Trials","Modelled"                     
                             ,"Field Trial","Crop Cutting Field Experiment","Census" )
+DataCollectionTags_represent <- c("Expert Opinion","-","SWS","NationalStatsYearbook" 
+                                  ,"NonProtected","Survey","NationalAcctSys"              
+                                  ,"WRI Protocol","FBS/APQ","LitReview" ,"Case Study"                    
+                                  ,"APHLIS","NP","Laboratory Trials","Modelled", "Census" )
 
-DataCollectionTags_represent <- c("-","APHLIS","Case Study","Census","Declarative","Expert Opinion",
-                                  "FBS/APQ","LitReview","Modelled","NationalAcctSys",
-                                  "NationalStatsYearbook","NonProtected","NP","Survey","SWS")
+# DataCollectionTags_represent <- c("-","APHLIS","Case Study","Census","Declarative","Expert Opinion",
+#                                   "FBS/APQ","LitReview","Modelled","NationalAcctSys",
+#                                   "NationalStatsYearbook","NonProtected","NP","Survey","SWS")
 UB<- 0.65
-LB <- 0.05
+LB <- 0.02
 #  c("SWS","NationalStatsYearbook","NonProtected","NationalAcctSys","FBS/APQ","Census",
 #                                      "APHLIS", "Expert Opinion","Survey","Declarative","-","LitReview")
 ExternalDataOpt <- DataCollectionTags_represent
@@ -187,7 +192,9 @@ if(CheckDebug()){
 CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
 FAOCrops     <- ReadDatatable("fcl2cpc_ver_2_1")
 ConvFactor1  <- ReadDatatable('flw_lossperfactors_')
-fbsTree      <- ReadDatatable("fbs_tree")
+#fbsTree      <- ReadDatatable("fbs_tree")
+fbsTree      <- ReadDatatable("gfli_basket")
+
 
 CountryGroup[,"geographicaream49":=CountryGroup$m49_code]
 CountryGroup[,"country":=CountryGroup$m49_region]
@@ -196,18 +203,17 @@ CountryGroup$country <- tolower(CountryGroup$country)
 FAOCrops[, "crop" := FAOCrops$description]
 FAOCrops[, "measureditemcpc" := addHeadingsCPC(FAOCrops$cpc)]
 
-names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
-names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
-
-fbsTree$GFLI_Basket <- 'NA'
-fbsTree[foodgroupname %in% c(2905), GFLI_Basket :='Cereals',]
-fbsTree[foodgroupname %in% c(2911), GFLI_Basket :='Pulses',]
-fbsTree[foodgroupname %in% c(2919,2918), GFLI_Basket :='Fruits & Vegetables',]
-fbsTree[foodgroupname %in% c(2907,2913), GFLI_Basket :='Roots, Tubers & Oil-Bearing Crops',]
-fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), GFLI_Basket :='Other',]
-fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), GFLI_Basket :='Meat & Animals Products',] # |foodGroupName == "PRODUCTS FROM FISH",
-fbsTree[GFLI_Basket == "NA", 'GFLI_Basket'] <- NA
-
+# names(fbsTree)[names(fbsTree)== "id3"] <- "foodgroupname"
+# names(fbsTree)[names(fbsTree)== "measureditemsuafbs"| names(fbsTree)== "item_sua_fbs" ] <- "measureditemcpc"
+# 
+# fbsTree$GFLI_Basket <- 'NA'
+# fbsTree[foodgroupname %in% c(2905), GFLI_Basket :='Cereals',]
+# fbsTree[foodgroupname %in% c(2911), GFLI_Basket :='Pulses',]
+# fbsTree[foodgroupname %in% c(2919,2918), GFLI_Basket :='Fruits & Vegetables',]
+# fbsTree[foodgroupname %in% c(2907,2913), GFLI_Basket :='Roots, Tubers & Oil-Bearing Crops',]
+# fbsTree[foodgroupname %in% c(2914,2908,2909,2912,2922,2923), GFLI_Basket :='Other',]
+# fbsTree[foodgroupname %in% c(2943, 2946,2945,2949,2948), GFLI_Basket :='Meat & Animals Products',] # |foodGroupName == "PRODUCTS FROM FISH",
+# fbsTree[GFLI_Basket == "NA", 'GFLI_Basket'] <- NA
 
 ### Importing the tables ###
 Temperature <-  ReadDatatable("temp_climate_month_ctry")
@@ -305,6 +311,11 @@ finalModelData =
     production <- getProductionData(areaVar,itemVar,yearVar,elementVar, selectedYear) # Value_measuredElement_5510
     imports <- getImportData(areaVar,itemVar,yearVar, selectedYear)
     lossProtected <- getLossData(areaVar,itemVar,yearVar,elementVar,selectedYear,protected = TRUE)     # Value_measuredElement_5016
+    lossProtected <- getLossData(areaVar,itemVar,yearVar,elementVar,selectedModelYear,protected = TRUE) 
+    
+    
+    lossProtected[flagObservationStatus.x =="M" & flagMethod.x == "-","Protected"] <- FALSE
+    
     lossProtected$value_measuredelement_5126 = 0
     
     names(production)[ names(production) == "Value"] <-  "value_measuredelement_5510"
@@ -388,8 +399,11 @@ finalModelData =
     
     #### Protected Data ###
     flagValidTableLoss <- as.data.table(flagValidTable)
+    flagValidTableLoss[flagObservationStatus == "M" & flagMethod== "-","Protected"] <- FALSE
+    
     protectedFlag <- flagValidTableLoss[flagValidTableLoss$Protected == TRUE,] %>%
       .[, flagCombination := paste(flagObservationStatus, flagMethod, sep = ";")]
+   
     timeSeriesDataToBeImputed$flagcombination <- " "
     timeSeriesDataToBeImputed[,flagcombination :=  paste(flagobservationstatus, flagmethod, sep = ";")] 
     
@@ -401,7 +415,19 @@ finalModelData =
     timeSeriesDataToBeImputed <- unique(timeSeriesDataToBeImputed)
 
     names(timeSeriesDataToBeImputed) <-tolower(names(timeSeriesDataToBeImputed))
-
+    # ### For Analytical Model ###
+    timeSeriesDataToBeImputed[flagcombination == "M;-", flagobservationstatus := NA]
+    timeSeriesDataToBeImputed[flagcombination == "M;-", flagmethod := NA]
+    timeSeriesDataToBeImputed[flagcombination == "M;-",flagcombination := "NA;NA"]
+    # ## Option 1:
+    # timeSeriesDataToBeImputed[value_measuredelement_5126 <LB, flagobservationstatus := NA]
+    # timeSeriesDataToBeImputed[value_measuredelement_5126 <LB, flagmethod := NA]
+    # timeSeriesDataToBeImputed[value_measuredelement_5126 <LB, flagcombination := "NA;NA"]
+    # ## Option 2:
+    # timeSeriesDataToBeImputed[, flagobservationstatus := NA]
+    # timeSeriesDataToBeImputed[, flagmethod := NA]
+    # timeSeriesDataToBeImputed[, flagcombination := "NA;NA"]
+    
     
     lossData <- subset(lossData, 
                        select = c(keys_lower,"isocode","country","loss_per_clean","fsc_location","flagobservationstatus.y", "flagmethod.y"))
@@ -423,10 +449,12 @@ if(updatemodel){
        ConvFactor1  <- ConvFactor1 %>% filter(!is.na(loss_per_clean ))
        ConvFactor1 <- ConvFactor1 %>% filter(loss_per_clean < UB)
        #ConvFactor1$measureditemcpc <- addHeadingsCPC(ConvFactor1$measureditemcpc)
-       names(ConvFactor1)[names(ConvFactor1)=='year'] <-'timepointyears'
+       ConvFactor1 %>%
+         group_by(tag_datacollection) %>%
+         summarise( n = n())
        
-       ## Runs the Markov Model to standardize estimates 
-       markov <- FSC_Markov(RawData=ConvFactor1,opt="aveatFSP")
+       ## Runs the Markov Model to standardize estimates (RawData,opt,modelEst,selectedYear,CountryGroup,fbsTree)
+       markov <- FSC_Markov(RawData=ConvFactor1,opt="aveatFSP",modelEst=T,selectedYear,CountryGroup,fbsTree)
        
        FullSet <- rbind(markov,lossData, fill=T)
       
@@ -438,21 +466,24 @@ if(updatemodel){
   
   FullSet <-join(FullSet, FAOCrops[,c("measureditemcpc","crop"), with=FALSE], by= c("measureditemcpc"))
   FullSet <- FullSet %>% filter(loss_per_clean != 0)
-  FullSet <- FullSet %>% filter(loss_per_clean > LB)
   FullSet <- FullSet %>% filter(loss_per_clean < UB)
-  
+
   #write.table(FullSet,paste(githubsite, 'General/FullSet.csv', sep=''),sep=',' )
   ### Save the intermediate aggregation table  to the sws
-  names(FullSet) <- tolower(names(FullSet))
-  ## Delete
-  table = "aggregate_loss_table"
-  changeset <- Changeset(table)
-  newdat <- ReadDatatable(table, readOnly = FALSE)
-  AddDeletions(changeset, newdat)
-  Finalise(changeset)
-  ## Add
-  AddInsertions(changeset,  FullSet[,c("geographicaream49","timepointyears","measureditemcpc","isocode","country","crop","loss_per_clean","fsc_location"), with=FALSE])
-  Finalise(changeset)
+  if(savesws){
+  # names(FullSet) <- tolower(names(FullSet))
+  # ## Delete
+    table = "aggregate_loss_table"
+    changeset <- Changeset(table)
+    newdat <- ReadDatatable(table, readOnly = FALSE)
+    AddDeletions(changeset, newdat)
+    Finalise(changeset)
+    ## Add
+    AddInsertions(changeset,  FullSet[,c("geographicaream49","timepointyears","measureditemcpc","isocode","country","crop","loss_per_clean","fsc_location"), with=FALSE])
+    Finalise(changeset)
+  } 
+  FullSet <- FullSet %>% filter(loss_per_clean > LB)
+  FullSet <- FullSet %>% filter(loss_per_clean < UB)
   
   print("Markov chain complete")
   
@@ -477,16 +508,17 @@ if(updatemodel){
   #Data_Use_train3 <- VariablesAdd1(FullSet,keys_lower,Predvar,"RF",'00')
   print("Variables Added")
   
-  
   ####### Model Estimation - Percentages only ############
-  ctry_modelvar <-  c("all") #c("100", "191" ,"196", "203" ,"208", "233" ,"246", "250", "276" ,"300" ,"348" ,"372", "380", "40" , "428",
-  # "440", "442" ,"470", "528", "56" , "616", "620" ,"642","703" ,"705")  
+  ctry_modelvar <-  c("all")
+    
+
+   
   # this model estimates by country and does carry-overs, once modeled the data is temporarily protected
   timeSeriesDataToBeImputed_ctry2 <- LossModel_ctry(Data= Data_Use_train0,timeSeriesDataToBeImputed,ctry_modelvar,HierarchicalCluster,keys_lower)
 
 
   #save(timeSeriesDataToBeImputed_ctry2 , file = "timeSeriesDataToBeImputed_ctry2.RData")
-  timeSeriesDataToBeImputed2 <- LossModel(Data= Data_Use_train0[fsc_location !="SWS;Prod_imp",], timeSeriesDataToBeImputed, production,HierarchicalCluster,keys_lower)
+  timeSeriesDataToBeImputed2 <- LossModel(Data= Data_Use_train0[fsc_location !="SWS;Prod_imp" & loss_per_clean > LB,], timeSeriesDataToBeImputed_ctry2, production,HierarchicalCluster,keys_lower,CountryGroup,fbsTree,Temperature,Precipitation,CropCalendar,LossTables_Yr,LossTables_ctryYr)
   
   #timeSeriesDataToBeImputed2 <-timeSeriesDataToBeImputed
   timeSeriesDataToBeImputed2$protected = FALSE
@@ -562,6 +594,8 @@ if(updatemodel){
   ####
   
   DataSave <- rbind(timeSeriesDataToBeImputed_5016,timeSeriesDataToBeImputed_5126)
+  
+  save(DataSave, file ="~/faoswsLossa/shiny/Soup2Nuts/timeSeriesDataToBeImputed_5126_jan_all_markov_1a.RData")
   # # Save to the SWS
   stats = SaveData(domain = "lossWaste",
                    dataset="loss",
@@ -591,15 +625,15 @@ if(updatemodel){
 if(updatemodel == FALSE){
   ###Computation parameters##
   LastRun <- TRUE
-  Cluster2Update <- na.omit(unique(fbsTree$GFLI_Basket))
+  Cluster2Update <- na.omit(unique(fbsTree$gfli_basket))
 
   ## Read DataTables of the existing model runs 
   modelRuns <- ReadDatatable("lossmodelruns")
   
   Cluster2Update <- na.omit(unique(fbsTree$GFLI_Basket))[vi]
   
-  name <-unique(fbsTree[GFLI_Basket %in% Cluster2Update,foodgroupname])
-  CPCs <-unique(fbsTree[GFLI_Basket %in% Cluster2Update,measureditemcpc])
+  name <-unique(fbsTree[gfli_basket %in% Cluster2Update,foodgroupname])
+  CPCs <-unique(fbsTree[gfli_basket %in% Cluster2Update,measureditemcpc])
     
   modelRuns2 <- modelRuns[(cluster %in% name) ,]
   modelRuns2 <- modelRuns2[(daterun == max(modelRuns2$daterun)),]
