@@ -85,7 +85,7 @@ if(CheckDebug()){
   selectedYear =  as.character(1990:maxYear)
   
 }
-selectedModelYear = as.character(1961:maxYear)
+
 
 print(paste("updatemodel: ", updatemodel))
 print(paste("subnationalestimates: ", subnationalestimates))
@@ -311,8 +311,6 @@ finalModelData =
     production <- getProductionData(areaVar,itemVar,yearVar,elementVar, selectedYear) # Value_measuredElement_5510
     imports <- getImportData(areaVar,itemVar,yearVar, selectedYear)
     lossProtected <- getLossData(areaVar,itemVar,yearVar,elementVar,selectedYear,protected = TRUE)     # Value_measuredElement_5016
-    lossProtected <- getLossData(areaVar,itemVar,yearVar,elementVar,selectedModelYear,protected = TRUE) 
-    
     
     lossProtected[flagObservationStatus.x =="M" & flagMethod.x == "-","Protected"] <- FALSE
     

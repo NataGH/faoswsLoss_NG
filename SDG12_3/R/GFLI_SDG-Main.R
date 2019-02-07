@@ -169,7 +169,7 @@ CountryGroup$country <- CountryGroup$m49_region
 
 FAOCrops[, "crop" := FAOCrops$description]
 FAOCrops[, "measureditemcpc" := addHeadingsCPC(FAOCrops$cpc)]
-intPrice <- merge(intPrice, FAOCrops[,c("measureditemcpc","crop"),with=F], by= c("measureditemcpc"))
+names(intPrice)[names(intPrice) == "measureditemcpc_description"] <- 'crop'
 
 
 
@@ -375,7 +375,7 @@ zz[nr <2,]
 basket <- subset(basket,
                  select = c("geographicaream49", "gfli_basket","measureditemcpc","itemname","qty_avey1y2","value","p0q0","basketname","Percent_prod", "protected"))
 basket$geographicaream49 <- as.character(basket$geographicaream49)
-
+names(basket)[names(basket)=="value"] <- "intprice"
 ### Save the Basket Selection to the sws ####
 if(savesws){
   write.table(basket ,'Commodbasket.csv', sep=",", row.names=FALSE)

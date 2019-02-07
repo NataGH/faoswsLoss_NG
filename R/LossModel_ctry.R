@@ -416,10 +416,10 @@ LossModel_ctry <- function(Data,timeSeriesDataToBeImputed,ctry_modelvar,Hierarch
         print(paste('Number of comodities:',length(unique(datamod_ctry$measureditemcpc))))
       }
       print("Break 5")
+      
       # In the cases where the model over estimates the loss to unrealistic numbers then the dataset reverts to the SIMPLIFIED model #########
-      ### Add when more data becomes available
-      #modelag <- unique(unlist(datapred[(value_measuredelement_5126< LB) & (value_measuredelement_5126< 3*sd(data_byctry$loss_per_clean, na.rm = T)),"measureditemcpc",with=F]))
-      #datapred[measureditemcpc %in% modelag,protected := FALSE]
+      modelag <- unique(unlist(datapred[(value_measuredelement_5126< LB) & (value_measuredelement_5126< 3*sd(data_byctry$loss_per_clean, na.rm = T)),"measureditemcpc",with=F]))
+      datapred[measureditemcpc %in% modelag,protected := FALSE]
       
       if(medianLoss> 3*sd(data_byctry$loss_per_clean, na.rm = T) | is.na(medianLoss)){
         formula_ctry <- paste(paste(depVar," ~",sep=""), paste(keys_lower_WOC,sep="+", collapse= " + "), collapse= " + ")

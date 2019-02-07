@@ -20,7 +20,7 @@ FSC_Markov <- function(RawData,opt,modelEst,selectedYear,CountryGroup,fbsTree){
   #   FullSet
   
   # Adjustments to the raw data
-
+  locations <- c("farm", "wholesupplychain", "sws_total") ## transport","storage", "trader","wholesale", "processing", "retail" <>
   trim <- function(x) gsub("^\\s+|\\s+$", "", x)
 
   RawData$country <- tolower(RawData$country)
@@ -38,11 +38,14 @@ FSC_Markov <- function(RawData,opt,modelEst,selectedYear,CountryGroup,fbsTree){
   FullSet [,country:='antarctica']
   FullSet <-   FullSet[,loss_per_clean :=0,]
   FullSeta <-   FullSet[1,,] 
-  TransitionMatrix = matrix(0,1,9)
+  TransitionMatrix = matrix(0,1,length(locations))
   
   #Splits the location to the first observation 
   RawData$fsc_location1 = sapply(strsplit(RawData$fsc_location,"/"), '[', 1)
-  locations <- c("farm","transport","storage", "trader","wholesale", "processing", "retail", "wholesupplychain", "sws_total")
+      
+   
+  
+  
   RawData <- RawData %>% filter(fsc_location1 %in% locations)
   
   # Sets the stage sequence for the markov chain
@@ -60,7 +63,7 @@ FSC_Markov <- function(RawData,opt,modelEst,selectedYear,CountryGroup,fbsTree){
     SubNational2[geographicaream49 == "484","est_region"] <- "13"
       
     ## data to be estimated ####
-    loc2 <- c("farm","transport","storage", "trader","wholesale", "processing", "retail")
+    loc2 <- c("farm") #,"transport","storage", "trader","wholesale", "processing", "retail" <>
     maxYear <- as.numeric(format(Sys.Date(), "%Y"))
     SubNat_VCD <- as.data.table(expand.grid(timepointyears = seq(1990,  maxYear, by = 1),
                                             geographicaream49 = as.character(unique(SubNational$geographicaream49)),
@@ -143,7 +146,7 @@ FSC_Markov <- function(RawData,opt,modelEst,selectedYear,CountryGroup,fbsTree){
       ## By country estimates, then by regions
       SubNational3_gfli$geographicaream49 <- as.factor(SubNational3_gfli$geographicaream49)
       SubNational3_gfli$est_region <- as.factor(SubNational3_gfli$est_region)
-      exp_var_region <- c("measureditemcpc","est_region","timepointyears","fsc_location1","geographicaream49:est_region")
+      exp_var_region <- c("measureditemcpc","est_region","timepointyears","geographicaream49:est_region") #"fsc_location1"
       formula_expOp <- paste(paste(depVar," ~",sep=""),paste(exp_var_region,sep="+", collapse= " + "))
       mod2_exOp_reg <- lm(as.formula(formula_expOp), data =  SubNational3_gfli )
       print(summary(mod2_exOp_reg))
@@ -274,7 +277,7 @@ FSC_Markov <- function(RawData,opt,modelEst,selectedYear,CountryGroup,fbsTree){
         if(dim(data4)[1]> 1){
           if(opt == "aveatFSP"){
             # Averages at each location in the FSC, excluding the whole chain and the SWS 
-            for(iiii in 1:9){
+            for(iiii in 1:length(locations)){
               TransitionMatrix[iiii] = sum(data4$loss_per_clean*(data4$fsc_location1 == colnames(TransitionMatrix)[iiii]))/(sum(data4$fsc_location1 == colnames(TransitionMatrix)[iiii]))
               TransitionMatrix[is.nan(TransitionMatrix)] = 0
             }
@@ -282,9 +285,9 @@ FSC_Markov <- function(RawData,opt,modelEst,selectedYear,CountryGroup,fbsTree){
             ref <- 1000 # reference amount
             ref0 <- ref 
             amt <- 0 
-            WS <- TransitionMatrix[,8] # Whole supply chain
-            SWS <- TransitionMatrix[,9] # Estimate from the SWS data 
-            FSC <- TransitionMatrix[,1:7][TransitionMatrix[,1:7] > 0] #aggregates of the food supply chain
+            WS <- unlist(TransitionMatrix[,c("wholesupplychain")]) # Whole supply chain
+            SWS <-unlist(TransitionMatrix[,c("sws_total")])  # Estimate from the SWS data 
+            FSC <- TransitionMatrix[,1:(length(TransitionMatrix)-2)][TransitionMatrix[,1:(length(TransitionMatrix)-2)] > 0] #aggregates of the food supply chain
             for(ni in 1:length(FSC)){
               # Uses the referent quantity to aggregate losses alog the supply chain
               ref <- ref- ref*(FSC[ni])
@@ -297,8 +300,8 @@ FSC_Markov <- function(RawData,opt,modelEst,selectedYear,CountryGroup,fbsTree){
             FullSeta[1, geographicaream49 := unique(data4$geographicaream49),]
             FullSeta[1, timepointyears := unique(data4$timepointyears),]
             FullSeta[1, measureditemcpc := unique(data4$measureditemcpc),]
-            FullSeta[1, isocode := unique(data4$isocode),]
-            FullSeta[1, country := unique(data4$country),]
+            FullSeta[1, isocode := na.omit(unique(data4$isocode)),]
+            FullSeta[1, country := na.omit(unique(data4$country)),]
             FullSeta[1, 'loss_per_clean':=lossPer]
             FullSeta[1, 'fsc_location'] <- "Calc"
           }} else{

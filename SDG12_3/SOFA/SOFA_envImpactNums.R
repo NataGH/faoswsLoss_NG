@@ -106,7 +106,7 @@ gfli_basket <- ReadDatatable("gfli_basket")
 FAOCrops <- ReadDatatable("fcl2cpc_ver_2_1")
 Loss_per_stage <- ReadDatatable("sn_vc_est")
 Loss_per_stage_envF <- ReadDatatable("snv_environ_factors")
-
+Baskets <- ReadDatatable("sdg123_commoditybasket")
 
 LossPer_SVC <- ReadDatatable("sn_vc_est")
 FAOCrops$measureditemcpc <- FAOCrops$cpc
@@ -117,6 +117,7 @@ load("~/faoswsLossa/shiny/Soup2Nuts/timeSeriesDataToBeImputed_5126_jan_all_marko
 
 Losses <- timeSeriesDataToBeImputed_5126 %>% filter(timePointYears <= 2016)
 
+# Multiplies loss percentages by production
 
 
 names(FWF_Impact_factors)
@@ -152,9 +153,47 @@ LossQty_stage2[, vcs_water_green := value_measuredelement_5016_vcs*water_green_m
 LossQty_stage2[, vcs_water_grey := value_measuredelement_5016_vcs*water_grey_m3_tonfood]
 LossQty_stage2[, vcs_land := value_measuredelement_5016_vcs*land_ha_tonfood]
 LossQty_stage2[, vcs_econ := value_measuredelement_5016_vcs*econ_usd_kgfood*1000]
+Baskets$ctrycomd <- NA
 
-keep <- c("geographicaream49","measureditemcpc","timepointyears","fsc_location","vcs_emission","vcs_carbon","vcs_water_blue","vcs_water_green","vcs_water_grey","vcs_land","vcs_econ")
+Baskets[,"ctrycomd" := paste(geographicaream49,measureditemcpc, sep=";")]
+LossQty_stage2[,ctrycomd := paste(geographicaream49,measureditemcpc, sep=";")]
+
+LossQty_stage2 <- LossQty_stage2[ctrycomd %in% Baskets$ctrycomd ,]
+
+keep <- c("geographicaream49","measureditemcpc","timepointyears","fsc_location","value_measuredelement_5016_vcs", "vcs_emission","vcs_carbon","vcs_water_blue","vcs_water_green","vcs_water_grey","vcs_land","vcs_econ")
 LossQty_stage2a <- LossQty_stage2[,keep,with=F]
+LossQty_stage2a <-merge(LossQty_stage2,gfli_basket[,c("measureditemcpc", "gfli_basket","basket_sofa_wu"), with= F], by = "measureditemcpc", all.x=T)
+LossQty_stage2a <-merge(LossQty_stage2a,CountryGroup [,c("geographicaream49", "sdg_regions", "worldbank_income2018_agg","sofa_agg"), with= F], by = "geographicaream49", all.x=T)
+
+LossQty_Env_stage_2015 <- as.data.table(LossQty_stage2a %>% 
+                               filter(timepointyears== 2015)%>%
+                               group_by(fsc_location) %>%
+                               dplyr:: summarise(
+                                 Aggvcs_Qty   = sum(value_measuredelement_5016_vcs, na.rm=T),
+                                 Aggvcs_emission    = sum(vcs_emission, na.rm=T),
+                                 Aggvcs_carbon      = sum(vcs_carbon, na.rm=T) ,
+                                 Aggvcs_water_blue  = sum(vcs_water_blue, na.rm=T),
+                                 Aggvcs_water_green = sum(vcs_water_green, na.rm=T),
+                                 Aggvcs_water_grey  = sum(vcs_water_grey, na.rm=T),
+                                 Aggvcs_land        = sum(vcs_land, na.rm=T),
+                                 Aggvcs_econ        = sum(vcs_econ, na.rm=T)
+                               ))
+
+LossQty_Env_comodgrp_2015 <- as.data.table(LossQty_stage2a %>% 
+                                          filter(timepointyears== 2015)%>%
+                                          group_by(gfli_basket) %>%
+                                          dplyr:: summarise(
+                                            Aggvcs_Qty   = sum(value_measuredelement_5016_vcs, na.rm=T),
+                                            Aggvcs_emission    = sum(vcs_emission, na.rm=T),
+                                            Aggvcs_carbon      = sum(vcs_carbon, na.rm=T) ,
+                                            Aggvcs_water_blue  = sum(vcs_water_blue, na.rm=T),
+                                            Aggvcs_water_green = sum(vcs_water_green, na.rm=T),
+                                            Aggvcs_water_grey  = sum(vcs_water_grey, na.rm=T),
+                                            Aggvcs_land        = sum(vcs_land, na.rm=T),
+                                            Aggvcs_econ        = sum(vcs_econ, na.rm=T)
+                                          ))
+
+
 LossQty_Env <- as.data.table(LossQty_stage2a %>% 
                                group_by(geographicaream49,measureditemcpc,timepointyears) %>%
                                dplyr:: summarise(
@@ -166,3 +205,27 @@ LossQty_Env <- as.data.table(LossQty_stage2a %>%
                                  Aggvcs_land        = sum(vcs_land, na.rm=T),
                                  Aggvcs_econ        = sum(vcs_econ, na.rm=T)
                                ))
+
+
+ConvFactor1  <- ReadDatatable('flw_lossperfactors_')
+ConvFactor1[,loss_per_clean := loss_per_clean/100]
+ConvFactor1  <- ConvFactor1 %>% filter(tag_datacollection %in%  ExternalDataOpt)
+ConvFactor1  <- ConvFactor1 %>% filter(!is.na(loss_per_clean ))
+ConvFactor1 <- ConvFactor1 %>% filter(loss_per_clean < UB)
+ConvFactor1$fsc_location1 = sapply(strsplit(ConvFactor1$fsc_location,"/"), '[', 1)
+
+ConvFactor1a<-merge(ConvFactor1,gfli_basket[,c("measureditemcpc", "gfli_basket","basket_sofa_wu"), with= F], by = "measureditemcpc", all.x=T)
+ConvFactor1a <-merge(ConvFactor1a,CountryGroup [,c("geographicaream49", "sdg_regions", "worldbank_income2018_agg","sofa_agg"), with= F], by = "geographicaream49", all.x=T)
+
+
+quarts <- ConvFactor1a  %>% 
+  filter(fsc_location1 %in% c("Farm","Transport","Storage", "Processing", "Retail") &
+           timepointyears %in% seq(2003,2016,1) & 
+           gfli_basket %in% c(na.omit(unique(gfli_basket))))%>%  
+  group_by(sdg_regions, gfli_basket,fsc_location1) %>%  
+  dplyr:: summarise(n= n()) 
+
+%>% 
+  do(data.frame(t(quantile(.$loss_per_clean,na.rm=T))))
+
+write.table(quarts, "quarts_n.csv", sep=",")
