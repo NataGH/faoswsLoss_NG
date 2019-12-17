@@ -744,13 +744,13 @@ shinyServer(function(input, output, session) {
     }
     p%>%layout(
       xaxis = list(
-        title = "Geographic Area",
+        title = "Commodity Grouping",
         titlefont = f,
         dtick = 1
         
       ),
       yaxis = list(
-        title = "Commodity",
+        title = "Geographic Area",
         tickformat = ".2%",
         titlefont = f
       ),
