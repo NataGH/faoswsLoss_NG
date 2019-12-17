@@ -1,0 +1,12 @@
+name: input_data
+title: input_data
+username:
+account: faofoodlossdata
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 516466
+bundleId: 1868791
+url: https://faofoodlossdata.shinyapps.io/input_data/
+when: 1549885092.36029
+asMultiple: FALSE
+asStatic: FALSE

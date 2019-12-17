@@ -18,7 +18,11 @@ library(DT)
 library(magrittr)
 library(data.table)
 library(plotly)
-library(rdrop2)
+#library(rdrop2)
+
+
+#### Need to change out the xlsx for openxlsx
+
 
 # token <- readRDS("token.rds")
 # # Then pass the token to each drop_ function
@@ -27,7 +31,7 @@ library(rdrop2)
 
 #load("~/faoswsLossa/shiny/Soup2Nuts/data_InternalFAO_jan.RData")
 
-load("data_InternalFAO_jan.RData")
+load("data_InternalFAO_jan2.RData")
 
 # Define UI for application that draws a histogram
 

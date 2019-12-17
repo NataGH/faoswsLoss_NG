@@ -26,7 +26,7 @@ library(xlsx)
 # # Then pass the token to each drop_ function
 # drop_acc(dtoken = token)
 # drop_download("data_InternalFAO_jan.RData" , path = "shiny", overwrite = TRUE)
-load("data_InternalFAO_jan.RData")
+load("data_InternalFAO_marc26.RData")
 
 shinyServer(function(input, output, session) {
   ##### Aggregation Options ####
@@ -60,7 +60,7 @@ shinyServer(function(input, output, session) {
       updateSelectInput(session, "Country", choices=ctry_choices, selected ="All")
     }
     if (input$aggregation == "gfli_basket") {
-      ctry_choices <-  c("All",unlist(na.omit(unique(gfli_basket[,measureditemcpc]))))
+      ctry_choices <-  c("All",unlist(na.omit(unique(gfli_basket[gfli_basket %in% input$Agg_options,measureditemcpc]))))
       updateSelectInput(session, "Country", choices=ctry_choices, selected ="All")
     }
     if (!input$aggregation  %in% c("sdgregion_code", "gfli_basket")) {
@@ -72,17 +72,25 @@ shinyServer(function(input, output, session) {
         ctry_choices <- c("All",c(unique(CountryGroup[(CountryGroup[[aggregationNameB]]   %in% input$Agg_options)&(geographicaream49 %in% Base_Prod$geographicaream49),"country",with=F])))
         updateSelectInput(session, "Country", choices=ctry_choices, selected = "All")
       }
-    }    
+    }  
+    if (input$aggregation  %in% "sdgregion_code"){
+      if(input$Agg_options == 'All'){
+        ctry_choices <- c("All",c(unique(CountryGroup[geographicaream49 %in% Base_Prod$geographicaream49,"country",with=F])))
+      }else{
+        ctry_choices <- c("All",c(unique(CountryGroup[(CountryGroup[['sdg_regions']]   %in% input$Agg_options),"country",with=F])))
+      }
+      updateSelectInput(session, "Country", choices=ctry_choices, selected = "All")
+    } 
     if (input$aggregation == "m49_code") {
       ctry_choices <- c("All",unlist(CountryGroup[["m49_region"]]))
       updateSelectInput(session, "Country", choices=ctry_choices, selected ="Italy")
     }
-    else{
-      aggregationNameB = sub("code", "region", input$aggregation )
-      ctry_choices <- c("All",unique(CountryGroup[CountryGroup[[aggregationNameB]] ==input$Agg_options,"country",with=F]))
-      updateSelectInput(session, "Country", choices=ctry_choices, selected ="All")
-    } 
-    
+    # else{
+    #   aggregationNameB = sub("code", "region", input$aggregation )
+    #   ctry_choices <- c("All",unique(CountryGroup[CountryGroup[[aggregationNameB]] ==input$Agg_options,"country",with=F]))
+    #   updateSelectInput(session, "Country", choices=ctry_choices, selected ="All")
+    # } 
+    # 
     
   })
 
@@ -130,9 +138,9 @@ shinyServer(function(input, output, session) {
           (geographicaream49 %in% unlist(CountryGroup[country %in% unlist(input$Country),"m49_code", with=F]))
           ,"measureditemcpc",with=F]))
       }
-      if(input$itemcpc != "All"){
+      if(!"All"  %in% input$itemcpc){
         Comm_grp <- Comm_grp %>% filter(measureditemcpc %in%  unlist(
-          FAOCrops[crop %in% input$itemcpc[input$itemcpc != "All"], "measureditemcpc", with=F]
+          FAOCrops[crop %in% unlist(input$itemcpc[input$itemcpc != "All"]), "measureditemcpc", with=F]
         ))
       }
       
@@ -142,6 +150,40 @@ shinyServer(function(input, output, session) {
     }
     unique(unlist(Comm_grp))
   })
+  countries <- reactive({
+    if (input$aggregation == "WORLD") {
+      ctry_choices <- c(unlist(CountryGroup[["m49_region"]]))
+    }
+    if (input$aggregation == "gfli_basket") {
+      ctry_choices <-  c(unlist(na.omit(unique(gfli_basket[gfli_basket %in% input$Agg_options,measureditemcpc]))))
+    }
+    if (!input$aggregation  %in% c("sdgregion_code", "gfli_basket")) {
+      if(input$Agg_options == 'All'){
+        ctry_choices <- c(unique(CountryGroup[geographicaream49 %in% Base_Prod$geographicaream49,"country",with=F]))
+      }else{
+        aggregationNameB = sub("code", "region", input$aggregation )
+        ctry_choices <- c(unique(CountryGroup[(CountryGroup[[aggregationNameB]]   %in% input$Agg_options)&(geographicaream49 %in% Base_Prod$geographicaream49),"country",with=F]))
+      }
+    }  
+    if (input$aggregation  %in% "sdgregion_code"){
+      if(input$Agg_options == 'All'){
+        ctry_choices <- c(unique(CountryGroup[geographicaream49 %in% Base_Prod$geographicaream49,"country",with=F]))
+      }else{
+        ctry_choices <- c(unique(CountryGroup[(CountryGroup[['sdg_regions']]   %in% input$Agg_options),"country",with=F]))
+      }
+    } 
+    if (input$aggregation == "m49_code") {
+      ctry_choices <- input$Country
+    }
+    # else{
+    #   aggregationNameB = sub("code", "region", input$aggregation )
+    #   ctry_choices <- c("All",unique(CountryGroup[CountryGroup[[aggregationNameB]] ==input$Agg_options,"country",with=F]))
+    #   updateSelectInput(session, "Country", choices=ctry_choices, selected ="All")
+    # } 
+    # 
+    ctry_choices 
+  })
+  
   #### SDG ### 
   WeightKeys <- reactive({
     if(input$WeightsChoice == "International Dollar Prices (2015)"){
@@ -190,6 +232,23 @@ shinyServer(function(input, output, session) {
       weights[, weightname := input$WeightsChoice ]
       #distinct(intPriceSelected,measuredItemCPC)
     }
+    if(input$WeightsChoice == "Quantities"){
+      
+      pvail <- unique(intPrice$measureditemcpc)
+      
+      intPriceSelected <-
+        intPrice %>%
+        select(measureditemcpc,timepointyears ,crop, value) %>%
+        filter(timepointyears  == as.numeric(BaseYear[2])-1)
+      
+      
+      intPriceSelected$itemname <- tolower(intPriceSelected$crop)
+      intPriceSelected$value <- 1
+      weights <- intPriceSelected[, c("itemname","measureditemcpc","value"),with=F]
+      weights <- as.data.table(weights)
+      weights[, weightname := input$WeightsChoice ]
+      #distinct(intPriceSelected,measuredItemCPC)
+    }
     if(input$WeightsChoice == "Calories"){
       Globalkcal1 <- nutrient_table %>% filter(measuredelement == 1001 &timepointyearssp==0)
       weights <- Globalkcal1[, c("geographicaream49","measureditemcpc","value"),with=F]
@@ -199,6 +258,7 @@ shinyServer(function(input, output, session) {
       weights[, weightname := input$WeightsChoice ]
       
     }
+    
     weights
     
     
@@ -327,7 +387,7 @@ shinyServer(function(input, output, session) {
           arrange(-timepointyears)
       }else{ 
         FLIndex()%>% filter((timepointyears %in% seq(input$Year[1],input$Year[2], by=1)) &
-                              (region_code %in% unlist(CountryGroup[country %in% unlist(input$Country),"m49_code", with=F])))%>%
+                              (region_code %in% unlist(CountryGroup[country %in% unlist(countries()),"m49_code", with=F])))%>%
           arrange(-timepointyears)
       }
     }
@@ -354,7 +414,7 @@ shinyServer(function(input, output, session) {
       }
       if((!"All" %in% input$Country)){
         Losses_Out%>% filter((timepointyears %in% seq(input$Year[1],input$Year[2], by=1)) &
-                               (geographicaream49 %in% unlist(CountryGroup[country %in% unlist(input$Country),"m49_code", with=F])) &
+                               (geographicaream49 %in% unlist(CountryGroup[country %in% unlist(countries()),"m49_code", with=F])) &
                                (measureditemcpc %in% crops())
         )%>%
           arrange(-timepointyears)
@@ -379,15 +439,17 @@ shinyServer(function(input, output, session) {
   ##### ---- Input Dataset ---- ####
   dataR_Input <- reactive({
     #if((input$aggregation == "m49_code") ) {
-      if("All" %in% input$Country ){
-        IO <- InputData_Out%>% filter((timepointyears %in% seq(input$Year[1],input$Year[2], by=1)) 
-        )%>% arrange(geographicaream49,-timepointyears)
+      IO <- InputData_Out%>% filter((timepointyears %in% seq(input$Year[1],input$Year[2], by=1)) )%>%
+                   arrange(geographicaream49,-timepointyears)
+      
+      if(!"WORLD" %in% input$aggregation){
+        IO <- IO %>% filter((geographicaream49 %in% unlist(CountryGroup[country %in% unlist(countries()),"m49_code", with=F]) ) &
+                              (measureditemcpc %in% crops()))
       }
       if((!"All" %in% input$Country)){
-        IO <- InputData_Out%>% filter((timepointyears %in% seq(input$Year[1],input$Year[2], by=1)) &
-                                        (geographicaream49 %in% unlist(CountryGroup[country %in% unlist(input$Country),"m49_code", with=F])) &
-                                        (measureditemcpc %in% crops())
-                                      
+        IO <- IO %>% filter((geographicaream49 %in% unlist(CountryGroup[country %in% unlist(input$Country),"m49_code", with=F])) &
+                              (measureditemcpc %in% crops())
+                            
         )%>%
           arrange(-timepointyears)
       }
@@ -475,9 +537,9 @@ shinyServer(function(input, output, session) {
   plotly_Input2 = function(){
     #### Plots the loss estimates for different aggregations
     trace_namesa = unique(dataR_loss()[["geographicaream49"]])
-    trace_namesb = unique(dataR_loss()[["measureditemcpc"]])
+    trace_namesb = unique(dataR_loss()[["measureditemcpc"]]) #crops()
     
-    trace1 = dataR_loss()[geographicaream49 %in% trace_namesa[1] & measureditemcpc %in% trace_namesb[1],]
+    trace1 = dataR_loss() %>% filter((geographicaream49 %in% trace_namesa[1]) & (measureditemcpc %in% trace_namesb[1]))
     crop_name = unlist(FAOCrops[cpc ==  trace_namesb[1],"crop",with=F])
     ctry_name = unlist(CountryGroup[geographicaream49 == trace_namesa[1], "country",with=F ])
     hovertext = unlist(dataR_loss()[geographicaream49 %in% trace_namesa[1] & measureditemcpc %in% trace_namesb[1],"flagcombo",with=F])
@@ -493,70 +555,75 @@ shinyServer(function(input, output, session) {
                                )),
                              name = paste(ctry_name,crop_name,sep=" - ") )
     }
-    if(length(trace_namesa)>1){
-      ## Multiple countries ###
-      for (nm in 1:length(trace_namesa)){
-        for (nmt in 2:length(trace_namesb)){
-          trace2 = dataR_loss()[geographicaream49 %in% trace_namesa[nm] & measureditemcpc %in% trace_namesb[nmt],]
-          crop_name = unlist(FAOCrops[cpc ==  trace_namesb[nmt],"crop",with=F])
-          ctry_name = unlist(CountryGroup[geographicaream49 == trace_namesa[nm], "country",with=F ])
-          hovertext =  unlist(dataR_loss()[geographicaream49 %in% trace_namesa[nm] & measureditemcpc %in% trace_namesb[nmt],"flagcombo",with=F])
-          
-          p <-p%>%  add_trace(y=trace2$value_measuredelement_5126, x= trace2$timepointyears , showlegend = TRUE, type="scatter", mode="lines",text=hovertext,name =  paste(ctry_name,crop_name,sep=" - "))
-          if(input$checkboxflags){
-            p <- p   %>% add_trace(y=trace2$value_measuredelement_5126, x= trace2$timepointyears,text=hovertext, showlegend = FALSE, type="scatter",  mode="markers", text = trace2$flagcombo,
-                                   transforms =list(
-                                     list(
-                                       type = 'groupby',
-                                       groups = trace2$flagcombo,
-                                       styles =  flags
-                                     )),
-                                   name = paste(ctry_name,crop_name,sep=" - ") )
-          }
-        }}
-    }else{
-      for (nmt in 2:length(trace_namesb)){
-        trace2 = dataR_loss()[geographicaream49 %in% trace_namesa[1] & measureditemcpc %in% trace_namesb[nmt],]
-        crop_name = unlist(FAOCrops[cpc ==  trace_namesb[nmt],"crop",with=F])
-        ctry_name = unlist(CountryGroup[geographicaream49 == trace_namesa[1], "country",with=F ])
-        hovertext = unlist(dataR_loss()[geographicaream49 %in% trace_namesa[1] & measureditemcpc %in% trace_namesb[nmt],"flagcombo",with=F])
-        
-        
-        p <-p%>%  add_trace(y=trace2$value_measuredelement_5126, x= trace2$timepointyears , showlegend = TRUE , type="scatter", mode="markers+lines",text=hovertext,name =  paste(ctry_name,crop_name,sep=" - "))
-        if(input$checkboxflags){
-          p <- p   %>% add_trace(y=trace2$value_measuredelement_5126, x= trace2$timepointyears,  type="scatter", showlegend = FALSE, mode="markers",  
-                                 transforms =list(
-                                   list(
-                                     type = 'groupby',
-                                     groups = trace2$flagcombo,
-                                     styles =  flags
-                                   )),
-                                 name = paste(ctry_name,crop_name,sep=" - ") )
-        }
-        
-      }
-    }
-    if(input$checkbox_input){
-      if(nrow(InputData_Out)>0){
-        trace3 <-   dataR_Input()
-        p <- p   %>% add_trace(y= trace3$loss_per_clean/100, x= trace3$timepointyears, type="scatter", showlegend = FALSE, mode="markers",
-                               text =  ~paste('Crop: ', trace3$crop,
-                                              '</br> Location: ',  trace3$fsc_location1,
-                                              '</br> Method of Data Collection: ', trace3$method_datacollection,
-                                              '</br> Data Tag: ', trace3$tag_datacollection,
-                                              '</br> Reference: ', trace3$ reference
-                               ),
-                               transforms =list(
-                                 list(
-                                   type = 'groupby',
-                                   groups = trace3$tag_datacollection,
-                                   styles =   tags
-                                 )),
-                               name = paste(ctry_name,crop_name,sep=" - ") )
-        
-      }
-    }
     
+    ##### Challenges here for crop commodity combos less than 1 <>
+    # if((length(trace_namesa)>1) ){
+    #   ## Multiple countries ###
+    #   for (nm in 1:length(trace_namesa)){
+    #     for (nmt in 2:length(trace_namesb)){
+    #       trace2 = dataR_loss() %>% filter((geographicaream49 %in% trace_namesa[nm]) & (measureditemcpc %in% trace_namesb[nmt]))
+    #       crop_name = unlist(FAOCrops[cpc %in% trace_namesb[nmt],"crop",with=F])
+    #       ctry_name = unlist(CountryGroup[geographicaream49 %in% trace_namesa[nm], "country",with=F ])
+    #       hovertext =  unlist(dataR_loss()[geographicaream49 %in% trace_namesa[nm] & measureditemcpc %in% trace_namesb[nmt],"flagcombo",with=F])
+    #       if(length(trace2)>1){
+    #            p <-p%>%  add_trace(y=trace2$value_measuredelement_5126, x= trace2$timepointyears , showlegend = TRUE, type="scatter", mode="lines",text=hovertext,name =  paste(ctry_name,crop_name,sep=" - "))
+    #       }else{
+    #         p <-p
+    #       }
+    #       if(input$checkboxflags){
+    #         p <- p   %>% add_trace(y=trace2$value_measuredelement_5126, x= trace2$timepointyears,text=hovertext, showlegend = FALSE, type="scatter",  mode="markers", text = trace2$flagcombo,
+    #                                transforms =list(
+    #                                  list(
+    #                                    type = 'groupby',
+    #                                    groups = trace2$flagcombo,
+    #                                    styles =  flags
+    #                                  )),
+    #                                name = paste(ctry_name,crop_name,sep=" - ") )
+    #       }
+    #     }}
+    # }else{
+    #    for (nmt in 2:length(trace_namesb)){
+    #      trace2 = dataR_loss()[geographicaream49 %in% trace_namesa[1] & measureditemcpc %in% trace_namesb[nmt],]
+    #      crop_name = unlist(FAOCrops[cpc ==  trace_namesb[nmt],"crop",with=F])
+    #      ctry_name = unlist(CountryGroup[geographicaream49 == trace_namesa[1], "country",with=F ])
+    #      hovertext = unlist(dataR_loss()[geographicaream49 %in% trace_namesa[1] & measureditemcpc %in% trace_namesb[nmt],"flagcombo",with=F])
+    # 
+    # 
+    #      p <-p%>%  add_trace(y=trace2$value_measuredelement_5126, x= trace2$timepointyears , showlegend = TRUE , type="scatter", mode="markers+lines",text=hovertext,name =  paste(ctry_name,crop_name,sep=" - "))
+    #      if(input$checkboxflags){
+    #        p <- p   %>% add_trace(y=trace2$value_measuredelement_5126, x= trace2$timepointyears,  type="scatter", showlegend = FALSE, mode="markers",
+    #                               transforms =list(
+    #                                 list(
+    #                                   type = 'groupby',
+    #                                   groups = trace2$flagcombo,
+    #                                   styles =  flags
+    #                                 )),
+    #                               name = paste(ctry_name,crop_name,sep=" - ") )
+    #      }
+    # 
+    #    }
+    #  }
+    # # if(input$checkbox_input){
+    #   if(nrow(InputData_Out)>0){
+    #     trace3 <-   dataR_Input()
+    #     p <- p   %>% add_trace(y= trace3$loss_per_clean/100, x= trace3$timepointyears, type="scatter", showlegend = FALSE, mode="markers",
+    #                            text =  ~paste('Crop: ', trace3$crop,
+    #                                           '</br> Location: ',  trace3$fsc_location1,
+    #                                           '</br> Method of Data Collection: ', trace3$method_datacollection,
+    #                                           '</br> Data Tag: ', trace3$tag_datacollection,
+    #                                           '</br> Reference: ', trace3$ reference
+    #                            ),
+    #                            transforms =list(
+    #                              list(
+    #                                type = 'groupby',
+    #                                groups = trace3$tag_datacollection,
+    #                                styles =   tags
+    #                              )),
+    #                            name = paste(ctry_name,crop_name,sep=" - ") )
+    #     
+    #   }
+    # }
+    # 
     p
   }
   plotly_Input3 = function(){
@@ -822,9 +889,9 @@ shinyServer(function(input, output, session) {
     
     print(input$aggregation)
   #  print(input$Agg_options)
-   # print(unlist(input$Country))
-  #  print(    dataR_Input())
-    print(   FLIndex())
+    print(FLIndex())
+    print(  unique(dataR_loss()[["measureditemcpc"]]))
+    print(  crops() )
     
   })
 

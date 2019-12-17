@@ -191,7 +191,7 @@ if(CheckDebug()){
 #####  Collects the data from the SWS #####
 CountryGroup <- ReadDatatable("a2017regionalgroupings_sdg_feb2017")
 FAOCrops     <- ReadDatatable("fcl2cpc_ver_2_1")
-ConvFactor1  <- ReadDatatable('flw_lossperfactors_')
+ConvFactor1  <- ReadDatatable('flw_lossperfactors')
 #fbsTree      <- ReadDatatable("fbs_tree")
 fbsTree      <- ReadDatatable("gfli_basket")
 

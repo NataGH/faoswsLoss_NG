@@ -116,7 +116,7 @@ if(CheckDebug()){
 production <- getProductionData(areaVar,itemVar,yearVar,elementVar,selectedYear) # Value_measuredElement_5510
 imports <- getImportData(areaVar,itemVar,yearVar, selectedYear)
 nutrient_table <- getNutritionData(areaVar,itemVar,yearVar,elementVar,selectedYear, protected = FALSE)
-ConvFactor1  <- ReadDatatable('flw_lossperfactors_')
+ConvFactor1  <- ReadDatatable('flw_lossperfactors__clone3')
 #fbsTree <- ReadDatatable("fbs_tree")
 gfli_basket <- ReadDatatable("gfli_basket")
 M_aggregates <- ReadDatatable('aggregate_loss_table')
@@ -141,6 +141,38 @@ prod_imports[,prod_imports := rowSums(.SD, na.rm = TRUE), .SDcols=c("value.x","v
 CountryGroup$geographicaream49 <- CountryGroup$m49_code
 CountryGroup$country <- CountryGroup$m49_region
 
+FAOCrops$measureditemcpc <- FAOCrops$cpc
+FAOCrops[, "crop" := FAOCrops$description]
+############Official Losses for the input dataset ##############
+#load("~/faoswsLossa/shiny/Soup2Nuts/march22_v2.RData")
+##load("~/faoswsLossa/shiny/Soup2Nuts/march22_nostageest.RData")
+#Losses <-  DataSave[measuredElementSuaFbs== "5126",]
+Losses <- getLossData_LossDomain(areaVar,itemVar,yearVar,elementVar,selectedYear,'5126')
+Losses[,flagcombination := paste(flagObservationStatus, flagMethod, sep=";")]
+#### Protected Data ###
+flagValidTableLoss <- as.data.table(flagValidTable)
+flagValidTableLoss[flagObservationStatus == "M" & flagMethod== "-","Protected"] <- FALSE
+
+protectedFlag <- flagValidTableLoss[flagValidTableLoss$Protected == TRUE,] %>%
+  .[, flagCombination := paste(flagObservationStatus, flagMethod, sep = ";")]
+
+Losses[flagcombination %in% protectedFlag$flagCombination,Protected := TRUE,]
+names(Losses) <- tolower(names(Losses))
+Losses$geographicaream49 <- as.character(Losses$geographicaream49)
+names(Losses)[names(Losses) == "measureditemsuafbs"] <- "measureditemcpc"
+OfficialLoss <- Losses[protected == TRUE,]
+names(OfficialLoss)[names(OfficialLoss) == "value"] <- "loss_per_clean"
+
+OfficialLoss <- merge(OfficialLoss,CountryGroup[,c("geographicaream49","isocode","country"),with=F], by= c("geographicaream49"), all.x = T)
+OfficialLoss <- merge(OfficialLoss,FAOCrops[,c("measureditemcpc","crop"),with=F], by= c("measureditemcpc"), all.x = T, allow.cartesian=T)
+OfficialLoss[, fsc_location := "SWS_Total"]
+OfficialLoss[, tag_datacollection := "FBS/APQ"]
+OfficialLoss[, loss_per_clean := loss_per_clean*100]
+ConvFactor1 <- rbind(ConvFactor1,OfficialLoss, fill = T)
+
+
+
+
 opt <- as.data.table(cbind( c("m49_code","iso2code","isocode","m49_region","sdgregion_code","sdg_regions","m49_level1_code",
                               "m49_level1_region","m49_level2_code","m49_level2_region","mdgregions_code","mdgregions_region","ldcs_code","ldcs_region",
                               "lldcssids_code","lldcssids_region","fao_region","fao_operational_agg", "worldbank_income2018_agg", "sofa_agg"),
@@ -152,9 +184,6 @@ opt2 <- c("m49_code","sdgregion_code","m49_level1_code",
           "m49_level2_code","mdgregions_code","ldcs_code",
           "lldcssids_code","fao_operational_agg", "worldbank_income2018_agg","gfli_basket", "sofa_agg","sofa_wu_agg", "basket_sofa_wu")
 
-
-FAOCrops$measureditemcpc <- FAOCrops$cpc
-FAOCrops[, "crop" := FAOCrops$description]
 
 
 gfli_basket[foodgroupname %in% c(2905,2911), gfli_basket :='Cereals & Pulses',]
@@ -188,10 +217,12 @@ datatags <- unique(InputData_Out$tag_datacollection)
 #load("~/faoswsLossa/shiny/Soup2Nuts/timeSeriesDataToBeImputed_5126_jan-FFAll.RData") ## all data sources
 #oad("~/faoswsLossa/shiny/Soup2Nuts/timeSeriesDataToBeImputed_5126_jan-s2lb.RData") # smoothed data
 #load("~/faoswsLossa/shiny/Soup2Nuts/timeSeriesDataToBeImputed_5126_jan_all_markovadj_noProtected.RData")
-load("~/faoswsLossa/shiny/Soup2Nuts/timeSeriesDataToBeImputed_5126_jan_all_markovadj_Protected.RData")
+#load("~/faoswsLossa/shiny/Soup2Nuts/timeSeriesDataToBeImputed_5126_jan_all_markovadj_Protected.RData")
 #load("~/faoswsLossa/shiny/Soup2Nuts/timeSeriesDataToBeImputed_5126_jan_all_markov_1.RData")
-
-Losses <- timeSeriesDataToBeImputed_5126 %>% filter(timePointYears <= 2016)
+#load("~/faoswsLossa/shiny/Soup2Nuts/OnlyFarm.RData")
+#load("~/faoswsLossa/shiny/Soup2Nuts/Jan18_v2.RData")
+timeSeriesDataToBeImputed_5126 <- DataSave[measuredElementSuaFbs == "5126",]
+#Losses <- timeSeriesDataToBeImputed_5126 %>% filter(timePointYears <= 2016)
 names(Losses) <- tolower(names(Losses))
 
 Losses$geographicaream49 <- as.character(Losses$geographicaream49)
@@ -224,8 +255,8 @@ Losses_Out <-Losses_Out[!value_measuredelement_5126==1,]
   detach("package:faoswsModules", unload=TRUE)
 # }
 ####
-save.image("~/faoswsLossa/shiny/Soup2Nuts/data_InternalFAO_jan.RData")
-drop_upload("~/faoswsLossa/shiny/Soup2Nuts/data_InternalFAO_jan.RData", path ="shiny")
+save.image("~/faoswsLossa/shiny/Soup2Nuts/data_InternalFAO_marc26.RData")
+#drop_upload("~/faoswsLossa/shiny/Soup2Nuts/data_InternalFAO_jan.RData", path ="shiny")
 
 
 # if(shinyappsA){  
@@ -238,3 +269,5 @@ drop_upload("~/faoswsLossa/shiny/Soup2Nuts/data_InternalFAO_jan.RData", path ="s
 # # }
 # 
 # 
+# If external 
+#   remove(Losses_Out)
